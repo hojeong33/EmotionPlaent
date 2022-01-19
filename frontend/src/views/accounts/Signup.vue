@@ -1,65 +1,80 @@
 <template>
-  <div class="signup_container">
-    <div class="signup">
-      <h1>Signup</h1>
-      <div>
-        <label for="email"></label>
+  <div id="signup_container">
+    <article id="signup_header">
+      <h1>
+        어서오세요!
+      </h1>
+      <span id="signup_header_title">
+        <h1 style="color: #5E39B3">
+          이모션 플래닛
+        </h1>
+        <h1>
+          에
+        </h1>
+      </span>
+      <h1>
+        시민권을 등록해볼까요?👽
+      </h1>
+    </article>
+    <section id="signup_form">
+      <article id="email_form">
+        <label for="email" style="color: #5E39B3">이메일</label>
         <input type="email"
         id="email"
         v-model="credentials.email"
         placeholder="e-mail"
         @input = "validateEmail">
-        <div v-if="credentials.email && !isValid.validateEmailcheck">
-          <p v-if="isValid.validateEmail" style="font-size:10px;">
+        <span v-if="credentials.email && !isValid.validateEmailcheck">
+          <p v-if="isValid.validateEmail" style="font-size:10px; color: red;">
             사용중인 이메일입니다.
           </p>
-          <p v-if="!isValid.validateEmail" style="font-size:10px; color: red">
+          <p v-if="!isValid.validateEmail" style="font-size:10px; color: red;">
             이메일 형식에 맞춰주세요. 
           </p>
-        </div>
-        <div v-if="isValid.validateEmailcheck" style="font-size:10px; color: green">
+        </span>
+        <span v-if="isValid.validateEmailcheck" style="font-size:10px; color: green;">
           <p>
             사용가능한 이메일입니다.
           </p>
-        </div>
-      </div>
-      <div>
-        <label for="nickname"></label>
+        </span>
+      </article>
+      <article id="nickname_form">
+        <label for="nickname" style="color: #5E39B3">닉네임</label>
         <input type="text"
         id="nickname"
         v-model="credentials.nickname"
         placeholder="nickname"
         @input= "checkNickname">
-        <div v-if="credentials.nickname">
-          <p v-if="!isValid.validateNicknamecheck" style="font-size:10px; color: red">
+        <span v-if="credentials.nickname">
+          <p v-if="!isValid.validateNicknamecheck" style="font-size:10px; color: red;">
             사용중인 닉네임입니다.
           </p>
-          <p v-if="isValid.validateNicknamecheck" style="font-size:10px; color: green">
+          <p v-if="isValid.validateNicknamecheck" style="font-size:10px; color: green;">
            사용가능한 닉네임입니다.
           </p>
-        </div>
-      </div>
+        </span>
+      </article>
       <div>
-        <label for="pw"></label>
+        <label for="pw" style="color: #5E39B3">password</label>
         <input type="password" 
         id="pw"
         v-model="credentials.pw"
         placeholder="password">
       </div>
       <div>
-        <label for="passwordConfirmation"></label>
+        <label for="passwordConfirmation" style="color: #5E39B3">비밀번호 확인</label>
         <input type="password" id="passwordConfirmation"
         v-model="credentials.passwordConfirmation"
         placeholder="passwordConfirmation">
       </div>
       <div>
-        <label for="birth"></label>
+        <label for="birth" style="color: #5E39B3">생년월일</label>
         <input type="date" id="birth"
         v-model="credentials.birth"
         >
       </div>
       <button @click="signup"> signup </button>
-    </div>
+    </section>
   </div>
 </template>
 
@@ -150,4 +165,64 @@
       },
     },
   }
-</script> 
+</script>
+<style scoped>
+  #signup_container {
+    background-color: white;
+    width: 40vh;
+    min-width: 300px;
+    height: 60vh;
+    min-height: 700px;
+    margin: auto;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #signup_header {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  #signup_header h1 {
+    margin: 0;
+  }
+
+  #signup_header_title {
+    display: flex;
+    flex-wrap: nowrap;
+  }
+
+  #signup_form {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    justify-content: flex-start;
+    align-items: center;
+    padding: 2rem;
+    overflow: unset;
+  }
+
+  #signup_form h1, div, article {
+    margin-bottom: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #signup_form input {
+    border: 1px #5E39B3 solid;
+    border-radius: 10px;
+    width: 15rem;
+    min-width: 200px;
+    height: 2rem;
+    min-height: 30px;
+    padding: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+</style>
