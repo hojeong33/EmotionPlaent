@@ -59,6 +59,6 @@ export default {
 }
 </script>
 
-<style>
-/* @import 'assets/styles/astrostyle.css'; */
-</style>
+<style scoped>
+  @import '../../assets/styles/plainstyle.css';
+</style>>
