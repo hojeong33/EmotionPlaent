@@ -13,15 +13,17 @@ export default {
 <style>
 /* landscape-green-sunlight-sky-atmosphere-universe-1428591-pxhere 1 */
 #background{
-
-  background-image: url("~@/assets/background.png");
-  border: 1px solid #000000;
-  box-sizing: border-box;
-  min-height: 100vh;
+  height: 100vh;
+  
+  background-repeat : no-repeat;
   background-size: cover;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
 
+}
+
+body { 
+  margin: 0;
+  padding: 0;
+  height: 100%;
 }
   
 </style>

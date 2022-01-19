@@ -46,7 +46,8 @@ export default {
       })
       .then(()=>{
         alert("로그인 성공")
-        this.$emit('login') 
+        this.$emit('login')
+        this.$router.push({name: 'Test1st'})
       })
       .catch(err=> {
         alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
@@ -57,3 +58,7 @@ export default {
   }
 }
 </script>
+
+<style>
+/* @import 'assets/styles/astrostyle.css'; */
+</style>
