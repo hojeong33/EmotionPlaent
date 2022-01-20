@@ -23,6 +23,7 @@
         id="email"
         v-model="credentials.email"
         placeholder="사용중인 이메일을 입력해주세요."
+        autocomplete="off"
         @input = "validateEmail">
         <span v-if="credentials.email && !isValid.validateEmailcheck">
           <p v-if="isValid.validateEmail" class="warn">
@@ -44,6 +45,7 @@
         id="nickname"
         v-model="credentials.nickname"
         placeholder="닉네임은 2자 이상, 10자 이하입니다."
+        autocomplete="off"
         @input= "checkNickname">
         <span v-if="credentials.nickname">
           <p v-if="!isValid.validateNicknamecheck" class="warn">
@@ -214,8 +216,19 @@
 
   input:focus {
     outline: none;
-    background-color: #5E39B3;
+    background-color: #afa0d6;
     color: white;
+    text-shadow: 0 1px 2px rgb(0, 0, 0, 0.5);
+  }
+
+  input::placeholder {
+    font-weight: initial;
+    letter-spacing: -1px;
+    text-shadow: none;
+  }
+
+  input:focus::placeholder {
+    color: transparent;
   }
 
   p {
@@ -252,7 +265,7 @@
     background-color: white;
     width: 45vh;
     min-width: 450px;
-    max-height: 100vh;
+    height: 80vh;
     min-height: 850px;
     margin: auto;
     display: flex;
@@ -261,6 +274,7 @@
     justify-content: flex-start;
     align-items: center;
     border-radius: 20px;
+    padding: 2rem;
   }
 
   #signup_header {
@@ -269,12 +283,12 @@
     flex-wrap: nowrap;
     align-items: flex-start;
     align-self: flex-start;
-    margin: 2rem 2rem 1rem;
   }
 
   #signup_header h1 {
     margin: 0;
     font-size: 2rem;
+    font-weight: bold;
     letter-spacing: -1px;
   }
 
@@ -338,10 +352,5 @@
 
   ::-webkit-calendar-picker-indicator {
     margin: 0;
-  }
-
-  ::-webkit-input-placeholder {
-    font-weight: initial;
-    letter-spacing: -1px;
   }
 </style>
