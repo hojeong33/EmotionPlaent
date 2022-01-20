@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.project.EmotionPlanet.Dao.FeedDao">
+
+    <select id="list" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.FeedDto">
+        select f.no, f.desc, f.author, f.date
+        from feed f
+        where f.author = (
+                            select fo.no
+                            from follow fo
+                            where fo.sender = #{no}
+                          ) and f.date between date_add(now(),interval -1 week ) and now()
+        order by date desc
+    </select>
+
+    <select id="myList" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.FeedDto">
+        select f.no, f.desc, f.author, f.date
+        from feed f
+        where f.author = #{no}
+        order by date desc
+    </select>
+
+    <select id="read" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.FeedDto">
+        select f.no, f.desc, f.author, f.date
+        from feed f
+        where f.no = #{no}
+    </select>
+
+    <insert id="write" parameterType="com.ssafy.project.EmotionPlanet.Dto.FeedDto">
+        insert into feed(desc, author)
+        values (  #{desc}, #{author})
+    </insert>
+
+    <update id="update" parameterType="com.ssafy.project.EmotionPlanet.Dto.FeedDto">
+        update feed
+            set desc = #{desc}
+            author = #{author}
+            date = #{date}
+        where no = #{no}
+    </update>
+    
+    <delete id="delete" parameterType="int">
+        delete from feed where no = #{no}
+    </delete>
+
+    <insert id="like" parameterType="map">
+        insert into feed_like(feedNo, userNo)
+        values (  #{feedNo}, #{userNo} )
+    </insert>
+
+    <delete id="unlike" parameterType="map">
+        delete from feed_like where feedNo = #{feedNo} and userNo = #{userNo}
+    </delete>
+
+</mapper>
