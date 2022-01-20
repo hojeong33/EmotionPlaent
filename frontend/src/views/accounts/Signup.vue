@@ -1,6 +1,6 @@
 <template>
   <div id="signup_container">
-    <article id="signup_header">
+    <section id="signup_header">
       <h1>
         어서오세요!
       </h1>
@@ -15,65 +15,73 @@
       <h1>
         시민권을 등록해볼까요?👽
       </h1>
-    </article>
+    </section>
     <section id="signup_form">
       <article id="email_form">
-        <label for="email" style="color: #5E39B3">이메일</label>
+        <label for="email">이메일</label>
         <input type="email"
         id="email"
         v-model="credentials.email"
-        placeholder="e-mail"
+        placeholder="사용중인 이메일을 입력해주세요."
         @input = "validateEmail">
         <span v-if="credentials.email && !isValid.validateEmailcheck">
-          <p v-if="isValid.validateEmail" style="font-size:10px; color: red;">
-            사용중인 이메일입니다.
+          <p v-if="isValid.validateEmail" class="warn">
+            사용중인 이메일이에요.
           </p>
-          <p v-if="!isValid.validateEmail" style="font-size:10px; color: red;">
+          <p v-if="!isValid.validateEmail" class="warn">
             이메일 형식에 맞춰주세요. 
           </p>
         </span>
-        <span v-if="isValid.validateEmailcheck" style="font-size:10px; color: green;">
+        <span v-if="isValid.validateEmailcheck" class="collect">
           <p>
             사용가능한 이메일입니다.
           </p>
         </span>
       </article>
       <article id="nickname_form">
-        <label for="nickname" style="color: #5E39B3">닉네임</label>
+        <label for="nickname">닉네임</label>
         <input type="text"
         id="nickname"
         v-model="credentials.nickname"
-        placeholder="nickname"
+        placeholder="닉네임은 2자 이상, 10자 이하입니다."
         @input= "checkNickname">
         <span v-if="credentials.nickname">
-          <p v-if="!isValid.validateNicknamecheck" style="font-size:10px; color: red;">
-            사용중인 닉네임입니다.
+          <p v-if="!isValid.validateNicknamecheck" class="warn">
+            사용중인 닉네임이에요.
           </p>
-          <p v-if="isValid.validateNicknamecheck" style="font-size:10px; color: green;">
+          <p v-if="isValid.validateNicknamecheck" class="collect">
            사용가능한 닉네임입니다.
           </p>
         </span>
       </article>
-      <div>
-        <label for="pw" style="color: #5E39B3">password</label>
+      <article id="pw_form">
+        <label for="pw">비밀번호</label>
         <input type="password" 
         id="pw"
         v-model="credentials.pw"
-        placeholder="password">
-      </div>
-      <div>
-        <label for="passwordConfirmation" style="color: #5E39B3">비밀번호 확인</label>
+        @change="pwCheck"
+        placeholder="비밀번호는 8자 이상, 20자 이하입니다.">
+      </article>
+      <article id="passwordConfirmation_form">
+        <label for="passwordConfirmation">비밀번호 확인</label>
         <input type="password" id="passwordConfirmation"
         v-model="credentials.passwordConfirmation"
-        placeholder="passwordConfirmation">
-      </div>
-      <div>
-        <label for="birth" style="color: #5E39B3">생년월일</label>
-        <input type="date" id="birth"
-        v-model="credentials.birth"
-        >
-      </div>
-      <button @click="signup"> signup </button>
+        @change="pwConfirmCheck"
+        placeholder="비밀번호를 다시 입력해주세요.">
+      </article>
+      <article id="signup_form_personal">
+        <div id="personal_form">
+          <label for="birth">생년월일</label>
+          <input type="date" id="birth"
+          v-model="credentials.birth"
+          >
+          <label for="image_upload">프로필 사진</label>
+          <button id="image_upload">이미지 업로드</button>
+        </div>
+        <img src="../../assets/images/profile.png" alt="profile image">
+      </article>
+      <button @click="signup" id="signup_btn">시민권 등록하기</button>
+      <button id="back_to_btn">다음에 할게요</button>
     </section>
   </div>
 </template>
@@ -93,9 +101,11 @@
           birth: null,
         },
         isValid: {
-          validateEmail: false, //이메일 형식 체크
+          validateEmail: false, // 이메일 형식 체크
           validateEmailcheck : false, // 중복 이메일 여부
           validateNicknamecheck : false, // 중복 닉네임 여부
+          validatePw: false, // 비밀번호 길이 체크
+          validatePwConf: false, // 비밀번호와 비밀번호 확인 일치 여부
         }
       }
     },
@@ -163,33 +173,109 @@
             this.isValid.validateEmailcheck = false
           })
       },
+      pwCheck: function(){
+        if (this.pw && this.pw.length < 8 || this.pw.length > 20){
+          this.isValid.validatePw = true
+        }
+        else {
+          this.isValid.validatePw = false
+        }
+      },
+      pwConfCheck: function(){
+        if (this.passwordConfirmation && this.pw === this.passwordConfirmation){
+          this.isValid.validatePwConf = true
+        }
+        else {
+          this.isValid.validatePwConf = false
+        }
+      }
     },
   }
 </script>
 <style scoped>
+  label {
+    color: #5E39B3;
+    font-weight: bold;
+    margin-left: 0.5rem;
+    font-size: 1.125rem;
+  }
+
+  input {
+    border: 2px #5E39B3 solid;
+    border-radius: 20px;
+    width: 30vh;
+    min-width: 300px;
+    height: 4vh;
+    min-height: 40px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+
+  input:focus {
+    outline: none;
+    background-color: #5E39B3;
+    color: white;
+  }
+
+  p {
+    margin-left: 0.5rem;
+    font-size: 0.8rem;
+  }
+
+  img {
+    width: 12vh;
+    min-width: 120px;
+  }
+
+  button {
+    background-color: #5E39B3;
+    color: white;
+    font-size: 1.125rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    padding: 0.4rem 1.125rem;
+    margin-bottom: 1.125rem;
+    cursor: pointer;
+  }
+
+  .warn {
+    color: red;
+  }
+
+  .collect {
+    color: green;
+  }
+
   #signup_container {
     background-color: white;
-    width: 40vh;
-    min-width: 300px;
-    height: 60vh;
-    min-height: 700px;
+    width: 45vh;
+    min-width: 450px;
+    max-height: 100vh;
+    min-height: 850px;
     margin: auto;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
+    border-radius: 20px;
   }
 
   #signup_header {
     display: flex;
     flex-direction: column;
-    flex-wrap: wrap;
+    flex-wrap: nowrap;
     align-items: flex-start;
+    align-self: flex-start;
+    margin: 2rem 2rem 1rem;
   }
 
   #signup_header h1 {
     margin: 0;
+    font-size: 2rem;
+    letter-spacing: -1px;
   }
 
   #signup_header_title {
@@ -203,26 +289,59 @@
     flex-wrap: nowrap;
     justify-content: flex-start;
     align-items: center;
-    padding: 2rem;
+    padding: 1.5rem;
     overflow: unset;
   }
 
-  #signup_form h1, div, article {
-    margin-bottom: 2rem;
+  #signup_form h1, article {
+    margin-bottom: 1.25rem;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
   }
 
-  #signup_form input {
-    border: 1px #5E39B3 solid;
-    border-radius: 10px;
-    width: 15rem;
-    min-width: 200px;
-    height: 2rem;
-    min-height: 30px;
-    padding: 0.5rem;
-    font-size: 0.9rem;
+  #signup_form_personal {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
   }
 
+  #personal_form {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #birth {
+    width: 16vh;
+    min-width: 150px;
+    margin-bottom: 1.25rem;
+  }
+
+  #signup_btn {
+    font-size: 1.35rem;
+    padding: 0.5rem 2rem;
+    width: 25vh;
+    min-width: 250px;
+  }
+
+  #back_to_btn {
+    background-color: #777777;
+    font-size: 1.35rem;
+    padding: 0.5rem 2rem;
+    width: 25vh;
+    min-width: 250px;
+  }
+
+  ::-webkit-calendar-picker-indicator {
+    margin: 0;
+  }
+
+  ::-webkit-input-placeholder {
+    font-weight: initial;
+    letter-spacing: -1px;
+  }
 </style>
