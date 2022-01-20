@@ -1,15 +1,18 @@
 package com.ssafy.project.EmotionPlanet.Dto;
 
+import java.util.Date;
+
 public class UserDto {
 
     private int no;
     private String email;
     private String pw;
     private String nickname;
-    private String birth;
+    private Date birth;
     private String profileImg;
     private int mood;
     private boolean publish;
+
     public int getNo() {
         return no;
     }
@@ -34,28 +37,24 @@ public class UserDto {
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
-    public String getBirth() {
+    public Date getBirth() {
         return birth;
     }
-    public void setBirth(String birth) {
+    public void setBirth(Date birth) {
         this.birth = birth;
     }
-
     public int getMood() {
         return mood;
     }
     public void setMood(int mood) {
         this.mood = mood;
     }
-
     public String getProfileImg() {
         return profileImg;
     }
-
     public void setProfileImg(String profileImg) {
         this.profileImg = profileImg;
     }
-
     public boolean isPublish() {
         return publish;
     }
@@ -64,7 +63,7 @@ public class UserDto {
     }
     public UserDto() {}
 
-    public UserDto(int no, String email, String pw, String nickname, String birth, String profileImg, int mood, boolean publish) {
+    public UserDto(int no, String email, String pw, String nickname, Date birth, String profileImg, int mood, boolean publish) {
         this.no = no;
         this.email = email;
         this.pw = pw;
