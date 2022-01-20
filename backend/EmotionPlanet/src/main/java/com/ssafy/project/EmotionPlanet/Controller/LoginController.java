@@ -3,6 +3,7 @@ package com.ssafy.project.EmotionPlanet.Controller;
 import javax.servlet.http.HttpSession;
 
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
+import com.ssafy.project.EmotionPlanet.Service.LoginService;
 import com.ssafy.project.EmotionPlanet.Service.LoginServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,7 +27,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class LoginController {
 
     @Autowired
-    LoginServiceImpl loginService;
+    LoginService loginService;
 
     @PostMapping(value = "/login")  // post 방식으로 들어옴
     public ResponseEntity<UserDto> login(@RequestBody UserDto dto, HttpSession session) {
