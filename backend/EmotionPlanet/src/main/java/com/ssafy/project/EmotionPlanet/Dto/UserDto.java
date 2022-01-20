@@ -40,22 +40,18 @@ public class UserDto {
     public void setBirth(String birth) {
         this.birth = birth;
     }
-
     public int getMood() {
         return mood;
     }
     public void setMood(int mood) {
         this.mood = mood;
     }
-
     public String getProfileImg() {
         return profileImg;
     }
-
     public void setProfileImg(String profileImg) {
         this.profileImg = profileImg;
     }
-
     public boolean isPublish() {
         return publish;
     }

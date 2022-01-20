@@ -30,8 +30,6 @@ public class LoginController {
 
     @PostMapping(value = "/login")  // post 방식으로 들어옴
     public ResponseEntity<UserDto> login(@RequestBody UserDto dto, HttpSession session) {
-        dto.setEmail(dto.getEmail());
-        dto.setPw(dto.getPw());
         UserDto userDto = loginService.login(dto);
         System.out.println(dto);
         System.out.println(userDto);

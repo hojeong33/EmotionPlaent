@@ -11,6 +11,7 @@
     <mappers>
         <mapper resource="mapper/login_query.xml" />
         <mapper resource="mapper/user_query.xml" />
+        <mapper resource="mapper/follow_query.xml" />
     </mappers>
 
 </configuration>
