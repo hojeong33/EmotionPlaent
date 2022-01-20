@@ -3,11 +3,13 @@
     <div id="login">
       <div id="login_header">
         <div>
-          <h3>어서오세요!</h3>
-          <h3>오늘은 어떤 이야기를</h3>
-          <h3>들려주실건가요?</h3>
+          <h4>어서오세요!</h4>
+          <h4>오늘은 어떤 이야기를</h4>
+          <h4>들려주실건가요?</h4>
         </div>
-        <img src="../../assets/images/sun.png" id="earth">
+        <div>
+          <img src="../../assets/images/sun.png" id="sun">
+        </div>
       </div>
       <div id="login_body">
         <div id="email">
@@ -20,7 +22,7 @@
         </div>
         <br>
         <div id="password_label">
-          <p id="password">password</p>
+          <p id="password_label">password</p>
           <label for="pw"></label>
           <input type="password" 
           id="pw"
@@ -43,7 +45,7 @@
 
       <button id="google_button">
         <img id="google" src="../../assets/images/Google__G__Logo.png">
-        <p>Google로 로그인</p>
+        <p id="google_text">Google로 로그인</p>
       </button>
       <br>
       <div>
@@ -95,36 +97,49 @@ export default {
 #login_container{
   display: flex;
   justify-content: center;
-  border: 1px;
+  border: 2px;
+  border-color: black;
   background-color: white;
-  width: 360px;
-  height: 470px;
-  border-radius: 10px;
+  width: 380px;
+  height: 580px;
+  border-radius: 13px;
   margin: auto;
 }
 #login{
-  padding: 20px 10px 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
 }
 #login_header{
-  padding-bottom:20px;
+  padding-bottom: 20px;
   display: flex;
   justify-content: space-between;
+  text-align: left;
+}
+#login_body{
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 #email_label{
   text-align: left;
   color: #5E39B3;
   font-size: 15px;
+  margin-bottom: 5px;
 }
 #password_label{
   text-align: left;
   color: #5E39B3;
   font-size: 15px;
+  margin-bottom: 5px;
 }
 input{
-  width: 250px;
-  height: 30px;
+  width: 300px;
+  height: 40px;
   border-radius: 5px;
   border-color: #5E39B3;
+}
+#pw{
+  font-size: 15px;
 }
 #link{
   font-size: 13px;
@@ -137,9 +152,6 @@ input{
   font-size: 14px;
   font-weight: bold;
   color: white;
-}
-h3{
-  text-align: left;
 }
 #google_button{
   display: flex;
@@ -182,10 +194,16 @@ img{
   width:18px;
   height: 18px;
 }
-#earth{
-  margin-top: 10px;
-  margin-bottom: 10px;
-  width: 55px;
-  height: 55px;
+#sun{
+  margin-top: 30px;
+  margin-left: 15px;
+  width: 60px;
+  height: 60px;
+}
+#google_text{
+  margin-top:17px;
+}
+#kakao_text{
+   margin-top:17px;
 }
 </style>
