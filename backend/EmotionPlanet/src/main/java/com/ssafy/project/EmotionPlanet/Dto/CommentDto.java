@@ -5,16 +5,18 @@ import java.time.LocalDateTime;
 public class CommentDto {
 
     private int no;
-    private String desc;
+    private int feedNo;
+    private String descr;
     private int author;
     private LocalDateTime date;
 
     public CommentDto() {
     }
 
-    public CommentDto(int no, String desc, int author, LocalDateTime date) {
+    public CommentDto(int no, int feedNo, String descr, int author, LocalDateTime date) {
         this.no = no;
-        this.desc = desc;
+        this.feedNo = feedNo;
+        this.descr = descr;
         this.author = author;
         this.date = date;
     }
@@ -27,12 +29,12 @@ public class CommentDto {
         this.no = no;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getdescr() {
+        return descr;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setdescr(String descr) {
+        this.descr = descr;
     }
 
     public int getAuthor() {
@@ -49,5 +51,13 @@ public class CommentDto {
 
     public void setDate(LocalDateTime date) {
         this.date = date;
+    }
+
+    public int getFeedNo() {
+        return feedNo;
+    }
+
+    public void setFeedNo(int feedNo) {
+        this.feedNo = feedNo;
     }
 }
