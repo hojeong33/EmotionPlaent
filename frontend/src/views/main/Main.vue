@@ -1,29 +1,40 @@
 <template>
-  <div class="example">
-    <div class="tabs">
-      <TabItem
-        v-for="item in list"
-        v-bind="item" :key="item.id"
-        v-model="currentId"/>
+    <div>
+        <div><navigation></navigation></div>
+            <div class="container justify-content-center">
+                <div class="v1"></div>
+                <div class="example">
+                    <div class="tabs">
+                    <TabItem
+                    v-for="item in list"
+                    v-bind="item" :key="item.id"
+                    v-model="currentId"/>
+                    </div>
+                    <div class="contents">
+                        <transition>
+                            <section class="item" :key="currentId">
+                                {{ current.content }}
+                                <recommend></recommend>
+                                <feed></feed>
+                            </section>
+                        </transition>
+                    </div>
+                </div>
+                <div class="v1"></div>
+            </div>
+
     </div>
-    <div class="contents">
-      <transition>
-        <section class="item" :key="currentId">
-            {{ current.content }}
-            <recommend></recommend>
-            <feed></feed>
-        </section>
-      </transition>
-    </div>
-  </div>
+ 
 </template>
 
 <script>
 import TabItem from './TabItem.vue'
 import Recommend from './Recommend.vue'
 import Feed from './Feed.vue'
+import Navigation from '../../components/Navigation.vue'
 export default {
-  components: { TabItem, Recommend, Feed },
+    components: { TabItem, Recommend, Feed, Navigation },
+    // components: {  Navigation },
   data() {
      return {
       currentId: 1,
@@ -42,10 +53,23 @@ export default {
 </script>
 
 <style scoped>
+    .v1 {
+    display: flexbox;
+    border-left: 1px solid black;
+    height: 100vh;
+    /* margin-left: 25%; */
+    }
+    .v2 {
+    display: flex;
+    border-left: 1px solid black;
+    height: 500px;
+    margin-left: 70%;
+    }
     .contents {
     position: relative;
     overflow: hidden;
-    width: 280px;
+    width: 100vh;
+    height: 100vh;
     border: 2px solid #000;
     }
     .item {
