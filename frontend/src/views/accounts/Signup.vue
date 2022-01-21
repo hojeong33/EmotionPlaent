@@ -92,6 +92,9 @@
 <script>
   import axios from 'axios'
   export default {
+    beforeCreate: function () {
+    document.body.className = 'astro';
+    },
     name: 'Signup',
     data: function () {
       return {
