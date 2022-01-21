@@ -9,7 +9,7 @@ import java.util.List;
 public class FeedDto {
 
     private int no;
-    private String desc;
+    private String descr;
     private int author;
     private LocalDateTime date;
 
@@ -23,12 +23,12 @@ public class FeedDto {
         this.no = no;
     }
 
-    public String getDesc() {
-        return desc;
+    public String getdescr() {
+        return descr;
     }
 
-    public void setDesc(String desc) {
-        this.desc = desc;
+    public void setdescr(String descr) {
+        this.descr = descr;
     }
 
     public int getAuthor() {
@@ -58,9 +58,9 @@ public class FeedDto {
     public FeedDto() {
     }
 
-    public FeedDto(int no, String desc, int author, LocalDateTime date) {
+    public FeedDto(int no, String descr, int author, LocalDateTime date) {
         this.no = no;
-        this.desc = desc;
+        this.descr = descr;
         this.author = author;
         this.date = date;
     }
@@ -71,7 +71,7 @@ public class FeedDto {
     public String toString() {
         return "FeedDto{" +
                 "no=" + no +
-                ", desc='" + desc + '\'' +
+                ", descr='" + descr + '\'' +
                 ", author=" + author +
                 ", date=" + date +
                 '}';

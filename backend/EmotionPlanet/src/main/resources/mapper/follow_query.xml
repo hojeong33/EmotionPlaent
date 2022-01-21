@@ -12,14 +12,21 @@
 		resultType="com.ssafy.project.EmotionPlanet.Dto.FollowDto">
 		select sender, receiver
 		from follow
-		where receiver = #{no} and type = 1 
+		where sender = #{no} and type = 1 
+	</select>
+	
+	<select id="select" parameterType="int"
+		resultType="com.ssafy.project.EmotionPlanet.Dto.FollowDto">
+		select sender, receiver
+		from follow
+		where sender = #{sender} and receiver = #{receiver} and type = 1 
 	</select>
 	
 	<select id="followingSelect" parameterType="int"
 		resultType="com.ssafy.project.EmotionPlanet.Dto.FollowDto">
 		select sender, receiver
 		from follow
-		where sender = #{no} and type = 1 
+		where receiver = #{no} and type = 1 
 	</select> 
 
 	<delete id="followDelete" parameterType="com.ssafy.project.EmotionPlanet.Dto.FollowDto">
@@ -30,7 +37,7 @@
 	<update id="followUpdate"
 		parameterType="com.ssafy.project.EmotionPlanet.Dto.FollowDto">
 		update follow
-		set publish = #{publish}
+		set type = #{type}
 		where sender = #{sender} and receiver = #{receiver}
 	</update>
 </mapper>

@@ -16,6 +16,7 @@
 
         <mapper resource="mapper/feed_query.xml" />
         <mapper resource="mapper/comment_query.xml" />
+        <mapper resource="mapper/S3_query.xml" />
 
     </mappers>
 
