@@ -3,7 +3,7 @@
     <div>
         <div class="container justify-content-center"> 
             <img class="planet" src="../../assets/images/depressed.png" alt="">
-            <h1>어서오세요!</h1>
+            <h1>어서오세요</h1>
             <h1>우울행성입니다.</h1>
         </div>
     </div>
