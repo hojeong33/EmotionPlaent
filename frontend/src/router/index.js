@@ -3,6 +3,7 @@ import VueRouter from 'vue-router'
 import Login from '@/views/accounts/Login.vue'
 import Signup from '@/views/accounts/Signup.vue'
 import Test1st from '@/views/test/Test1st.vue'
+import EmotionTest from '@/views/EmotionTest'
 
 Vue.use(VueRouter)
 
@@ -21,6 +22,11 @@ const routes = [
     path: '/test1st',
     name: 'Test1st',
     component: Test1st
+  },
+  {
+    path: '/emotiontest',
+    name: 'EmotionTest',
+    component: EmotionTest
   },
 ]
 

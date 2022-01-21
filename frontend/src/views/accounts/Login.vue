@@ -25,24 +25,24 @@
         placeholder="비밀번호를 입력해주세요">
       </article>
     </section>
-    <div id="link">
+    <article id="link">
       <a href="#">이메일 찾기</a>
       <a href="#">비밀번호 찾기</a>
       <router-link :to="{ name: 'Signup' }" class="gosignup">회원가입</router-link>
-    </div>
-    <div>
+    </article>
+    <article>
       <button id="login_btn" @click="login">로그인</button>
-    </div>
+    </article>
     <button id="google" class="social_login">
       <img id="google" src="../../assets/images/Google__G__Logo.png">
       <p>Google로 로그인</p>
     </button>
-    <div>
+    <article>
       <button id="kakao" class="social_login">
         <img id="kakao" src="../../assets/images/kakao.png">
         <p>Kakao로 로그인</p>
         </button>
-    </div>
+    </article>
   </div>
 </template>
 
@@ -154,8 +154,6 @@ export default {
     background-color: white;
     width: 45vh;
     min-width: 450px;
-    height: 65vh;
-    min-height: 650px;
     border-radius: 20px;
     margin: auto;
     padding: 2rem;
