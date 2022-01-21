@@ -8,11 +8,10 @@ public class UserDto {
     private String email;
     private String pw;
     private String nickname;
-    private Date birth;
+    private String birth;
     private String profileImg;
     private int mood;
     private boolean publish;
-
     public int getNo() {
         return no;
     }
@@ -37,17 +36,11 @@ public class UserDto {
     public void setNickname(String nickname) {
         this.nickname = nickname;
     }
-    public Date getBirth() {
+    public String getBirth() {
         return birth;
     }
-    public void setBirth(Date birth) {
+    public void setBirth(String birth) {
         this.birth = birth;
-    }
-    public int getMood() {
-        return mood;
-    }
-    public void setMood(int mood) {
-        this.mood = mood;
     }
     public String getProfileImg() {
         return profileImg;
@@ -55,15 +48,23 @@ public class UserDto {
     public void setProfileImg(String profileImg) {
         this.profileImg = profileImg;
     }
+    public int getMood() {
+        return mood;
+    }
+    public void setMood(int mood) {
+        this.mood = mood;
+    }
     public boolean isPublish() {
         return publish;
     }
     public void setPublish(boolean publish) {
         this.publish = publish;
     }
+    
     public UserDto() {}
-
-    public UserDto(int no, String email, String pw, String nickname, Date birth, String profileImg, int mood, boolean publish) {
+    public UserDto(int no, String email, String pw, String nickname, String birth, String profileImg, int mood,
+            boolean publish) {
+        super();
         this.no = no;
         this.email = email;
         this.pw = pw;
@@ -73,18 +74,11 @@ public class UserDto {
         this.mood = mood;
         this.publish = publish;
     }
-
     @Override
     public String toString() {
-        return "UserDto{" +
-                "no=" + no +
-                ", email='" + email + '\'' +
-                ", pw='" + pw + '\'' +
-                ", nickname='" + nickname + '\'' +
-                ", birth='" + birth + '\'' +
-                ", profileImg='" + profileImg + '\'' +
-                ", mood=" + mood +
-                ", publish=" + publish +
-                '}';
+        return "UserDto [no=" + no + ", email=" + email + ", pw=" + pw + ", nickname=" + nickname + ", birth=" + birth
+                + ", profileImg=" + profileImg + ", mood=" + mood + ", publish=" + publish + "]";
     }
+
+    
 }
