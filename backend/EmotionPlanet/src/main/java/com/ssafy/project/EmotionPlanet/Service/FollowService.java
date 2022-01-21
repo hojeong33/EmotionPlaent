@@ -10,4 +10,5 @@ public interface FollowService {
 	public List<FollowDto> followingSelect(int no);
 	public int followDelete(FollowDto followDto);
 	public int followUpdate(FollowDto followDto);
+	public int select(int sender, int receiver);
 }
