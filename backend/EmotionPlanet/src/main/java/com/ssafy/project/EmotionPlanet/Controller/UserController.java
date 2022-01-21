@@ -1,10 +1,14 @@
 package com.ssafy.project.EmotionPlanet.Controller;
 
+import com.ssafy.project.EmotionPlanet.Dto.FindEmailDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 import com.ssafy.project.EmotionPlanet.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.mail.SimpleMailMessage;
+import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -16,14 +20,19 @@ public class UserController {
 	@Autowired
 	UserService userService;
 
+	@Autowired
+	private JavaMailSender javaMailSender;
+	
 	private static final int SUCCESS = 1;
 
 	@PostMapping(value = "/users") // 회원가입
 	public ResponseEntity<Integer> register(@RequestBody UserDto userDto) {
-		System.out.println(userDto);
 		if (userService.userRegister(userDto) == SUCCESS) {
+			System.out.println("회원 가입 성공");
+			System.out.println(userDto); 
 			return new ResponseEntity<Integer>(SUCCESS, HttpStatus.OK);
 		} else {
+			System.out.println("회원 가입 실패");
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "가입 양식이 올바르지 않습니다.");
 		}
 	}
@@ -33,42 +42,22 @@ public class UserController {
 		int userNo = Integer.parseInt(no);
 		UserDto userDto = userService.userSelect(userNo);
 		if (userDto != null) {
+			System.out.println("회원 번호 검색 성공");
+			System.out.println(userDto);
 			return new ResponseEntity<UserDto>(userDto, HttpStatus.OK);
 		} else {
+			System.out.println("회원 번호 검색 실패");
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하는 유저가 없습니다.");
-		}
-	}
-
-	@DeleteMapping(value = "/users/{no}")
-	public ResponseEntity<Integer> delete(@PathVariable String no) { //회원 탈퇴 회원 번호로 회원 정보 삭제
-		int userNo = Integer.parseInt(no);
-		if (userService.userDelete(userNo) == SUCCESS) {
-			return new ResponseEntity<Integer>(SUCCESS, HttpStatus.OK);
-		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하는 유저가 없습니다.");
-		}
-	}
-	
-	@PutMapping(value ="/users")
-	public ResponseEntity<Integer> update(@RequestBody UserDto changeuserDto) { //restapi를 이용해서 http 상태코드를 성공 실패여부로 같이 넘겨준다.
-		// 컨트롤에서 서비스 업데이트 호출하면 이때 user dto 두개 넘겨줌
-		
-		UserDto userDto = userService.userSelect(changeuserDto.getNo()); //입력받은 유저 번호로 기존 유저 정보 가져옴	
-		 // 기존 유저 정보와 변경되는 유저 정보를 파라미터로 넘김
-		System.out.println(changeuserDto);
-		System.out.println(userDto);
-		if(userService.userUpdate(userDto, changeuserDto) == SUCCESS) {
-			return new ResponseEntity<Integer>(SUCCESS, HttpStatus.OK);
-		}else {
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "수정할 내용을 확인해 주세요.");
 		}
 	}
 
 	@GetMapping(value = "/users/checkByEmail/{email}") // 이메일 중복검사
 	public ResponseEntity<Integer> duplicateEmail(@PathVariable String email) {
 		if (userService.duplicateEmail(email) == SUCCESS) {
+			System.out.println("이메일 중복 검사 미사용 " + email);
 			return new ResponseEntity<Integer>(SUCCESS, HttpStatus.OK);
 		} else {
+			System.out.println("이메일 중복 검사 사용중 " + email);
 			throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 사용중인 이메일 입니다.");
 		}
 	}
@@ -76,9 +65,79 @@ public class UserController {
 	@GetMapping(value = "/users/checkByNickname/{nickname}") // 닉네임 중복검사
 	public ResponseEntity<Integer> duplicateNickname(@PathVariable String nickname) {
 		if (userService.duplicateNickname(nickname) == SUCCESS) {
+			System.out.println("닉네임 중복 검사 미사용 " + nickname);
 			return new ResponseEntity<Integer>(SUCCESS, HttpStatus.OK);
 		} else {
+			System.out.println("닉네임 중복 검사 사용중 " + nickname);
 			throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 사용중인 닉네임 입니다.");
+		}
+	}
+	
+	@GetMapping(value = "/users/checkByTel/{tel}") // 전화번호 중복검사
+	public ResponseEntity<Integer> duplicateTel(@PathVariable String tel) {
+		if (userService.duplicateTel(tel) == SUCCESS) {
+			System.out.println("전화번호 중복 검사 미사용 " + tel);
+			return new ResponseEntity<Integer>(SUCCESS, HttpStatus.OK);
+		} else {
+			System.out.println("전화번호 중복 검사 사용중 " + tel);
+			throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 사용중인 전화번호 입니다.");
+		}
+	}
+	
+	@PutMapping(value ="/users") //회원 수정
+	public ResponseEntity<Integer> update(@RequestBody UserDto changeuserDto) {
+		UserDto userDto = userService.userSelect(changeuserDto.getNo()); //입력받은 유저 번호로 기존 유저 정보 가져옴	
+		if(userService.userUpdate(userDto, changeuserDto) == SUCCESS) { // 기존정보와 입력받은 정보를 비교해서 새로 갱신
+			System.out.println("회원 수정 성공");
+			System.out.println("수정된 정보 " + changeuserDto); 
+			return new ResponseEntity<Integer>(SUCCESS, HttpStatus.OK);
+		}else {
+			System.out.println("회원 수정 실패");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "수정할 내용을 확인해 주세요.");
+		}
+	}
+	
+	@DeleteMapping(value = "/users/{no}") //회원 탈퇴 회원 번호로 회원 정보 삭제
+	public ResponseEntity<Integer> delete(@PathVariable String no) { 
+		int userNo = Integer.parseInt(no);
+		if (userService.userDelete(userNo) == SUCCESS) {
+			System.out.println("회원 탈퇴 성공");
+			System.out.println("회원 번호" + no);
+			return new ResponseEntity<Integer>(SUCCESS, HttpStatus.OK);
+		} else {
+			System.out.println("회원 탈퇴 실패");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하는 유저가 없습니다.");
+		}
+	}
+	
+	@GetMapping(value = "/users/findEmail/{tel}") // 이메일 찾기
+	public ResponseEntity<String> findemail(@PathVariable String tel) {
+		String email = userService.findEamil(tel);
+		if(email != null) {
+			System.out.println("이메일 찾기 성공");
+			System.out.println("이메일 : "+ email);
+			return new ResponseEntity<String>(email, HttpStatus.OK);
+		} else {
+			System.out.println("이메일 찾기 실패");
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "전화 번호를 확인해 주세요.");
+		}
+	}
+	
+	@PostMapping(value = "/users/findPw") // 비밀번호 찾기
+	public void sendmail(@RequestBody FindEmailDto findEmailDto) {
+		String Pw = userService.findPw(findEmailDto);
+		if(Pw != null) {
+			System.out.println("비밀번호 찾기 성공");
+			SimpleMailMessage simpleMailMessage = new SimpleMailMessage();
+			simpleMailMessage.setTo(findEmailDto.getRequestemail());
+			simpleMailMessage.setSubject("Emotion Planet 비밀번호 안내 메일입니다.");
+			simpleMailMessage.setText("신규 비밀번호 : "+Pw+"\n 로그인 후 비밀번호를 변경해 주세요.");
+			javaMailSender.send(simpleMailMessage);
+			System.out.println("이메일 전송 완료");
+			throw new ResponseStatusException(HttpStatus.OK, "이메일을 확인하세요.");
+		}else {
+			System.out.println("비밀번호 찾기 실패");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하는 유저가 없습니다.");
 		}
 	}
 }
