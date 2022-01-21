@@ -49,9 +49,6 @@
 <script>
 import axios from 'axios'
 export default {
-  beforeCreate: function () {
-    document.body.className = 'astro';
-  },
   name: 'Login',
   data: function () {
     return {
@@ -84,7 +81,7 @@ export default {
 </script>
 
 <style scoped>
-  @import '../../assets/styles/globalstyle.css';
+  @import '../../assets/styles/astrostyle.css';
   
   label {
     color: #5E39B3;
