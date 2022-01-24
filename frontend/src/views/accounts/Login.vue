@@ -25,30 +25,33 @@
         placeholder="비밀번호를 입력해주세요">
       </article>
     </section>
-    <div id="link">
+    <article id="link">
       <a href="#">이메일 찾기</a>
       <a href="#">비밀번호 찾기</a>
       <router-link :to="{ name: 'Signup' }" class="gosignup">회원가입</router-link>
-    </div>
-    <div>
+    </article>
+    <article>
       <button id="login_btn" @click="login">로그인</button>
-    </div>
+    </article>
     <button id="google" class="social_login">
       <img id="google" src="../../assets/images/Google__G__Logo.png">
       <p>Google로 로그인</p>
     </button>
-    <div>
+    <article>
       <button id="kakao" class="social_login">
         <img id="kakao" src="../../assets/images/kakao.png">
         <p>Kakao로 로그인</p>
         </button>
-    </div>
+    </article>
   </div>
 </template>
 
 <script>
 import axios from 'axios'
 export default {
+   beforeCreate: function () {
+    document.body.className = 'astro';
+  },
   name: 'Login',
   data: function () {
     return {
@@ -68,7 +71,6 @@ export default {
       .then(()=>{
         alert("로그인 성공")
         this.$emit('login')
-        this.$router.push({name: 'Test1st'})
       })
       .catch(err=> {
         alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
@@ -81,8 +83,7 @@ export default {
 </script>
 
 <style scoped>
-  @import '../../assets/styles/astrostyle.css';
-  
+  @import '../../assets/styles/globalstyle.css';
   label {
     color: #5E39B3;
     font-weight: bold;
@@ -154,10 +155,8 @@ export default {
     background-color: white;
     width: 45vh;
     min-width: 450px;
-    height: 65vh;
-    min-height: 650px;
     border-radius: 20px;
-    margin: auto;
+    margin: 2rem auto;
     padding: 2rem;
   }
 

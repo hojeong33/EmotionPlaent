@@ -33,7 +33,7 @@
             이메일 형식에 맞춰주세요. 
           </p>
         </span>
-        <span v-if="isValid.validateEmailcheck" class="collect">
+        <span v-if="credentials.email && isValid.validateEmailcheck" class="collect">
           <p>
             사용가능한 이메일입니다.
           </p>
@@ -61,15 +61,31 @@
         <input type="password" 
         id="pw"
         v-model="credentials.pw"
-        @change="pwCheck"
+        @input="pwCheck"
         placeholder="비밀번호는 8자 이상, 20자 이하입니다.">
+        <span v-if="credentials.pw">
+          <p v-if="!isValid.validatePw" class="warn">
+            사용할 수 없는 비밀번호에요.
+          </p>
+          <p v-if="isValid.validatePw" class="collect">
+            사용할 수 있는 비밀번호입니다.
+          </p>
+        </span>
       </article>
       <article id="passwordConfirmation_form">
         <label for="passwordConfirmation">비밀번호 확인</label>
         <input type="password" id="passwordConfirmation"
         v-model="credentials.passwordConfirmation"
-        @change="pwConfirmCheck"
+        @input="pwConfCheck"
         placeholder="비밀번호를 다시 입력해주세요.">
+        <span v-if="credentials.passwordConfirmation">
+          <p v-if="!isValid.validatePwConf" class="warn">
+            비밀번호가 맞지 않아요.
+          </p>
+          <p v-if="isValid.validatePwConf" class="collect">
+            비밀번호가 일치합니다.
+          </p>
+        </span>
       </article>
       <article id="signup_form_personal">
         <div id="personal_form">
@@ -92,6 +108,9 @@
 <script>
   import axios from 'axios'
   export default {
+     beforeCreate: function () {
+    document.body.className = 'astro';
+  },
     name: 'Signup',
     data: function () {
       return {
@@ -112,7 +131,7 @@
       }
     },
     methods: {
-       validateEmail(){
+       validateEmail: function(){
         let regexp =
         /^[0-9a-zA-Z]([-.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
         this.isValid.validateEmail = regexp.test(this.credentials.email) ? true : false; //이메일 형식에 맞으면 true 아니면 false
@@ -149,7 +168,7 @@
         this.credentials.birth ="";
       },
 
-      checkNickname(el){
+      checkNickname: function(el){
         this.credentials.nickname = el.target.value // 한글 입력 이슈 해결하기 위해 사용. 한박자 느린거?
         axios({
             method: 'get',
@@ -163,7 +182,7 @@
           })
       },
 
-      checkEmail(){
+      checkEmail: function(){
           axios({
             method: 'get',
             url: 'http://127.0.0.1:8080/users/checkByEmail/' + this.credentials.email,
@@ -176,7 +195,7 @@
           })
       },
       pwCheck: function(){
-        if (this.pw && this.pw.length < 8 || this.pw.length > 20){
+        if (this.credentials.pw && this.credentials.pw.length >= 8 && this.credentials.pw.length <= 20){
           this.isValid.validatePw = true
         }
         else {
@@ -184,7 +203,7 @@
         }
       },
       pwConfCheck: function(){
-        if (this.passwordConfirmation && this.pw === this.passwordConfirmation){
+        if (this.credentials.passwordConfirmation && this.credentials.pw === this.credentials.passwordConfirmation){
           this.isValid.validatePwConf = true
         }
         else {
@@ -210,7 +229,7 @@
     height: 4vh;
     min-height: 40px;
     padding: 0.75rem;
-    font-size: 1rem;
+    font-size: 1.125rem;
     font-weight: bold;
   }
 
@@ -222,6 +241,7 @@
   }
 
   input::placeholder {
+    font-size: 0.9rem;
     font-weight: initial;
     letter-spacing: -1px;
     text-shadow: none;
@@ -232,7 +252,7 @@
   }
 
   p {
-    margin-left: 0.5rem;
+    margin: 0 0 0 0.5rem;
     font-size: 0.8rem;
   }
 
@@ -265,16 +285,14 @@
     background-color: white;
     width: 45vh;
     min-width: 450px;
-    height: 80vh;
-    min-height: 850px;
-    margin: auto;
+    margin: 2rem auto;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
     justify-content: flex-start;
     align-items: center;
     border-radius: 20px;
-    padding: 2rem;
+    padding: 3rem 2rem 1.5rem;
   }
 
   #signup_header {
@@ -308,7 +326,7 @@
   }
 
   #signup_form h1, article {
-    margin-bottom: 1.25rem;
+    margin-bottom: 1rem;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -348,6 +366,7 @@
     padding: 0.5rem 2rem;
     width: 25vh;
     min-width: 250px;
+    margin-bottom: 0;
   }
 
   ::-webkit-calendar-picker-indicator {

@@ -4,17 +4,32 @@
 
 	<insert id="userRegister"
 		parameterType="com.ssafy.project.EmotionPlanet.Dto.UserDto">
-		insert into user(email, pw, nickname, birth)
-		values (
-		#{email}, #{pw}, #{nickname}, #{birth} )
+		insert into user(email, pw, nickname, birth, tel)
+		values (#{email}, #{pw}, #{nickname}, #{birth}, #{tel})
 	</insert>
-
+	
+	
 	<select id="userSelect" parameterType="int"
 		resultType="com.ssafy.project.EmotionPlanet.Dto.UserDto">
-		select no, email, pw, nickname, birth, profile_img as
+		select no, email, pw, nickname, tel, birth, profile_img as
 		profileImg, publish
 		from user
 		where no = #{no}
+	</select>
+	
+	<select id="findPw" parameterType="String"
+		resultType="com.ssafy.project.EmotionPlanet.Dto.UserDto">
+		select no, email, pw, nickname, tel, birth, profile_img as
+		profileImg, publish
+		from user
+		where email = #{email} and tel = #{tel}
+	</select>
+	
+	<select id="findEamil" parameterType="String"
+		resultType="String">
+		select email
+		from user
+		where tel = #{tel}
 	</select>
 
 	<select id="duplicateEmail" parameterType="String"
@@ -30,8 +45,21 @@
 		from user
 		where nickname = #{nickname}
 	</select>
+	
+	<select id="duplicateTel" parameterType="String"
+		resultType="int">
+		select count(*)
+		from user
+		where tel = #{tel}
+	</select>
 
 	<delete id="userDelete" parameterType="int">
+		delete from follow 
+		where sender = #{no};
+		
+		delete from follow 
+		where receiver = #{no};
+	
 		delete from user where
 		no = #{no};
 	</delete>
@@ -40,7 +68,7 @@
 		parameterType="com.ssafy.project.EmotionPlanet.Dto.UserDto">
 		update user
 		set pw = #{pw}, nickname = #{nickname} ,profile_img = #{profileImg} , mood
-		= #{mood} , publish = #{publish} 
+		= #{mood} , publish = #{publish} , tel = #{tel}
 		where no = #{no}
 	</update> 
 </mapper>

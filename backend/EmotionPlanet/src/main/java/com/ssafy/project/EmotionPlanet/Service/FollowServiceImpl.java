@@ -54,4 +54,12 @@ public class FollowServiceImpl implements FollowService {
 			return FAIL;
 	}
 
+	@Override
+	public int select(int sender, int receiver) {
+		if(followDao.select(sender, receiver) != null)
+			return SUCCESS;
+		else
+			return FAIL;
+	}
+
 }
