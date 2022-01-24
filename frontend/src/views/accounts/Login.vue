@@ -156,7 +156,7 @@ export default {
     width: 45vh;
     min-width: 450px;
     border-radius: 20px;
-    margin: auto;
+    margin: 2rem auto;
     padding: 2rem;
   }
 
