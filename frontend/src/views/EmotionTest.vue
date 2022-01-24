@@ -12,13 +12,28 @@
 				:keyword="keyword" @delete_keyword="deleteKeyword" />
 			</article>
 		</section>
-		<section id="test_keywords">
-			<test-keyword v-for="(keyword, idx) in paginated_keywords" :key="idx" 
-			:keyword="keyword" @checked="select" />
+		<section id="test_keywords_container">
+			<transition-group id="test_keywords" :name="page - before_page > 0 ? 'slide':'slide-reverse'">
+				<article class="test_page" v-show="page == 1" key="page_1">
+					<test-keyword v-for="keyword in keywords.slice(0, 12)" :key="keyword" 
+					:keyword="keyword" @checked="check" :ref="keyword"/>
+				</article>
+				<article class="test_page" v-show="page == 2" key="page_2">
+					<test-keyword v-for="keyword in keywords.slice(12, 24)" :key="keyword" 
+					:keyword="keyword" @checked="check" :ref="keyword"/>
+				</article>
+				<article class="test_page" v-show="page == 3" key="page_3">
+					<test-keyword v-for="keyword in keywords.slice(24, )" :key="keyword" 
+					:keyword="keyword" @checked="check" :ref="keyword"/>
+				</article>
+			</transition-group>
 			<article id="paginator_container">
-				<button @click="page = 1" class="paginator" :class="{ 'active_paginator' : page == 1 }"></button>
-				<button @click="page = 2" class="paginator" :class="{ 'active_paginator' : page == 2 }"></button>
-				<button @click="page = 3" class="paginator" :class="{ 'active_paginator' : page == 3 }"></button>
+				<button @click="before_page = page; page = 1" class="paginator" 
+				:class="{ 'active_paginator' : page == 1 }"></button>
+				<button @click="before_page = page; page = 2" class="paginator" 
+				:class="{ 'active_paginator' : page == 2 }"></button>
+				<button @click="before_page = page; page = 3" class="paginator" 
+				:class="{ 'active_paginator' : page == 3 }"></button>
 			</article>
 		</section>
 		<section id="buttons">
@@ -39,6 +54,7 @@ export default {
 	data: function(){
 		return {
 			page: 1,
+			before_page: null,
 			keywords: [
 				'겁나다', '긴박하다', '긴장되다', '두렵다', '무섭다', '무시무시하다',
 				'가뿐하다', '감개무량하다', '감격하다', '감동하다', '감미롭다', '감복하다',
@@ -55,30 +71,36 @@ export default {
 		SelectedKeyword
 	},
 	methods: {
-		select: function(keyword){
-			let idx = this.selected.indexOf(keyword)
+		check: function(keyword){
+			const idx = this.selected.indexOf(keyword)
 
 			if (idx != -1){
-				this.selected.splice(idx, idx+1)
+				this.selected.splice(idx, 1)
 			}
 			else {
 				this.selected.push(keyword)
 			}
-			console.log(this.selected)
 		},
 		deleteKeyword: function(keyword){
-			let idx = this.selected.indexOf(keyword)
+			const idx = this.selected.indexOf(keyword)
 
 			if (idx != -1){
-				this.selected.splice(idx, idx+1)
+				this.selected.splice(idx, 1)
 			}
+			this.$refs[keyword][0].isChecked = false
 			console.log(this.selected)
 		}
 	},
 	computed: {
-		paginated_keywords: function(){
-			return this.keywords.slice(12 * (this.page -1), 12 * this.page)
-		}
+		keywords_info: function(){
+			console.log('hi')
+			let informs = []
+
+			this.keywords.forEach(keyword => {
+				informs.push([keyword, false])
+			})
+			return informs
+		},
 	},
 	created: function(){
 		this.keywords = this.keywords.sort(() => Math.random() - 0.5)
@@ -161,7 +183,7 @@ export default {
 		flex-wrap: nowrap;
 	}
 
-	#test_keywords {
+	#test_keywords_container {
 		width: 100%;
 		display: flex;
 		justify-content: center;
@@ -169,6 +191,51 @@ export default {
 		padding: 1rem;
 		border-bottom: 1px #5E39B3 solid;
 		margin-bottom: 2rem;
+	}
+
+	#test_keywords {
+		width: 100%;
+		height: 24vh;
+		display: flex;
+		justify-content: center;
+		flex-wrap: wrap;
+		padding: 1rem;
+		position: relative;
+		overflow: hidden;
+	}
+
+  .test_page {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+		position: absolute;
+		width: 100%;
+  }
+
+	@keyframes slide-in {
+		from { right: -100% }
+		to { right: 0 }
+	}
+
+	@keyframes slide-out {
+		from { right: 0 }
+		to { right: 100% }
+	}
+
+  .slide-enter-active {
+		animation: slide-in 1s ease-in-out;
+	}
+
+	.slide-leave-active {
+		animation: slide-out 1s ease-in-out;
+	}
+
+	.slide-reverse-enter-active {
+		animation: slide-out 1s ease-in-out reverse;
+	}
+
+	.slide-reverse-leave-active {
+		animation: slide-in 1s ease-in-out reverse;
 	}
 
 	#paginator_container {

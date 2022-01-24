@@ -1,7 +1,7 @@
 <template>
   <button id="emotion_btn" @click="check"
   :class="isChecked ? 'checked' : 'blank'">
-    {{ keyword }}
+    {{ this.keyword }}
   </button>
 </template>
 
@@ -18,7 +18,6 @@ export default {
   methods: {
     check: function(){
       this.isChecked = !this.isChecked
-
       this.$emit('checked', this.keyword)
     }
   }
