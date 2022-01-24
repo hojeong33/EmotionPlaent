@@ -33,6 +33,9 @@ import TestKeyword from '@/components/EmotionTest/EmotionKeyword'
 import SelectedKeyword from '@/components/EmotionTest/SelectedKeyword'
 
 export default {
+	beforeCreate: function () {
+    document.body.className = 'astro';
+  },
 	data: function(){
 		return {
 			page: 1,
