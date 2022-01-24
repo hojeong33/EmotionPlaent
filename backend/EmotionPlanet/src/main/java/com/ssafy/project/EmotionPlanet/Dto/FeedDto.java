@@ -1,6 +1,7 @@
 package com.ssafy.project.EmotionPlanet.Dto;
 
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.beans.Transient;
 import java.time.LocalDateTime;
@@ -83,6 +84,7 @@ public class FeedDto {
         this.imgs = imgs;
     }
 
+
     public FeedDto() {
     }
 
@@ -92,8 +94,6 @@ public class FeedDto {
         this.author = author;
         this.date = date;
     }
-
-
 
     @Override
     public String toString() {

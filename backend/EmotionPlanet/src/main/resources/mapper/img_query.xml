@@ -19,4 +19,8 @@
         where i.no = #{no}
     </select>
 
+    <insert id="relation" parameterType="map">
+        insert into feed_img(feedNo, imgNo) values (  #{feedNo}, #{imgNo})
+    </insert>
+
 </mapper>

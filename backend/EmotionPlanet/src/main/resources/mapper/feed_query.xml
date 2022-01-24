@@ -3,37 +3,40 @@
 <mapper namespace="com.ssafy.project.EmotionPlanet.Dao.FeedDao">
 
     <select id="list" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.FeedDto">
-        select f.no, f.desc, f.author, f.date
+        select f.no, f.descr, f.author, f.date
         from feed f
         where f.author = (
                             select fo.no
                             from follow fo
                             where fo.sender = #{no}
                           ) and f.date between date_add(now(),interval -1 week ) and now()
-        order by date desc
+        order by date descr
     </select>
 
     <select id="myList" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.FeedDto">
-        select f.no, f.desc, f.author, f.date
+        select f.no, f.descr, f.author, f.date
         from feed f
         where f.author = #{no}
-        order by date desc
+        order by date descr
     </select>
 
     <select id="read" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.FeedDto">
-        select f.no, f.desc, f.author, f.date
+        select f.no, f.descr, f.author, f.date
         from feed f
         where f.no = #{no}
     </select>
 
     <insert id="write" parameterType="com.ssafy.project.EmotionPlanet.Dto.FeedDto">
-        insert into feed(desc, author)
-        values (  #{desc}, #{author})
+        insert into feed(descr, author)
+        values (  #{descr}, #{author})
+        <selectKey keyProperty="no" resultType="int" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
     </insert>
 
     <update id="update" parameterType="com.ssafy.project.EmotionPlanet.Dto.FeedDto">
         update feed
-            set desc = #{desc}
+            set descr = #{descr}
             author = #{author}
             date = #{date}
         where no = #{no}
