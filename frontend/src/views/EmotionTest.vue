@@ -99,39 +99,39 @@ export default {
 	}
 
 	label {
-    color: #5E39B3;
-    font-size: 1.125rem;
-    font-weight: bold;
+		color: #5E39B3;
+		font-size: 1.125rem;
+		font-weight: bold;
 		letter-spacing: -0.5px;
-    margin-left: 0.5rem;
-  }
+		margin-left: 0.5rem;
+	}
 
 	button {
-    background-color: #5E39B3;
-    color: white;
-    font-size: 1.125rem;
-    font-weight: bold;
-		border: 3px #5E39B3 solid;
-    border-radius: 20px;
-    padding: 0.4rem 1.125rem;
-    margin-bottom: 1.125rem;
-    cursor: pointer;
-		line-height: 2rem;
-  }
+		background-color: #5E39B3;
+		color: white;
+		font-size: 1.125rem;
+		font-weight: bold;
+			border: 3px #5E39B3 solid;
+		border-radius: 20px;
+		padding: 0.4rem 1.125rem;
+		margin-bottom: 1.125rem;
+		cursor: pointer;
+			line-height: 2rem;
+	}
 
 	#test_container {
 		background-color: white;
 		width: 75vh;
-    min-width: 750px;
-    margin: 2rem auto;
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
-    justify-content: flex-start;
-    align-items: center;
-    border-radius: 20px;
-    padding: 3rem 4rem 1.5rem;
-	}
+		min-width: 750px;
+		margin: 2rem auto;
+		display: flex;
+		flex-direction: column;
+		flex-wrap: nowrap;
+		justify-content: flex-start;
+		align-items: center;
+		border-radius: 20px;
+		padding: 3rem 4rem 1.5rem;
+		}
 
 	#test_header {
 		display: flex;
