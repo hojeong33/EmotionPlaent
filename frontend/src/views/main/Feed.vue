@@ -1,15 +1,16 @@
 <template>
-  <div id="background">
-
+  <div>
+      <h1>피드</h1>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'Test1st',
+ 
+
 }
 </script>
 
-<style>
-  
+<style scoped>
+
 </style>

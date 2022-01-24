@@ -49,6 +49,9 @@
 <script>
 import axios from 'axios'
 export default {
+   beforeCreate: function () {
+    document.body.className = 'astro';
+  },
   name: 'Login',
   data: function () {
     return {
@@ -68,7 +71,6 @@ export default {
       .then(()=>{
         alert("로그인 성공")
         this.$emit('login')
-        this.$router.push({name: 'Test1st'})
       })
       .catch(err=> {
         alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
@@ -81,8 +83,7 @@ export default {
 </script>
 
 <style scoped>
-  @import '../../assets/styles/astrostyle.css';
-  
+  @import '../../assets/styles/globalstyle.css';
   label {
     color: #5E39B3;
     font-weight: bold;
