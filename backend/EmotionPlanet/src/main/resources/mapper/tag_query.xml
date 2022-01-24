@@ -4,12 +4,8 @@
 
     <select id="list" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.TagDto">
         select t.no, t.name, t.type
-        from tag t
-        where t.no = (
-                        select tagNo
-                        from feed_tag ft
-                        where ft.feedNo = #{feedNo}
-                        )
+        from tag t, feed_tag ft
+        where t.no = ft.tagNo and ft.feedNo = #{feedNo}
     </select>
 
     <select id="select" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.TagDto">

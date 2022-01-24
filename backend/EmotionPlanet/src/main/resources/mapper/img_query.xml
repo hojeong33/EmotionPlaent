@@ -4,13 +4,9 @@
 
     <select id="list" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.ImgDto">
         select i.no, i.imgLink, i.imgName
-        from img i
-        where i.no = (
-                        select imgNo
-                        from feed_img fi
-                        where fi.feedNo = #{feedNo}
-                    )
-        order by i.no descr
+        from img i, feed_img fi
+        where i.no = fi.imgNo and fi.feedNo = #{feedNo}
+        order by i.no desc
     </select>
 
     <select id="select" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.ImgDto">

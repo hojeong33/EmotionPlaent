@@ -10,14 +10,14 @@
                             from follow fo
                             where fo.sender = #{no}
                           ) and f.date between date_add(now(),interval -1 week ) and now()
-        order by date descr
+        order by date desc
     </select>
 
     <select id="myList" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.FeedDto">
         select f.no, f.descr, f.author, f.date
         from feed f
         where f.author = #{no}
-        order by date descr
+        order by date desc
     </select>
 
     <select id="read" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.FeedDto">
