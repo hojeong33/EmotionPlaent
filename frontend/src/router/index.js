@@ -4,8 +4,8 @@ import Login from '@/views/accounts/Login.vue'
 import Signup from '@/views/accounts/Signup.vue'
 import EmotionTest from '@/views/EmotionTest'
 import Mypage from '@/views/accounts/Mypage.vue'
-import Recommend from '@/views/main/Recommend.vue'
-import Feed from '@/views/main/Feed.vue'
+import Recommend from '@/components/MainPage/RecommendTab/Recommend.vue'
+import Feed from '@/components/MainPage/FeedTab/Feed.vue'
 import Main from '@/views/main/Main.vue'
 
 Vue.use(VueRouter)

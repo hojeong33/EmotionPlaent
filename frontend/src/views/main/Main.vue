@@ -1,46 +1,48 @@
 <template>
     <div>
         <div><navigation></navigation></div>
-            <div class="container justify-content-center">
-                <div class="v1"></div>
-                <div class="example">
-                    <div class="tabs">
-                    <TabItem
-                    v-for="item in list"
-                    v-bind="item" :key="item.id"
-                    v-model="currentId"/>
-                    </div>
-                    <div class="contents">
-                        <transition>
-                            <section class="item" :key="currentId">
-                                {{ current.content }}
-                                <recommend></recommend>
-                                <feed></feed>
-                            </section>
-                        </transition>
-                    </div>
-                </div>
-                <div class="v1"></div>
-            </div>
-
+          <div class="container justify-content-center">
+              <div class="v1"></div>
+              <div class="example">
+                  <div class="tabs">
+                  <TabItem
+                  v-for="item in list"
+                  v-bind="item" :key="item.id"
+                  v-model="currentId"/>
+                  </div>
+                  <div class="contents">
+                      <transition>
+                          <section class="item" :key="currentId">
+                            <div v-if="current.content=='1'">
+                              <recommend></recommend>
+                            </div>
+                            <div v-else>
+                              <feed></feed>
+                            </div>
+                          </section>
+                      </transition>
+                  </div>
+              </div>
+              <div class="v1"></div>
+          </div>
     </div>
  
 </template>
 
 <script>
 import TabItem from './TabItem.vue'
-import Recommend from './Recommend.vue'
-import Feed from './Feed.vue'
+import Recommend from '../../components/MainPage/RecommendTab/Recommend.vue'
+import Feed from '../../components/MainPage/FeedTab/Feed.vue'
 import Navigation from '../../components/Navigation.vue'
 export default {
-    components: { TabItem, Recommend, Feed, Navigation },
-    // components: {  Navigation },
+  name:'Main',
+  components: { TabItem, Recommend, Feed, Navigation },
   data() {
      return {
       currentId: 1,
       list: [
-        { id: 1, label: '추천', content: '콘텐츠1' },
-        { id: 2, label: '피드', content: '콘텐츠2' },
+        { id: 1, label: '추천', content: '1' },
+        { id: 2, label: '피드', content: '2' },
       ]
     }
   },
@@ -54,27 +56,24 @@ export default {
 
 <style scoped>
     .v1 {
-    display: flexbox;
-    border-left: 1px solid black;
-    height: 100vh;
-    /* margin-left: 25%; */
-    }
-    .v2 {
     display: flex;
-    border-left: 1px solid black;
-    height: 500px;
-    margin-left: 70%;
+    /* border-left: 1px solid gainsboro; */
+    min-height: 100vh;
+    /* margin-left: 25%; */
     }
     .contents {
     position: relative;
     overflow: hidden;
     width: 100vh;
-    height: 100vh;
-    border: 2px solid #000;
+    min-height: 100vh;
+    border: 2px solid gainsboro;
     }
     .item {
-    box-sizing: border-box;
-    padding: 10px;
+    display:flex;
+    flex-direction: column;
+    /* box-sizing: border-box; */
+    align-items: stretch;
+    /* padding: 10px; */
     width: 100%;
     transition: all 0.8s ease;
     }
