@@ -1,9 +1,7 @@
 package com.ssafy.project.EmotionPlanet.Service;
 
-import com.ssafy.project.EmotionPlanet.Dao.CommentDao;
-import com.ssafy.project.EmotionPlanet.Dao.FeedDao;
-import com.ssafy.project.EmotionPlanet.Dto.CommentDto;
-import com.ssafy.project.EmotionPlanet.Dto.FeedDto;
+import com.ssafy.project.EmotionPlanet.Dao.*;
+import com.ssafy.project.EmotionPlanet.Dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -18,13 +16,23 @@ public class FeedServiceImpl implements FeedService{
     @Autowired
     CommentDao commentDao;
 
+    @Autowired
+    TagDao tagDao;
+
+    @Autowired
+    ImgDao imgDao;
+
     @Override
     public List<FeedDto> list(int no) {
 
         List<FeedDto> feeds = feedDao.list(no);
         for(FeedDto feed : feeds){
             List<CommentDto> comments = commentDao.list(feed.getNo());
+            List<TagDto> tags = tagDao.list(feed.getNo());
+            List<ImgDto> imgs = imgDao.list(feed.getNo());
             feed.setComments(comments);
+            feed.setTags(tags);
+            feed.setImgs(imgs);
         }
 
         return feeds;
@@ -36,7 +44,11 @@ public class FeedServiceImpl implements FeedService{
         List<FeedDto> feeds = feedDao.myList(no);
         for(FeedDto feed : feeds){
             List<CommentDto> comments = commentDao.list(feed.getNo());
+            List<TagDto> tags = tagDao.list(feed.getNo());
+            List<ImgDto> imgs = imgDao.list(feed.getNo());
             feed.setComments(comments);
+            feed.setTags(tags);
+            feed.setImgs(imgs);
         }
 
         return feeds;
@@ -45,9 +57,13 @@ public class FeedServiceImpl implements FeedService{
     @Override
     public FeedDto read(int no) {
 
-        List<CommentDto> comments = commentDao.list(no);
         FeedDto feed = feedDao.read(no);
+        List<CommentDto> comments = commentDao.list(feed.getNo());
+        List<TagDto> tags = tagDao.list(feed.getNo());
+        List<ImgDto> imgs = imgDao.list(feed.getNo());
         feed.setComments(comments);
+        feed.setTags(tags);
+        feed.setImgs(imgs);
         return feed;
 
     }
@@ -59,6 +75,8 @@ public class FeedServiceImpl implements FeedService{
 
     @Override
     public int update(FeedDto feedDto) {
+        
+
         return feedDao.update(feedDto);
     }
 

@@ -14,6 +14,10 @@ public class FeedDto {
     private LocalDateTime date;
 
     private List<CommentDto> comments;
+    private List<FeedLikeDto> likes;
+    private List<TagDto> tags;
+    private List<ImgDto> imgs;
+
 
     public int getNo() {
         return no;
@@ -21,14 +25,6 @@ public class FeedDto {
 
     public void setNo(int no) {
         this.no = no;
-    }
-
-    public String getdescr() {
-        return descr;
-    }
-
-    public void setdescr(String descr) {
-        this.descr = descr;
     }
 
     public int getAuthor() {
@@ -53,6 +49,38 @@ public class FeedDto {
 
     public void setComments(List<CommentDto> comments) {
         this.comments = comments;
+    }
+
+    public String getDescr() {
+        return descr;
+    }
+
+    public void setDescr(String descr) {
+        this.descr = descr;
+    }
+
+    public List<FeedLikeDto> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<FeedLikeDto> likes) {
+        this.likes = likes;
+    }
+
+    public List<TagDto> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagDto> tags) {
+        this.tags = tags;
+    }
+
+    public List<ImgDto> getImgs() {
+        return imgs;
+    }
+
+    public void setImgs(List<ImgDto> imgs) {
+        this.imgs = imgs;
     }
 
     public FeedDto() {

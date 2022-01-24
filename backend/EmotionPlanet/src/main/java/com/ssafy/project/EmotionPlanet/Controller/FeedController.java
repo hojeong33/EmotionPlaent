@@ -68,7 +68,7 @@ public class FeedController {
         }
     }
 
-    @PutMapping(value ="/feeds") // 글 작성
+    @PutMapping(value ="/feeds") // 글 수정
     public ResponseEntity<Integer> update(@RequestBody FeedDto feedDto) {
         int result = feedService.update(feedDto);
         if(result == SUCCESS) {

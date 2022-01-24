@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.project.EmotionPlanet.Dao.ImgDao">
+
+    <select id="list" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.ImgDto">
+        select i.no, i.imgLink, i.imgName
+        from img i
+        where i.no = (
+                        select imgNo
+                        from feed_img fi
+                        where fi.feedNo = #{feedNo}
+                    )
+        order by i.no descr
+    </select>
+
+    <select id="select" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.ImgDto">
+        select i.no, i.imgLink, i.imgName
+        from img i
+        where i.no = #{no}
+    </select>
+
+</mapper>
