@@ -1,8 +1,5 @@
 package com.ssafy.project.EmotionPlanet.Dto;
 
-import org.springframework.transaction.annotation.Transactional;
-
-import java.beans.Transient;
 import java.time.LocalDateTime;
 import java.util.List;
 

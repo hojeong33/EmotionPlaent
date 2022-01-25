@@ -54,12 +54,6 @@
 	</select>
 
 	<delete id="userDelete" parameterType="int">
-		delete from follow 
-		where sender = #{no};
-		
-		delete from follow 
-		where receiver = #{no};
-	
 		delete from user where
 		no = #{no};
 	</delete>

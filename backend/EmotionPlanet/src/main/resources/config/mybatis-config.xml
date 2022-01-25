@@ -13,6 +13,7 @@
         <mapper resource="mapper/user_query.xml" />
 
         <mapper resource="mapper/follow_query.xml" />
+        <mapper resource="mapper/search_query.xml" />
 
         <mapper resource="mapper/feed_query.xml" />
         <mapper resource="mapper/comment_query.xml" />
