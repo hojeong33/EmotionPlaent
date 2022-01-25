@@ -63,6 +63,7 @@ export default {
     height: 30vh;
     min-height: 450px;
     padding: 2rem;
+    margin-left: 17rem;
   }
 
   #profile_card {
