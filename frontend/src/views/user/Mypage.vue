@@ -26,12 +26,10 @@
 <script>
 import SideProfileCard from '../../components/SideProfileCard.vue'
 import Navigation from '../../components/Navigation.vue'
+import TabItem from './TabItem.vue'
 export default {
   name: 'Mypage',
-  components: {
-    SideProfileCard,
-    Navigation,
-  }
+  components: {SideProfileCard, Navigation, TabItem},
 }
 </script>
 
