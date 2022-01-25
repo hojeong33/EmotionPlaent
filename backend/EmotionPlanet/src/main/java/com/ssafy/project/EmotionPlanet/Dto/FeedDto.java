@@ -1,6 +1,7 @@
 package com.ssafy.project.EmotionPlanet.Dto;
 
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.beans.Transient;
 import java.time.LocalDateTime;
@@ -9,11 +10,15 @@ import java.util.List;
 public class FeedDto {
 
     private int no;
-    private String desc;
+    private String descr; //내용
     private int author;
+    private List<TagDto> tags;
     private LocalDateTime date;
 
     private List<CommentDto> comments;
+    private List<FeedLikeDto> likes;
+    private List<ImgDto> imgs;
+
 
     public int getNo() {
         return no;
@@ -21,14 +26,6 @@ public class FeedDto {
 
     public void setNo(int no) {
         this.no = no;
-    }
-
-    public String getDesc() {
-        return desc;
-    }
-
-    public void setDesc(String desc) {
-        this.desc = desc;
     }
 
     public int getAuthor() {
@@ -55,23 +52,54 @@ public class FeedDto {
         this.comments = comments;
     }
 
+    public String getDescr() {
+        return descr;
+    }
+
+    public void setDescr(String descr) {
+        this.descr = descr;
+    }
+
+    public List<FeedLikeDto> getLikes() {
+        return likes;
+    }
+
+    public void setLikes(List<FeedLikeDto> likes) {
+        this.likes = likes;
+    }
+
+    public List<TagDto> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<TagDto> tags) {
+        this.tags = tags;
+    }
+
+    public List<ImgDto> getImgs() {
+        return imgs;
+    }
+
+    public void setImgs(List<ImgDto> imgs) {
+        this.imgs = imgs;
+    }
+
+
     public FeedDto() {
     }
 
-    public FeedDto(int no, String desc, int author, LocalDateTime date) {
+    public FeedDto(int no, String descr, int author, LocalDateTime date) {
         this.no = no;
-        this.desc = desc;
+        this.descr = descr;
         this.author = author;
         this.date = date;
     }
-
-
 
     @Override
     public String toString() {
         return "FeedDto{" +
                 "no=" + no +
-                ", desc='" + desc + '\'' +
+                ", descr='" + descr + '\'' +
                 ", author=" + author +
                 ", date=" + date +
                 '}';

@@ -20,7 +20,13 @@ public class CommentServiceImpl implements CommentService{
 
     @Override
     public int write(CommentDto commentDto) {
-        return commentDao.write(commentDto);
+        int result = commentDao.write(commentDto);
+
+        if(result == 1) {
+            int commentNo = commentDto.getNo();
+            int feedNo = commentDto.getFeedNo();
+            return commentDao.relation(commentNo, feedNo);
+        } else return result;
     }
 
     @Override
@@ -32,4 +38,5 @@ public class CommentServiceImpl implements CommentService{
     public int delete(int no) {
         return commentDao.delete(no);
     }
+
 }

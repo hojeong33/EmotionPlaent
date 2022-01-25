@@ -3,24 +3,27 @@
 <mapper namespace="com.ssafy.project.EmotionPlanet.Dao.CommentDao">
 
     <select id="list" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.CommentDto">
-        select co.no, co.desc, co.author, co.date
-        from comment co
-        where co.no = (
-                        select commentNo
-                        from feed_comment fc
-                        where fc.feedNo = #{no}
-                       )
+        select co.no, co.descr, co.author, co.date
+        from comment co, feed_comment fc
+        where co.no = fc.commentNo and fc.feedNo = #{feedNo}
         order by date desc
     </select>
 
     <insert id="write" parameterType="com.ssafy.project.EmotionPlanet.Dto.CommentDto">
-        insert into comment(desc, author)
-        values (  #{desc}, #{author})
+        insert into comment(descr, author) values (  #{descr}, #{author})
+        <selectKey keyProperty="no" resultType="int" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+
+    <insert id="relation" parameterType="map">
+        insert into feed_comment(feedNo, commentNo) values (  #{feedNo}, #{commentNo})
     </insert>
 
     <update id="update" parameterType="com.ssafy.project.EmotionPlanet.Dto.CommentDto">
         update comment
-        set desc = #{desc}
+        set descr = #{descr}
         author = #{author}
         date = #{date}
         where no = #{no}
