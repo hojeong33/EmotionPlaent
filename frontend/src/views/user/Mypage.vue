@@ -2,23 +2,32 @@
   <div>
     <navigation></navigation>
     <side-profile-card></side-profile-card>
+    
     <div id="container">
-      <div id="v1"></div>
       <div id="profile_container">
-        <img src="../../assets/images/profile.png" id="profile_img">
+        <img src="../../assets/images/icons/profile.png" id="profile_img">
         <div id="profile_card">
           <div id="name_card">
-            <h1>최강상후</h1>
+            <h1>{{ userinfo.username }}</h1>
             <button>프로필 수정</button>
           </div>
           <div id="info_card">
-            <h3>게시글</h3>
-            <h3>팔로워</h3>
-            <h3>팔로잉</h3>
+            <h3>게시글 {{ userinfo.posts }}</h3>
+            <h3>팔로워 {{ userinfo.followings }}</h3>
+            <h3>팔로잉 {{ userinfo.followers }}</h3>
           </div>
         </div>
+        
       </div>
-      <div id="v2"></div>
+      <div id="tab">
+        <span id="dot">
+        </span>
+        <span id="tab_names">
+          <p>게시글</p>
+          <p>찜목록</p>
+        </span>
+      </div>
+      <tabs></tabs>
     </div>
   </div>  
 </template>
@@ -26,46 +35,49 @@
 <script>
 import SideProfileCard from '../../components/SideProfileCard.vue'
 import Navigation from '../../components/Navigation.vue'
-import TabItem from './TabItem.vue'
+import Tabs from './Tabs.vue'
 export default {
   name: 'Mypage',
-  components: {SideProfileCard, Navigation, TabItem},
+  components: {SideProfileCard, Navigation, Tabs},
+  data() {
+    return {
+      userinfo: {
+      username: '최강상후',
+      posts: 0,
+      followings: 0,
+      followers: 20100,
+      },
+      postlist: [],
+      picklist: [],
+    }
+  }
 }
 </script>
 
 <style>
   #container {
-    display: flex;
-    flex-direction: row;
-    justify-content: center;
-  }
-
-  #v1 {
-    display: flex;
-    border: 1px solid gainsboro;
+    width: 100vh;
     min-height: 100vh;
-  }
-  
-  #v2 {
+    margin: auto;
+    border-left: 0.1rem solid gainsboro;
+    border-right: 0.1rem solid gainsboro;
     display: flex;
-    border: 1px solid gainsboro;
-    min-height: 100vh;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
   }
 
   #profile_container {
     display: flex;
     flex-direction: row;
+    justify-content: center;
     background-color: white;
-    width: 100vh;
-    min-width: 350px;
-    height: 30vh;
-    min-height: 450px;
+    width: 100%;
     padding: 2rem;
-    margin-left: 20rem;
   }
 
   #profile_card {
-    width: 500px;
+    width: 50%;
     margin-left: 1rem;
   }
 
@@ -74,15 +86,12 @@ export default {
     direction: row;
     justify-content: space-between;
     align-items: center;
-    margin-top: 10px;
-    margin-right: 10rem;
   }
   
   #info_card {
     display: flex;
     direction: row;
     justify-content: space-between;
-    margin-right: 10rem;
   }
   
   #card {
@@ -141,6 +150,32 @@ export default {
   padding: 0.75rem;
   font-size: 1rem;
   font-weight: bold;
+  }
+
+  #tab {
+    display: flex;
+    justify-content: center;
+    position: relative;
+    border-top: 0.1rem solid gainsboro;
+    width: 100%;
+  }
+
+  #dot {
+    width: 25px;
+    height: 25px;
+    border-radius: 50%;
+    position: absolute;
+    top: -28%;
+    left: 43%;
+    background-color: #5E39B3;
+  }
+
+  #tab_names {
+    margin-top: 2%;
+    width: 17%;
+    display: flex;
+    direction: row;
+    justify-content: space-between;
   }
 
   </style>
