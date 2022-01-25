@@ -10,13 +10,13 @@ import java.util.List;
 public class FeedDto {
 
     private int no;
-    private String descr;
+    private String descr; //내용
     private int author;
+    private List<TagDto> tags;
     private LocalDateTime date;
 
     private List<CommentDto> comments;
     private List<FeedLikeDto> likes;
-    private List<TagDto> tags;
     private List<ImgDto> imgs;
 
 
