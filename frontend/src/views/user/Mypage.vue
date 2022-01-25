@@ -63,11 +63,12 @@ export default {
     height: 30vh;
     min-height: 450px;
     padding: 2rem;
-    margin-left: 17rem;
+    margin-left: 20rem;
   }
 
   #profile_card {
     width: 500px;
+    margin-left: 1rem;
   }
 
   #name_card {
@@ -102,7 +103,6 @@ export default {
   color: black;
   font-size: 2rem;
   font-weight: bold;
-  margin-bottom: 2rem;
   }
 
   h3 {
