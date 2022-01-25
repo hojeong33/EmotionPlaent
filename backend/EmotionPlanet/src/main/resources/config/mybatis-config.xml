@@ -18,6 +18,8 @@
         <mapper resource="mapper/feed_query.xml" />
         <mapper resource="mapper/comment_query.xml" />
         <mapper resource="mapper/S3_query.xml" />
+        <mapper resource="mapper/tag_query.xml" />
+        <mapper resource="mapper/img_query.xml" />
 
     </mappers>
 

@@ -11,5 +11,4 @@ public interface CommentService {
     public int update(CommentDto commentDto);
     public int delete(int no);
 
-    public int relation(int commentNo, int feedNo);
 }
