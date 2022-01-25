@@ -7,6 +7,9 @@ import Mypage from '@/views/accounts/Mypage.vue'
 import Recommend from '@/views/main/Recommend.vue'
 import Feed from '@/views/main/Feed.vue'
 import Main from '@/views/main/Main.vue'
+import CreateImg from '@/views/create/CreateImg'
+import CreateTag from '@/views/create/CreateTag'
+import CreateText from '@/views/create/CreateText'
 
 Vue.use(VueRouter)
 
@@ -46,6 +49,21 @@ const routes = [
     name: 'EmotionTest',
     component: EmotionTest
   },
+  {
+    path: '/create',
+    name: 'CreateImg',
+    component: CreateImg
+  },
+  {
+    path: '/create/tag',
+    name: 'CreateTag',
+    component: CreateTag
+  },
+  {
+    path: '/create/text',
+    name: 'CreateText',
+    component: CreateText
+  }
 ]
 
 const router = new VueRouter({

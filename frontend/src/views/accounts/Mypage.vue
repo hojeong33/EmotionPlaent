@@ -3,7 +3,7 @@
     <side-profile-card></side-profile-card>
     <div id="profile_container">
       <div id="card">
-        <img src="../../assets/images/profile.png" id="profile_img">
+        <img src="../../assets/images/icons/profile.png" id="profile_img">
         <div id="name_card">
           <h1>최강상후</h1>
           <button>프로필 수정</button>
