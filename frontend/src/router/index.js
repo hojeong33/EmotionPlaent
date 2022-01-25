@@ -7,6 +7,8 @@ import Mypage from '@/views/accounts/Mypage.vue'
 import Recommend from '@/views/main/Recommend.vue'
 import Feed from '@/views/main/Feed.vue'
 import Main from '@/views/main/Main.vue'
+import Setting from '@/views/setting'
+import PassChange from '@/components/Settings/PasswordChange'
 
 Vue.use(VueRouter)
 
@@ -45,6 +47,16 @@ const routes = [
     path: '/emotiontest',
     name: 'EmotionTest',
     component: EmotionTest
+  },
+  {
+    path: '/setting',
+    name: 'Setting',
+    component: Setting
+  },
+  {
+    path: '/passwordchange',
+    name: 'PassChange',
+    component: PassChange
   },
 ]
 
