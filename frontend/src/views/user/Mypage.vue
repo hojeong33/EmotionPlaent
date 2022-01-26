@@ -1,20 +1,23 @@
 <template>
   <div>
     <navigation></navigation>
-    <side-profile-card></side-profile-card>
+    <side-profile-card
+      :user-info="userInfo"
+    >
+    </side-profile-card>
     
     <div id="container">
       <div id="profile_container">
-        <img src="../../assets/images/icons/profile.png" id="profile_img">
+        <img src="https://www.thesprucepets.com/thmb/meRd41is751DsQQjofaiKV_ZUBg=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cat-talk-eyes-553942-hero-df606397b6ff47b19f3ab98589c3e2ce.jpg" id="profile_img">
         <div id="profile_card">
           <div id="name_card">
-            <h1>{{ userinfo.username }}</h1>
+            <h1>{{ userInfo.username }}</h1>
             <button>프로필 수정</button>
           </div>
           <div id="info_card">
-            <h3>게시글 {{ userinfo.posts }}</h3>
-            <h3>팔로워 {{ userinfo.followings }}</h3>
-            <h3>팔로잉 {{ userinfo.followers }}</h3>
+            <h3>게시글 {{ userInfo.posts }}</h3>
+            <h3>팔로워 {{ userInfo.followings }}</h3>
+            <h3>팔로잉 {{ userInfo.followers }}</h3>
           </div>
         </div>
         
@@ -41,7 +44,7 @@ export default {
   components: {SideProfileCard, Navigation, Tabs},
   data() {
     return {
-      userinfo: {
+      userInfo: {
       username: '최강상후',
       posts: 0,
       followings: 0,
@@ -54,7 +57,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   #container {
     width: 100vh;
     min-height: 100vh;
@@ -101,9 +104,10 @@ export default {
   }
 
   #profile_img {
-    width: 10vh;
-    height: 10vh;
+    width: 12vh;
+    height: 12vh;
     min-width: 50px;
+    border-radius: 50%;
   }
 
   h1 {

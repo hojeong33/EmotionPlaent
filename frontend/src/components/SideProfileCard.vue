@@ -1,48 +1,158 @@
 <template>
   <div class="card_container">
-    <div class="card" style="width: 15rem;">
-      <div class="card-header text-black overlay">
-        <img class="card-img-top" src="../assets/images/icons/profile.png" alt="Card image cap">
-        <div class="overlay-content">
-          <h5>최강상후</h5>
-          <button>프로필 수정</button>
-        </div>
-      </div>
-      
-      <div class="card-body">
-        <p>게시글</p>
-        <p>팔로우</p>
-        <p>팔로워</p>
-        <a href="#" class="btn btn-primary">피드 작성</a>
-        <a href="#" class="btn btn-primary">테스트 다시하기</a>
+    <div class="card_header">
+      <div class="overlay_content">
+        <h2>{{ userInfo.username }}</h2>
+        <button id="update">프로필 수정</button>
       </div>
     </div>
-  </div>
+    <div class="card_body">
+      <p>게시글 {{ userInfo.posts }}</p>
+      <p>팔로우 {{ userInfo.followings }} </p>
+      <p>팔로워 {{ userInfo.followers }} </p>
+    </div>
+    <div id="card_footer">
+      <div id="where">
+        <span>나는 지금...</span>
+        <span id="at">
+          <img src="../assets/images/emotions/depressed.png" id="planet">
+          <p>우울행성</p>
+        </span>
+      </div>
+      <div id="footer_buttons">
+        <button>피드 작성</button>
+        <button>테스트 다시하기</button>
+      </div>
+    </div>  
+</div>
   
 </template>
 
 <script>
 export default {
   name: 'SideProfileCard',
+  props: {
+    userInfo: Object,
+  },
 }
 </script>
 
-<style>
-  .overlay_content {
-    position: flex;
-    direction: row;
-    justify-content: space-between;
-  }
-
+<style scoped>
   .card_container {
+    display: flex;
+    flex-direction: column;
+    width: 40vh;
+    min-width: 40vh;
+    height: 100vh;
+    min-height: 100px;
     position: fixed;
-    top: 15rem;
-    right: 0;
-    padding-right: 30px;
+    top: 10rem;
+    right: 3%;
+    z-index: 1;
   }
 
-  .card-img-top {
-    width: 12vh;
-    min-width: 120px;
+  .card_header {
+    position: relative;
+    background: url('https://www.thesprucepets.com/thmb/meRd41is751DsQQjofaiKV_ZUBg=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cat-talk-eyes-553942-hero-df606397b6ff47b19f3ab98589c3e2ce.jpg') 0 0 no-repeat;
+    background-size: cover;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    height: 12rem;
   }
+
+  .overlay_content {
+    display: flex;
+    direction: row;
+    width: 90%;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 0.1rem solid gainsboro;
+  }
+
+  .card_body {
+    display: flex;
+    direction: row;
+    justify-content: space-evenly;
+    align-items: flex-end;
+    height: 3rem;
+    border-bottom: 0.1rem solid gainsboro;
+    font-size: 1rem;
+    font-weight: bold;
+  }
+
+  .card_footer {
+    display: flex;
+    height: 40%;
+  }
+
+  h2 {
+    color: white;
+    font-size: 1.5rem;
+    font-weight: bold;
+  }
+
+  h3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    letter-spacing: -1px;
+    line-height: 75%;
+  }
+
+  label {
+    color: #5E39B3;
+    font-size: 1.125rem;
+    font-weight: bold;
+    letter-spacing: -0.5px;
+    margin-left: 0.5rem;
+  }
+
+  #update {
+    background-color: gray;
+    color: white;
+    font-size: 0.8rem;
+    font-weight: bold;
+    border-radius: 20px;
+    cursor: pointer;
+    border: none;
+    padding: 0.2rem 0.9rem;
+  }
+
+  button {
+    background-color: #5E39B3;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    border: 1px #5E39B3 solid;
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    line-height: 1rem;
+  }
+
+  #footer_buttons {
+    display: flex;
+    justify-content: space-around;
+  }
+
+  #where {
+    display: flex;
+    flex-direction: column;
+  }
+
+  #at {
+    display: flex;
+    direction: row;
+    justify-content: center;
+    align-items: center;
+  }
+
+  #planet {
+    width: 5vh;
+    height: 5vh;
+    min-width: 20px;
+  }
+
 </style>
