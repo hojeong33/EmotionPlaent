@@ -28,13 +28,11 @@
         <span id="dot2" v-if="onPick">
         </span>
         <span id="tab_names">
-          <p @click="toggleFeed" v-if="onFeed">게시글</p>
-          <p id="inactive" @click="togglePick" v-if="onFeed">찜목록</p>
-          <p id="inactive" @click="toggleFeed" v-if="onPick">게시글</p>
-          <p @click="togglePick" v-if="onPick">찜목록</p>
+          <p @click="toggleFeed" :class="onFeed ? 'active': 'inactive'">게시글</p>
+          <p @click="togglePick" :class="onPick ? 'active': 'inactive'">찜 목록</p>
         </span>
       </div>
-      <tabs></tabs>
+
     </div>
   </div>  
 </template>
@@ -42,10 +40,10 @@
 <script>
 import SideProfileCard from '../../components/SideProfileCard.vue'
 import Navigation from '../../components/Navigation.vue'
-import Tabs from './Tabs.vue'
+
 export default {
   name: 'Mypage',
-  components: {SideProfileCard, Navigation, Tabs},
+  components: {SideProfileCard, Navigation},
   data() {
     return {
       userInfo: {
@@ -151,7 +149,7 @@ export default {
     font-weight: bold;
   }
   
-  #inactive {
+  .inactive {
     color: gray;
     font-size: 1.2rem;
     font-weight: bold;

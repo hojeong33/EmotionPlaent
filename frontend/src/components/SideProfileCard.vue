@@ -14,10 +14,10 @@
     </div>
     <div id="card_footer">
       <div id="where">
-        <span style="font-size:1.3rem; font-weight:bold">나는 지금...</span>
+        <span style="font-size:1rem; font-weight:bold">나는 지금...</span>
         <span id="at">
           <img src="../assets/images/emotions/depressed.png" id="planet">
-          <p>우울행성</p>
+          <p style="font-size:1.4rem; font-weight:bold; margin-top:0.3rem; margin-left:0.3rem; color:#2A61F0">우울행성</p>
         </span>
       </div>
       <div id="footer_buttons">
@@ -42,7 +42,7 @@ export default {
   .card_container {
     display: flex;
     flex-direction: column;
-    width: 40vh;
+    width: 37vh;
     min-width: 300px;
     height: 50vh;
     min-height: 400px;
@@ -150,7 +150,7 @@ export default {
     display: flex;
     direction: row;
     justify-content: center;
-    align-items: center;
+    margin-top: 0.7rem;
   }
 
   #planet {
