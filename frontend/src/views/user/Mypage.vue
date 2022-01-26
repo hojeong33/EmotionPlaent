@@ -5,7 +5,7 @@
     <div id="container">
       <div id="v1"></div>
       <div id="profile_container">
-        <img src="../../assets/images/profile.png" id="profile_img">
+        <img src="../../assets/images/icons/profile.png" id="profile_img">
         <div id="profile_card">
           <div id="name_card">
             <h1>최강상후</h1>
@@ -26,14 +26,15 @@
 <script>
 import SideProfileCard from '../../components/SideProfileCard.vue'
 import Navigation from '../../components/Navigation.vue'
-import TabItem from './TabItem.vue'
+// import TabItem from './TabItem.vue'
 export default {
   name: 'Mypage',
-  components: {SideProfileCard, Navigation, TabItem},
+  components: {SideProfileCard, Navigation},
+  // TabItem
 }
 </script>
 
-<style>
+<style scoped>
   #container {
     display: flex;
     flex-direction: row;

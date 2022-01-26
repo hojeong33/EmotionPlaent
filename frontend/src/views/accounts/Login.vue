@@ -65,7 +65,8 @@ export default {
     login: function () {
       axios({
         method: 'post',
-        url:'http://localhost:8080/login',
+        // url:'http://localhost:8080/login',
+        url: 'http://13.125.47.126:8080/login',
         data: this.credentials
       })
       .then(()=>{

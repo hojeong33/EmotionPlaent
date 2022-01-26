@@ -136,7 +136,7 @@
     color: white;
     font-size: 1.125rem;
     font-weight: bold;
-      border: 3px #5E39B3 solid;
+    border: 3px #5E39B3 solid;
     border-radius: 20px;
     padding: 0.4rem 1.125rem;
     margin-bottom: 1.125rem;
