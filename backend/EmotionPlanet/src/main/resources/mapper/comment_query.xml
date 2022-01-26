@@ -4,13 +4,9 @@
 
     <select id="list" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.CommentDto">
         select co.no, co.descr, co.author, co.date
-        from comment co
-        where co.no = (
-                        select commentNo
-                        from feed_comment fc
-                        where fc.feedNo = #{no}
-                       )
-        order by date descr
+        from comment co, feed_comment fc
+        where co.no = fc.commentNo and fc.feedNo = #{feedNo}
+        order by date desc
     </select>
 
     <insert id="write" parameterType="com.ssafy.project.EmotionPlanet.Dto.CommentDto">

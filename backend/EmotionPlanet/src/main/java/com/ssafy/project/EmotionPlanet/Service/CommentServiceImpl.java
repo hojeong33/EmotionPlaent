@@ -39,8 +39,4 @@ public class CommentServiceImpl implements CommentService{
         return commentDao.delete(no);
     }
 
-    @Override
-    public int relation(int commentNo, int feedNo) {
-        return commentDao.relation(commentNo, feedNo);
-    }
 }

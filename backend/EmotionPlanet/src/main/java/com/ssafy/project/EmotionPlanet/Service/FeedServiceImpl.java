@@ -1,12 +1,12 @@
 package com.ssafy.project.EmotionPlanet.Service;
 
-import com.ssafy.project.EmotionPlanet.Dao.CommentDao;
-import com.ssafy.project.EmotionPlanet.Dao.FeedDao;
-import com.ssafy.project.EmotionPlanet.Dto.CommentDto;
-import com.ssafy.project.EmotionPlanet.Dto.FeedDto;
+import com.ssafy.project.EmotionPlanet.Dao.*;
+import com.ssafy.project.EmotionPlanet.Dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -18,13 +18,26 @@ public class FeedServiceImpl implements FeedService{
     @Autowired
     CommentDao commentDao;
 
+    @Autowired
+    TagDao tagDao;
+
+    @Autowired
+    ImgDao imgDao;
+
+    @Autowired
+    TagService tagService;
+
     @Override
     public List<FeedDto> list(int no) {
 
         List<FeedDto> feeds = feedDao.list(no);
         for(FeedDto feed : feeds){
             List<CommentDto> comments = commentDao.list(feed.getNo());
+            List<TagDto> tags = tagDao.list(feed.getNo());
+            List<ImgDto> imgs = imgDao.list(feed.getNo());
             feed.setComments(comments);
+            feed.setTags(tags);
+            feed.setImgs(imgs);
         }
 
         return feeds;
@@ -36,7 +49,11 @@ public class FeedServiceImpl implements FeedService{
         List<FeedDto> feeds = feedDao.myList(no);
         for(FeedDto feed : feeds){
             List<CommentDto> comments = commentDao.list(feed.getNo());
+            List<TagDto> tags = tagDao.list(feed.getNo());
+            List<ImgDto> imgs = imgDao.list(feed.getNo());
             feed.setComments(comments);
+            feed.setTags(tags);
+            feed.setImgs(imgs);
         }
 
         return feeds;
@@ -45,20 +62,41 @@ public class FeedServiceImpl implements FeedService{
     @Override
     public FeedDto read(int no) {
 
-        List<CommentDto> comments = commentDao.list(no);
         FeedDto feed = feedDao.read(no);
+        List<CommentDto> comments = commentDao.list(feed.getNo());
+        List<TagDto> tags = tagDao.list(feed.getNo());
+        List<ImgDto> imgs = imgDao.list(feed.getNo());
         feed.setComments(comments);
+        feed.setTags(tags);
+        feed.setImgs(imgs);
         return feed;
 
     }
 
     @Override
     public int write(FeedDto feedDto) {
-        return feedDao.write(feedDto);
+
+        int result = feedDao.write(feedDto);
+        System.out.println("피드번호 : " + feedDto.getNo());
+        if(feedDto.getNo() != 0){
+
+            for (ImgDto img : feedDto.getImgs()) {
+                imgDao.relation(img.getNo(), feedDto.getNo());
+            }
+
+            for (TagDto tag : feedDto.getTags()) {
+                tag.setFeedNo(feedDto.getNo());
+                tagService.create(tag);
+            }
+
+            return result;
+        } else return result;
     }
 
     @Override
     public int update(FeedDto feedDto) {
+
+
         return feedDao.update(feedDto);
     }
 
