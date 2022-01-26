@@ -9,7 +9,7 @@ import Feed from '@/views/main/Feed.vue'
 import Main from '@/views/main/Main.vue'
 import Setting from '@/views/setting'
 import UserInfo from '@/components/Settings/UserInfo'
-import PassChange from '@/components/Settings/PasswordChange'
+import PwChange from '@/components/Settings/PwChange'
 
 Vue.use(VueRouter)
 
@@ -60,7 +60,7 @@ const routes = [
       },
       {
         path: 'password',
-        component: PassChange
+        component: PwChange
       }
     ]
   },

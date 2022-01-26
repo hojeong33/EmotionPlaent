@@ -5,7 +5,7 @@
     <div id="container">
       <div id="v1"></div>
       <div id="profile_container">
-        <img src="../../assets/images/profile.png" id="profile_img">
+        <img src="../../assets/images/icons/profile.png" id="profile_img">
         <div id="profile_card">
           <div id="name_card">
             <h1>최강상후</h1>
@@ -17,6 +17,7 @@
             <h3>팔로잉</h3>
           </div>
         </div>
+        <tab-item/>
       </div>
       <div id="v2"></div>
     </div>
@@ -33,7 +34,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   #container {
     display: flex;
     flex-direction: row;

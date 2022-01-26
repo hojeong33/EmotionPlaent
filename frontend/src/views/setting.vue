@@ -32,7 +32,7 @@ export default {
     flex-direction: column;
     width: 50%;
     min-width: 700px;
-    min-height: 100vh;
+    min-height: 50vh;
     border-left: 2px #cccccc solid;
     border-right: 2px #cccccc solid;
     padding: 1.5rem 0;

@@ -1,5 +1,5 @@
 <template>
-  <div id="user_setting_container">
+  <div id="us_container">
     <h1>계정 정보</h1>
     <section id="us_header">
       <article id="us_header_img">
@@ -122,7 +122,7 @@ export default {
     cursor: pointer;
   }
 
-  #user_setting_container {
+  #us_container {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
