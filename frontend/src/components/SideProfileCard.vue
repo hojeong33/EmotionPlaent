@@ -17,7 +17,7 @@
         <span style="font-size:1rem; font-weight:bold">나는 지금...</span>
         <span id="at">
           <img src="../assets/images/emotions/depressed.png" id="planet">
-          <p style="font-size:1.4rem; font-weight:bold; margin-top:0.3rem; margin-left:0.3rem; color:#2A61F0">우울행성</p>
+          <p style="font-size:1.4rem; font-weight:bold; margin-top:0.4rem; margin-left:0.3rem; color:#2A61F0">우울행성</p>
         </span>
       </div>
       <div id="footer_buttons">
@@ -32,6 +32,11 @@
 <script>
 export default {
   name: 'SideProfileCard',
+  data() {
+    return {
+      currentMood: this.props.userInfo.mood,
+    }
+  },
   props: {
     userInfo: Object,
   },

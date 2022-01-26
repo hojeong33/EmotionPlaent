@@ -32,22 +32,30 @@
           <p @click="togglePick" :class="onPick ? 'active': 'inactive'">찜 목록</p>
         </span>
       </div>
-
+      <div v-if="onFeed === true">
+        <pick-list></pick-list>
+      </div>
+      <div v-else-if="onPick === true">
+        <user-feed></user-feed>
+      </div>
     </div>
   </div>  
 </template>
 
 <script>
-import SideProfileCard from '../../components/SideProfileCard.vue'
-import Navigation from '../../components/Navigation.vue'
+import SideProfileCard from '@/components/SideProfileCard.vue'
+import Navigation from '@/components/Navigation.vue'
+import PickList from '@/components/user/PickList.vue'
+import UserFeed from '@/components/user/UserFeed.vue'
 
 export default {
   name: 'Mypage',
-  components: {SideProfileCard, Navigation},
+  components: {SideProfileCard, Navigation, PickList, UserFeed},
   data() {
     return {
       userInfo: {
       username: '최강상후',
+      mood: 1,
       posts: 0,
       followings: 0,
       followers: 20100,
