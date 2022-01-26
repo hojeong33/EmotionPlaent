@@ -1,12 +1,11 @@
 package com.ssafy.project.EmotionPlanet.Service;
 
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 import com.ssafy.project.EmotionPlanet.Dao.FollowDao;
 import com.ssafy.project.EmotionPlanet.Dto.FollowDto;
+import com.ssafy.project.EmotionPlanet.Dto.FollowResultDto;
 
 @Service
 public class FollowServiceImpl implements FollowService {
@@ -55,11 +54,21 @@ public class FollowServiceImpl implements FollowService {
 	}
 
 	@Override
-	public int select(int sender, int receiver) {
-		if(followDao.select(sender, receiver) != null)
-			return SUCCESS;
-		else
-			return FAIL;
+	public FollowResultDto select(int sender, int receiver) {
+		FollowResultDto followResultDto  = new FollowResultDto();
+		FollowDto followDto = followDao.select(sender, receiver);
+		
+		if(followDto != null) {
+			if(followDto.isType())
+				followResultDto.setFollowResult(1);
+			else
+				followResultDto.setWaition(1);
+		}
+		List<FollowDto> follower = followDao.followSelect(receiver);
+		List<FollowDto> following =  followDao.followingSelect(receiver);
+		followResultDto.setFollower(follower);
+		followResultDto.setFollowing(following);
+		return followResultDto;
 	}
 
 }

@@ -17,9 +17,9 @@
 	
 	<select id="select" parameterType="int"
 		resultType="com.ssafy.project.EmotionPlanet.Dto.FollowDto">
-		select sender, receiver
+		select sender, receiver,  type
 		from follow
-		where sender = #{sender} and receiver = #{receiver} and type = 1 
+		where sender = #{sender} and receiver = #{receiver}
 	</select>
 	
 	<select id="followingSelect" parameterType="int"

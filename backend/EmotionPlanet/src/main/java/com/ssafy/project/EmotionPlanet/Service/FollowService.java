@@ -3,6 +3,7 @@ package com.ssafy.project.EmotionPlanet.Service;
 import java.util.List;
 
 import com.ssafy.project.EmotionPlanet.Dto.FollowDto;
+import com.ssafy.project.EmotionPlanet.Dto.FollowResultDto;
 
 public interface FollowService {
 	public int followRegister(FollowDto followDto);
@@ -10,5 +11,5 @@ public interface FollowService {
 	public List<FollowDto> followingSelect(int no);
 	public int followDelete(FollowDto followDto);
 	public int followUpdate(FollowDto followDto);
-	public int select(int sender, int receiver);
+	public FollowResultDto select(int sender, int receiver);
 }
