@@ -3,17 +3,42 @@
 <mapper namespace="com.ssafy.project.EmotionPlanet.Dao.SearchDao">
 
 	<select id="tagSelect" parameterType="String"
-		resultType="map">
-		select name , (select count(*) from feed_tag where feed_tag.tagNo = no) as 'count' 
+		resultType="com.ssafy.project.EmotionPlanet.Dto.TagDto">
+		select name , (select count(*) from feed_tag where feed_tag.tagNo = no) as 'count'
 		from tag
 		where name like CONCAT(#{name},'%');
 	</select>
+
+	<select id="tagListSelect" parameterType="String"
+		resultType="int">
+		select ft.feedNo, (select count(*) from feed_like where feed_like.feedNo = ft.feedNo) as 'count'
+		from feed_tag ft, tag t, feed f
+		where ft.tagNo = t.no and t.name = #{name} and f.no = ft.feedNo and f.date between date_add(now(),interval -1 MONTH) and now()
+		order by
+		count desc;
+	</select>
+
+	<select id="userSelect" parameterType="String"
+		resultType="com.ssafy.project.EmotionPlanet.Dto.UserDto">
+		select no, nickname
+		from user
+		where nickname like
+		CONCAT(#{name},'%');
+	</select>
+
+	<select id="recommendSelect" parameterType="String"
+		resultType="com.ssafy.project.EmotionPlanet.Dto.PickDto">
+		select p.no, p.userNo, u.nickname, p.name, p.date, p.tagNo, (select count(*) from picklike where picklike.pickNo = p.no) as 'count'
+		from pick p, tag t, user u
+		where u.no = p.userNo and p.tagNo = t.no and p.date between date_add(now(),interval -1 MONTH) and now() and p.tagNo = (select no from tag where name = #{name})
+		order by count desc;
+	</select>
 	
-	<select id="tagDetailSelect" parameterType="String"
-		resultType="map">
-		select f.no, f.desc, f.date, fi.imgNo, i.imgLink
-		from feed f, feed_img fi, img i
-		where f.no = fi.feedNo and fi.imgNo = i.no and fi.imgNo = 1 and f.no in (select feedNo from feed_tag  where feed_tag .tagNo = (select no from tag where name = #{name}));
+	<select id="pickcontentSelect" parameterType="int"
+		resultType="com.ssafy.project.EmotionPlanet.Dto.PickContentDto">
+		select *
+		from pickcontent
+		where pickNo = #{no};
 	</select>
 	
 </mapper>
