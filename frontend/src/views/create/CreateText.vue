@@ -11,9 +11,10 @@
           <h3>이제 자유태그와 글을 작성할 수 있습니다!</h3>
           <h3>여러분의 하루를 공유해주세요</h3> 
         </div>
+        <br>
         <div>
           <input type="text" id="tagInput">
-          <input type="text" id="textInput">
+          <textarea id="textInput"></textarea>
         </div>
         <br>
         <div id="footer">
@@ -38,6 +39,7 @@ export default {
   },
   methods: {
     checkedSecret: function () {
+      console.log(this.isChecked)
       this.isChecked = !this.isChecked
       console.log(this.isChecked)
     }
@@ -79,10 +81,16 @@ h3{
 }
 #tagInput{
   width: 60vh;
+  border-radius: 10px;
 }
 #textInput{
   width: 60vh;
   height: 30vh;
+  border-radius: 10px;
+}
+#p{
+  margin:auto;
+  font-weight: bold;
 }
 #footer{
   display:flex;
@@ -92,7 +100,7 @@ h3{
 #secret{
   display:flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: left;
   align-items: center;
 }
 #btn_next{

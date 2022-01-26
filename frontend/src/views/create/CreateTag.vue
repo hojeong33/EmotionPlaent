@@ -16,19 +16,19 @@
         </div>
         <br>
         <div class="container" id="tag_search">
-          <form action="">
+          <!-- <form action="">
             <input type="search" placeholder="검색" id="search_bar">
-          </form>
+          </form> -->
           <div id="tags">
-            <div id="acts">
-              <p v-for="(keyword,idx) in act_keywords" :key="idx" @click="selectAct" id="act">
+            <div id="act_categorys">
+              <act-category v-for="(category, idx) in act_categorys" :key="idx" :category="category" :isChecked="isChecked" :index="idx" id="categorys"></act-category>
+            <!-- <div id="categorys"> -->
+              <!-- <p v-for="(keyword,idx) in act_keywords" :key="idx" @click="selectAct" id="category">
                 {{ keyword }}
-              </p>
+              </p> -->
             </div>
-            <div id="acts_detail">
-              <button v-for="(act, idx) in selectedAct" :key="idx" id="actDetail">
-                {{ act }}
-              </button>
+            <div>
+              <act-tags :selectedAct="selectedAct" id="acts"></act-tags>
             </div>
           </div>
         </div>
@@ -43,50 +43,50 @@
 </template>
 
 <script>
+import ActTags from '@/components/FeedCreate/ActTags'
+import ActCategory from '@/components/FeedCreate/ActCategory'
+
 export default {
   name: 'Create_tag',
   data: function () {
     return {
-      act_keywords: [
+      act_categorys: [
         '운동', '문화활동', '여가활동', '정리/휴식', '감정표현', '선물', '기타 등등'
       ],
       act_details: {
-        '운동': ['했어요', '갔어요','뛰었어요'], 
-        '문화활동': ['봤어요', '했어요', '들었어요'],
-        '여가활동': ['갔어요', '먹었어요', '마셨어요'],
-        '정리/휴식': ['했어요', '잤어요', '쉬었어요'],
-        '감정표현': ['울었어요', '싸웠어요', '소리 질렀어요'],
-        '선물': ['줬어요', '받았어요', '샀어요']
+        '운동': ['했어요', '갔어요','뛰었어요', '움직였어요', 'ooo', 'ooo', 'ooo'], 
+        '문화활동': ['봤어요', '했어요', '들었어요', '갔어요'],
+        '여가활동': ['갔어요', '먹었어요', '마셨어요', '놀았어요'],
+        '정리/휴식': ['했어요', '잤어요', '쉬었어요', '치웠어요'],
+        '감정표현': ['울었어요', '싸웠어요', '소리 질렀어요', '웃었어요'],
+        '선물': ['줬어요', '받았어요', '샀어요', '했어요']
       },
-      isChecked: false,
+      isChecked: [false, false, false, false, false, false, false],
       selectedKeyword: '',
       selectedAct: []
     }
   },
+  components: {
+    ActTags,
+    ActCategory
+  },
   methods: {
-    // check: function(){
-    //   this.isChecked = true
-    //   if (this.isChecked === true) {
-    //     document.getElementById('act').className = 'checked_act'
-    //   } else {
-    //     document.getElementById('act').className = 'unchecked'
-    //   }
-    // }
     selectAct: function(actKeyword) {
+      // console.log
+      // this.isChecked = !this.isChecked
+      // console.log(this.isChecked)
+      // console.log(actKeyword.target.id)
+      // document.getElementById(actKeyword.target.id).className = 'checked_category'
+      if (document.getElementById(actKeyword.target.textContent).className === 'checked_category') {
+        console.log((actKeyword.target.textContent).className)
+        document.getElementById(actKeyword.target.id).className = 'unchecked_category'
+      } else {
+        document.getElementById(actKeyword.target.id).className = 'checked_category'
+      }
       this.selectedKeyword = actKeyword.target.textContent.trim()
       for (let key in this.act_details) {
         if (key === this.selectedKeyword) {
-          if (this.selectedAct.length === 0){
-            for (let k of this.act_details[key]) {
-              this.selectedAct.push(k)
-            }
-          } else {
-            console.log(this.selectedAct)
-            this.selectedAct.pop()
-            for (let k of this.act_details[key]) {
-              this.selectedAct.push(k)
-            }
-          }
+          this.selectedAct = this.act_details[key]
         }
       }
     }
@@ -135,40 +135,37 @@ h3{
 #tag_header_content{
   font-size: 1.25rem;
 }
-#search_bar{
+/* #search_bar{
   width: 60vh;
   border-radius: 5px;
   background-color: #E7E7E7;
-}
+} */
 #tags{
+  display: flex;
+  flex-direction: row;
   width:60vh;
   border-radius: 5px;
   border: thin black;
   border-style: solid; 
-  display: flex;
-  flex-direction: row;
 }
-#acts{
+#act_categorys{
+  display:flex;
+  flex-direction: column;
   text-align: left;
   padding-left: 3px;
   overflow-y: scroll; height: 20vh;
-  width: 12vh
-}
-#acts_detail{
-  overflow-y: scroll; height: 20vh; width: 48vh;
-}
-.unchecked{
-  margin-top: 5px;
-  margin-bottom: 10px;
+  width: 12vh;
   color: black;
   font-weight: bold;
 }
-.checked_act{
-  margin-top: 5px;
-  margin-bottom: 10px;
-  color: white;
-  font-weight: bold;
-  background-color: #5E39B3;
+#acts{
+  display:flex;
+  flex-wrap: wrap;
+  justify-content: space-evenly;
+  align-content: center;
+  overflow-y: scroll; width: 48vh;
+  margin-top:5px;
+  margin-bottom: 5px;
 }
 #footer{
   display:flex;
