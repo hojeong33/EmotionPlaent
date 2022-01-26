@@ -1,18 +1,18 @@
 <template>
-  <div id="pc_container">
-    <section id="pc_header">
-      <h1>비밀번호 변경</h1>
-      <h3>계정 보호를 위해 주기적으로</h3>
-      <h3>비밀번호를 교체해주세요</h3>
+  <div id="wd_container">
+    <section id="wd_header">
+      <h1>회원 탈퇴</h1>
+      <h3>이별의 시간은 언제나 슬퍼요..</h3>
+      <h3>다시 볼 수 있길 바랄게요 😢</h3>
+      <h4>회원 탈퇴를 위해 비밀번호를 입력해주세요</h4>
     </section>
-    <section id="pc_body">
-      <article id="before_pw_form">
-        <label for="before_pw">비밀번호</label>
-        <input type="password" 
-        id="before_pw"
-        v-model="credentials.beforePw"
-        placeholder="사용중인 비밀번호를 입력해주세요.">
-        <!-- <span v-if="credentials.beforePw">
+    <section id="wd_body">
+      <article id="pw_form">
+        <label for="pw">비밀번호</label>
+        <input type="password" id="pw"
+        v-model="credentials.pw"
+        placeholder="비밀번호를 입력해주세요.">
+        <!-- <span v-if="credentials.pw">
           <p v-if="!isValid.validatePw" class="warn">
             사용할 수 없는 비밀번호에요.
           </p>
@@ -21,25 +21,9 @@
           </p>
         </span> -->
       </article>
-      <article id="next_pw_form">
-        <label for="next_pw">변경할 비밀번호</label>
-        <input type="password" 
-        id="next_pw"
-        v-model="credentials.nextPw"
-        @input="pwCheck"
-        placeholder="비밀번호는 8자 이상, 20자 이하입니다.">
-        <span v-if="credentials.nextPw">
-          <p v-if="!isValid.validateNextPw" class="warn">
-            사용할 수 없는 비밀번호에요.
-          </p>
-          <p v-if="isValid.validateNextPw" class="collect">
-            사용할 수 있는 비밀번호입니다.
-          </p>
-        </span>
-      </article>
-      <article id="pw_conf_form">
-        <label for="pw_conf">비밀번호 확인</label>
-        <input type="password" id="pw_conf"
+      <article id="pwConf_form">
+        <label for="pwConfn">비밀번호 확인</label>
+        <input type="password" id="pwConf"
         v-model="credentials.pwConf"
         @input="pwConfCheck"
         placeholder="비밀번호를 다시 입력해주세요.">
@@ -52,39 +36,35 @@
           </p>
         </span>
       </article>
-      <a href="">비밀번호를 잊었나요?</a>
       <article id="pc_buttons">
-        <button>변경하기</button>
-        <button @click="backTo">뒤로가기</button>
+        <button @click="activate = true">회원탈퇴</button>
+        <button @click="go_to_back">뒤로가기</button>
       </article>
     </section>
+    <wd-conf v-if="activate" @cancel="activate = false" />
   </div>
 </template>
 
 <script>
+import wdConf from '@/components/Settings/WithdrawalConf'
+
 export default {
   data: function(){
     return {
-      credentials : {
-        beforePw: null,
-        nextPw: null,
+      credentials: {
+        pw: null,
         pwConf: null
       },
       isValid: {
-        validateNextPw: false,
-        validatePwConf: false,
-      }
+        validatePwConf: false
+      },
+      activate: false
     }
   },
+  components: {
+    wdConf
+  },
   methods: {
-    pwCheck: function(){
-      if (this.credentials.nextPw && this.credentials.nextPw.length >= 8 && this.credentials.nextPw.length <= 20){
-        this.isValid.validateNextPw = true
-      }
-      else {
-        this.isValid.validateNextPw = false
-      }
-    },
     pwConfCheck: function(){
       if (this.credentials.pwConf && this.credentials.nextPw === this.credentials.pwConf){
         this.isValid.validatePwConf = true
@@ -93,9 +73,9 @@ export default {
         this.isValid.validatePwConf = false
       }
     },
-    backTo: function(){
+    go_to_back: function(){
       this.$router.push('/setting')
-    }
+    },
   }
 }
 </script>
@@ -117,7 +97,6 @@ export default {
     min-height: 40px;
     padding: 0.75rem;
     font-size: 4rem;
-    letter-spacing: -1px;
     font-weight: bold;
   }
 
@@ -146,10 +125,15 @@ export default {
     margin-bottom: 4rem;
   }
 
-   h3 {
+  h3 {
     font-size: 1.5rem;
     font-weight: bold;
     margin: 0;
+  }
+
+  h4 {
+    font-size: 1.5rem;
+    margin-top: 3rem;
   }
 
   p {
@@ -176,55 +160,43 @@ export default {
   .collect {
     color: green;
   }
-
-  #pc_container {
+  #wd_container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 65%;
-    margin: 0 auto;
   }
 
-  #pc_header {
+  #wd_header {
     display: flex;
     flex-direction: column;
     align-self: flex-start;
     align-items: flex-start;
-    margin: 2rem 1rem;
+    margin: 2rem;
   }
 
-  #pc_body {
+  #wd_body {
     display: flex;
     flex-direction: column;
-    /* align-items: center; */
-    margin: 1rem;
+    align-items: center;
+    width: 80%;
   }
 
-  #pc_body article {
+  #wd_body article {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
-    padding: 1rem 0;
+    padding: 1rem 3rem;
     width: 100%;
-  }
-
-  #pc_body a {
-    align-self: flex-end;
-    text-decoration: none;
-    color: rgb(85, 85, 255);
-    font-size: 1.125rem;
-    font-weight: bold;
-    margin: 1rem 0;
   }
 
   #pc_buttons {
     display: flex;
     flex-direction: row !important;
     justify-content: center;
-    margin: 1rem;
+    margin-top: 4rem;
   }
 
-  #pc_buttons > *:last-child {
-    background-color: #777777;
+  #pc_buttons > *:first-child {
+    background-color: rgb(240, 90, 90);
   }
 </style>

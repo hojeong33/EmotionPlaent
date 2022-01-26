@@ -23,14 +23,14 @@
       </article>
       <article id="us_password">
         <h3>비밀번호</h3>
-        <a href="#" @click="passwordChange">비밀번호 변경...</a>
+        <a href="#" @click="go_to_passwordchange">비밀번호 변경...</a>
       </article>
       <article id="us_birth">
         <h3>생년월일</h3>
         <span>
           <p>1994.11.07</p>
           <span>
-            <input type="checkbox" id="show_birth">
+            <input type="checkbox" id="show_birth" v-model="birthShow">
             <label for="show_birth">비공개</label>
           </span>
         </span>
@@ -39,11 +39,11 @@
         <h3>계정 공개</h3>
         <span>
           <span>
-            <input type="radio" id="show_all">
+            <input type="radio" id="show_all" v-model="showAll">
             <label for="show_all">모두에게 공개</label>
           </span>
           <span>
-            <input type="radio" id="show_followers">
+            <input type="radio" id="show_followers" v-model="showFollow">
             <label for="show_followers">팔로워에게 공개</label>
           </span>
         </span>
@@ -53,17 +53,27 @@
         <a href="#">자세히...</a>
       </article>
     </section>
-    <button id="user_delete">회원 탈퇴</button>
+    <button id="withdrawal" @click="go_to_withdrawal">회원 탈퇴</button>
   </div>
 </template>
 
 <script>
 export default {
-  methods: {
-    passwordChange: function(){
-      this.$emit('password-change')
+  data: function(){
+    return {
+      burthShow: false,
+      showAll: false,
+      showFollow: true
     }
-  }
+  },
+  methods: {
+    go_to_passwordchange: function(){
+      this.$router.push('/setting/password')
+    },
+    go_to_withdrawal: function(){
+      this.$router.push('/setting/withdrawal')
+    }
+  },
 }
 </script>
 
@@ -170,7 +180,7 @@ export default {
   }
 
   #us_header_info > *:first-child > button {
-    background-color: rgb(200, 100, 100);
+    background-color: rgb(240, 90, 90);
   }
 
   #us_header_info *:last-child {
@@ -184,7 +194,7 @@ export default {
     flex-direction: column;
     align-items: center;
     width: 100%;
-    padding-top: 1rem;
+    padding: 3rem 4rem;
   }
 
   #us_body article {
@@ -206,8 +216,8 @@ export default {
     width: 100%;
   }
 
-  #user_delete {
-    background-color: rgb(200, 100, 100);
+  #withdrawal {
+    background-color: rgb(240, 90, 90);
     align-self: center;
     margin-top: rem;
   }
