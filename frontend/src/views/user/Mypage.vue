@@ -8,11 +8,7 @@
     
     <div id="container">
       <div id="profile_container">
-<<<<<<< HEAD
-        <img src="../../assets/images/icons/profile.png" id="profile_img">
-=======
         <img src="https://www.thesprucepets.com/thmb/meRd41is751DsQQjofaiKV_ZUBg=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cat-talk-eyes-553942-hero-df606397b6ff47b19f3ab98589c3e2ce.jpg" id="profile_img">
->>>>>>> ea9c30f13f6db8c69ad4899071a7096754fe9049
         <div id="profile_card">
           <div id="name_card">
             <h1>{{ userInfo.username }}</h1>
@@ -32,13 +28,14 @@
         <span id="dot2" v-if="onPick">
         </span>
         <span id="tab_names">
-          <p @click="toggleFeed" v-if="onFeed">게시글</p>
-          <p id="inactive" @click="togglePick" v-if="onFeed">찜목록</p>
+          <!-- <p @click="toggleFeed" v-if="onFeed">게시글</p> -->
+          <!-- <p id="inactive" @click="togglePick" v-if="onFeed">찜목록</p>
           <p id="inactive" @click="toggleFeed" v-if="onPick">게시글</p>
-          <p @click="togglePick" v-if="onPick">찜목록</p>
+          <p @click="togglePick" v-if="onPick">찜목록</p> -->
+          <p @click="toggleFeed" :class="onFeed ? 'active': 'inactive'">게시글</p>
+          <p @click="togglePick" :class="onPick ? 'active': 'inactive'">찜 목록</p>
         </span>
       </div>
-      <tabs></tabs>
     </div>
   </div>  
 </template>
@@ -46,10 +43,11 @@
 <script>
 import SideProfileCard from '../../components/SideProfileCard.vue'
 import Navigation from '../../components/Navigation.vue'
-import Tabs from './Tabs.vue'
+
+
 export default {
   name: 'Mypage',
-  components: {SideProfileCard, Navigation, Tabs},
+  components: {SideProfileCard, Navigation},
   data() {
     return {
       userInfo: {
@@ -155,7 +153,7 @@ export default {
     font-weight: bold;
   }
   
-  #inactive {
+  .inactive {
     color: gray;
     font-size: 1.2rem;
     font-weight: bold;
