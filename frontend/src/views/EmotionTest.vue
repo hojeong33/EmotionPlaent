@@ -15,7 +15,7 @@
     <section id="test_keywords_container">
       <transition-group id="test_keywords" :name="page - before_page > 0 ? 'slide':'slide-reverse'">
         <article class="test_page" v-show="page == 1" key="page_1">
-          <test-keyword v-for="keyword in keywords.slice(0, 12)" :key="keyword" 
+          <test-keyword v-for="keyword in keywords.slice(0, 8)" :key="keyword" 
           :keyword="keyword" @checked="check" :ref="keyword"/>
         </article>
         <article class="test_page" v-show="page == 2" key="page_2">
