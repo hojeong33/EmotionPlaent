@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ssafy.project.EmotionPlanet.Dao.PickDao">
+
+    <select id="list" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.PickDto">
+        select no, userNo, name, date, tagNo
+        from pick
+        where author = #{no}
+        order by date desc
+    </select>
+
+    <select id="select" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.PickDto">
+        select no, userNo, name, date, tagNo
+        from pick
+        where no = #{no}
+    </select>
+
+    <insert id="create" parameterType="com.ssafy.project.EmotionPlanet.Dto.PickDto">
+        insert into feed(userNo, name, tagNo)
+        values (  #{userNo}, #{name}, #{tagNo})
+        <selectKey keyProperty="no" resultType="int" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+    </insert>
+
+    <update id="update" parameterType="com.ssafy.project.EmotionPlanet.Dto.PickDto">
+        update pick
+        set
+        userNo = #{userNo}
+        name = #{name}
+        tagNo = #{tagNo}
+        where no = #{no}
+    </update>
+
+    <delete id="delete" parameterType="int">
+        delete from pick where no = #{no}
+    </delete>
+
+    <insert id="like" parameterType="map">
+        insert into pick_like(pickNo, userNo)
+        values (  #{pickNo}, #{userNo} )
+    </insert>
+
+    <delete id="unlike" parameterType="map">
+        delete from pick_like where pickNo = #{pickNo} and userNo = #{userNo}
+    </delete>
+</mapper>
