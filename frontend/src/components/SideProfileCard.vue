@@ -1,6 +1,7 @@
 <template>
   <div class="card_container">
     <div class="card_header">
+      <img id="profile_image" src="https://www.thesprucepets.com/thmb/meRd41is751DsQQjofaiKV_ZUBg=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cat-talk-eyes-553942-hero-df606397b6ff47b19f3ab98589c3e2ce.jpg" alt="">
       <div class="overlay_content">
         <h2>{{ userInfo.username }}</h2>
         <button id="update">프로필 수정</button>
@@ -13,7 +14,7 @@
     </div>
     <div id="card_footer">
       <div id="where">
-        <span>나는 지금...</span>
+        <span style="font-size:1.3rem; font-weight:bold">나는 지금...</span>
         <span id="at">
           <img src="../assets/images/emotions/depressed.png" id="planet">
           <p>우울행성</p>
@@ -42,27 +43,28 @@ export default {
     display: flex;
     flex-direction: column;
     width: 40vh;
-    min-width: 40vh;
-    height: 100vh;
-    min-height: 100px;
+    min-width: 300px;
+    height: 50vh;
+    min-height: 400px;
     position: fixed;
     top: 10rem;
     right: 3%;
     z-index: 1;
+    border: 0.1rem solid gainsboro;
+    border-radius: 10px;
   }
 
   .card_header {
     position: relative;
-    background: url('https://www.thesprucepets.com/thmb/meRd41is751DsQQjofaiKV_ZUBg=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cat-talk-eyes-553942-hero-df606397b6ff47b19f3ab98589c3e2ce.jpg') 0 0 no-repeat;
-    background-size: cover;
     overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    height: 12rem;
+    height: 25vh;
   }
 
   .overlay_content {
+    position: absolute;
     display: flex;
     direction: row;
     width: 90%;
@@ -76,7 +78,7 @@ export default {
     direction: row;
     justify-content: space-evenly;
     align-items: flex-end;
-    height: 3rem;
+    height: 6vh;
     border-bottom: 0.1rem solid gainsboro;
     font-size: 1rem;
     font-weight: bold;
@@ -84,7 +86,8 @@ export default {
 
   .card_footer {
     display: flex;
-    height: 40%;
+    height: 29vh;
+    margin: auto;
   }
 
   h2 {
@@ -140,6 +143,7 @@ export default {
   #where {
     display: flex;
     flex-direction: column;
+    margin: 1rem 0 1.2rem 0;
   }
 
   #at {
@@ -155,4 +159,10 @@ export default {
     min-width: 20px;
   }
 
+  #profile_image {
+    position: relative;
+    width: 43vh;
+    height: 28vh;
+    border-radius: 10px;
+  }
 </style>

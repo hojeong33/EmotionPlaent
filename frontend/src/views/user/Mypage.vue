@@ -16,18 +16,22 @@
           </div>
           <div id="info_card">
             <h3>게시글 {{ userInfo.posts }}</h3>
-            <h3>팔로워 {{ userInfo.followings }}</h3>
-            <h3>팔로잉 {{ userInfo.followers }}</h3>
+            <h3>팔로우 {{ userInfo.followings }}</h3>
+            <h3>팔로워 {{ userInfo.followers }}</h3>
           </div>
         </div>
         
       </div>
       <div id="tab">
-        <span id="dot">
+        <span id="dot1" v-if="onFeed">
+        </span>
+        <span id="dot2" v-if="onPick">
         </span>
         <span id="tab_names">
-          <p>게시글</p>
-          <p>찜목록</p>
+          <p @click="toggleFeed" v-if="onFeed">게시글</p>
+          <p id="inactive" @click="togglePick" v-if="onFeed">찜목록</p>
+          <p id="inactive" @click="toggleFeed" v-if="onPick">게시글</p>
+          <p @click="togglePick" v-if="onPick">찜목록</p>
         </span>
       </div>
       <tabs></tabs>
@@ -50,10 +54,22 @@ export default {
       followings: 0,
       followers: 20100,
       },
+      onFeed: true,
+      onPick: false,
       postlist: [],
       picklist: [],
     }
-  }
+  },
+  methods: {
+    toggleFeed: function () {
+      this.onFeed = true
+      this.onPick = false
+    },
+    togglePick: function () {
+      this.onPick = true
+      this.onFeed = false
+    },
+  },
 }
 </script>
 
@@ -76,12 +92,13 @@ export default {
     justify-content: center;
     background-color: white;
     width: 100%;
-    padding: 2rem;
+    padding: 2rem 1rem;
   }
 
   #profile_card {
-    width: 50%;
-    margin-left: 1rem;
+    width: 45%;
+    margin-left: 1.2rem;
+    margin-top: 1rem;
   }
 
   #name_card {
@@ -89,12 +106,16 @@ export default {
     direction: row;
     justify-content: space-between;
     align-items: center;
+    margin-top: 0.2rem;
+    margin-bottom: 1.2rem;
+    width: 91%;
   }
   
   #info_card {
     display: flex;
     direction: row;
     justify-content: space-between;
+    width: 90%;
   }
   
   #card {
@@ -104,56 +125,69 @@ export default {
   }
 
   #profile_img {
-    width: 12vh;
-    height: 12vh;
+    width: 14vh;
+    height: 14vh;
     min-width: 50px;
     border-radius: 50%;
   }
 
   h1 {
-  color: black;
-  font-size: 2rem;
-  font-weight: bold;
+    color: black;
+    font-size: 2rem;
+    font-weight: bold;
   }
 
   h3 {
-  font-size: 1.25rem;
-  font-weight: bold;
-  letter-spacing: -1px;
-  line-height: 75%;
+    color: black;
+    font-size: 1.2rem;
+    font-weight: bold;
+    line-height: 80%;
+    letter-spacing: 0.05rem;
+  }
+
+  p {
+    color: black;
+    font-size: 1.4rem;
+    font-weight: bold;
+  }
+  
+  #inactive {
+    color: gray;
+    font-size: 1.2rem;
+    font-weight: bold;
   }
 
   label {
-  color: #5E39B3;
-  font-size: 1.125rem;
-  font-weight: bold;
-  letter-spacing: -0.5px;
-  margin-left: 0.5rem;
+    color: #5E39B3;
+    font-size: 1.125rem;
+    font-weight: bold;
+    letter-spacing: -0.5px;
+    margin-left: 0.5rem;
   }
 
   button {
-  background-color: #5E39B3;
-  color: white;
-  font-size: 1rem;
-  font-weight: bold;
-  border: 1px #5E39B3 solid;
-  border-radius: 20px;
-  padding: 0.5rem 0.5rem;
-  margin-bottom: 1rem;
-  cursor: pointer;
-  line-height: 1rem;
+    background-color: #5E39B3;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
+    border: 1px #5E39B3 solid;
+    border-radius: 20px;
+    padding: 0.41rem 0.45rem;
+    margin-bottom: 0.7rem;
+    cursor: pointer;
+    line-height: 1rem;
   }
 
   input {
-  border: 2px #5E39B3 solid;
-  border-radius: 20px;
-  width: 35vh;
-  min-width: 350px;
-  height: 4vh;
-  min-height: 40px;
-  padding: 0.75rem;
-  font-size: 1rem;
-  font-weight: bold;
+    border: 2px #5E39B3 solid;
+    border-radius: 20px;
+    width: 35vh;
+    min-width: 350px;
+    height: 4vh;
+    min-height: 40px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    font-weight: bold;
   }
 
   #tab {
@@ -164,19 +198,29 @@ export default {
     width: 100%;
   }
 
-  #dot {
-    width: 25px;
-    height: 25px;
+  #dot1 {
+    width: 18px;
+    height: 18px;
     border-radius: 50%;
     position: absolute;
-    top: -28%;
+    top: -17%;
     left: 43%;
+    background-color: #5E39B3;
+  }
+  
+  #dot2 {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    position: absolute;
+    top: -17%;
+    left: 55%;
     background-color: #5E39B3;
   }
 
   #tab_names {
-    margin-top: 2%;
-    width: 17%;
+    margin-top: 1%;
+    width: 19%;
     display: flex;
     direction: row;
     justify-content: space-between;
