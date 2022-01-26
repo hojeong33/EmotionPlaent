@@ -8,6 +8,7 @@ import Recommend from '@/views/main/Recommend.vue'
 import Feed from '@/views/main/Feed.vue'
 import Main from '@/views/main/Main.vue'
 import Setting from '@/views/setting'
+import UserInfo from '@/components/Settings/UserInfo'
 import PassChange from '@/components/Settings/PasswordChange'
 
 Vue.use(VueRouter)
@@ -51,12 +52,17 @@ const routes = [
   {
     path: '/setting',
     name: 'Setting',
-    component: Setting
-  },
-  {
-    path: '/passwordchange',
-    name: 'PassChange',
-    component: PassChange
+    component: Setting,
+    children: [
+      {
+        path: '',
+        component: UserInfo
+      },
+      {
+        path: 'password',
+        component: PassChange
+      }
+    ]
   },
 ]
 

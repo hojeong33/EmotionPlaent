@@ -2,19 +2,17 @@
   <div id="setting">
     <navigation />
     <section id="setting_container">
-      <user-setting @password-change="passwordChange" />
+      <router-view />
     </section>
   </div>
 </template>
 
 <script>
 import Navigation from '@/components/Navigation'
-import UserSetting from '@/components/Settings/UserSetting'
 
 export default {
   components: {
     Navigation,
-    UserSetting
   },
   methods: {
     passwordChange: function(){
