@@ -8,37 +8,33 @@
     <section id="selected_keywords_container">
       <label for="selected_keywords">지금까지 고른 키워드</label>
       <article id="selected_keywords">
+        <p class="test_helper" v-if="!selected.length && testNum == 1">
+          키워드는 최소 두 개, 최대 여섯 개까지 선택 가능해요
+        </p>
+        <p class="test_helper" id="test_2_helper" v-if="!selected.length && testNum == 2">
+          이번에는 한 개 이상, 네 개 이하의 키워드를 선택해주세요
+        </p>
         <selected-keyword v-for="(keyword, idx) in selected" :key="idx"
         :keyword="keyword" @delete_keyword="deleteKeyword" />
+        <span id="refresh" @click="refresh_keywords" />
       </article>
     </section>
     <section id="test_keywords_container">
-      <transition-group id="test_keywords" :name="page - before_page > 0 ? 'slide':'slide-reverse'">
-        <article class="test_page" v-show="page == 1" key="page_1">
-          <test-keyword v-for="keyword in keywords.slice(0, 12)" :key="keyword" 
-          :keyword="keyword" @checked="check" :ref="keyword"/>
-        </article>
-        <article class="test_page" v-show="page == 2" key="page_2">
-          <test-keyword v-for="keyword in keywords.slice(12, 24)" :key="keyword" 
-          :keyword="keyword" @checked="check" :ref="keyword"/>
-        </article>
-        <article class="test_page" v-show="page == 3" key="page_3">
-          <test-keyword v-for="keyword in keywords.slice(24, )" :key="keyword" 
-          :keyword="keyword" @checked="check" :ref="keyword"/>
+      <transition-group id="test_transition" :name="page - before_page > 0 ? 'slide':'slide-reverse'">
+        <article class="test_keywords" v-for="idx in page_of_keywords" v-show="page == idx" :key="'page-'+idx">
+          <test-keyword v-for="keyword in keywords.slice(12 * (idx-1), 12 * idx)" :key="keyword.no" 
+          :keyword="keyword" @checked="check" :ref="keyword.no"/>
         </article>
       </transition-group>
       <article id="paginator_container">
-        <button @click="before_page = page; page = 1" class="paginator" 
-        :class="{ 'active_paginator' : page == 1 }"></button>
-        <button @click="before_page = page; page = 2" class="paginator" 
-        :class="{ 'active_paginator' : page == 2 }"></button>
-        <button @click="before_page = page; page = 3" class="paginator" 
-        :class="{ 'active_paginator' : page == 3 }"></button>
+        <button v-for="idx in page_of_keywords" :key="'btn-'+idx"
+         @click="before_page = page; page = idx" class="paginator" 
+        :class="{ 'active_paginator' : page == idx }"></button>
       </article>
     </section>
     <section id="buttons">
-      <button id="submit_test_btn">다 골랐어요</button>
-      <button id="return_to_btn">아직 안할래요</button>
+      <button @click="nextTest" id="submit_test_btn">다 골랐어요</button>
+      <button @click="go_to_back" id="return_to_btn">아직 안할래요</button>
     </section>
   </div>
 </template>
@@ -46,6 +42,7 @@
 <script>
   import TestKeyword from '@/components/EmotionTest/EmotionKeyword'
   import SelectedKeyword from '@/components/EmotionTest/SelectedKeyword'
+  import axios from 'axios'
 
   export default {
     beforeCreate: function () {
@@ -55,15 +52,9 @@
       return {
         page: 1,
         before_page: null,
-        keywords: [
-          '겁나다', '긴박하다', '긴장되다', '두렵다', '무섭다', '무시무시하다',
-          '가뿐하다', '감개무량하다', '감격하다', '감동하다', '감미롭다', '감복하다',
-          '겸연쩍다', '노파심', '머쓱하다', '멋쩍다', '무안하다', '쭈뼛거리다',
-          '갑작스럽다', '경악하다', '경이롭다', '급작스럽다', '기겁하다', '기막히다',
-          '삐지다', '격분하다', '격앙되다', '괘씸하다', '굴욕적이다', '비아냥대다',
-          '가련하다', '가슴아프다', '걱정하다', '그리워하다', '낙심하다', '막막하다'
-        ],
-        selected: []
+        keywords: null,
+        selected: [],
+        testNum: 1
       }
     },
     components: {
@@ -73,12 +64,19 @@
     methods: {
       check: function(keyword){
         const idx = this.selected.indexOf(keyword)
-
-        if (idx != -1){
-          this.selected.splice(idx, 1)
+        if ((this.testNum == 1 && this.selected.length > 5) || 
+          (this.testNum == 2 && this.selected.length > 3))
+        {
+          alert('너무 많이 골랐어요..!')
+          this.$refs[keyword.no][0].isChecked = false
         }
         else {
-          this.selected.push(keyword)
+          if (idx != -1){
+            this.selected.splice(idx, 1)
+          }
+          else {
+            this.selected.push(keyword)
+          }
         }
       },
       deleteKeyword: function(keyword){
@@ -87,23 +85,82 @@
         if (idx != -1){
           this.selected.splice(idx, 1)
         }
-        this.$refs[keyword][0].isChecked = false
-        console.log(this.selected)
+        if (this.$refs[keyword.no].length > 0){
+          this.$refs[keyword.no][0].isChecked = false
+        }
+      },
+      nextTest: function(){
+        if (this.testNum == 1){
+          if (this.selected.length >= 2){
+            axios({
+              method: 'post',
+              url: 'http://13.125.47.126:8080/detailtest',
+              data: this.selected
+            })
+            .then((res) => {
+              console.log(res)
+              this.keywords = res.data
+              this.keywords = this.keywords.sort(() => Math.random() - 0.5)
+              this.selected = []
+              alert('한 번만 더 선택해볼까요?')
+              this.testNum = 2
+              this.page = 1
+            })
+            .catch(() => alert('잘못된 요청입니다'))
+          }
+          else {
+            alert('조금만 더 골라주세요🤣')
+          }
+        }
+        else {
+          axios({
+            method: 'post',
+            url: 'http://13.125.47.126:8080/resulttest',
+            data: this.selected
+          })
+          .then(res => {
+            alert(`당신은 ${ res.data.name }행성 입니다!`)
+            location.reload()
+          })
+          .catch(() => alert('잘못된 요청입니다.'))
+        }
+      },
+      go_to_back: function(){
+        this.$router.push({ name: 'main' })
+      },
+      refresh_keywords: function(){
+        axios({
+          method: 'get',
+          url: 'http://13.125.47.126:8080/test'
+        })
+        .then(res => {
+          this.keywords = res.data
+          this.keywords = this.keywords.sort(() => Math.random() - 0.5)
+        })
+        .catch(() => alert('잘못된 요청입니다.'))
       }
     },
     computed: {
-      keywords_info: function(){
-        console.log('hi')
-        let informs = []
-
-        this.keywords.forEach(keyword => {
-          informs.push([keyword, false])
-        })
-        return informs
-      },
+      page_of_keywords: function(){
+        if (this.keywords){
+          return Math.floor(this.keywords.length / 12)
+        }
+        return 0
+      }
     },
     created: function(){
-      this.keywords = this.keywords.sort(() => Math.random() - 0.5)
+      axios({
+        method: 'get',
+        url: 'http://13.125.47.126:8080/test'
+      })
+      .then(res => {
+        this.keywords = res.data
+        this.keywords = this.keywords.sort(() => Math.random() - 0.5)
+      })
+      .catch(() => {
+        alert('잘못된 요청입니다.')
+        this.$router.push({ name: 'main' })
+      })
     }
   }
 </script>
@@ -136,18 +193,18 @@
     color: white;
     font-size: 1.125rem;
     font-weight: bold;
-      border: 3px #5E39B3 solid;
+    border: 3px #5E39B3 solid;
     border-radius: 20px;
     padding: 0.4rem 1.125rem;
     margin-bottom: 1.125rem;
     cursor: pointer;
-      line-height: 2rem;
+    line-height: 2rem;
   }
 
   #test_container {
     background-color: white;
-    width: 75vh;
-    min-width: 750px;
+    width: 80vh;
+    min-width: 800px;
     margin: 2rem auto;
     display: flex;
     flex-direction: column;
@@ -176,39 +233,68 @@
 
   #selected_keywords {
     width: 100%;
-    height: 5vh;
+    min-height: 6vh;
     padding: 0.5rem;
     border-bottom: 1px #5E39B3 solid;
     display: flex;
-    flex-wrap: nowrap;
+    flex-wrap: wrap;
+    align-items: center;
+    position: relative;
+  }
+
+  .test_helper {
+    margin: 0;
+    color: #777777;
+  }
+
+  @keyframes gliter {
+    from { color: rgb(85, 85, 255); }
+    to { color: rgb(147, 147, 255); }
+  }
+
+  #test_2_helper {
+    color: rgb(85, 85, 255);
+    animation: glitter 1s ease-in-out 0s infinite alternate;
+  }
+
+  #refresh {
+    background-image: url('../assets/images/icons/refresh.png');
+    background-size: cover;
+    width: 1.5rem;
+    height: 1.5rem;
+    position: absolute;
+    right: 0;
+    cursor: pointer;
   }
 
   #test_keywords_container {
     width: 100%;
+    height: 30vh;
+    min-height: 300px;
     display: flex;
+    flex-direction: column;
+    align-items: center;
     justify-content: center;
-    flex-wrap: wrap;
-    padding: 1rem;
     border-bottom: 1px #5E39B3 solid;
     margin-bottom: 2rem;
   }
 
-  #test_keywords {
+  #test_transition {
     width: 100%;
-    height: 24vh;
+    height: 75%;
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
-    padding: 1rem;
     position: relative;
     overflow: hidden;
   }
 
-  .test_page {
+  .test_keywords {
     display: flex;
     justify-content: center;
     flex-wrap: wrap;
     position: absolute;
+    padding: 0.5rem 1rem;
     width: 100%;
   }
 
@@ -239,15 +325,19 @@
   }
 
   #paginator_container {
-    width: 100%;
-    margin-top: 1.5rem;
+    margin: 1rem auto;
+  }
+
+  @keyframes glitter {
+    from { opacity: 0%; }
+    to { opacity: 100%; }
   }
 
   .paginator{
     background-color: white;
     border: 2px rgb(128, 128, 128, 0.75) solid;
-    width: 1.5vh;
-    height: 1.5vh;
+    width: 1rem;
+    height: 1rem;
     padding: 0;
     margin: 1rem 1rem 0;
   }

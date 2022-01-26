@@ -1,7 +1,7 @@
 <template>
   <button id="emotion_btn" @click="check"
   :class="isChecked ? 'checked' : 'blank'">
-    {{ this.keyword }}
+    {{ keyword.name }}
   </button>
 </template>
 
@@ -13,7 +13,7 @@ export default {
     }
   },
   props: {
-    keyword: String
+    keyword: Object
   },
   methods: {
     check: function(){
