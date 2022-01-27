@@ -147,7 +147,8 @@ export default {
   }
 
   img {
-    width: 3vh;
+    width: 5vh;
+    height: 5vh;
   }
 
   p {

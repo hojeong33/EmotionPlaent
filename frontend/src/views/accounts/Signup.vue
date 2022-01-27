@@ -263,6 +263,7 @@
 
   img {
     width: 12vh;
+    height: 18vh;
     min-width: 120px;
   }
 
