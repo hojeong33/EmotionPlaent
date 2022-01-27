@@ -20,7 +20,6 @@
             <h3>팔로워 {{ userInfo.followers }}</h3>
           </div>
         </div>
-        
       </div>
       <div id="tab">
         <span id="dot1" v-if="onFeed">

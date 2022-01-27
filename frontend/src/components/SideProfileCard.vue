@@ -16,7 +16,7 @@
       <div id="where">
         <span style="font-size:1rem; font-weight:bold">나는 지금...</span>
         <span id="at">
-          <img :src="'../assets/images/emotions/' + tmp.img">
+          <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)">
           <p id="planet_name" style="font-size:1.4rem; font-weight:bold; margin-top:0.4rem; margin-left:0.3rem" :style="{color:tmp.color}">{{tmp.name }}</p>
         </span>
       </div>
@@ -38,15 +38,12 @@ export default {
     return {
       planetStyles: [
         { id: 1, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
-        { id: 2, name: '행복행성', img: "@/assets/images/emotions/happy.png", color: '#6BD9E8' },
-        { id: 3, name: '중립행성', img: "@/assets/images/emotions/neutral.png", color: '#C5D3DC' },
-        { id: 4, name: '놀라움행성', img: "@/assets/images/emotions/surprised.png", color: '#FEA95C' },
+        { id: 2, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
+        { id: 3, name: '중립행성', img: "neutral.png", color: '#C5D3DC' },
+        { id: 4, name: '놀라움행성', img: "surprised.png", color: '#FEA95C' },
         { id: 5, name: '분노행성', img: "rage.png", color: '#FB5D38' },
-        { id: 6, name: '우울행성', img: "@/assets/images/emotions/depressed.png", color: '#2A61F0' },
-      ],
-      currentStyle: null,
-      currentPlanetImg: null,
-      currentPlanetColor: null,
+        { id: 6, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
+      ]
     }
   },
   computed: {
@@ -56,16 +53,6 @@ export default {
       return style
     }
   },
-  // created: function() {
-    
-  //   console.log(style)
-  //   this.currentStyle = style
-  //   this.currentPlanetImg = style.img
-  //   this.currentPlanetColor = style.color
-  //   console.log(this.currentStyle)
-  //   console.log(this.currentPlanetImg)
-  //   console.log(this.currentPlanetColor)
-  // },
 }
 </script>
 
