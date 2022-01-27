@@ -33,10 +33,10 @@
         </span>
       </div>
       <div v-if="onFeed === true">
-        <pick-list></pick-list>
+        <user-feed></user-feed>
       </div>
       <div v-else-if="onPick === true">
-        <user-feed></user-feed>
+        <pick-list></pick-list>
       </div>
     </div>
   </div>  
@@ -55,7 +55,7 @@ export default {
     return {
       userInfo: {
       username: '최강상후',
-      mood: 1,
+      mood: 5,
       posts: 0,
       followings: 0,
       followers: 20100,
