@@ -240,13 +240,18 @@
     text-shadow: 0 1px 2px rgb(0, 0, 0, 0.5);
   }
 
-  input::placeholder {
-    font-size: 0.9rem;
-    font-weight: initial;
-    letter-spacing: -1px;
-    text-shadow: none;
+  input[type="password"] {
+    font-size: 3rem;
   }
 
+  input::placeholder {
+    font-size: 1rem !important;
+    font-weight: initial;
+    text-shadow: none;
+    letter-spacing: -1px;
+    position: absolute;
+    top: 20%;
+  }
   input:focus::placeholder {
     color: transparent;
   }
@@ -275,7 +280,7 @@
   }
 
   .warn {
-    color: red;
+    color: rgb(240, 90, 90);
   }
 
   .collect {

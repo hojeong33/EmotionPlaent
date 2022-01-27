@@ -1,7 +1,7 @@
 <template>
   <div id="selected_keyword">
     <span>
-      {{ keyword }}
+      {{ keyword.name }}
     </span>
     <span id="delete_btn" @click="deleteKeyword">
       x
@@ -12,7 +12,7 @@
 <script>
 export default {
   props: {
-    keyword: String
+    keyword: Object
   },
   methods: {
     deleteKeyword: function(){
@@ -33,11 +33,12 @@ export default {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    min-width: 80px;
     border: none;
     border-radius: 20px;
     font-weight: bold;
     padding: 0.25rem;
-    margin-left: 0.25rem;
+    margin: 0.2rem
   }
 
   #delete_btn {

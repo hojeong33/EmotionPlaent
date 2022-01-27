@@ -99,7 +99,7 @@ export default {
     height: 4vh;
     min-height: 40px;
     padding: 0.75rem;
-    font-size: 1rem;
+    font-size: 1.25rem;
     font-weight: bold;
   }
 
@@ -110,10 +110,16 @@ export default {
     text-shadow: 0 1px 2px rgb(0, 0, 0, 0.5);
   }
 
+  input[type="password"] {
+    font-size: 3rem;
+  }
+
   input::placeholder {
+    font-size: 1rem !important;
     font-weight: initial;
-    letter-spacing: -1px;
     text-shadow: none;
+    position: absolute;
+    top: 20%;
   }
 
   input:focus::placeholder {

@@ -1,0 +1,139 @@
+<template>
+  <div id="wdc_container">
+    <section id="wdc_modal">
+      <article id="wdc_header">
+        <span id="go_to_back" @click="go_to_back" />
+        <p>회원 탈퇴</p>
+      </article>
+      <article v-if="!confirm" class="wdc_content">
+        <div class="wdc_body">
+          <h3>정말 탈퇴하시겠습니까?</h3>
+          <h3>회원정보는 삭제되며 복구할 수 없습니다.</h3>
+        </div>
+        <div class="wdc_buttons">
+          <button @click="go_to_back">아니요</button>
+          <button @click="confirm = true">네, 탈퇴합니다.</button>
+        </div>
+      </article>
+      <article v-if="confirm" class="wdc_content">
+        <div class="wdc_body">
+          <h3>회원 탈퇴가 완료되었습니다.</h3>
+          <h3>다시 만날 수 있으면 좋겠어요.</h3>
+        </div>
+        <div class="wdc_buttons">
+          <button @click="go_to_back">확인</button>
+        </div>
+      </article>
+    </section>
+  </div>
+</template>
+
+<script>
+export default {
+  data: function(){
+    return {
+      confirm: false
+    }
+  },
+  methods: {
+    go_to_back: function(){
+      this.$emit('cancel')
+    }
+  }
+}
+</script>
+
+<style scoped>
+  h3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  p {
+    font-size: 1.125rem;
+    font-weight: bold;
+    margin: 0;
+  }
+
+  button {
+    background-color: #5E39B3;
+    color: white;
+    font-size: 1.125rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    padding: 0.2rem 1rem;
+    margin: 0.5rem;
+    cursor: pointer;
+    line-height: 2rem;
+  }
+
+  #wdc_container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
+    top: 0;
+    left: 0;
+    background-color: rgb(0, 0, 0, 0.5);
+  }
+
+  #wdc_modal {
+    display: flex;
+    flex-direction: column;
+    background-color: white;
+    border-radius: 20px;
+    width: 30%;
+    min-width: 300px;
+    height: 30%;
+    min-height: 230px;
+  }
+
+  #wdc_header {
+    display: flex;
+    justify-content: center;
+    border-bottom: 1px #cccccc solid;
+    padding: 0.25rem;
+    position: relative;
+  }
+
+  #wdc_header span {
+    width: 1.25rem;
+    height: 1.25rem;
+    background-image: url('../../assets/images/icons/return.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 20%;
+    left: 2%;
+    cursor: pointer;
+  }
+
+  .wdc_content {
+    display: flex;
+    flex-direction: column;
+    height: 90%;
+  }
+
+  .wdc_body {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    border-bottom: 1px #cccccc solid;
+    padding: 1.5rem;
+    height: 80%;
+  }
+
+  .wdc_buttons {
+    display: flex;
+    justify-content: flex-end;
+    padding: 0.5rem;
+  }
+
+  .wdc_buttons > *:last-child {
+    background-color: #777777;
+  }
+</style>

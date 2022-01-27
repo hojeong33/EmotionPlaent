@@ -3,7 +3,7 @@
 <mapper namespace="com.ssafy.project.EmotionPlanet.Dao.LoginDao">
 
     <select id="login" parameterType="string" resultType="com.ssafy.project.EmotionPlanet.Dto.UserDto">
-        select email, pw, nickname, birth, profile_img as profileImg, publish
+        select no, email, pw, nickname,tel,birth, profile_img as profileImg, mood ,publish
         from user
         where email = #{userId}
     </select>
