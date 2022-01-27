@@ -34,12 +34,12 @@
       <button id="login_btn" @click="login">로그인</button>
     </article>
     <button id="google" class="social_login">
-      <img id="google" src="../../assets/images/Google__G__Logo.png">
+      <img id="google" src="../../assets/images/etc/Google__G__Logo.png">
       <p>Google로 로그인</p>
     </button>
     <article>
       <button id="kakao" class="social_login">
-        <img id="kakao" src="../../assets/images/kakao.png">
+        <img id="kakao" src="../../assets/images/etc/kakao.png">
         <p>Kakao로 로그인</p>
         </button>
     </article>
@@ -141,7 +141,8 @@ export default {
   }
 
   img {
-    width: 3vh;
+    width: 5vh;
+    height: 5vh;
   }
 
   p {

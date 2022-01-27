@@ -1,7 +1,7 @@
 <template>
-  <button @click="$emit('input', id)" :class="[active, 'tab']">
+  <div @click="$emit('input', id)" :class="[active, 'tab']">
     {{ label }}
-  </button>
+  </div>
 </template>
 
 <script>
@@ -20,6 +20,10 @@ export default {
 </script>
 
 <style scoped>
+ div{
+   margin: 1rem;
+  font-size: 2rem; 
+ }
 .tab {
   border-radius: 2px 2px 0 0;
   background: #fff;
@@ -30,6 +34,6 @@ export default {
   background: #eeeeee;
 }
 .active {
-  background: #f7c9c9;
+  background: #dbc9f7;
 }
 </style>

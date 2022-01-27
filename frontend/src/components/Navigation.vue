@@ -2,17 +2,17 @@
   <div>
     <nav class="navbar navbar-expand-lg" id="navbar-default">
         <div class="container justify-content-center">
-            <a class="navbar-brand" href="#"><img src="@/assets/images/EMOTION PLANET.png" id="logo_img" alt=""></a>
+            <a class="navbar-brand" href="#"><img src="@/assets/images/logo/EMOTION PLANET.png" id="logo_img" alt=""></a>
             <!-- <router-link :to="{ name: 'Signup' }" class="gosignup">회원가입</router-link> -->
             <form class="d-flex">
                 <input class="form-control" type="search" placeholder="Search" aria-label="Search">
-                <button class="btn btn-outline-success" type="submit"><img src="@/assets/images/search.png" id="search"></button>
+                <button class="btn btn-outline-success" type="submit"><img src="@/assets/images/icons/search.png" id="search"></button>
             </form>
-            <a class="nav-link active" aria-current="page" href="#"><img src="@/assets/images/more.png" id="write"></a>
-            <a class="nav-link" href="#"><img src="@/assets/images/home.png" id="home"></a>
-            <a class="nav-link "><img src="@/assets/images/user.png" id="my_page"></a>
-            <a class="nav-link "><img src="@/assets/images/bell.png" id="alarm"></a>
-            <a class="nav-link "><img src="@/assets/images/settings.png" id="setting"></a>
+            <a class="nav-link active" aria-current="page" href="#"><img src="@/assets/images/icons/more.png" id="write"></a>
+            <a class="nav-link" href="#"><img src="@/assets/images/icons/home.png" id="home"></a>
+            <a class="nav-link "><img src="@/assets/images/icons/user.png" id="my_page"></a>
+            <a class="nav-link "><img src="@/assets/images/icons/bell.png" id="alarm"></a>
+            <a class="nav-link "><img src="@/assets/images/icons/settings.png" id="setting"></a>
         </div>
     </nav>
   </div>

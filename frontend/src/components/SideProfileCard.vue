@@ -6,7 +6,7 @@
           <h5 class="card-title">최강상후</h5>
           <button>프로필 수정</button>
         </div>
-        <img class="card-img-top" src="../assets/images/profile.png" alt="Card image cap">
+        <img class="card-img-top" src="../assets/images/icons/profile.png" alt="Card image cap">
       </div>
       
       <div class="card-body">
@@ -27,7 +27,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .card_container {
     position: fixed;
     top: 15rem;

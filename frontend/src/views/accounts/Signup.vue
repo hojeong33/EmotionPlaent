@@ -96,7 +96,7 @@
           <label for="image_upload">프로필 사진</label>
           <button id="image_upload">이미지 업로드</button>
         </div>
-        <img src="../../assets/images/profile.png" alt="profile image">
+        <img src="../../assets/images/icons/profile.png" alt="profile image">
       </article>
       <button @click="signup" id="signup_btn">시민권 등록하기</button>
       <button id="back_to_btn">다음에 할게요</button>
@@ -258,6 +258,7 @@
 
   img {
     width: 12vh;
+    height: 18vh;
     min-width: 120px;
   }
 

@@ -62,5 +62,4 @@ export default {
 
 <style scoped>
   @import '../../../assets/styles/carousel.css';
-
 </style>
