@@ -20,25 +20,10 @@
       </article>
     </section>
     <section id="test_keywords_container">
-<<<<<<< HEAD
       <transition-group id="test_transition" :name="page - before_page > 0 ? 'slide':'slide-reverse'">
         <article class="test_keywords" v-for="idx in page_of_keywords" v-show="page == idx" :key="'page-'+idx">
           <test-keyword v-for="keyword in keywords.slice(12 * (idx-1), 12 * idx)" :key="keyword.no" 
           :keyword="keyword" @checked="check" :ref="keyword.no"/>
-=======
-      <transition-group id="test_keywords" :name="page - before_page > 0 ? 'slide':'slide-reverse'">
-        <article class="test_page" v-show="page == 1" key="page_1">
-          <test-keyword v-for="keyword in keywords.slice(0, 8)" :key="keyword" 
-          :keyword="keyword" @checked="check" :ref="keyword"/>
-        </article>
-        <article class="test_page" v-show="page == 2" key="page_2">
-          <test-keyword v-for="keyword in keywords.slice(12, 24)" :key="keyword" 
-          :keyword="keyword" @checked="check" :ref="keyword"/>
-        </article>
-        <article class="test_page" v-show="page == 3" key="page_3">
-          <test-keyword v-for="keyword in keywords.slice(24, )" :key="keyword" 
-          :keyword="keyword" @checked="check" :ref="keyword"/>
->>>>>>> 249b1a624041be895c3f3c5931c1da678acfe0c4
         </article>
       </transition-group>
       <article id="paginator_container">

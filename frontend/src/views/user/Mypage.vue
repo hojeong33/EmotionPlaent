@@ -8,11 +8,7 @@
     
     <div id="container">
       <div id="profile_container">
-<<<<<<< HEAD
-        <img src="../../assets/images/icons/profile.png" id="profile_img">
-=======
         <img src="https://www.thesprucepets.com/thmb/meRd41is751DsQQjofaiKV_ZUBg=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cat-talk-eyes-553942-hero-df606397b6ff47b19f3ab98589c3e2ce.jpg" id="profile_img">
->>>>>>> 249b1a624041be895c3f3c5931c1da678acfe0c4
         <div id="profile_card">
           <div id="name_card">
             <h1>{{ userInfo.username }}</h1>
@@ -24,10 +20,6 @@
             <h3>팔로워 {{ userInfo.followers }}</h3>
           </div>
         </div>
-<<<<<<< HEAD
-        <tab-item/>
-=======
-        
       </div>
       <div id="tab">
         <span id="dot1" v-if="onFeed">
@@ -44,7 +36,6 @@
       </div>
       <div v-else-if="onPick === true">
         <pick-list></pick-list>
->>>>>>> 249b1a624041be895c3f3c5931c1da678acfe0c4
       </div>
     </div>
   </div>  
