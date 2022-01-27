@@ -79,8 +79,13 @@ export default {
 </script>
 
 <style scoped>
+  #mypage {
+    width: 100vw;
+  }
+
   #container {
-    width: 100vh;
+    width: 50%;
+    min-width: 700px;
     min-height: 100vh;
     margin: auto;
     border-left: 0.1rem solid gainsboro;
@@ -103,7 +108,7 @@ export default {
   #profile_card {
     width: 45%;
     margin-left: 1.2rem;
-    margin-top: 1rem;
+    margin-top: 1.1rem;
   }
 
   #name_card {
@@ -113,14 +118,15 @@ export default {
     align-items: center;
     margin-top: 0.2rem;
     margin-bottom: 1.2rem;
-    width: 91%;
+    width: 100%;
   }
   
   #info_card {
     display: flex;
     direction: row;
     justify-content: space-between;
-    width: 90%;
+    align-items: center;
+    width: 100%;
   }
   
   #card {
@@ -146,8 +152,9 @@ export default {
     color: black;
     font-size: 1.2rem;
     font-weight: bold;
-    line-height: 80%;
+    line-height: 100%;
     letter-spacing: 0.05rem;
+    margin: 0;
   }
 
   p {
@@ -209,7 +216,7 @@ export default {
     border-radius: 50%;
     position: absolute;
     top: -17%;
-    left: 43%;
+    left: 42%;
     background-color: #5E39B3;
   }
   
@@ -219,13 +226,13 @@ export default {
     border-radius: 50%;
     position: absolute;
     top: -17%;
-    left: 55%;
+    left: 56%;
     background-color: #5E39B3;
   }
 
   #tab_names {
     margin-top: 1%;
-    width: 19%;
+    width: 22%;
     display: flex;
     direction: row;
     justify-content: space-between;
