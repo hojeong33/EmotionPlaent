@@ -136,14 +136,18 @@
         .then(res => {
           this.keywords = res.data
           this.keywords = this.keywords.sort(() => Math.random() - 0.5)
+          this.page = 1
         })
         .catch(() => alert('잘못된 요청입니다.'))
       }
     },
     computed: {
       page_of_keywords: function(){
-        if (this.keywords){
+        if (this.keywords && this.keywords.length > 12){
           return Math.floor(this.keywords.length / 12)
+        }
+        else if (this.keywords){
+          return 1
         }
         return 0
       }
