@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import com.ssafy.project.EmotionPlanet.Dto.FollowDto;
+import com.ssafy.project.EmotionPlanet.Dto.FollowResultDto;
 import com.ssafy.project.EmotionPlanet.Service.FollowService;
 
 @CrossOrigin(origins = "http://localhost:5500", allowCredentials = "true", allowedHeaders = "*", methods = {
@@ -24,7 +25,7 @@ import com.ssafy.project.EmotionPlanet.Service.FollowService;
 @RestController
 public class FollowController {
 	@Autowired
-	FollowService followService;
+	FollowService followService; 
 
 	private static final int SUCCESS = 1;
 
@@ -40,19 +41,12 @@ public class FollowController {
 		}
 	}
 	
-	@GetMapping(value = {"/follows/{sender}/{receiver}"}) //팔로우 여부 체크
-	public ResponseEntity<Integer> select(@PathVariable String sender,@PathVariable String receiver){
+	@GetMapping(value = {"/follows/{sender}/{receiver}"}) //팔로우 여부 및 정보 체크
+	public ResponseEntity<FollowResultDto> select(@PathVariable String sender,@PathVariable String receiver){
 		int senderno = Integer.parseInt(sender);
 		int receiverno = Integer.parseInt(receiver);
-		if(followService.select(senderno, receiverno) == SUCCESS) {
-			System.out.println("팔로우중");
-			System.out.println(sender +"->"+ receiver);
-			return new ResponseEntity<Integer>(SUCCESS, HttpStatus.OK);
-		} else {
-			System.out.println("언팔로우중");
-			System.out.println(sender +"->"+ receiver);
-			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "다시 확인해주세요..");
-		}
+		FollowResultDto dto = followService.select(senderno, receiverno);
+		return new ResponseEntity<FollowResultDto>(dto, HttpStatus.OK);
 	}
 	
 	@GetMapping(value = "/follows/{no}")
