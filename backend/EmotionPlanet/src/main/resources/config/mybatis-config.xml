@@ -21,6 +21,8 @@
         <mapper resource="mapper/S3_query.xml" />
         <mapper resource="mapper/tag_query.xml" />
         <mapper resource="mapper/img_query.xml" />
+        <mapper resource="mapper/pick_query.xml" />
+        <mapper resource="mapper/pickContent_query.xml" />
 
     </mappers>
 

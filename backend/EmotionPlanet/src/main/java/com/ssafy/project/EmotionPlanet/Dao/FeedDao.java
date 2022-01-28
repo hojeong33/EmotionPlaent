@@ -1,6 +1,8 @@
 package com.ssafy.project.EmotionPlanet.Dao;
 
 import com.ssafy.project.EmotionPlanet.Dto.FeedDto;
+import com.ssafy.project.EmotionPlanet.Dto.UserDto;
+import com.ssafy.project.EmotionPlanet.Dto.UserRequestDto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,6 +22,14 @@ public interface FeedDao {
             @Param("userNo") int userNo,
             @Param("feedNo") int feedNo);
     public int unlike(
+            @Param("userNo") int userNo,
+            @Param("feedNo")int feedNo);
+
+    public List<UserRequestDto> likeListFollow(
+            @Param("userNo") int userNo,
+            @Param("feedNo")int feedNo);
+
+    public List<UserRequestDto> likeListUnFollow(
             @Param("userNo") int userNo,
             @Param("feedNo")int feedNo);
 }

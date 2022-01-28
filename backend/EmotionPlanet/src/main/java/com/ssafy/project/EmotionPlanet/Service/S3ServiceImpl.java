@@ -68,8 +68,44 @@ public class S3ServiceImpl implements S3Service {
         return Ids;
     }
 
+    public List<String> uploadFileReturnURL(List<MultipartFile> multipartFile) {
+        List<String> fileNameList = new ArrayList<>();
+        List<String> fileURLList = new ArrayList<>();
+
+        // forEach 구문을 통해 multipartFile로 넘어온 파일들 하나씩 fileNameList에 추가
+        multipartFile.forEach(file -> {
+            String fileName = createFileName(file.getOriginalFilename());
+            ObjectMetadata objectMetadata = new ObjectMetadata();
+            objectMetadata.setContentLength(file.getSize());
+            objectMetadata.setContentType(file.getContentType());
+
+            String fileUrl = "";
+            try(InputStream inputStream = file.getInputStream()) {
+                amazonS3.putObject(new PutObjectRequest(bucket, fileName, inputStream, objectMetadata)
+                        .withCannedAcl(CannedAccessControlList.PublicRead));
+                fileUrl = amazonS3.getUrl(bucket, fileName).toString();
+            } catch(IOException e) {
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "파일 업로드에 실패했습니다.");
+            }
+
+            fileNameList.add(fileName);
+            fileURLList.add(fileUrl);
+        });
+
+        List<String> URLs = new ArrayList<>();
+        for (int i = 0; i < fileNameList.size(); i++) {
+            S3Dto s3Dto = new S3Dto();
+            s3Dto.setImgName(fileNameList.get(i));
+            s3Dto.setImgLink(fileURLList.get(i));
+            s3Dao.flushFile(s3Dto);
+            URLs.add(s3Dto.getImgLink());
+        }
+        return URLs;
+    }
     public void deleteFile(String fileName) {
+
         amazonS3.deleteObject(new DeleteObjectRequest(bucket, fileName));
+        s3Dao.deleteFile(fileName);
     }
 
     private String createFileName(String fileName) { // 먼저 파일 업로드 시, 파일명을 난수화하기 위해 random으로 돌립니다.
