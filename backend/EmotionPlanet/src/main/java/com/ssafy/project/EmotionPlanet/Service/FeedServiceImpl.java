@@ -117,6 +117,23 @@ public class FeedServiceImpl implements FeedService{
     }
 
     @Override
+    public List<UserRequestDto> likeList(int feedNo) {
+        FeedDto feedDto = feedDao.read(feedNo);
+        int userNo = feedDto.getAuthor();
+        List<UserRequestDto> follow = feedDao.likeListFollow(userNo, feedNo);
+        List<UserRequestDto> unfollow = feedDao.likeListUnFollow(userNo, feedNo);
+
+        List<UserRequestDto> sum = new ArrayList<>();
+        for (UserRequestDto user : follow) {
+            sum.add(user);
+        }
+        for (UserRequestDto user : follow) {
+            sum.add(user);
+        }
+        return sum;
+    }
+
+    @Override
     public int like(int userNo, int feedNo) {
         return feedDao.like(userNo, feedNo);
     }

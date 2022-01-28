@@ -1,10 +1,14 @@
 package com.ssafy.project.EmotionPlanet.Service;
 
+import com.ssafy.project.EmotionPlanet.Dao.PickContentDao;
 import com.ssafy.project.EmotionPlanet.Dao.PickDao;
+import com.ssafy.project.EmotionPlanet.Dto.PickContentDto;
 import com.ssafy.project.EmotionPlanet.Dto.PickDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -13,6 +17,9 @@ public class PickServiceImpl implements PickService{
     @Autowired
     PickDao pickDao;
 
+    @Autowired
+    PickContentDao pickContentDao;
+
     @Override
     public int create(PickDto pickDto) {
         return pickDao.create(pickDto);
@@ -20,12 +27,21 @@ public class PickServiceImpl implements PickService{
 
     @Override
     public List<PickDto> list(int userNo) {
-        return pickDao.list(userNo);
+
+        List<PickDto> pickDtos = pickDao.list(userNo);
+
+        for (PickDto pickDto : pickDtos) {
+            pickDto.setContentsList(pickContentDao.list(pickDto.getNo()));
+        }
+
+        return pickDtos;
     }
 
     @Override
     public PickDto select(int no) {
-        return pickDao.select(no);
+        PickDto pickDto = pickDao.select(no);
+        pickDto.setContentsList(pickContentDao.list(pickDto.getNo()));
+        return pickDto;
     }
 
     @Override

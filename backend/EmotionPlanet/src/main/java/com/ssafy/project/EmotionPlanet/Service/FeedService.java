@@ -1,6 +1,7 @@
 package com.ssafy.project.EmotionPlanet.Service;
 
 import com.ssafy.project.EmotionPlanet.Dto.FeedDto;
+import com.ssafy.project.EmotionPlanet.Dto.UserRequestDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,6 +13,7 @@ public interface FeedService {
     public int write(FeedDto feedDto);
     public int update(FeedDto feedDto);
     public int delete(int no);
+    public List<UserRequestDto> likeList(int feedNo);
     public int like(int userNo, int feedNo);
     public int unlike(int userNo, int feedNo);
 }

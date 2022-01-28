@@ -2,4 +2,21 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.ssafy.project.EmotionPlanet.Dao.PickContentDao">
 
+    <select id="list" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.PickContentDto">
+        select no, pickNo, apiId, name, descr, author, year, type, postImgLink
+        from pickcontent
+        where pickNo = #{pickNo}
+        order by no desc
+    </select>
+
+    <select id="select" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.PickContentDto">
+        select no, pickNo, apiId, name, descr, author, year, type, postImgLink
+        from pickcontent
+        where no = #{no}
+    </select>
+
+    <delete id="delete" parameterType="int">
+        delete from pickcontent where no = #{no}
+    </delete>
+
 </mapper>

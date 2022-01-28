@@ -12,8 +12,8 @@ import com.ssafy.project.EmotionPlanet.Util.createAccesstoken;
 public class ApiServiceImpl implements ApiService {
 	
 	private final RestTemplate restTemplate = new RestTemplate();
-	String text = "sad";
-	private String URL= "https://api.spotify.com/v1/recommendations/?seed_genres="+text+"&limit=100&market=KR";
+	String text = "happy";
+	private String URL= "https://api.spotify.com/v1/recommendations/?seed_genres="+text+"&limit=2&market=KR";
 	
 	@Override
 	public String Recommendations() {

@@ -5,7 +5,7 @@
     <select id="list" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.PickDto">
         select no, userNo, name, date, tagNo
         from pick
-        where author = #{no}
+        where userNo = #{no}
         order by date desc
     </select>
 
