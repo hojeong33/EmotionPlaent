@@ -1,13 +1,15 @@
 <template>
-  <div></div>
+  <div>
+		하이
+	</div>
 </template>
 
 <script>
 export default {
-
+	
 }
 </script>
 
-<style>
+<style scoped>
 
 </style>
