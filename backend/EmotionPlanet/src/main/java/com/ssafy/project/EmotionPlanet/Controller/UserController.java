@@ -4,7 +4,6 @@ import com.ssafy.project.EmotionPlanet.Dto.FindEmailDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 import com.ssafy.project.EmotionPlanet.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
@@ -60,7 +59,7 @@ public class UserController {
 			System.out.println("이메일 중복 검사 사용중 " + email);
 			throw new ResponseStatusException(HttpStatus.CONFLICT, "이미 사용중인 이메일 입니다.");
 		}
-	}
+	} 
 
 	@GetMapping(value = "/users/checkByNickname/{nickname}") // 닉네임 중복검사
 	public ResponseEntity<Integer> duplicateNickname(@PathVariable String nickname) {

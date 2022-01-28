@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import com.ssafy.project.EmotionPlanet.Dto.FeedDto;
-import com.ssafy.project.EmotionPlanet.Dto.PickDto;
 import com.ssafy.project.EmotionPlanet.Dto.TagDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 import com.ssafy.project.EmotionPlanet.Service.SearchService;
@@ -64,16 +63,16 @@ public class SearchController {
 		}
 	}
 	
-	@GetMapping(value = "/serachs/byRecommend/{name}")  //찜목록 태그 검색
-	public ResponseEntity<List<PickDto>> recommendSelect(@PathVariable String name) {
-		List<PickDto> list = searchService.recommendSelect(name);
-		if (list != null) {
-			System.out.println("찜목록 검색 성공");
-			System.out.println(list);
-			return new ResponseEntity<List<PickDto>>(list, HttpStatus.OK);
-		} else {
-			System.out.println("찜목록 검색 실패");
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하는 정보가 없습니다.");
-		}
-	}
+//	@GetMapping(value = "/serachs/byRecommend/{name}")  //찜목록 태그 검색
+//	public ResponseEntity<List<PickDto>> recommendSelect(@PathVariable String name) {
+//		List<PickDto> list = searchService.recommendSelect(name);
+//		if (list != null) {
+//			System.out.println("찜목록 검색 성공");
+//			System.out.println(list);
+//			return new ResponseEntity<List<PickDto>>(list, HttpStatus.OK);
+//		} else {
+//			System.out.println("찜목록 검색 실패");
+//			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하는 정보가 없습니다.");
+//		}
+//	}
 }
