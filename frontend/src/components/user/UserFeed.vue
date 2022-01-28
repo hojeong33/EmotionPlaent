@@ -1,11 +1,16 @@
 <template>
   <div>
 		<div v-if="isExist">
-			<p>전체</p>
+			<div id="filter">
+				<p>전체</p>
+				<img id="rocket" src="@/assets/images/etc/rocket.png" alt="">
+			</div>
 			<br>
-			<div v-for="(feed, idx) in feedList" :key="idx">
-				<img id="feed_img" :src="feed.feedImg" alt="">
-				<img id="feed_planet" :src="feed.feedPlanet" alt=""> 
+			<div id="feeds"> 
+				<article id="feed" v-for="(feed, idx) in feedList" :key="idx" class="container">
+					<img id="feed_img" :src="feed.feedImg" alt="">
+					<img id="feed_planet" :src="`${feed.feedPlanet}`" alt=""> 
+				</article>
 			</div>
 		</div>
 		<div v-else id="body">	
@@ -66,11 +71,11 @@ export default {
 			],
 			planetStyles: [
         { id: 1, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
-        { id: 2, name: '행복행성', img: "@/assets/images/emotions/happy.png", color: '#6BD9E8' },
-        { id: 3, name: '중립행성', img: "@/assets/images/emotions/neutral.png", color: '#C5D3DC' },
-        { id: 4, name: '놀라움행성', img: "@/assets/images/emotions/surprised.png", color: '#FEA95C' },
+        { id: 2, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
+        { id: 3, name: '중립행성', img: "neutral.png", color: '#C5D3DC' },
+        { id: 4, name: '놀라움행성', img: "surprised.png", color: '#FEA95C' },
         { id: 5, name: '분노행성', img: "rage.png", color: '#FB5D38' },
-        { id: 6, name: '우울행성', img: "@/assets/images/emotions/depressed.png", color: '#2A61F0' },
+        { id: 6, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
       ],
 			feedList: [],
 		}
@@ -78,12 +83,14 @@ export default {
 	created: function () {
 		for (let feed of this.user_feed) {
 			for (let emotion of this.planetStyles) {
-				if (feed.planet === emotion.name)
-				console.log(emotion.img)
-				this.feedList.push({'feedImg': feed.postImage, 'feedPlanet': feed.planet}) 
+				if (feed.planet === emotion.name) {
+					const planetImg = `../../assets/images/emotions/${emotion.img}`
+					this.feedList.push({'feedImg': feed.postImage, 'feedPlanet': planetImg}) 
+				}
 			}
 		}
 		console.log(this.feedList)
+		
 	}
 	// methods: function () {
 	// 	// axios로 서버에서 데이터 받아오기
@@ -104,18 +111,43 @@ export default {
 	height: 10vh;
 	margin-bottom: 2vh;
 }
+#filter {
+	display: flex;
+	flex-direction: row;
+	justify-content: right;
+	
+}
 p {
 	font-size: 1.5rem;
-	color: gray;
+	color: black;
+	font-weight: bold;
+}
+#rocket{
+	width: 2.5vh;
+	height: 2.5vh;
+	margin-top: 3px;
+	margin-right: 5vh;
+	margin-left: 5px;
+}
+#feeds{
+	display: flex;
+}
+#feed {
+	display: flex;
+	position: relative;
+	padding-left: 4vh;
+	padding-right: 4vh;
 }
 #feed_img {
-	position: relative;
-	width: 20vh;
-	height: 20vh;
+	width: 25vh;
+	height: 25vh;
+	border-radius: 10px;
 }
 #feed_planet {
 	position: absolute;
-	width: 10vh;
-	height: 10vh;
+	width: 5vh;
+	height: 5vh;
+	top: 20vh;
+	border-radius: 10px;
 }
 </style>

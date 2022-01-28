@@ -32,6 +32,7 @@
           <p @click="togglePick" :class="onPick ? 'active': 'inactive'">찜 목록</p>
         </span>
       </div>
+      <br>
       <div v-if="onFeed">
         <user-feed></user-feed> 
       </div>
