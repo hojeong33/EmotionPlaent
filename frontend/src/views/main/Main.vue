@@ -2,7 +2,6 @@
 	<div>
 		<navigation/>
 		<div class="container justify-content-center">
-			<div class="v1"></div>
 			<div class="example">
 				<div class="tabs">
 					<TabItem
@@ -23,7 +22,6 @@
 					</transition>
 				</div>
 			</div>
-			<div class="v1"></div>
 		</div>
 	</div>
 </template>
@@ -56,16 +54,24 @@ export default {
 </script>
 
 <style scoped>
-	.v1 {
-	display: flex; 
-	border: 1px solid gainsboro;
-	min-height: 100vh;
-	/* margin-left: 25%; */
-	}
+  .container {
+    width: 50vw;
+    min-width: 700px;
+    min-height: 92.5vh;
+    margin: auto;
+    border-left: 0.1rem solid gainsboro;
+    border-right: 0.1rem solid gainsboro;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    }
 	.contents {
 	position: relative;
 	overflow: hidden;
-	width: 100vh; 
+	width: 50vw;
+  min-width: 700px;
+  min-height: 92.5vh;
 	/* 메인 피드 크기 -> 100vh-> 센터 */
 	min-height: 100vh;
 	border: 2px solid gainsboro;
