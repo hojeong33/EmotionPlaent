@@ -32,5 +32,4 @@
         replace into feed_tag(feedNo, tagNo) values (#{feedNo}, #{tagNo})
     </insert>
 
-
 </mapper>

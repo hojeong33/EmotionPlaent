@@ -84,7 +84,7 @@ public class SearchServiceImpl implements SearchService {
 		if(list.size() != 0) {
 			for (PickDto pick : list) {
 				List<PickContentDto> pickcontents = searchDao.pickcontentSelect(pick.getNo());
-				pick.setPickcontents(pickcontents);
+				//pick.setPickcontents(pickcontents);
 			}
 			return list;
 		}else {

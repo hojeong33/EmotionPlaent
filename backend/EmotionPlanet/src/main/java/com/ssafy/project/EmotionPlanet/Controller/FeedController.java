@@ -1,9 +1,6 @@
 package com.ssafy.project.EmotionPlanet.Controller;
 
-import com.ssafy.project.EmotionPlanet.Dto.FeedDto;
-import com.ssafy.project.EmotionPlanet.Dto.FeedLikeDto;
-import com.ssafy.project.EmotionPlanet.Dto.ImgDto;
-import com.ssafy.project.EmotionPlanet.Dto.TagDto;
+import com.ssafy.project.EmotionPlanet.Dto.*;
 import com.ssafy.project.EmotionPlanet.Service.FeedService;
 import com.ssafy.project.EmotionPlanet.Service.ImgService;
 import com.ssafy.project.EmotionPlanet.Service.S3Service;
@@ -94,6 +91,20 @@ public class FeedController {
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "피드가 없습니다.");
         }
+    }
+
+    @GetMapping(value = "/feeds/like/{no}")
+    public ResponseEntity<List<UserRequestDto>> likeList(@PathVariable String no) {
+        int feedNo = Integer.parseInt(no);
+        List<UserRequestDto> users = feedService.likeList(feedNo);
+
+        return new ResponseEntity<List<UserRequestDto>>(users, HttpStatus.OK);
+
+//        if(users != null) {
+//            return new ResponseEntity<List<UserDto>>(users, HttpStatus.OK);
+//        } else {
+//            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "좋아요 목록이 없습니다.");
+//        }
     }
 
     @PutMapping(value ="/feeds") // 글 수정

@@ -30,6 +30,14 @@ public class S3Controller {
         else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "업로드 실패.");
     }
 
+    @PostMapping("/file2")
+    public ResponseEntity<List<String>> uploadFileReturnURL( @RequestPart List<MultipartFile> multipartFile) {
+        List<String> result = s3Service.uploadFileReturnURL(multipartFile);
+
+        if(result.size() != 0) return new ResponseEntity<List<String>>(result, HttpStatus.OK);
+        else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "업로드 실패.");
+    }
+
     @DeleteMapping("/file")
     public ResponseEntity<Integer> deleteFile(@RequestParam String fileName) {
         s3Service.deleteFile(fileName);
