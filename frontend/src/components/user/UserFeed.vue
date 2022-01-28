@@ -9,7 +9,7 @@
 			<div id="feeds"> 
 				<article id="feed" v-for="(feed, idx) in feedList" :key="idx" class="container">
 					<img id="feed_img" :src="feed.feedImg" alt="">
-					<img id="feed_planet" :src="`${feed.feedPlanet}`" alt=""> 
+					<img id="feed_planet" :src="require('@/assets/images/emotions/'+`${feed.feedPlanet}`)" alt=""> 
 				</article>
 			</div>
 		</div>
@@ -84,8 +84,8 @@ export default {
 		for (let feed of this.user_feed) {
 			for (let emotion of this.planetStyles) {
 				if (feed.planet === emotion.name) {
-					const planetImg = `../../assets/images/emotions/${emotion.img}`
-					this.feedList.push({'feedImg': feed.postImage, 'feedPlanet': planetImg}) 
+					// const planetImg = `../../assets/images/emotions/${emotion.img}`
+					this.feedList.push({'feedImg': feed.postImage, 'feedPlanet': emotion.img}) 
 				}
 			}
 		}
@@ -126,7 +126,7 @@ p {
 	width: 2.5vh;
 	height: 2.5vh;
 	margin-top: 3px;
-	margin-right: 5vh;
+	margin-right: 3.5vh;
 	margin-left: 5px;
 }
 #feeds{
@@ -135,19 +135,21 @@ p {
 #feed {
 	display: flex;
 	position: relative;
-	padding-left: 4vh;
-	padding-right: 4vh;
+	padding-left: 3vh;
+	padding-right: 3vh;
 }
 #feed_img {
-	width: 25vh;
-	height: 25vh;
+	width: 22vh;
+	height: 22vh;
 	border-radius: 10px;
 }
 #feed_planet {
 	position: absolute;
 	width: 5vh;
 	height: 5vh;
-	top: 20vh;
-	border-radius: 10px;
+	top: 17vh;
+	border-radius: 50%;
+	border: 3px solid;
+	border-color: white;
 }
 </style>
