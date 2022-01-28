@@ -1,16 +1,19 @@
 <template>
   <div>
-      <h1>피드</h1>
+      {{comment}}
   </div>
 </template>
 
 <script>
 export default {
- 
+    name:'Comment',
+    props:{
+        comment:String
+    }
 
 }
 </script>
 
-<style scoped>
+<style>
 
 </style>
