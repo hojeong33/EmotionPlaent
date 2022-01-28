@@ -1,10 +1,8 @@
 package com.ssafy.project.EmotionPlanet.Dao;
 
 import java.util.List;
-
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
-
 import com.ssafy.project.EmotionPlanet.Dto.FollowDto;
 
 @Mapper

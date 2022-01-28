@@ -65,13 +65,12 @@ export default {
     login: function () {
       axios({
         method: 'post',
-        // url:'http://localhost:8080/login',
-        url: 'http://13.125.47.126:8080/login',
+        url:'http://13.125.47.126:8080/login',
         data: this.credentials
       })
       .then(()=>{
         alert("로그인 성공")
-        this.$emit('login')
+        this.$router.push({ name: 'Main' })
       })
       .catch(err=> {
         alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
@@ -97,10 +96,10 @@ export default {
     border-radius: 20px;
     width: 35vh;
     min-width: 350px;
-    height: 4vh;
+    height: 4.5vh;
     min-height: 40px;
     padding: 0.75rem;
-    font-size: 1rem;
+    font-size: 1.25rem;
     font-weight: bold;
   }
 
@@ -111,10 +110,16 @@ export default {
     text-shadow: 0 1px 2px rgb(0, 0, 0, 0.5);
   }
 
+  input[type="password"] {
+    font-size: 3rem;
+  }
+
   input::placeholder {
+    font-size: 1rem !important;
     font-weight: initial;
-    letter-spacing: -1px;
     text-shadow: none;
+    position: absolute;
+    top: 20%;
   }
 
   input:focus::placeholder {
@@ -142,7 +147,8 @@ export default {
   }
 
   img {
-    width: 3vh;
+    width: 5vh;
+    height: 5vh;
   }
 
   p {

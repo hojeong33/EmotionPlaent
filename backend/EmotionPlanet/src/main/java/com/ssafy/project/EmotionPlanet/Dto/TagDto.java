@@ -7,11 +7,15 @@ public class TagDto {
     private String name;
     private int type;
 
-    public TagDto() {
+    private int count; // 태그 검색 시 해당 태그가 포함된 피드 갯수 가져올때 사용.
+    public int getCount() {
+		return count;
+	}
+	public void setCount(int count) {
+		this.count = count;
+	}
+	public TagDto() {
     }
-
-
-
     public TagDto(int no, int feedNo, String name, int type) {
         this.no = no;
         this.feedNo = feedNo;
@@ -50,4 +54,11 @@ public class TagDto {
     public void setFeedNo(int feedNo) {
         this.feedNo = feedNo;
     }
+	@Override
+	public String toString() {
+		return "TagDto [no=" + no + ", feedNo=" + feedNo + ", name=" + name + ", type=" + type + ", count=" + count
+				+ "]";
+	}
+    
+    
 }
