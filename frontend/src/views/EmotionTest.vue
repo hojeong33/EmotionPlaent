@@ -64,15 +64,16 @@
     methods: {
       check: function(keyword){
         const idx = this.selected.indexOf(keyword)
-        if ((this.testNum == 1 && this.selected.length > 5) || 
-          (this.testNum == 2 && this.selected.length > 3))
-        {
-          alert('너무 많이 골랐어요..!')
-          this.$refs[keyword.no][0].isChecked = false
+        const nums = this.selected.length
+
+        if (idx != -1){
+          this.selected.splice(idx, 1)
         }
         else {
-          if (idx != -1){
-            this.selected.splice(idx, 1)
+          if ((this.testNum == 1 && nums > 5) ||
+          (this.testNum == 2 && nums > 3)){
+            alert('너무 많이 골랐어요..!')
+            this.$refs[keyword.no][0].isChecked = false
           }
           else {
             this.selected.push(keyword)
