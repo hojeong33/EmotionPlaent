@@ -13,8 +13,6 @@ import com.ssafy.project.EmotionPlanet.Dao.TagDao;
 import com.ssafy.project.EmotionPlanet.Dto.CommentDto;
 import com.ssafy.project.EmotionPlanet.Dto.FeedDto;
 import com.ssafy.project.EmotionPlanet.Dto.ImgDto;
-import com.ssafy.project.EmotionPlanet.Dto.PickContentDto;
-import com.ssafy.project.EmotionPlanet.Dto.PickDto;
 import com.ssafy.project.EmotionPlanet.Dto.TagDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 
@@ -78,17 +76,17 @@ public class SearchServiceImpl implements SearchService {
 		}
 	}
 
-	@Override
-	public List<PickDto> recommendSelect(String name) {
-		List<PickDto> list = searchDao.recommendSelect(name);
-		if(list.size() != 0) {
-			for (PickDto pick : list) {
-				List<PickContentDto> pickcontents = searchDao.pickcontentSelect(pick.getNo());
-				pick.setPickcontents(pickcontents);
-			}
-			return list;
-		}else {
-			return null;
-		}
-	}
+//	@Override
+//	public List<PickDto> recommendSelect(String name) {
+//		List<PickDto> list = searchDao.recommendSelect(name);
+//		if(list.size() != 0) {
+//			for (PickDto pick : list) {
+//				List<PickContentDto> pickcontents = searchDao.pickcontentSelect(pick.getNo());
+//				pick.setPickcontents(pickcontents);
+//			}
+//			return list;
+//		}else {
+//			return null;
+//		}
+//	}
 }
