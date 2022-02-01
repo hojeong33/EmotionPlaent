@@ -1,6 +1,9 @@
 <template>
   <div id="pick_container">
-    <filter-tab @filtering="filterFeed" id="filter"></filter-tab>
+    <filter-tab 
+      @filtering="filterPicks"
+      id="filter"
+      ></filter-tab>
     <div id="list_tab">
       <p @click="toggleMusic">음악</p>
       <p @click="toggleMovie">영화</p>
@@ -8,12 +11,15 @@
     </div>
     <music-pick 
       :music-list="musicList"
-      v-if="onMusic" ></music-pick>
+      :music-exist="musicExist"
+      v-if="onMusic"></music-pick>
     <movie-pick 
       :movie-list="movieList"
+      :movie-exist="movieExist"
       v-if="onMovie"></movie-pick>
     <activity-pick 
       :activity-list="activityList"
+      :activity-exist="activityExist"
       v-if="onActivity"></activity-pick>
   </div>
 </template>
@@ -30,13 +36,18 @@ export default {
   data() {
     return {
       picks,
-      filtering: null,
+      
       onMusic: true,
       onMovie: false,
       onActivity: false,
+
       musicList: [],
       movieList: [],
-      ActivityList: [],
+      activityList: [],
+
+			musicExist: false,
+      movieExist: false,
+      activityExist: false,
     }
   },
   components: {
@@ -46,14 +57,7 @@ export default {
     FilterTab,
   },
   created() {
-    const music = this.picks.find(el => el.no === 1) || {}
-    this.musicList.push(music)
-
-    const movie = this.picks.find(el => el.no === 2) || {}
-    this.movieList.push(movie)
-    
-    const activity = this.picks.find(el => el.no === 3) || {}
-    this.activityList.push(activity)
+    this.sortPicks()
   },
   methods: {
     toggleMusic: function () {
@@ -71,9 +75,63 @@ export default {
       this.onMovie = false
       this.onActivity = true
     },
-    filterFeed: function (filterValue) {
-      console.log(filterValue)
+    sortPicks: function () {
+      this.picks.forEach(element => {
+        if (element.no === 1) {
+          this.musicList = this.musicList.concat(element.contentsList)
+        }
+        else if (element.no === 2) {
+          this.movieList = this.movieList.concat(element.contentsList)
+        }      
+        else if (element.no === 3) {
+          this.activityList = this.activityList.concat(element.contentsList)
+        } 
+      })
+      if (this.musicList.length != 0) {
+        this.musicExist = true
+      }
+      if (this.movieList.length != 0) {
+        this.movieExist = true
+      }
+      if (this.activityList.length != 0) {
+        this.activityExist = true
+      }
+      console.log(this.musicList)
     },
+    filterPicks: function (filterValue) {
+      this.musicList = []
+      this.movieList = []
+      this.activityList = []
+      this.musicExist = false
+      this.movieExist = false
+      this.activityExist = false
+      
+      if (filterValue != '0') {
+				for (let pick of this.picks) {
+					if ( pick.no === 1 && pick.tagNo === Number(filterValue)) {
+						this.musicList = this.musicList.concat(pick.contentsList)
+					}
+					else if ( pick.no === 2 && pick.tagNo === Number(filterValue)) {
+						this.movieList = this.movieList.concat(pick.contentsList)
+					}
+					else if ( pick.no === 3 && pick.tagNo === Number(filterValue)) {
+						this.activityList = this.activityList.concat(pick.contentsList)
+					}
+				}
+        if (this.musicList.length != 0) {
+          this.musicExist = true
+        }
+        if (this.movieList.length != 0) {
+          this.movieExist = true
+        }
+        if (this.activityList.length != 0) {
+          this.activityExist = true
+        }
+      }
+      else {
+        this.sortPicks()
+      }
+		}
   },
 }
 </script>
