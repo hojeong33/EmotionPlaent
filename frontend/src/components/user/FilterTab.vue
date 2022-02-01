@@ -20,9 +20,6 @@ export default {
 			filterValue: null,
 		}
 	},
-	props: {
-		planetStyles: Array,
-	},
 	methods: {
 		filtering: function (onselect) {
 			this.filterValue = onselect.target.value
