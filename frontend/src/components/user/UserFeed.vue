@@ -1,38 +1,31 @@
 <template>
   <div class="container">
-		<filter-tab :planet-styles="planetStyles" @filtering="filterFeed" id="filter"></filter-tab>
-			<!-- <select id="selectbox" @change="filtering">
-				<option value="0">선택하기</option>
-				<option value="1">행복행성</option>
-				<option value="2">우울행성</option>
-				<option value="3">중립행성</option>
-				<option value="4">공포행성</option>
-				<option value="5">깜짝행성</option>
-				<option value="6">분노행성</option>
-			</select> -->
+		<filter-tab @filtering="filterFeed" id="filter"></filter-tab>
 		<br>
-		<!-- <div v-if="isExist" id="show_result">
-			<div id="feeds" v-if="filteredFeed.length === 0 && filteredExist === true"> 
-				<article id="feed" v-for="(feed, idx) in feedList" :key="idx" class="container">
-					<img id="feed_img" :src="feed.feedImg" alt="">
-					<img id="feed_planet" :src="require('@/assets/images/emotions/'+`${feed.feedPlanet}`)" alt=""> 
-				</article>
-			</div>
-			<div id="feeds" v-else-if="filteredFeed && filteredExist === true">
-				<article id="feed" v-for="(feed, idx) in filteredFeed" :key="idx" class="container">
-					<img id="feed_img" :src="feed.feedImg" alt="">
-					<img id="feed_planet" :src="require('@/assets/images/emotions/'+`${feed.feedPlanet}`)" alt=""> 
-				</article>
-			</div>
-			<div id="feeds" v-else-if="filteredFeed.length === 0 && filteredExist ===false">
-				<img id="nothing" src="@/assets/images/etc/alien.png" alt="">
-				<p>게시글이 없어요...</p>
+		<div v-if="isExist">
+			<div @change="filterFeed">
+				<div id="feeds" v-if="filteredFeed.length === 0 && filteredExist === true"> 
+					<article id="feed" v-for="(feed, idx) in feedList" :key="idx">
+						<img id="feed_img" :src="feed.feedImg" alt="">
+						<img id="feed_planet" :src="require('@/assets/images/emotions/'+`${feed.feedPlanet}`)" alt=""> 
+					</article>
+				</div>
+				<div id="feeds" v-else-if="filteredFeed && filteredExist === true">
+					<article id="feed" v-for="(feed, idx) in filteredFeed" :key="idx">
+						<img id="feed_img" :src="feed.feedImg" alt="">
+						<img id="feed_planet" :src="require('@/assets/images/emotions/'+`${feed.feedPlanet}`)" alt=""> 
+					</article>
+				</div>
+				<div id="no_result" v-else-if="filteredFeed.length === 0 && filteredExist ===false">
+					<img id="nothing" src="@/assets/images/etc/alien.png" alt="">
+					<p>게시글이 없어요...</p>
+				</div>
 			</div>
 		</div>
 		<div v-else id="no_result">
 			<img id="nothing" src="@/assets/images/etc/alien.png" alt="">
 			<p>게시글이 없어요...</p>
-		</div> -->
+		</div>
 	</div>
 </template>
 
@@ -58,7 +51,7 @@ export default {
 					caption: "내 기분은 ☀️",
 					comment_cnt:"2",
 					comments:["반가워요","안녕하세요"],
-					planet:"행복행성"
+					planet: 1
 				},
 				{
 					username: "조은누리",
@@ -71,7 +64,7 @@ export default {
 					caption: "맥주한잔생각나는밤이군",
 					comment_cnt:"2",
 					comments:["반가워요","안녕하세요"],
-					planet:"행복행성"
+					planet: 1
 				},
 				{
 					username: "조은누리",
@@ -84,7 +77,7 @@ export default {
 					caption: "멍멍🐶",
 					comment_cnt:"2",
 					comments:["반가워요","안녕하세요"],
-					planet:"우울행성"
+					planet: 2
 				}
 			],
 			planetStyles: [
@@ -106,40 +99,36 @@ export default {
 	},
 	methods: {
 		filterFeed: function (filterValue) {
-			console.log(`${filterValue}`)
+			if (filterValue === '0') {
+				//값 초기화
+				this.filteredExist = true
+				this.filteredFeed = []
+				// console.log(this.feedList)
+				// console.log(this.filteredExist)
+			} else {
+				// 값 초기화
+				this.filteredFeed = []
+				this.filteredExist = true
+
+				for (let filteredEmotion of this.feedList) {
+					if (filteredEmotion.planetId === Number(filterValue)) {
+						this.filteredFeed.push(filteredEmotion)
+						// console.log(this.filteredFeed)
+					}
+				}
+				// 필터링 값이 없을 경우
+				if (this.filteredFeed.length === 0) {
+					this.filteredExist = false
+					// console.log(this.filteredExist)
+				}
+			}
+			// console.log(this.filteredFeed)
 		}
-		// filtering: function (onselect) {
-		// 	if (onselect.target.value === '0') {
-		// 		//값 초기화
-		// 		this.filteredExist = true
-		// 		this.filteredFeed = []
-
-		// 		console.log(this.feedList)
-		// 		console.log(this.filteredExist)
-		// 	} else {
-		// 		// 값 초기화
-		// 		this.filteredFeed = []
-		// 		this.filteredExist = true
-
-		// 		for (let filteredEmotion of this.feedList) {
-		// 			if (filteredEmotion.planetId === Number(onselect.target.value)) {
-		// 				this.filteredFeed.push(filteredEmotion)
-		// 				console.log(this.filteredFeed)
-		// 			}
-		// 		}
-		// 		// 필터링 값이 없을 경우
-		// 		if (this.filteredFeed.length === 0) {
-		// 			this.filteredExist = false
-		// 			console.log(this.filteredExist)
-		// 		}
-		// 	}
-		// 	// console.log(this.filteredFeed)
-		// } 
 	},
 	created: function () {
 		for (let feed of this.user_feed) {
 			for (let emotion of this.planetStyles) {
-				if (feed.planet === emotion.name) {
+				if (feed.planet === emotion.id) {
 					// const planetImg = `../../assets/images/emotions/${emotion.img}`
 					this.feedList.push({'feedImg': feed.postImage, 'planetId': emotion.id, 'feedPlanet': emotion.img}) 
 				}
@@ -165,25 +154,31 @@ export default {
 	margin: auto;
 }
 #no_result {
-	text-align: center;
+	display:flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	padding-top: 5vh;
 }
 #nothing {
 	width: 10vh;
 	height: 10vh;
 	margin-bottom: 2vh;
 }
+p{
+	font-weight: bold;
+}
 #filter {
 	display: flex;
 	justify-content: right;
-}
-#show_result{
-	text-align: left;
 }
 #feeds{
 	display: flex;
 }
 #feed {
 	display: flex;
+	flex-direction: left;
+	padding: 1rem;
 	position: relative;
 }
 #feed_img {
