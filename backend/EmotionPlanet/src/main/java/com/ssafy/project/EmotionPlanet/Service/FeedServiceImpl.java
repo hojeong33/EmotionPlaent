@@ -27,6 +27,9 @@ public class FeedServiceImpl implements FeedService{
     @Autowired
     TagService tagService;
 
+    @Autowired
+    S3Service s3Service;
+
     @Override
     public List<FeedDto> list(int no) {
 
@@ -96,7 +99,6 @@ public class FeedServiceImpl implements FeedService{
     @Override
     public int update(FeedDto feedDto) {
 
-
         return feedDao.update(feedDto);
     }
 
@@ -104,10 +106,31 @@ public class FeedServiceImpl implements FeedService{
     public int delete(int no) {
 
         List<CommentDto> comments = commentDao.list(no);
+        List<ImgDto> imgs = imgDao.list(no);
         for(CommentDto comment : comments){
             commentDao.delete(comment.getNo());
         }
+        for(ImgDto img : imgs){
+            s3Service.deleteFile(img.getImgName());
+        }
         return feedDao.delete(no);
+    }
+
+    @Override
+    public List<UserRequestDto> likeList(int feedNo) {
+        FeedDto feedDto = feedDao.read(feedNo);
+        int userNo = feedDto.getAuthor();
+        List<UserRequestDto> follow = feedDao.likeListFollow(userNo, feedNo);
+        List<UserRequestDto> unfollow = feedDao.likeListUnFollow(userNo, feedNo);
+
+        List<UserRequestDto> sum = new ArrayList<>();
+        for (UserRequestDto user : follow) {
+            sum.add(user);
+        }
+        for (UserRequestDto user : follow) {
+            sum.add(user);
+        }
+        return sum;
     }
 
     @Override

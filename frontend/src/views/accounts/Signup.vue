@@ -149,7 +149,6 @@
           this.isValid.validateEmailcheck = false
         }
       },
-
       signup: function () {
         if (this.credentials.pw === this.credentials.passwordConfirmation){ // 입력 비밀번호가 일치하면 회원가입 (나중에 여기다 벨류체크)
           axios({
@@ -158,7 +157,7 @@
             data: this.credentials
           })
           .then( () => {
-            if (confirm('가입이 완료되었습니다.')){
+            if (alert('가입이 완료되었습니다.')){
               this.$router.push({name:'Login'}) // 가입 완료시 로그인 페이지로 이동
             }
           })

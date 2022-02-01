@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div id="pick_container">
     <div id="sort_bar">
       <p style="font-size:1.8rem; font-weight:bold">우울행성</p>
@@ -15,15 +16,25 @@
       <span id="item"></span>
     </div>
   </div>
+=======
+  <div>
+		하이
+	</div>
+>>>>>>> 9d0f26fe07c917d82ce59e5dea056a90b6ce28cc
 </template>
 
 <script>
 export default {
+<<<<<<< HEAD
   name: 'PickList',
+=======
+	
+>>>>>>> 9d0f26fe07c917d82ce59e5dea056a90b6ce28cc
 }
 </script>
 
 <style scoped>
+<<<<<<< HEAD
   #pick_container {
     width: 100%;
     min-width: 700px;
@@ -74,6 +85,8 @@ export default {
     background-color: antiquewhite;
     border-radius: 20px;
   }
+=======
+>>>>>>> 9d0f26fe07c917d82ce59e5dea056a90b6ce28cc
 
   p {
     color: black;

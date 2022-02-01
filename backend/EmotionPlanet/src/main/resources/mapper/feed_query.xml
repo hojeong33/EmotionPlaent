@@ -55,4 +55,21 @@
         delete from feed_like where feedNo = #{feedNo} and userNo = #{userNo}
     </delete>
 
+    <select id="likeListFollow" parameterType="map" resultType="com.ssafy.project.EmotionPlanet.Dto.UserRequestDto">
+        select u.no, u.nickname, u.profile_img
+        from user u, feed_like fl, follow f
+        where fl.feedNo = #{feedNo} and u.no = fl.userNo and f.sender = fl.userNo and f.receiver = #{userNo}
+    </select>
+
+    <select id="likeListUnFollow" parameterType="map" resultType="com.ssafy.project.EmotionPlanet.Dto.UserRequestDto">
+        select u.no, u.nickname, u.profile_img
+        from user u join feed_like fl
+        on fl.feedNo = 115 and u.no = fl.userNo and u.no not in (
+                                                                    select u.no
+                                                                    from user u, feed_like fl, follow f
+                                                                    where fl.feedNo = #{feedNo} and u.no = fl.userNo and f.sender = fl.userNo and f.receiver = #{userNo}
+                                                                 )
+    </select>
+
+
 </mapper>

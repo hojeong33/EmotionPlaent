@@ -7,6 +7,9 @@ import Mypage from '@/views/user/Mypage.vue'
 import Recommend from '@/components/MainPage/RecommendTab/Recommend.vue'
 import Feed from '@/components/MainPage/FeedTab/Feed.vue'
 import Main from '@/views/main/Main.vue'
+import CreateImg from '@/views/create/CreateImg'
+import CreateTag from '@/views/create/CreateTag'
+import CreateText from '@/views/create/CreateText'
 import Setting from '@/views/setting'
 import UserInfo from '@/components/Settings/UserInfo'
 import PwChange from '@/components/Settings/PwChange'
@@ -51,6 +54,21 @@ const routes = [
     component: EmotionTest
   },
   {
+    path: '/create',
+    name: 'CreateImg',
+    component: CreateImg
+  },
+  {
+    path: '/create/tag',
+    name: 'CreateTag',
+    component: CreateTag
+  },
+  {
+    path: '/create/text',
+    name: 'CreateText',
+    component: CreateText
+  },
+  {
     path: '/setting',
     name: 'Setting',
     component: Setting,
@@ -67,7 +85,7 @@ const routes = [
         path: 'withdrawal',
         component: Withdrawal
       },
-    ]
+    ],
   },
 ]
 
