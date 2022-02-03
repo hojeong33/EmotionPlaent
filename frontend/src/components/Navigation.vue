@@ -23,7 +23,6 @@
         <a class="nav-link "><img src="@/assets/images/bell_selected.png" id="setting"></a> -->
       </div>
     </nav>
-    <router-view/>
   </div>
 </template>
 <script>
