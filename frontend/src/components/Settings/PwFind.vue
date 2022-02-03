@@ -1,17 +1,23 @@
 <template>
-  <div id="pc_container">
-    <section id="pc_header">
-      <h1>비밀번호 변경</h1>
-      <h3>계정 보호를 위해 주기적으로</h3>
-      <h3>비밀번호를 교체해주세요</h3>
+  <div id="pf-container">
+    <section id="pf-header">
+      <h1>비밀번호 찾기</h1>
+      <h3>비밀번호를 잊으셨군요</h3>
+      <h3>임시 비밀번호를 보내드릴게요</h3>
     </section>
-    <section id="pc_body">
-      <article id="before_pw_form">
-        <label for="before_pw">비밀번호</label>
-        <input type="password" 
-        id="before_pw"
-        v-model="credentials.beforePw"
-        placeholder="사용중인 비밀번호를 입력해주세요.">
+    <section id="pf_-body">
+      <article id="email-form">
+        <span id="email-form-header">
+          <label for="email">이메일</label>
+          <span>
+            <input type="checkbox" id="checkbox">
+            <label for="checkbox">여기로 받을게요</label>
+          </span>
+        </span>
+        <input type="email" 
+        id="email"
+        v-model="credentials.email"
+        placeholder="등록하신 이메일을 입력해주세요.">
         <!-- <span v-if="credentials.beforePw">
           <p v-if="!isValid.validatePw" class="warn">
             사용할 수 없는 비밀번호에요.
@@ -21,13 +27,13 @@
           </p>
         </span> -->
       </article>
-      <article id="next_pw_form">
-        <label for="next_pw">변경할 비밀번호</label>
-        <input type="password" 
-        id="next_pw"
-        v-model="credentials.nextPw"
+      <article id="te-form">
+        <label for="target-email">전달받을 이메일</label>
+        <input type="text" 
+        id="phone"
+        v-model="credentials.tel"
         @input="pwCheck"
-        placeholder="비밀번호는 8자 이상, 20자 이하입니다.">
+        placeholder="등록하신 휴대전화를 입력해주세요.">
         <span v-if="credentials.nextPw">
           <p v-if="!isValid.validateNextPw" class="warn">
             사용할 수 없는 비밀번호에요.
@@ -37,7 +43,7 @@
           </p>
         </span>
       </article>
-      <article id="pw_conf_form">
+      <article id="p_conf_form">
         <label for="pw_conf">비밀번호 확인</label>
         <input type="password" id="pw_conf"
         v-model="credentials.pwConf"
@@ -52,10 +58,10 @@
           </p>
         </span>
       </article>
-      <a @click="pwFind">비밀번호를 잊었나요?</a>
+      <a href="">비밀번호를 잊었나요?</a>
       <article id="pc_buttons">
         <button>변경하기</button>
-        <button @click="go_to_back">뒤로가기</button>
+        <button @click="backTo">뒤로가기</button>
       </article>
     </section>
   </div>
@@ -93,12 +99,9 @@ export default {
         this.isValid.validatePwConf = false
       }
     },
-    pwFind(){
-      this.$router.push('/setting/password-find')
-    },
-    go_to_back: function(){
-      this.$router.go(-1)
-    },
+    backTo: function(){
+      this.$router.push('/setting')
+    }
   }
 }
 </script>
@@ -180,7 +183,7 @@ export default {
     color: green;
   }
 
-  #pc_container {
+  #pf-container {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -188,7 +191,7 @@ export default {
     margin: 0 auto;
   }
 
-  #pc_header {
+  #pf-header {
     display: flex;
     flex-direction: column;
     align-self: flex-start;
@@ -196,14 +199,14 @@ export default {
     margin: 2rem 1rem;
   }
 
-  #pc_body {
+  #pf-body {
     display: flex;
     flex-direction: column;
     /* align-items: center; */
     margin: 1rem;
   }
 
-  #pc_body article {
+  #pf-body article {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -211,7 +214,13 @@ export default {
     width: 100%;
   }
 
-  #pc_body a {
+  #email-form-header {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  #pf-body a {
     align-self: flex-end;
     text-decoration: none;
     color: rgb(85, 85, 255);
@@ -220,14 +229,14 @@ export default {
     margin: 1rem 0;
   }
 
-  #pc_buttons {
+  #pf-buttons {
     display: flex;
     flex-direction: row !important;
     justify-content: center;
     margin: 1rem;
   }
 
-  #pc_buttons > *:last-child {
+  #pf-buttons > *:last-child {
     background-color: #777777;
   }
 </style>

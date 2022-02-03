@@ -11,6 +11,7 @@ import Setting from '@/views/Setting'
 import UserInfo from '@/components/Settings/UserInfo'
 import PwChange from '@/components/Settings/PwChange'
 import Withdrawal from '@/components/Settings/Withdrawal'
+import PwFind from '@/components/Settings/PwFind' 
 
 Vue.use(VueRouter)
 
@@ -67,6 +68,10 @@ const routes = [
         path: 'withdrawal',
         component: Withdrawal
       },
+      {
+        path: 'password-find',
+        component: PwFind
+      }
     ],
   },
 ]

@@ -258,7 +258,7 @@
         })
       },
       go_to_back: function(){
-        this.$$router.go(-1)
+        this.$router.go(-1)
       }
     },
   }
