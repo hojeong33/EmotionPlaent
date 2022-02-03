@@ -13,7 +13,7 @@
 					<transition>
 						<section class="item" :key="currentId">
 							<div v-if="current.content=='1'">
-								<recommend/>
+								<recommend :user-info="userInfo"/>
 							</div>
 							<div v-else>
 								<feed-list :posts="posts"/>
@@ -42,8 +42,15 @@ export default {
 			list: [
 				{ id: 1, label: '추천', content: '1' },
 				{ id: 2, label: '피드', content: '2' },
-				]
-			}
+				],
+			userInfo: {
+      username: '최강상후',
+      mood: 4,
+      posts: 0,
+      followings: 0,
+      followers: 20100,
+      },
+    }
 	},
 	computed: {
 		current() {

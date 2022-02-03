@@ -1,13 +1,14 @@
 <template>
   <div>
     <div>
-        <div id="container"> 
+        <div id="container">
           <div>
-            <img class="planet" src="../../../assets/images/emotions/depressed.png" alt="">
+            <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)">
           </div>
           <div id="header">
-            <h1>어서오세요</h1>
-            <h1 id="planet_name">우울행성입니다</h1>
+            <h1 style="font-size:2.5rem;">어서오세요</h1>
+            <span id="planet_name" :style="{color:tmp.color}">{{tmp.name }}</span>
+            <span style="font-size:2.5rem;" >입니다</span>
           </div>
         </div>
     </div>
@@ -27,10 +28,28 @@ import ActiveList from './ActiveList.vue'
 import MovieList from './MovieList.vue'
 export default {
   components: {MusicList,MovieList, ActiveList},
+  props:{
+    userInfo:Object
+  },
   data:function(){
     return{
+      planetStyles: [
+        { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
+        { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
+        { id: 3, name: '중립행성', img: "neutral.png", color: '#C5D3DC' },
+        { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
+        { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
+        { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
+      ],
       onRefresh: true,
       onFeel: false,
+    }
+  },
+  computed: {
+    tmp: function () {
+      const mood = this.userInfo.mood
+      const style = this.planetStyles.find(el => el.id === mood) || {}
+      return style
     }
   },
   methods: {
@@ -58,7 +77,8 @@ p {
     height:6rem;
 }
 #planet_name{
-  color:rgba(45, 80, 235, 0.952);
+  font-size: 3rem;
+  font-weight: bold;
 }
 #container{
   /* border: 2px solid black; */
@@ -71,6 +91,7 @@ p {
 }
 #header{
   text-align: left;
+  margin-left:5px;
 }
 .tab{
   display: flex;
