@@ -1,6 +1,5 @@
 <template>
   <div>
-    <navigation></navigation>
     <side-profile-card
       :user-info="userInfo"
     >
@@ -43,13 +42,12 @@
 
 <script>
 import SideProfileCard from '@/components/SideProfileCard.vue'
-import Navigation from '@/components/Navigation.vue'
 import PickList from '@/components/user/PickList.vue'
 import UserFeed from '@/components/user/UserFeed.vue'
 
 export default {
   name: 'Mypage',
-  components: {SideProfileCard, Navigation, PickList, UserFeed},
+  components: {SideProfileCard, PickList, UserFeed},
   data() {
     return {
       userInfo: {
