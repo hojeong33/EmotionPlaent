@@ -31,10 +31,10 @@
         </span>
       </div>
       <div v-if="onFeed === true">
-        <user-feed></user-feed>
+        <user-feed :user-mood="userInfo.mood"></user-feed>
       </div>
       <div v-else-if="onPick === true">
-        <pick-list></pick-list>
+        <pick-list :user-mood="userInfo.mood"></pick-list>
       </div>
     </div>
   </div>  
@@ -162,7 +162,7 @@ export default {
   }
   
   .inactive {
-    color: gray;
+    color: #777777;
     font-size: 1.2rem;
     font-weight: bold;
   }
