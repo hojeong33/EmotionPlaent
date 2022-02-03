@@ -77,4 +77,17 @@ const router = new VueRouter({
   routes
 })
 
+router.beforeEach((to, from, next) => {
+  const body = document.querySelector('body')
+
+  if (to.name == 'Signup' || to.name == 'Login' || to.name == 'EmotionTest'){
+    body.setAttribute('class', 'astro')
+    next()
+  }
+  else {
+    body.removeAttribute('class')
+    next()
+  }
+})
+
 export default router

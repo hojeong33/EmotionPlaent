@@ -48,10 +48,8 @@
 
 <script>
 import axios from 'axios'
+
 export default {
-   beforeCreate: function () {
-    document.body.className = 'astro';
-  },
   name: 'Login',
   data: function () {
     return {
@@ -78,7 +76,7 @@ export default {
       this.credentials.email = "";
       this.credentials.pw ="";
     },
-  }
+  },
 }
 </script>
 
