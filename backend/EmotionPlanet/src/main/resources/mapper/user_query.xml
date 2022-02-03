@@ -61,7 +61,7 @@
 	<update id="userUpdate"
 		parameterType="com.ssafy.project.EmotionPlanet.Dto.UserDto">
 		update user
-		set pw = #{pw}, nickname = #{nickname} ,profile_img = #{profileImg} , mood
+		set pw = #{pw}, nickname = #{nickname} , mood
 		= #{mood} , publish = #{publish} , tel = #{tel}
 		where no = #{no}
 	</update> 
