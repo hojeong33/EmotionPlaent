@@ -32,17 +32,17 @@ const routes = [
     component: Mypage
   },
   {
-    path:'/Recommend',
+    path:'/recommend',
     name:'Recommend',
     component:Recommend
   },
   {
-    path:'/Feed',
+    path:'/feed',
     name:'Feed',
     component:Feed
   },
   {
-    path:'/Main',
+    path:'/main',
     name:'Main',
     component:Main
   },
