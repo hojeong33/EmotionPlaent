@@ -1,8 +1,6 @@
 <template>
 	<div>
-		<navigation/>
 		<div class="container justify-content-center">
-			<div class="v1"></div>
 			<div class="example">
 				<div class="tabs">
 					<TabItem
@@ -23,7 +21,6 @@
 					</transition>
 				</div>
 			</div>
-			<div class="v1"></div>
 		</div>
 	</div>
 </template>
@@ -31,12 +28,11 @@
 <script>
 import TabItem from './TabItem.vue'
 import Recommend from '../../components/MainPage/RecommendTab/Recommend.vue'
-import Navigation from '../../components/Navigation.vue'
 import FeedList from '../../components/MainPage/FeedTab/FeedList.vue'
 import posts from '../../assets/data/posts.js'
 export default {
 	name:'Main',
-	components: { TabItem, Recommend, Navigation, FeedList },
+	components: { TabItem, Recommend, FeedList },
 	data() {
 		return {
 			posts,
