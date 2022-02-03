@@ -1,5 +1,6 @@
 <template>
-  <div>
+  <div id="container">
+		<img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)">
 		<select id="selectbox" @change="filtering">
 			<option value="0">전체</option>
 			<option value="1">행복행성</option>
@@ -17,19 +18,53 @@ export default {
 	name:'FilterTab',
 	data: function () {
 		return {
+			planetStyles: [
+				{ id: 0, name: 'default'},
+        { id: 1, name: '행복행성', img: "happy.png", color: '#ED5A8E' },
+        { id: 2, name: '우울행성', img: "depressed.png", color: '#6BD9E8' },
+        { id: 3, name: '중립행성', img: "neutral.png", color: '#C5D3DC' },
+        { id: 4, name: '공포행성', img: "fear.png", color: '#FEA95C' },
+        { id: 5, name: '깜짝행성', img: "suprised.png", color: '#FB5D38' },
+        { id: 6, name: '분노행성', img: "rage.png", color: '#2A61F0' },
+      ],
 			filterValue: null,
+			planetImg: null,
+			mood: null,
 		}
+	},
+	props: {
+		userMood: Number,
 	},
 	methods: {
 		filtering: function (onselect) {
 			this.filterValue = onselect.target.value
 			this.$emit('filtering', this.filterValue)
 		}
-	}
+	},
+	created() {
+		this.mood = this.userMood
+	},
+	computed: {
+    tmp: function () {
+      const mood = this.mood
+      const style = this.planetStyles.find(el => el.id === mood) || {}
+      return style
+    }
+  },
 }
 </script>
 
 <style scoped>
+#container {
+	display: flex;
+	justify-content: center;
+}
+
+#planet_img {
+  width: 4vh;
+  height: 4vh;
+}
+
 select { 
 	width: 11.5vh;
 	height: 3vh;
