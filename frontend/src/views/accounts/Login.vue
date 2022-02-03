@@ -84,6 +84,7 @@ export default {
 
 <style scoped>
   @import '../../assets/styles/globalstyle.css';
+  
   label {
     color: #5E39B3;
     font-weight: bold;

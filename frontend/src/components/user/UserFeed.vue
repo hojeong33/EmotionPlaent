@@ -1,19 +1,28 @@
 <template>
-  <div>
+  <div class="container">
+		<filter-tab @filtering="filterFeed" id="filter"></filter-tab>
+		<br>
 		<div v-if="isExist">
-			<div id="filter">
-				<p>전체</p>
-				<img id="rocket" src="@/assets/images/etc/rocket.png" alt="">
-			</div>
-			<br>
-			<div id="feeds"> 
-				<article id="feed" v-for="(feed, idx) in feedList" :key="idx" class="container">
-					<img id="feed_img" :src="feed.feedImg" alt="">
-					<img id="feed_planet" :src="require('@/assets/images/emotions/'+`${feed.feedPlanet}`)" alt=""> 
-				</article>
+			<div @change="filterFeed">
+				<div id="feeds" v-if="filteredFeed.length === 0 && filteredExist === true"> 
+					<article id="feed" v-for="(feed, idx) in feedList" :key="idx">
+						<img id="feed_img" :src="feed.feedImg" alt="">
+						<img id="feed_planet" :src="require('@/assets/images/emotions/'+`${feed.feedPlanet}`)" alt=""> 
+					</article>
+				</div>
+				<div id="feeds" v-else-if="filteredFeed && filteredExist === true">
+					<article id="feed" v-for="(feed, idx) in filteredFeed" :key="idx">
+						<img id="feed_img" :src="feed.feedImg" alt="">
+						<img id="feed_planet" :src="require('@/assets/images/emotions/'+`${feed.feedPlanet}`)" alt=""> 
+					</article>
+				</div>
+				<div id="no_result" v-else-if="filteredFeed.length === 0 && filteredExist ===false">
+					<img id="nothing" src="@/assets/images/etc/alien.png" alt="">
+					<p>게시글이 없어요...</p>
+				</div>
 			</div>
 		</div>
-		<div v-else id="body">	
+		<div v-else id="no_result">
 			<img id="nothing" src="@/assets/images/etc/alien.png" alt="">
 			<p>게시글이 없어요...</p>
 		</div>
@@ -21,11 +30,13 @@
 </template>
 
 <script>
+import FilterTab from '@/components/user/FilterTab.vue'
+
 export default {
 	name: 'UserFeed',
 	data: function () {
 		return {
-			isExist: true,
+			isExist: false,
 			// 유저 데이터는 서버 또는 store에서 받아와야 한다. 지금은 임시 데이터
 			user_feed: [
 				{
@@ -40,7 +51,7 @@ export default {
 					caption: "내 기분은 ☀️",
 					comment_cnt:"2",
 					comments:["반가워요","안녕하세요"],
-					planet:"행복행성"
+					planet: 1
 				},
 				{
 					username: "조은누리",
@@ -53,7 +64,7 @@ export default {
 					caption: "맥주한잔생각나는밤이군",
 					comment_cnt:"2",
 					comments:["반가워요","안녕하세요"],
-					planet:"우울행성"
+					planet: 1
 				},
 				{
 					username: "조은누리",
@@ -66,31 +77,68 @@ export default {
 					caption: "멍멍🐶",
 					comment_cnt:"2",
 					comments:["반가워요","안녕하세요"],
-					planet:"우울행성"
+					planet: 2
 				}
 			],
 			planetStyles: [
-        { id: 1, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
-        { id: 2, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
+				{ id: 0, name: 'default'},
+        { id: 1, name: '행복행성', img: "happy.png", color: '#ED5A8E' },
+        { id: 2, name: '우울행성', img: "depressed.png", color: '#6BD9E8' },
         { id: 3, name: '중립행성', img: "neutral.png", color: '#C5D3DC' },
-        { id: 4, name: '놀라움행성', img: "surprised.png", color: '#FEA95C' },
-        { id: 5, name: '분노행성', img: "rage.png", color: '#FB5D38' },
-        { id: 6, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
+        { id: 4, name: '공포행성', img: "fear.png", color: '#FEA95C' },
+        { id: 5, name: '깜짝행성', img: "suprised.png", color: '#FB5D38' },
+        { id: 6, name: '분노행성', img: "rage.png", color: '#2A61F0' },
       ],
 			feedList: [],
+			filteredFeed: [],
+			filteredExist: true		
+		}
+	},
+	components: {
+		FilterTab
+	},
+	methods: {
+		filterFeed: function (filterValue) {
+			if (filterValue === '0') {
+				//값 초기화
+				this.filteredExist = true
+				this.filteredFeed = []
+				// console.log(this.feedList)
+				// console.log(this.filteredExist)
+			} else {
+				// 값 초기화
+				this.filteredFeed = []
+				this.filteredExist = true
+
+				for (let filteredEmotion of this.feedList) {
+					if (filteredEmotion.planetId === Number(filterValue)) {
+						this.filteredFeed.push(filteredEmotion)
+						// console.log(this.filteredFeed)
+					}
+				}
+				// 필터링 값이 없을 경우
+				if (this.filteredFeed.length === 0) {
+					this.filteredExist = false
+					// console.log(this.filteredExist)
+				}
+			}
+			// console.log(this.filteredFeed)
 		}
 	},
 	created: function () {
 		for (let feed of this.user_feed) {
 			for (let emotion of this.planetStyles) {
-				if (feed.planet === emotion.name) {
+				if (feed.planet === emotion.id) {
 					// const planetImg = `../../assets/images/emotions/${emotion.img}`
-					this.feedList.push({'feedImg': feed.postImage, 'feedPlanet': emotion.img}) 
+					this.feedList.push({'feedImg': feed.postImage, 'planetId': emotion.id, 'feedPlanet': emotion.img}) 
 				}
 			}
 		}
-		console.log(this.feedList)
-		
+		// console.log(this.feedList)
+		if (this.feedList) {
+			this.isExist = true 
+		}
+		// console.log(this.isExist)
 	}
 	// methods: function () {
 	// 	// axios로 서버에서 데이터 받아오기
@@ -100,43 +148,38 @@ export default {
 </script>
 
 <style scoped>
-#body {
-	display: flex;
+/* 피드가 일정한 간격으로 왼쪽정렬로 해서 나와야 함 */
+.container{
+	width: 80vh;
+	margin: auto;
+}
+#no_result {
+	display:flex;
 	flex-direction: column;
 	justify-content: center;
 	align-items: center;
+	padding-top: 5vh;
 }
 #nothing {
 	width: 10vh;
 	height: 10vh;
 	margin-bottom: 2vh;
 }
-#filter {
-	display: flex;
-	flex-direction: row;
-	justify-content: right;
-	
-}
-p {
-	font-size: 1.5rem;
-	color: black;
+p{
 	font-weight: bold;
 }
-#rocket{
-	width: 2.5vh;
-	height: 2.5vh;
-	margin-top: 3px;
-	margin-right: 3.5vh;
-	margin-left: 5px;
+#filter {
+	display: flex;
+	justify-content: right;
 }
 #feeds{
 	display: flex;
 }
 #feed {
 	display: flex;
+	flex-direction: left;
+	padding: 1rem;
 	position: relative;
-	padding-left: 3vh;
-	padding-right: 3vh;
 }
 #feed_img {
 	width: 22vh;
