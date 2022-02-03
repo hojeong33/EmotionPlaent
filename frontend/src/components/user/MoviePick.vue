@@ -2,17 +2,19 @@
   <div id="item_container" 
     v-if="movieExist"
     :movieExist="movieExist">
-    <span id="item" 
-      v-for="movie in movieList"
-      :movie="movie"
-      :key="movieList.indexOf(movie)">
-      <article>
-        <img :src="movie.postImgLink" alt="" id="poster_img">
-      </article>
-      <article id="info">
-        <p>{{ movie.name }}</p>
-      </article>
-    </span>
+    <div id="items">
+      <span id="item" 
+        v-for="movie in movieList"
+        :movie="movie"
+        :key="movieList.indexOf(movie)">
+        <article>
+          <img :src="movie.postImgLink" alt="" id="poster_img">
+        </article>
+        <article id="info">
+          <p>{{ movie.name }}</p>
+        </article>
+      </span>
+    </div>
   </div>
   <div v-else id="no_result">
 		<img id="nothing" src="@/assets/images/etc/alien.png" alt="">
@@ -32,26 +34,29 @@ export default {
 
 <style scoped>
   #item_container {
+    width: 80vh;
+    margin: 1rem auto;
+  }
+
+  #items {
     display: flex;
-    flex-direction: column;
     justify-content: center;
-    width: 100%;
+    flex-wrap: wrap;
   }
 
   #item {
     display: flex;
-    align-items: center;
-    width: 75vh;
-    height: 7vh;
-    margin: 1.15rem auto;
-    background-color: #ECE9E9;
-    border-radius: 20px;
+    flex-direction: column;
+    position: relative;
+    margin: 0 1rem;
+    box-shadow: 5px 1px 5px 5px rgb(220, 220, 220, 0.5);
+    border-radius: 10px;
   }
 
   #poster_img {
-    width: 7vh;
-    height: 7vh;
-    border-radius: 20px 0 0 20px;
+    width: 22vh;
+    height: 33vh;
+    border-radius: 10px;
   }
 
   p {
