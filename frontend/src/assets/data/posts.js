@@ -10,7 +10,7 @@ export default [
       hasBeenLiked: false,
       caption: "내 기분은 ☀️",
       comment_cnt:"2",
-      comments:["반가워요","안녕하세요"],
+      comments:[{username:"정순일이",userImage:"https://s3.ap-northeast-2.amazonaws.com/elasticbeanstalk-ap-northeast-2-176213403491/media/magazine_img/magazine_280/5-3-%EC%8D%B8%EB%84%A4%EC%9D%BC.jpg",commentText:"반가워요"},{username:"정순일이",userImage:"https://s3.ap-northeast-2.amazonaws.com/elasticbeanstalk-ap-northeast-2-176213403491/media/magazine_img/magazine_280/5-3-%EC%8D%B8%EB%84%A4%EC%9D%BC.jpg",commentText:"안녕하세요"}],
       planet:"행복행성"
     },
     {

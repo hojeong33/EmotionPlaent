@@ -54,7 +54,7 @@ export default {
     return {
       userInfo: {
       username: '최강상후',
-      mood: 4,
+      mood: 3,
       posts: 0,
       followings: 0,
       followers: 20100,
