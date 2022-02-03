@@ -7,10 +7,11 @@ import Mypage from '@/views/user/Mypage.vue'
 import Recommend from '@/components/MainPage/RecommendTab/Recommend.vue'
 import Feed from '@/components/MainPage/FeedTab/Feed.vue'
 import Main from '@/views/main/Main.vue'
-import Setting from '@/views/Setting'
+import Setting from '@/views/setting.vue'
 import UserInfo from '@/components/Settings/UserInfo'
 import PwChange from '@/components/Settings/PwChange'
 import Withdrawal from '@/components/Settings/Withdrawal'
+import FeedDetail from '@/components/FeedDetail'
 
 Vue.use(VueRouter)
 
@@ -69,6 +70,12 @@ const routes = [
       },
     ],
   },
+  {
+    // 경로도 이야기해야할듯
+    path: '/feed/detail',
+    name: 'FeedDetail',
+    component: FeedDetail
+  }
 ]
 
 const router = new VueRouter({
