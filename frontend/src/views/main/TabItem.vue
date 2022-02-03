@@ -27,13 +27,15 @@ export default {
 .tab {
   border-radius: 2px 2px 0 0;
   background: #fff;
-  color: #311d0a;
+  color: gainsboro;
   line-height: 24px;
+  margin-bottom:0;
 }
 .tab:hover {
-  background: #eeeeee;
 }
 .active {
-  background: #dbc9f7;
+  padding-bottom:1rem;
+  border-bottom: 0.2rem solid rgb(94, 57, 179);
+  color:black;
 }
 </style>
