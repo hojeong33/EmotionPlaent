@@ -68,6 +68,7 @@ export default {
       })
       .then(()=>{
         alert("로그인 성공")
+        this.$store.commit('userData', this.credentials)
         this.$router.push({ name: 'Main' })
       })
       .catch(err=> {

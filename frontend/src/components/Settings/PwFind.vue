@@ -5,102 +5,153 @@
       <h3>비밀번호를 잊으셨군요</h3>
       <h3>임시 비밀번호를 보내드릴게요</h3>
     </section>
-    <section id="pf_-body">
+    <section id="pf-body">
       <article id="email-form">
-        <span id="email-form-header">
+        <div id="email-form-header">
           <label for="email">이메일</label>
-          <span>
-            <input type="checkbox" id="checkbox">
+          <span v-show="credentials.email">
+            <input type="checkbox" id="checkbox" v-model="checked">
             <label for="checkbox">여기로 받을게요</label>
           </span>
-        </span>
+        </div>
         <input type="email" 
         id="email"
         v-model="credentials.email"
+        @input="emailInput"
         placeholder="등록하신 이메일을 입력해주세요.">
-        <!-- <span v-if="credentials.beforePw">
-          <p v-if="!isValid.validatePw" class="warn">
-            사용할 수 없는 비밀번호에요.
+        <span v-if="credentials.email">
+          <p v-if="!isValid.validateEmail" class="warn">
+            일치하지 않는 이메일이에요.
           </p>
-          <p v-if="isValid.validatePw" class="collect">
-            사용할 수 있는 비밀번호입니다.
+          <p v-if="isValid.validateEmail" class="collect">
+            일치하는 이메일입니다.
           </p>
-        </span> -->
+        </span>
       </article>
       <article id="te-form">
         <label for="target-email">전달받을 이메일</label>
-        <input type="text" 
-        id="phone"
+        <input type="text" id="target-email"
+        v-model="credentials.target_email"
+        :disabled="checked" :class="{'disabled':checked }"
+        placeholder="임시 비밀번호를 받을 이메일을 입력해주세요.">
+      </article>
+      <article id="tel-form">
+        <label for="tel">휴대전화</label>
+        <input type="text" id="tel"
         v-model="credentials.tel"
-        @input="pwCheck"
+        @input="tel_helper" maxlength="13"
         placeholder="등록하신 휴대전화를 입력해주세요.">
-        <span v-if="credentials.nextPw">
-          <p v-if="!isValid.validateNextPw" class="warn">
-            사용할 수 없는 비밀번호에요.
+        <span v-if="credentials.tel">
+          <p v-if="!isValid.validateTel" class="warn">
+            등록되지 않은 휴대전화입니다.
           </p>
-          <p v-if="isValid.validateNextPw" class="collect">
-            사용할 수 있는 비밀번호입니다.
-          </p>
-        </span>
-      </article>
-      <article id="p_conf_form">
-        <label for="pw_conf">비밀번호 확인</label>
-        <input type="password" id="pw_conf"
-        v-model="credentials.pwConf"
-        @input="pwConfCheck"
-        placeholder="비밀번호를 다시 입력해주세요.">
-        <span v-if="credentials.pwConf">
-          <p v-if="!isValid.validatePwConf" class="warn">
-            비밀번호가 맞지 않아요.
-          </p>
-          <p v-if="isValid.validatePwConf" class="collect">
-            비밀번호가 일치합니다.
+          <p v-if="isValid.validateTel" class="collect">
+            등록된 휴대전화입니다.
           </p>
         </span>
       </article>
-      <a href="">비밀번호를 잊었나요?</a>
-      <article id="pc_buttons">
+      <article id="pin-form">
+        <span>
+          <label for="pin">PIN 번호</label>
+          <img src="../../assets/images/icons/help.png" alt="help" id="help"
+          @mouseover="help = true" @mouseout="help = false">
+          <p v-show="help" id="help-message">
+            PIN 번호는 회원 가입시 설정한 추가 비밀번호입니다.
+            PIN 번호를 분실하였을 경우 고객센터 문의를 이용해주세요.
+          </p>
+        </span>
+        <input type="password" id="pin"
+        v-model="credentials.pin"
+        placeholder="등록하신 PIN 번호를 입력해주세요.">
+      </article>
+      <a href="">이메일을 잊었나요?</a>
+      <article id="pf-buttons">
         <button>변경하기</button>
-        <button @click="backTo">뒤로가기</button>
+        <button @click="go_to_back">뒤로가기</button>
       </article>
     </section>
   </div>
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
   data: function(){
     return {
       credentials : {
-        beforePw: null,
-        nextPw: null,
-        pwConf: null
+        email: null,
+        target_email: null,
+        tel: null,
+        pin: null
       },
       isValid: {
-        validateNextPw: false,
-        validatePwConf: false,
-      }
+        validateEmail: false,
+        validateTel: false,
+      },
+      checked: false,
+      help: false
     }
   },
   methods: {
-    pwCheck: function(){
-      if (this.credentials.nextPw && this.credentials.nextPw.length >= 8 && this.credentials.nextPw.length <= 20){
-        this.isValid.validateNextPw = true
+    emailInput(){
+      if (!this.credentials.email){
+        console.log('-1')
+        this.credentials.target_email = null
+        this.checked = false
+      }
+      // else {
+      //   if (this.user.email == this.credentials.email){
+      //   this.isValid.validateEmail = true
+      //   }
+      //   else {
+      //     this.isValid.validateEmail = false
+      //   }
+      // }
+    },
+    go_to_back: function(){
+      this.$router.go(-1)
+    },
+    tel_helper: function(event){
+      const nums = this.credentials.tel.length
+      const n = this.credentials.tel.charCodeAt(nums-1)
+      const poss = ['010', '011', '012', '013', '014',
+                    '015', '016', '017', '018', '019']
+
+      console.log(nums)
+      if (event.inputType == 'deleteContentBackward'){
+        if (nums == 3 || nums == 8){
+          this.credentials.tel = this.credentials.tel.slice(0, nums - 1)
+        }
+        return
+      }
+      if (n > 47 && n < 58){
+        if (nums == 3 || nums == 8){
+          this.credentials.tel += '-'
+        }
       }
       else {
-        this.isValid.validateNextPw = false
+        this.credentials.tel = this.credentials.tel.slice(0, nums - 1)
       }
-    },
-    pwConfCheck: function(){
-      if (this.credentials.pwConf && this.credentials.nextPw === this.credentials.pwConf){
-        this.isValid.validatePwConf = true
+      if (nums == 13 && poss.indexOf(this.credentials.tel.slice(0,3)) > -1){
+        console.log(poss.indexOf(this.credentials.tel.slice(0,3)))
+        console.log(nums)
+        this.telCheck()
       }
       else {
-        this.isValid.validatePwConf = false
+        this.isValid.validateTel = false
       }
     },
-    backTo: function(){
-      this.$router.push('/setting')
+  },
+  computed: mapState(['user']),
+  watch: {
+    checked(){
+      if (this.checked){
+        this.credentials.target_email = this.credentials.email
+      }
+      else {
+        this.credentials.target_email = null
+      }
     }
   }
 }
@@ -122,9 +173,22 @@ export default {
     height: 5vh;
     min-height: 40px;
     padding: 0.75rem;
-    font-size: 4rem;
+    font-size: 1.5rem;
     letter-spacing: -1px;
     font-weight: bold;
+  }
+
+  input[type="checkbox"] {
+    width: 1rem;
+    height: 1rem;
+    min-width: 10px;
+    min-height: 10px;
+    padding: 0;
+    margin: 0;
+  }
+
+  input[type="password"] {
+    font-size: 4rem;
   }
 
   input:focus {
@@ -152,7 +216,7 @@ export default {
     margin-bottom: 4rem;
   }
 
-   h3 {
+  h3 {
     font-size: 1.5rem;
     font-weight: bold;
     margin: 0;
@@ -175,6 +239,12 @@ export default {
     line-height: 2rem;
   }
 
+  #email-form-header span label {
+    color: black;
+    font-size: 1rem;
+
+  }
+
   .warn {
     color: rgb(240, 90, 90);
   }
@@ -183,11 +253,15 @@ export default {
     color: green;
   }
 
+  .disabled {
+    background-color: #cccccc;
+  }
+
   #pf-container {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 65%;
+    width: 80%;
     margin: 0 auto;
   }
 
@@ -202,7 +276,7 @@ export default {
   #pf-body {
     display: flex;
     flex-direction: column;
-    /* align-items: center; */
+    width: 80%;
     margin: 1rem;
   }
 
@@ -218,6 +292,11 @@ export default {
     display: flex;
     justify-content: space-between;
     width: 100%;
+  }
+
+  #email-form-header span {
+    display: flex;
+    align-items: center;
   }
 
   #pf-body a {
@@ -238,5 +317,31 @@ export default {
 
   #pf-buttons > *:last-child {
     background-color: #777777;
+  }
+
+  #pin-form span {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  #help {
+    width: 1rem;
+    height: 1rem;
+    margin: 0 0.5rem;
+  }
+
+  #help-message {
+    font-size: 0.75rem;
+    width: 15rem;
+    position: absolute;
+    top: 80%;
+    left: 75%;
+    background-color: #5E39B3;
+    color: white;
+    z-index: 1;
+    padding: 1rem;
+    border-radius: 20px;
+    word-break: keep-all;
   }
 </style>
