@@ -1,19 +1,23 @@
 <template>
   <div id="app">
-    <router-view/>
+    <navigation />
     <create v-if="feedActive" />
+    <router-view/>
   </div>
 </template>
 
 <script>
 import Create from '@/views/Create'
+import Navigation from '@/components/Navigation'
 import { mapState } from 'vuex'
 
 export default {
   components: {
-    Create
+    Create,
+    Navigation
   },
-  computed: mapState(['feedActive'])
+  computed:
+    mapState(['feedActive'])
 }
 
 </script>

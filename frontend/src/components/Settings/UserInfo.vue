@@ -1,11 +1,11 @@
 <template>
-  <div id="us_container">
+  <section id="us_container">
     <h1>계정 정보</h1>
-    <section id="us_header">
-      <article id="us_header_img">
+    <article id="us_header">
+      <div id="us_header_img">
         <span id="opacity"></span>
-      </article>
-      <article id="us_header_info">
+      </div>
+      <div id="us_header_info">
         <span>
           <h2>나는멋쟁이</h2>
           <button>로그아웃</button>
@@ -14,18 +14,18 @@
           <h4>가입일 1234.56.78</h4>
           <button>프로필사진 변경</button>
         </span>
-      </article>
-    </section>
-    <section id="us_body">
-      <article id="us_email">
+      </div>
+    </article>
+    <article id="us_body">
+      <div id="us_email">
         <h3>이메일</h3>
         <p>test@ssafy.com</p>
-      </article>
-      <article id="us_password">
+      </div>
+      <div id="us_password">
         <h3>비밀번호</h3>
         <a href="#" @click="go_to_passwordchange">비밀번호 변경...</a>
-      </article>
-      <article id="us_birth">
+      </div>
+      <div id="us_birth">
         <h3>생년월일</h3>
         <span>
           <p>1994.11.07</p>
@@ -34,8 +34,8 @@
             <label for="show_birth">비공개</label>
           </span>
         </span>
-      </article>
-      <article id="us_show">
+      </div>
+      <div id="us_show">
         <h3>계정 공개</h3>
         <span>
           <span>
@@ -47,21 +47,21 @@
             <label for="show_followers">팔로워에게 공개</label>
           </span>
         </span>
-      </article>
-      <article id="us_history">
+      </div>
+      <div id="us_history">
         <h3>활동 내역</h3>
         <a href="#">자세히...</a>
-      </article>
-    </section>
+      </div>
+    </article>
     <button id="withdrawal" @click="go_to_withdrawal">회원 탈퇴</button>
-  </div>
+  </section>
 </template>
 
 <script>
 export default {
   data: function(){
     return {
-      burthShow: false,
+      birthShow: false,
       showAll: false,
       showFollow: true
     }
@@ -197,7 +197,7 @@ export default {
     padding: 3rem 4rem;
   }
 
-  #us_body article {
+  #us_body div {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
@@ -205,11 +205,11 @@ export default {
     padding: 1rem 2rem;
   }
 
-  #us_body article *:last-child {
+  #us_body div *:last-child {
     padding: 0.5rem 2rem;
   }
 
-  #us_body article > span {
+  #us_body div > span {
     display: flex;
     justify-content: space-between;
     align-items: center;

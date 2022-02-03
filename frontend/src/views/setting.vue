@@ -1,19 +1,15 @@
 <template>
-  <div id="setting">
-    <navigation />
-    <section id="setting_container">
-      <router-view />
-    </section>
-  </div>
+  <section id="setting_container">
+    <router-view />
+  </section>
 </template>
 
 <script>
-import Navigation from '@/components/Navigation'
 
 export default {
-  components: {
-    Navigation,
-  }
+//   components: {
+//     Navigation,
+//   }
 }
 </script>
 
