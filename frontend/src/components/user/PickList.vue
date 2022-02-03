@@ -1,6 +1,7 @@
 <template>
   <div id="pick_container">
-    <filter-tab 
+    <filter-tab
+      :user-mood="mood" 
       @filtering="filterPicks"
       id="filter"
       ></filter-tab>
@@ -45,6 +46,7 @@ export default {
   data() {
     return {
       picks,
+      mood: null,
       
       onMusic: true,
       onMovie: false,
@@ -59,6 +61,9 @@ export default {
       activityExist: false,
     }
   },
+  props: {
+    userMood: Number,
+  },
   components: {
     MusicPick,
     MoviePick,
@@ -67,12 +72,14 @@ export default {
   },
   created() {
     this.sortPicks()
+    this.mood = this.userMood
   },
   methods: {
     toggleMusic: function () {
       this.onMusic = true
       this.onMovie = false
       this.onActivity = false
+      console.log(this.mood)
     },
     toggleMovie: function () {
       this.onMusic = false
@@ -147,7 +154,7 @@ export default {
 
 <style scoped>
   #pick_container {
-    width: 100%;
+    width: 80vh;
     min-width: 700px;
     min-height: 100vh;
     padding-top: 1rem;
@@ -205,7 +212,7 @@ export default {
   }
 
   .inactive {
-    color: gray;
+    color: #777777;
     font-size: 1.2rem;
     font-weight: bold;
     margin-bottom: 0.5rem;

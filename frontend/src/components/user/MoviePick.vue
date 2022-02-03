@@ -1,19 +1,16 @@
 <template>
-  <div id="item_container" 
+  <div 
     v-if="movieExist"
-    :movieExist="movieExist">
-    <div id="items">
-      <span id="item" 
-        v-for="movie in movieList"
-        :movie="movie"
-        :key="movieList.indexOf(movie)">
-        <article>
+    :movieExist="movieExist"
+    id="contain">
+    <div
+      v-for="movie in movieList"
+      :movie="movie"
+      :key="movieList.indexOf(movie)">
+        <div id="item_container">
           <img :src="movie.postImgLink" alt="" id="poster_img">
-        </article>
-        <article id="info">
-          <p>{{ movie.name }}</p>
-        </article>
-      </span>
+          <p id="info">{{ movie.name }}</p>
+        </div>
     </div>
   </div>
   <div v-else id="no_result">
@@ -33,42 +30,33 @@ export default {
 </script>
 
 <style scoped>
-  #item_container {
-    width: 80vh;
-    margin: 1rem auto;
-  }
-
-  #items {
+  #contain {
     display: flex;
-    justify-content: center;
+    justify-content: left;
     flex-wrap: wrap;
+    margin: auto;
   }
 
-  #item {
+  #item_container {
+    width: 20.3vh;
     display: flex;
     flex-direction: column;
-    position: relative;
-    margin: 0 1rem;
-    box-shadow: 5px 1px 5px 5px rgb(220, 220, 220, 0.5);
+    border: solid 1px;
+    margin: 1rem 1.5rem;
     border-radius: 10px;
   }
 
   #poster_img {
-    width: 22vh;
-    height: 33vh;
+    width: 20vh;
+    height: 30vh;
     border-radius: 10px;
   }
 
-  p {
-    margin-left: 0.5rem;
-  }
-
   #info {
-    display: flex;
     font-size: 1.2rem;
     font-weight: bold;
-    margin-top: 1rem;
-    margin-left: 1.5rem;
+    text-align: center;
+    margin: 1rem auto;
   }
 
   #no_result {
