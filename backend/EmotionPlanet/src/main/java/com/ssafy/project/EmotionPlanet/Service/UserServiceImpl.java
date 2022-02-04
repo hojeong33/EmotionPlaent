@@ -27,6 +27,11 @@ public class UserServiceImpl implements UserService {
 	}
 
 	@Override
+	public UserDto userSelectByEmail(String email) {
+		return userDao.userSelectByEmail(email);
+	}
+
+	@Override
 	public int duplicateEmail(String email) { // 이메일 중복 체크
 		if (userDao.duplicateEmail(email) == 0) // 사용가능
 			return SUCCESS;

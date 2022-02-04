@@ -8,7 +8,8 @@ public class EmotionPlanetApplication {
 
 	public static final String APPLICATION_LOCATIONS = "spring.config.location="
 			+ "classpath:application.properties,"
-			+ "classpath:aws.yml";
+			+ "classpath:aws.yml,"
+			+ "classpath:security.yml";
 
 	public static void main(String[] args) {
 		new SpringApplicationBuilder(EmotionPlanetApplication.class)
