@@ -52,6 +52,7 @@ export default {
       if (this.imgName_profile === 'user.png') {
         this.imgName_profile = 'user_selected.png'
         this.isActive = true
+        console.log(this.$routes)
       } else {
         this.imgName_profile = 'user.png'
         this.isActive = false

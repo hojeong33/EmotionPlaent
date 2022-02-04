@@ -1,18 +1,22 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from '@/views/accounts/Login.vue'
-import Signup from '@/views/accounts/Signup.vue'
+import Login from '@/views/accounts/Login'
+import Signup from '@/views/accounts/Signup'
 import EmotionTest from '@/views/EmotionTest'
 import Mypage from '@/views/user/Mypage.vue'
-import Recommend from '@/components/MainPage/RecommendTab/Recommend.vue'
-import Feed from '@/components/MainPage/FeedTab/Feed.vue'
-import Main from '@/views/main/Main.vue'
+import Recommend from '@/components/MainPage/RecommendTab/Recommend'
+import Feed from '@/components/MainPage/FeedTab/Feed'
+import Main from '@/views/main/Main'
 import Setting from '@/views/setting'
 import UserInfo from '@/components/Settings/UserInfo'
 import PwChange from '@/components/Settings/PwChange'
 import Withdrawal from '@/components/Settings/Withdrawal'
 import FeedDetail from '@/components/FeedDetail'
-import PwFind from '@/components/Settings/PwFind' 
+import PwFind from '@/components/Settings/PwFind'
+import Create from '@/views/Create'
+import CreateImg from '@/components/Create/CreateImg'
+import CreateTag from '@/components/Create/CreateTag'
+import CreateText from '@/components/Create/CreateText'
 
 Vue.use(VueRouter)
 
@@ -73,8 +77,28 @@ const routes = [
         path: 'password-find',
         component: PwFind
       }
-    ],
+    ],  
   },
+  {
+    path: '/create',
+    name: 'Create',
+    component: Create,
+    children: [
+      {
+        path: 'Img',
+        component: CreateImg
+      },
+      {
+        path: 'Tags',
+        component: CreateTag,
+      },
+      {
+        path: 'Text',
+        component: CreateText,
+      }
+    ],  
+  },
+
   {
     // 경로도 이야기해야할듯
     path: '/feed/detail',
