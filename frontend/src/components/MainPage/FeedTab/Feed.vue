@@ -1,19 +1,20 @@
 <template>
   <div id="feed">
     <div id="header">
-        <section id="profile_image">
-          <img :src="post.userImage" />
-        </section>
-        <div id="profile_content">
-          <section id="username">{{post.username}}</section>
-          <section>{{post.date}}</section>
-        </div>
-        <div id="setting">
-          <i class="fas fa-ellipsis-v"></i>
-        </div>
+      <section id="profile_image">
+        <img :src="post.userImage" />
+      </section>
+      <div id="profile_content">
+        <section id="username">{{post.username}}</section>
+        <section>{{post.date}}</section>
+      </div>
+      <div id="setting">
+        <i class="fas fa-ellipsis-v"></i>
+      </div>
     </div>
     <div id="post_image">
       <img :src="post.postImage" alt="">
+      <p class="overlay_content" >{{post.username}}님은 {{post.planet}} <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p>
     </div>
     <div id="like">
       <div id="heart">
@@ -39,6 +40,25 @@ export default {
   props: {
     post: Object,
     comments:Array
+  },
+  data(){
+    return{
+      planetStyles: [
+        { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
+        { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
+        { id: 3, name: '중립행성', img: "neutral.png", color: '#C5D3DC' },
+        { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
+        { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
+        { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
+      ]
+    }
+  },
+   computed: {
+    tmp: function () {
+      const name = this.post.planet
+      const style = this.planetStyles.find(el => el.name === name) || {}
+      return style
+    }
   },
   methods: {
     like() {
@@ -111,8 +131,23 @@ export default {
     /* background-color: antiquewhite; */
   }
   #post_image img{
-    width: 80vh;
-    height: 80vh;
+    width: 90vh;
+    height: 90vh;
   }
+  #post_image{
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+  }
+  .overlay_content {
+    position: absolute;
+    padding: 0rem 1rem;
+    margin-right:16rem;
+    background-color: white;
+    border-radius: 10px;
+  }
+
 
 </style>

@@ -16,7 +16,8 @@
             </div>
         </div>
         <div class="card-carousel--nav__right" @click="moveCarousel(1)" :disabled="atEndOfList"></div>
-    </div>   
+    </div>
+    <p style="text-align:right; margin-right:5rem;">더보기</p>   
   </div>
 </template>
 

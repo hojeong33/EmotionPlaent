@@ -36,7 +36,7 @@ export default {
       planetStyles: [
         { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
         { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
-        { id: 3, name: '중립행성', img: "neutral.png", color: '#C5D3DC' },
+        { id: 3, name: '중립행성', img: "neutral.png", color: '#ABBECA' },
         { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
         { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
         { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
@@ -85,7 +85,7 @@ p {
   display: flex;
   width: 100%;
   padding-top:1rem;
-  background-color: gainsboro;
+  background-color: rgb(216, 216, 216,0.2);
   padding:2rem;
   justify-content: center;
 }
@@ -98,7 +98,7 @@ p {
   justify-content:center;
   font-size: 1.2rem;
   font-weight: bold;
-  color:rgb(117, 116, 116);
+  color:#777777;
 }
 .active {
   color:  rgb(94, 57, 179);
