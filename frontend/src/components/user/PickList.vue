@@ -1,9 +1,8 @@
 <template>
-  <div id="pick_container">
+  <article id="pick_container">
     <filter-tab
       :user-mood="mood" 
       @filtering="filterPicks"
-      id="filter"
       ></filter-tab>
     <div id="list_tab">
       <span id="music_tab">
@@ -31,7 +30,7 @@
       :activity-list="activityList"
       :activity-exist="activityExist"
       v-if="onActivity"></activity-pick>
-  </div>
+  </article>
 </template>
 
 <script>
@@ -154,27 +153,16 @@ export default {
 
 <style scoped>
   #pick_container {
-    width: 80vh;
-    min-width: 700px;
-    min-height: 100vh;
-    padding-top: 1rem;
-    margin: 2rem auto;
     display: flex;
-    flex-direction: column;
-    /* border: 0.1rem solid gainsboro; */
-  }
-
-  #filter {
-    display: flex;
-    justify-content: right;
+		flex-direction: column;
+		align-items: center;
+		width: 100%;
+		padding: 1rem;
   }
 
   #list_tab {
     display: flex;
     width: 40%;
-    margin-left: 13.3rem;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
     justify-content: space-evenly;
     align-items: center;
   }

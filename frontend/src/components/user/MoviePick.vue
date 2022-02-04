@@ -1,22 +1,19 @@
 <template>
-  <div 
-    v-if="movieExist"
-    :movieExist="movieExist"
-    id="contain">
-    <div
-      v-for="movie in movieList"
-      :movie="movie"
-      :key="movieList.indexOf(movie)">
-        <div id="item_container">
+  <div>
+    <div v-if="movieExist" id="contain">
+      <div
+        v-for="movie in movieList"
+        :movie="movie" class="item_container"
+        :key="movieList.indexOf(movie)">
           <img :src="movie.postImgLink" alt="" id="poster_img">
           <p id="info">{{ movie.name }}</p>
-        </div>
+      </div>
+    </div>
+    <div v-else id="no_result">
+      <img id="nothing" src="@/assets/images/etc/alien.png" alt="">
+      <p>찜한 영화가 없어요...</p>
     </div>
   </div>
-  <div v-else id="no_result">
-		<img id="nothing" src="@/assets/images/etc/alien.png" alt="">
-		<p>찜한 영화가 없어요...</p>
-	</div>
 </template>
 
 <script>
@@ -32,12 +29,13 @@ export default {
 <style scoped>
   #contain {
     display: flex;
-    justify-content: left;
-    flex-wrap: wrap;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 15px;
     margin: auto;
   }
 
-  #item_container {
+  .item_container {
+    grid-area: content;
     width: 20.3vh;
     display: flex;
     flex-direction: column;
