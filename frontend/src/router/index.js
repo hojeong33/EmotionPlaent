@@ -11,6 +11,7 @@ import Setting from '@/views/Setting'
 import UserInfo from '@/components/Settings/UserInfo'
 import PwChange from '@/components/Settings/PwChange'
 import Withdrawal from '@/components/Settings/Withdrawal'
+import SearchResult from '@/views/SearchResult'
 
 Vue.use(VueRouter)
 
@@ -49,6 +50,11 @@ const routes = [
     path: '/emotiontest',
     name: 'EmotionTest',
     component: EmotionTest
+  },
+  {
+    path: '/searchresult',
+    name: 'SearchResult',
+    component: SearchResult
   },
   {
     path: '/setting',
