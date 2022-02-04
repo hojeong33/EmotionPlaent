@@ -4,34 +4,47 @@
       :user-info="userInfo"
     >
     </side-profile-card>
-
-    <div id="container">
-      <div id="tab">
-        <span id="tab_names">
-            <p @click="toggleFeed" :class="onFeed ? 'active': 'inactive'">피드</p>
-            <p @click="toggleInfo" :class="onInfo ? 'active': 'inactive'">정보</p>
-        </span>
-        <span id="underline1" v-if="onFeed">
-        </span>
-        <span id="underline2" v-if="onInfo">
-        </span>
-      <search-feed></search-feed>
-      <search-info></search-info>
-      </div>
-    </div>
+    <div class="container justify-content-center">
+			<div class="example">
+				<div class="tabs">
+					<TabItem
+					v-for="item in list"
+					v-bind="item" :key="item.id"
+					v-model="currentId"/>
+				</div>
+				<div class="contents">
+					<transition>
+						<section class="item" :key="currentId">
+							<div v-if="current.content=='1'">
+								<search-feed-list></search-feed-list>
+							</div>
+							<div v-else>
+								<search-info></search-info>
+							</div>
+						</section>
+					</transition>
+				</div>
+			</div>
+		</div>
   </div>
 </template>
 
 <script>
 import SideProfileCard from '@/components/SideProfileCard.vue'
-import SearchFeed from '@/components/Search/SearchFeed.vue'
+import SearchFeedList from '@/components/Search/SearchFeedList.vue'
 import SearchInfo from '@/components/Search/SearchInfo.vue'
+import TabItem from '@/views/main//TabItem.vue'
 
 export default {
   name: 'SearchResult',
-  components: {SideProfileCard, SearchFeed, SearchInfo},
+  components: {SideProfileCard, SearchFeedList, SearchInfo, TabItem},
   data() {
     return {
+			currentId: 1,
+			list: [
+				{ id: 1, label: '피드', content: '1' },
+				{ id: 2, label: '정보', content: '2' },
+				],
       userInfo: {
       username: '최강상후',
       mood: 3,
@@ -55,71 +68,58 @@ export default {
       this.onFeed = false
     },
   },
+  computed: {
+		current() {
+			return this.list.find(el => el.id === this.currentId) || {}
+		}
+	},
 }
 </script>
 
 <style scoped>
-  #searchresult {
-    width: 100vw;
+.container {
+  width: 50vw;
+  min-width: 700px;
+  min-height: 92.5vh;
+  margin: auto;
+  border-left: 0.1rem solid gainsboro;
+  border-right: 0.1rem solid gainsboro;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
   }
+	.contents {
+	position: relative;
+	overflow: hidden;
+	width: 50vw;
+  min-width: 700px;
+  min-height: 92.5vh;
+	/* 메인 피드 크기 -> 100vh-> 센터 */
+	min-height: 100vh;
+	border: 2px solid gainsboro;
+	}
+	.item {
+	display:flex;
+	flex-direction: column;
+	/* box-sizing: border-box; */
+	align-items: stretch;
+	/* padding: 10px; */
+	width: 100%;
+	transition: all 0.8s ease;
+	}
 
-  #container {
-    width: 50%;
-    min-width: 700px;
-    min-height: 100vh;
-    margin: auto;
-    border-left: 0.1rem solid gainsboro;
-    border-right: 0.1rem solid gainsboro;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-  }
-
-  #tab_names {
-    margin-top: 1%;
-    width: 22%;
-    display: flex;
-    direction: row;
-    justify-content: space-between;
-  }
-
-  p {
-    color: black;
-    font-size: 1.4rem;
-    font-weight: bold;
-  }
-  
-  .inactive {
-    color: #777777;
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-
-   #tab {
-    display: flex;
-    justify-content: center;
-    position: relative;
-    border-top: 0.1rem solid gainsboro;
-    width: 100%;
-  }
-
-  #underline1 {
-    width: 30px;
-    height: 4px;
-    position: absolute;
-    top: 30%;
-    left: 42%;
-    background-color: #5E39B3;
-  }
-  
-  #underline2 {
-    width: 18px;
-    height: 18px;
-    border-radius: 50%;
-    position: absolute;
-    top: -17%;
-    left: 56%;
-    background-color: #5E39B3;
-  }
+	.v-leave-active {
+	position: absolute;
+	}
+	.v-enter {
+	transform: translateX(-100%);
+	}
+	.v-leave-to {
+	transform: translateX(100%);
+	}
+	.tabs{
+		display:flex;
+    justify-content:center;
+	}
 </style>
