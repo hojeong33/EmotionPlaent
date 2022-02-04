@@ -1,5 +1,9 @@
 <template>
 	<div>
+		<side-profile-card
+      :user-info="userInfo"
+    >
+    </side-profile-card>
 		<div class="container justify-content-center">
 			<div class="example">
 				<div class="tabs">
@@ -30,9 +34,10 @@ import TabItem from './TabItem.vue'
 import Recommend from '../../components/MainPage/RecommendTab/Recommend.vue'
 import FeedList from '../../components/MainPage/FeedTab/FeedList.vue'
 import posts from '../../assets/data/posts.js'
+import SideProfileCard from '@/components/SideProfileCard.vue' 
 export default {
 	name:'Main',
-	components: { TabItem, Recommend, FeedList },
+	components: { TabItem, Recommend, FeedList ,SideProfileCard},
 	data() {
 		return {
 			posts,
@@ -43,7 +48,7 @@ export default {
 				],
 			userInfo: {
       username: '최강상후',
-      mood: 4,
+      mood: 3,
       posts: 0,
       followings: 0,
       followers: 20100,
