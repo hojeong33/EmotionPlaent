@@ -6,7 +6,8 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     feedActive: false,
-    user: null
+    user: null,
+    userEmotion: null,
   },
   mutations: {
     activateFeed: function(state){
@@ -16,7 +17,7 @@ export default new Vuex.Store({
     userInfo: function(state, payload){
       console.log(payload)
       state.user = payload
-    }
+    },
   },
   actions: {
   },

@@ -59,6 +59,9 @@ export default {
 		current() {
 			return this.list.find(el => el.id === this.currentId) || {}
 		}
+	},
+	created() {
+		console.log(this.$store.state.userEmotion)
 	}
 }
 </script>

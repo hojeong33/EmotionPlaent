@@ -43,6 +43,7 @@
   import TestKeyword from '@/components/EmotionTest/EmotionKeyword'
   import SelectedKeyword from '@/components/EmotionTest/SelectedKeyword'
   import axios from 'axios'
+  // import index from '@/store/index.js'
 
   export default {
     data: function(){
@@ -119,6 +120,7 @@
           })
           .then(res => {
             alert(`당신은 ${ res.data.name }행성 입니다!`)
+            this.$store.state.userEmotion = res.data.no
             location.reload()
           })
           .catch(() => alert('잘못된 요청입니다.'))
