@@ -45,9 +45,6 @@
   import axios from 'axios'
 
   export default {
-    beforeCreate: function () {
-      document.body.className = 'astro';
-    },
     data: function(){
       return {
         page: 1,
@@ -128,7 +125,7 @@
         }
       },
       go_to_back: function(){
-        this.$router.push({ name: 'main' })
+        this.$router.go(-1)
       },
       refresh_keywords: function(){
         while (this.selected.length > 0){

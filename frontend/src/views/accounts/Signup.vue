@@ -113,9 +113,6 @@
   import axios from 'axios'
 
   export default {
-     beforeCreate: function () {
-    document.body.className = 'astro';
-  },
     name: 'Signup',
     data: function () {
       return {
@@ -215,12 +212,19 @@
           this.isValid.validatePwConf = false
         }
       },
-      tel_helper: function(){
+      tel_helper: function(event){
         const nums = this.credentials.tel.length
         const n = this.credentials.tel.charCodeAt(nums-1)
         const poss = ['010', '011', '012', '013', '014',
                       '015', '016', '017', '018', '019']
 
+        console.log(nums)
+        if (event.inputType == 'deleteContentBackward'){
+          if (nums == 3 || nums == 8){
+            this.credentials.tel = this.credentials.tel.slice(0, nums - 1)
+          }
+          return
+        }
         if (n > 47 && n < 58){
           if (nums == 3 || nums == 8){
             this.credentials.tel += '-'
@@ -254,7 +258,7 @@
         })
       },
       go_to_back: function(){
-        this.$router.push({ name: 'Login' })
+        this.$router.go(-1)
       }
     },
   }
