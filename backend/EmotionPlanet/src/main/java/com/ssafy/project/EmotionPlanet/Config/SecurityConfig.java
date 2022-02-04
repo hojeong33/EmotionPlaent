@@ -32,12 +32,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().permitAll()
                 .and()
                 .formLogin()
-                .loginPage("/loginForm")
+                .loginPage("/login")
                 .loginProcessingUrl("/login") // login 주소가 호출이 되면 시큐리티가 낚아채서 대신 로그인을 진행.
                 .defaultSuccessUrl("/")
                 .and()
                 .oauth2Login()
-                .loginPage("/loginForm")
+                .loginPage("/login")
                 .userInfoEndpoint()
                 .userService(principalOauth2UserService); // 구글 로그인 후의 후처리
     }

@@ -43,6 +43,7 @@
         <p>Kakao로 로그인</p>
         </button>
     </article>
+    <a href="/oauth2/authorization/google">구글 로그인</a>
   </div>
 </template>
 

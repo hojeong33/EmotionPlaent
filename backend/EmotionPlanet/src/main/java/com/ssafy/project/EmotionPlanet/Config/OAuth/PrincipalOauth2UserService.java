@@ -35,23 +35,21 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         String provider = userRequest.getClientRegistration().getClientId(); // google
         String providerId = oAuth2User.getAttribute("sub");
         String email = oAuth2User.getAttribute("email");
-        String username = provider + "_" + providerId;
+        String nickname = provider + "_" + providerId;
         String password = bCryptPasswordEncoder.encode("겟인데아");
         String role = "ROLE_USER";
 
         UserDto userEntity = userService.userSelectByEmail(email);
-//
-//        if (userEntity == null) {
-//            userEntity = User.builder()
-//                    .username(username)
-//                    .password(password)
-//                    .email(email)
-//                    .role(role)
-//                    .provider(provider)
-//                    .providerId(providerId)
-//                    .build();
-//            userRepository.save(userEntity);
-//        }
+
+        if (userEntity == null) {
+            userEntity = UserDto.builder()
+                    .nickname(nickname)
+                    .pw(password)
+                    .email(email)
+                    .provider(provider)
+                    .build();
+            userService.userRegister(userEntity);
+        }
 
         return new PrincipalDetails(userEntity, oAuth2User.getAttributes());
     }

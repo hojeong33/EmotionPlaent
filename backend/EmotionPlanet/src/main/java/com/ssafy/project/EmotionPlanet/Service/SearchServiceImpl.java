@@ -13,7 +13,10 @@ import com.ssafy.project.EmotionPlanet.Dao.ImgDao;
 import com.ssafy.project.EmotionPlanet.Dao.SearchDao;
 import com.ssafy.project.EmotionPlanet.Dao.TagDao;
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
+=======
+>>>>>>> 23eb37b9ee45cd613a39234fc0a86819032f156f
 import com.ssafy.project.EmotionPlanet.Dto.CommentDto;
 import com.ssafy.project.EmotionPlanet.Dto.FeedDto;
 import com.ssafy.project.EmotionPlanet.Dto.ImgDto;
@@ -21,7 +24,10 @@ import com.ssafy.project.EmotionPlanet.Dto.PickContentDto;
 import com.ssafy.project.EmotionPlanet.Dto.PickDto;
 import com.ssafy.project.EmotionPlanet.Dto.TagDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
+<<<<<<< HEAD
 >>>>>>> acb85e233d54bbc05e27bd3b7e56abb397397696
+=======
+>>>>>>> 23eb37b9ee45cd613a39234fc0a86819032f156f
 
 @Service
 public class SearchServiceImpl implements SearchService {
@@ -69,7 +75,7 @@ public class SearchServiceImpl implements SearchService {
 			}
 			return list;
 		} else {
-			return null;			
+			return null;
 		}
 	}
 
@@ -86,10 +92,14 @@ public class SearchServiceImpl implements SearchService {
 //	@Override
 //	public List<PickDto> recommendSelect(String name) {
 <<<<<<< HEAD
+<<<<<<< HEAD
 //		List<PickDto> list = searchDao.s(name);
 =======
 //		List<PickDto> list = searchDao.recommendSelect(name);
 >>>>>>> acb85e233d54bbc05e27bd3b7e56abb397397696
+=======
+//		List<PickDto> list = searchDao.recommendSelect(name);
+>>>>>>> 23eb37b9ee45cd613a39234fc0a86819032f156f
 //		if(list.size() != 0) {
 //			for (PickDto pick : list) {
 //				List<PickContentDto> pickcontents = searchDao.pickcontentSelect(pick.getNo());
