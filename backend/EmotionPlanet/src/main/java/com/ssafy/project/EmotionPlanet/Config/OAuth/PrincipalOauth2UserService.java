@@ -37,7 +37,6 @@ public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
         String email = oAuth2User.getAttribute("email");
         String nickname = provider + "_" + providerId;
         String password = bCryptPasswordEncoder.encode("겟인데아");
-        String role = "ROLE_USER";
 
         UserDto userEntity = userService.userSelectByEmail(email);
 
