@@ -27,7 +27,7 @@ export default {
 .tab {
   border-radius: 2px 2px 0 0;
   background: #fff;
-  color: gainsboro;
+  color: #777777;
   line-height: 24px;
   margin-bottom:0;
 }
