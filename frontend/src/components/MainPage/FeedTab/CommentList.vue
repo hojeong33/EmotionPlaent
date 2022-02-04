@@ -10,8 +10,10 @@
       </comment>
       <p v-if="isShort" id="comment-more" @click="commentMore">댓글 더보기</p>
       <p v-if="isAll" id="comment-more" @click="commentShort">댓글 닫기</p>
-      <input id="comment-input" v-model.trim="commentContent" placeholder="댓글을 입력해 주세요."> 
-      <button id="submit" @click="createComment">등록</button> 
+      <div id="comment_write">
+        <input id="comment-input" @keyup.enter="createComment" v-model.trim="commentContent" placeholder="댓글을 입력해 주세요."> 
+        <img id="submit" @click="createComment" src="@/assets/images/icons/write.png" alt="" style="width:1.4rem;height:1.4rem;">
+      </div>
     </div>
   </div>
 </template>
@@ -36,10 +38,12 @@ export default {
   methods:{
     createComment:function(){
       const commentItem={
-        content:this.commentContent
+        commentText:this.commentContent,
+        username:'default',
+        userImage:'https://cdn.indiepost.co.kr/uploads/images/2018/12/11/VDbIX3-600x338.png'
       }
-      if(commentItem.content){
-        this.comments.push(commentItem.content)
+      if(commentItem.commentText){
+        this.comments.push(commentItem)
         this.commentContent=null
 
       }
@@ -64,21 +68,34 @@ export default {
 </script>
 
 <style scoped>
+#submit{
+  border-style: none;
+}
+#comment_write{
+  border:0.2rem solid gainsboro;
+  border-radius: 10px;
+  margin-bottom:1rem;
+}
 #comments{
   text-align: left;
   margin:0rem 3rem;
 }
 #comment-count{
-  color:gray;
+  color:#777777;
 }
 #comment-input{
-  width: 33rem;
+  width: 95%;
+  height: 100%;
   margin-bottom: 1rem;
+  margin-left:3px;
+  border-style:none;
+  margin-bottom: 0;
+  outline: none;
 }
 #comment-more{
   margin-top: 1rem;
   font-size: 0.8rem;
-  color:gray;
+  color:#777777;
 }
 
 </style>

@@ -48,10 +48,8 @@
 
 <script>
 import axios from 'axios'
+
 export default {
-   beforeCreate: function () {
-    document.body.className = 'astro';
-  },
   name: 'Login',
   data: function () {
     return {
@@ -70,6 +68,7 @@ export default {
       })
       .then(()=>{
         alert("로그인 성공")
+        this.$store.commit('userData', this.credentials)
         this.$router.push({ name: 'Main' })
       })
       .catch(err=> {
@@ -78,12 +77,13 @@ export default {
       this.credentials.email = "";
       this.credentials.pw ="";
     },
-  }
+  },
 }
 </script>
 
 <style scoped>
   @import '../../assets/styles/globalstyle.css';
+  
   label {
     color: #5E39B3;
     font-weight: bold;

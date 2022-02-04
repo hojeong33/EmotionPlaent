@@ -52,10 +52,24 @@
           </p>
         </span>
       </article>
-      <a href="">비밀번호를 잊었나요?</a>
+      <article id="pin-form">
+        <span>
+          <label for="pin">PIN 번호</label>
+          <img src="../../assets/images/icons/help.png" alt="help" id="help"
+          @mouseover="help = true" @mouseout="help = false">
+          <p v-show="help" id="help-message">
+            PIN 번호는 회원 가입시 설정한 추가 비밀번호입니다.
+            PIN 번호를 분실하였을 경우 고객센터 문의를 이용해주세요.
+          </p>
+        </span>
+        <input type="password" id="pin"
+        v-model="credentials.pin"
+        placeholder="등록하신 PIN 번호를 입력해주세요.">
+      </article>
+      <a @click="pwFind">비밀번호를 잊었나요?</a>
       <article id="pc_buttons">
         <button>변경하기</button>
-        <button @click="backTo">뒤로가기</button>
+        <button @click="go_to_back">뒤로가기</button>
       </article>
     </section>
   </div>
@@ -73,7 +87,8 @@ export default {
       isValid: {
         validateNextPw: false,
         validatePwConf: false,
-      }
+      },
+      help: false
     }
   },
   methods: {
@@ -93,9 +108,12 @@ export default {
         this.isValid.validatePwConf = false
       }
     },
-    backTo: function(){
-      this.$router.push('/setting')
-    }
+    pwFind(){
+      this.$router.push('/setting/password-find')
+    },
+    go_to_back: function(){
+      this.$router.go(-1)
+    },
   }
 }
 </script>
@@ -181,7 +199,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 65%;
+    width: 80%;
     margin: 0 auto;
   }
 
@@ -197,6 +215,7 @@ export default {
     display: flex;
     flex-direction: column;
     /* align-items: center; */
+    width: 80%;
     margin: 1rem;
   }
 
@@ -215,6 +234,7 @@ export default {
     font-size: 1.125rem;
     font-weight: bold;
     margin: 1rem 0;
+    cursor: pointer;
   }
 
   #pc_buttons {
@@ -226,5 +246,31 @@ export default {
 
   #pc_buttons > *:last-child {
     background-color: #777777;
+  }
+
+  #pin-form span {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  #help {
+    width: 1rem;
+    height: 1rem;
+    margin: 0 0.5rem;
+  }
+
+  #help-message {
+    font-size: 0.75rem;
+    width: 15rem;
+    position: absolute;
+    top: 80%;
+    left: 75%;
+    background-color: #5E39B3;
+    color: white;
+    z-index: 1;
+    padding: 1rem;
+    border-radius: 20px;
+    word-break: keep-all;
   }
 </style>
