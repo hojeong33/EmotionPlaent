@@ -1,8 +1,6 @@
 package com.ssafy.project.EmotionPlanet.Controller;
 
-
 import java.util.List;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
-
+import com.ssafy.project.EmotionPlanet.Dto.ActivityDto;
 import com.ssafy.project.EmotionPlanet.Dto.MovieDto;
 import com.ssafy.project.EmotionPlanet.Dto.MusicDto;
 import com.ssafy.project.EmotionPlanet.Service.ApiServiceImpl;
@@ -28,7 +26,9 @@ public class ApiController {
 	
 	@Autowired
 	ApiServiceImpl apiservice;
+	
 	private final int SUCESS = 1;
+	
 	@GetMapping(value ="/movieup")
 	public ResponseEntity<Integer> movieinsert(){ // TMDB에서 인기순으로 500개의 영화를 가져와서 디비에 저장
 		if(apiservice.MovieInsert() == SUCESS)
@@ -55,6 +55,17 @@ public class ApiController {
 		List<MusicDto> list = apiservice.Music(moodnumber,typenumber);
 		if(list.size()!=0) {
 			return new ResponseEntity<List<MusicDto>>(list, HttpStatus.OK);
+		}else {
+			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "다시 시도해주세요");
+		}
+	}
+	
+	@GetMapping(value = "/activity/{type}") //여기에 감정이랑 뭐 해소 or 심화 감정 데이터 같이 넘겨야 할듯? 갯수 제한도?
+	public ResponseEntity<List<ActivityDto>> Activity(@PathVariable String type) {
+		int typenumber = Integer.parseInt(type);
+		List<ActivityDto> list = apiservice.ActivitySelect(typenumber);
+		if(list != null) {
+			return new ResponseEntity<List<ActivityDto>>(list, HttpStatus.OK);
 		}else {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "다시 시도해주세요");
 		}

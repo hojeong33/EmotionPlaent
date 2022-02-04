@@ -1,10 +1,9 @@
 package com.ssafy.project.EmotionPlanet.Service;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
-
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -15,23 +14,21 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
-
 import com.ssafy.project.EmotionPlanet.Dao.ApiDao;
+import com.ssafy.project.EmotionPlanet.Dto.ActivityDto;
 import com.ssafy.project.EmotionPlanet.Dto.MovieDto;
 import com.ssafy.project.EmotionPlanet.Dto.MusicDto;
-import com.ssafy.project.EmotionPlanet.Dto.TestDto;
 import com.ssafy.project.EmotionPlanet.Util.createAccesstoken;
 
 @Service
 public class ApiServiceImpl implements ApiService {
-	
+
 	@Autowired
 	ApiDao apiDao;
 
 	private final RestTemplate restTemplate = new RestTemplate();
 
-	private String[][] musicemotion = new String[][] { 
-			{ "happy", "sad" }, // 행복 너무행복해서 슬프려한다?
+	private String[][] musicemotion = new String[][] { { "happy", "sad" }, // 행복 너무행복해서 슬프려한다?
 			{ "sad", "happy" }, // 우울
 			{ "k-pop", "k-pop" }, // 중립
 			{ "goth", "acoustic" }, // 공포
@@ -39,19 +36,18 @@ public class ApiServiceImpl implements ApiService {
 			{ "rock-n-roll", "funk" } // 분노
 	};
 	// https://api.themoviedb.org/3/genre/movie/list?api_key=a571ca19d9fd38ff2298025d4a8475f5
-	private String[][] movieemotion = new String[][] { 
-		{ "35", "18" }, // 행복 Comedy Drama
-		{ "18", "35" }, // 우울 Drama Comedy
-		{ "", "" }, // 중립은 그냥 둘다 추천?
-		{ "27", "10751" }, // 공포 Horror, Family
-		{ "10752", "16" }, // 깜짝 War, Animation
-		{ "53", "12" } // 분노 Thriller Adventure
-};
+	private String[][] movieemotion = new String[][] { { "35", "18" }, // 행복 Comedy Drama
+			{ "18", "35" }, // 우울 Drama Comedy
+			{ "", "" }, // 중립은 그냥 둘다 추천? => 최신 개봉한거 위주
+			{ "27", "10751" }, // 공포 Horror, Family
+			{ "9648", "10402" }, // 깜짝 Mystery, Music
+			{ "10752", "16" } // 분노 War Animation
+	};
 
 	@Override
 	public List<MusicDto> Music(int mood, int type) {
 		String URL = "https://api.spotify.com/v1/recommendations/?seed_genres=" + musicemotion[mood - 1][type]
-				+ "&limit=3&market=KR";
+				+ "&limit=6&market=KR";
 		createAccesstoken create = new createAccesstoken();
 		final HttpHeaders headers = new HttpHeaders();
 		headers.set("Authorization", "Bearer " + create.accesstoken());
@@ -87,19 +83,26 @@ public class ApiServiceImpl implements ApiService {
 	}
 
 	@Override
-	public List<MovieDto> Movie(int mood, int type) {  
-		List<MovieDto> result = new ArrayList<>();
-		List<MovieDto> list = apiDao.MovieSelect(movieemotion[mood-1][type]);
-		random(result,list,3,list.size());
-		return result;
+	public List<MovieDto> Movie(int mood, int type) {
+		List<MovieDto> list = null;
+		if(mood == 3) {
+			list = apiDao.MovieSelectnomal(movieemotion[mood - 1][type]);
+		}else {
+			list = apiDao.MovieSelect(movieemotion[mood - 1][type]);
+		}
+		if (list.size() != 0)
+			return list;
+		return null;
 	}
-	
+
 	@Override
-	public int MovieInsert() {
+	public int MovieInsert() { // 그 공백 데이터 지우고 19세 adult 이부분 체크하기
 		String key = "a571ca19d9fd38ff2298025d4a8475f5";
+		LocalDate now = LocalDate.now();
 		List<MovieDto> list = new ArrayList<MovieDto>();
 		for (int page = 1; page <= 25; page++) {
-			String apiURL = "https://api.themoviedb.org/3/movie/popular?api_key=" + key + "&language=ko-KR&page="+page;
+			String apiURL = "https://api.themoviedb.org/3/movie/popular?api_key=" + key + "&language=ko-KR&page="
+					+ page;
 			final HttpHeaders headers = new HttpHeaders();
 			final HttpEntity<String> entity = new HttpEntity<String>(headers);
 			String str = restTemplate.exchange(apiURL, HttpMethod.GET, entity, String.class).getBody();
@@ -109,13 +112,17 @@ public class ApiServiceImpl implements ApiService {
 				JSONArray result = (JSONArray) jsonObject.get("results"); // JSON 파싱 데이터에서 tracks부분을 배열로 가져옴
 				for (int i = 0; i < result.size(); i++) {
 					JSONObject resultbody = (JSONObject) result.get(i);
-					if(!resultbody.containsKey("release_date") || !resultbody.containsKey("genre_ids"))
+					if (!resultbody.containsKey("release_date") || !resultbody.containsKey("genre_ids") || resultbody.get("overview").toString().equals("") ||
+							resultbody.get("poster_path") == null || resultbody.get("genre_ids").toString().equals("[]"))
+						continue;
+					LocalDate day = LocalDate.parse(resultbody.get("release_date").toString());
+					if(now.isBefore(day))
 						continue;
 					MovieDto dto = new MovieDto();
 					dto.setApiId(Integer.parseInt(resultbody.get("id").toString()));
 					dto.setTitle(resultbody.get("title").toString());
 					dto.setDescr(resultbody.get("overview").toString());
-					dto.setImgLink("https://image.tmdb.org/t/p/original"+resultbody.get("poster_path"));
+					dto.setImgLink("https://image.tmdb.org/t/p/original" + resultbody.get("poster_path"));
 					dto.setYear(resultbody.get("release_date").toString());
 					dto.setGenre(resultbody.get("genre_ids").toString());
 					list.add(dto);
@@ -128,100 +135,33 @@ public class ApiServiceImpl implements ApiService {
 		int result = apiDao.MovieInsert(list);
 		return result;
 	}
-	
-	public void random(List<MovieDto> list, List<MovieDto> emt, int n, int m) {
-		Random r = new Random();
-		int number[] = new int[n];
-		for (int i = 0; i < n; i++) {
-			number[i] = r.nextInt(m);
-			for (int j = 0; j < i; j++) {
-				if (number[i] == number[j])
-					i--;
-			}
-		}
-		for (int i = 0; i < n; i++) {
-			list.add(emt.get(number[i]));
-		}
-		Arrays.sort(number); // 정렬한 이유 : 중간 값을 빼버리면 리스트 뒤에 값이 앞당겨짐 즉 큰값부터 작은값순으로 제거하기 위해
-		for (int i = n - 1; i >= 0; i--) {
-			emt.remove(number[i]);
-		}
-	}
 
-//	네이버 영화 api
-//	@Override
-//	public String Movie() {
-//		String clientId = "g5J_S00F7zMVPYzEpbHM"; //애플리케이션 클라이언트 아이디값"
-//        String clientSecret = "wo_townKIG"; //애플리케이션 클라이언트 시크릿값"
-//
-//        String text =  "기생충";
-//        try {
-//            text = URLEncoder.encode("그린팩토리", "UTF-8");
-//        } catch (UnsupportedEncodingException e) {
-//            throw new RuntimeException("검색어 인코딩 실패",e);
-//        }
-//        String test = "a571ca19d9fd38ff2298025d4a8475f5";
-//        String apiURL = "https://api.themoviedb.org/3/movie/popular?api_key="+test
-//        		+"&language=ko-KR";   // json 결과
-//        //String apiURL = "https://openapi.naver.com/v1/search/blog.xml?query="+ text; // xml 결과
-//
-//        Map<String, String> requestHeaders = new HashMap<>();
-//        String responseBody = get(apiURL,requestHeaders);
-//
-//        System.out.println(responseBody);
-//		return null;
+//	public void random(List<MovieDto> list, List<MovieDto> emt, int n, int m) {
+//		Random r = new Random();
+//		int number[] = new int[n];
+//		for (int i = 0; i < n; i++) {
+//			number[i] = r.nextInt(m);
+//			for (int j = 0; j < i; j++) {
+//				if (number[i] == number[j])
+//					i--;
+//			}
+//		}
+//		for (int i = 0; i < n; i++) {
+//			list.add(emt.get(number[i]));
+//		}
+//		Arrays.sort(number); // 정렬한 이유 : 중간 값을 빼버리면 리스트 뒤에 값이 앞당겨짐 즉 큰값부터 작은값순으로 제거하기 위해
+//		for (int i = n - 1; i >= 0; i--) {
+//			emt.remove(number[i]);
+//		}
 //	}
-//	
-//	
-//	private String get(String apiUrl, Map<String, String> requestHeaders){
-//        HttpURLConnection con = connect(apiUrl);
-//        try {
-//            con.setRequestMethod("GET");
-//            for(Map.Entry<String, String> header :requestHeaders.entrySet()) {
-//                con.setRequestProperty(header.getKey(), header.getValue());
-//            }
-//
-//            int responseCode = con.getResponseCode();
-//            if (responseCode == HttpURLConnection.HTTP_OK) { // 정상 호출
-//                return readBody(con.getInputStream());
-//            } else { // 에러 발생
-//                return readBody(con.getErrorStream());
-//            }
-//        } catch (IOException e) {
-//            throw new RuntimeException("API 요청과 응답 실패", e);
-//        } finally {
-//            con.disconnect();
-//        }
-//    }
-//
-//    private HttpURLConnection connect(String apiUrl){
-//        try {
-//            URL url = new URL(apiUrl);
-//            return (HttpURLConnection)url.openConnection();
-//        } catch (MalformedURLException e) {
-//            throw new RuntimeException("API URL이 잘못되었습니다. : " + apiUrl, e);
-//        } catch (IOException e) {
-//            throw new RuntimeException("연결이 실패했습니다. : " + apiUrl, e);
-//        }
-//    }
-//
-//    private String readBody(InputStream body){
-//        InputStreamReader streamReader = new InputStreamReader(body);
-//
-//        try (BufferedReader lineReader = new BufferedReader(streamReader)) {
-//            StringBuilder responseBody = new StringBuilder();
-//
-//            String line;
-//            while ((line = lineReader.readLine()) != null) {
-//                responseBody.append(line);
-//            }
-//
-//            return responseBody.toString();
-//        } catch (IOException e) {
-//            throw new RuntimeException("API 응답을 읽는데 실패했습니다.", e);
-//        }
-//    }
 
+	@Override
+	public List<ActivityDto> ActivitySelect(int type) {
+		List<ActivityDto> list = apiDao.ActivitySelect(type);
+		if (list.size() != 0)
+			return list;
+		return null;
+	}
 }
 
 /*

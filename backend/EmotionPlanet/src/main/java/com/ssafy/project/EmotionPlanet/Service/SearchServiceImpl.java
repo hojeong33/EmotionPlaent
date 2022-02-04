@@ -15,8 +15,6 @@ import com.ssafy.project.EmotionPlanet.Dao.TagDao;
 import com.ssafy.project.EmotionPlanet.Dto.CommentDto;
 import com.ssafy.project.EmotionPlanet.Dto.FeedDto;
 import com.ssafy.project.EmotionPlanet.Dto.ImgDto;
-import com.ssafy.project.EmotionPlanet.Dto.PickContentDto;
-import com.ssafy.project.EmotionPlanet.Dto.PickDto;
 import com.ssafy.project.EmotionPlanet.Dto.TagDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 

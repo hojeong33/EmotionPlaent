@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.server.ResponseStatusException;
 import com.ssafy.project.EmotionPlanet.Dto.FollowDto;
 import com.ssafy.project.EmotionPlanet.Dto.FollowResultDto;
+import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 import com.ssafy.project.EmotionPlanet.Service.FollowService;
 
 @CrossOrigin(origins = "http://localhost:5500", allowCredentials = "true", allowedHeaders = "*", methods = {
@@ -50,13 +51,13 @@ public class FollowController {
 	}
 	
 	@GetMapping(value = "/follows/{no}")
-	public ResponseEntity<List<FollowDto>> followselect(@PathVariable String no) { //해당 유저의 팔로우 리스트 출력
+	public ResponseEntity<List<UserDto>> followselect(@PathVariable String no) { //해당 유저의 팔로우 리스트 출력
 		int userNo = Integer.parseInt(no);
-		List<FollowDto> list = followService.followSelect(userNo);
+		List<UserDto> list = followService.followSelect(userNo);
 		if(list.size() != 0) {
 			System.out.println("팔로우 유저 있음");
 			System.out.println(list.size() +" 명");
-			return new ResponseEntity<List<FollowDto>>(list, HttpStatus.OK);
+			return new ResponseEntity<List<UserDto>>(list, HttpStatus.OK);
 		} else {
 			System.out.println("팔로우 중인 유저 없음");
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "팔로워 중인 사람이 없습니다.");
@@ -64,13 +65,13 @@ public class FollowController {
 	}
  
 	@GetMapping(value = "/followings/{no}")
-	public ResponseEntity<List<FollowDto>> followingselect(@PathVariable String no) { //해당 유저의 팔로잉 리스트 출력
+	public ResponseEntity<List<UserDto>> followingselect(@PathVariable String no) { //해당 유저의 팔로잉 리스트 출력
 		int userNo = Integer.parseInt(no);
-		List<FollowDto> list = followService.followingSelect(userNo);
+		List<UserDto> list = followService.followingSelect(userNo);
 		if(list.size() != 0) {
 			System.out.println("팔로잉 유저 있음");
 			System.out.println(list.size() +" 명");
-			return new ResponseEntity<List<FollowDto>>(list, HttpStatus.OK);
+			return new ResponseEntity<List<UserDto>>(list, HttpStatus.OK);
 		} else {
 			System.out.println("팔로잉 유저 없음");
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "팔로잉 중인 사람이 없습니다.");

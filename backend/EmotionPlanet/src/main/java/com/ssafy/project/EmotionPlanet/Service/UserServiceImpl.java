@@ -60,8 +60,6 @@ public class UserServiceImpl implements UserService {
 		//변경되는 유정 정보가 넘어왔을때 null또는 0값이 아닌 값 즉 변경되는 값을 찾아 기존 유저정보를 변경함
 		if (changeuserDto.getMood() != 0) { // 감정 정보 변경
 			userDto.setMood(changeuserDto.getMood());
-		} else if (changeuserDto.getProfileImg() != null) { // 프로필 변경 프로필 사진 받아오는것도 생각 해야함
-			userDto.setProfileImg(changeuserDto.getProfileImg());
 		} else if (changeuserDto.getPw() != null) { // 비밀 번호 변경
 			userDto.setPw(changeuserDto.getPw());
 		} else if (changeuserDto.getNickname() != null) { // 활동명 변경
