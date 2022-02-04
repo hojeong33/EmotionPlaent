@@ -127,7 +127,7 @@ public class FeedServiceImpl implements FeedService{
         for (UserRequestDto user : follow) {
             sum.add(user);
         }
-        for (UserRequestDto user : follow) {
+        for (UserRequestDto user : unfollow) {
             sum.add(user);
         }
         return sum;

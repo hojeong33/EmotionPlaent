@@ -13,10 +13,10 @@ import PwChange from '@/components/Settings/PwChange'
 import Withdrawal from '@/components/Settings/Withdrawal'
 import FeedDetail from '@/components/FeedDetail'
 import PwFind from '@/components/Settings/PwFind'
-import Create from '@/views/Create'
-import CreateImg from '@/components/Create/CreateImg'
-import CreateTag from '@/components/Create/CreateTag'
-import CreateText from '@/components/Create/CreateText'
+// import Create from '@/views/Create'
+// import CreateImg from '@/components/Create/CreateImg'
+// import CreateTag from '@/components/Create/CreateTag'
+// import CreateText from '@/components/Create/CreateText'
 
 Vue.use(VueRouter)
 
@@ -55,6 +55,11 @@ const routes = [
     path: '/emotiontest',
     name: 'EmotionTest',
     component: EmotionTest
+  },
+  {
+    path: '/searchresult',
+    name: 'SearchResult',
+    component: SearchResult
   },
   {
     path: '/setting',

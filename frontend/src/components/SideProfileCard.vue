@@ -21,8 +21,8 @@
         </span>
       </div>
       <div id="footer_buttons">
-        <router-link to="/create"><button>피드 작성</button></router-link>
-        <router-link to="/emotiontest"><button>테스트 다시하기</button></router-link>
+        <button @click="createFeed">피드 작성</button>
+        <button @click="$router.push({ name:'EmotionTest' })">테스트 다시하기</button>
       </div>
     </div>  
   </div>  
@@ -51,6 +51,11 @@ export default {
       const mood = this.userInfo.mood
       const style = this.planetStyles.find(el => el.id === mood) || {}
       return style
+    }
+  },
+  methods: {
+    createFeed: function(){
+      this.$store.commit('activateFeed')
     }
   },
 }
