@@ -45,9 +45,6 @@
   import axios from 'axios'
 
   export default {
-    beforeCreate: function () {
-      document.body.className = 'astro';
-    },
     data: function(){
       return {
         page: 1,
@@ -128,6 +125,12 @@
         }
       },
       go_to_back: function(){
+        // if문에서 이전 감정 데이터가 존재하지 않으면 {
+        //   this.$router.push({ name: 'Main' })
+
+        // } else {
+        //   this.$router.go(-1)
+        // }
         this.$router.push({ name: 'Main' })
       },
       refresh_keywords: function(){
