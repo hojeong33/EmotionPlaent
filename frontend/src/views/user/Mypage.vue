@@ -197,18 +197,18 @@ export default {
     border-radius: 50%;
     position: absolute;
     top: -15%;
-    left: 42%;
+    left: 44%;
     background-color: #5E39B3;
   }
 
   @keyframes slide-in {
-    from {left: 42%;}
-    to {left: 55%;}
+    from {left: 44%;}
+    to {left: 54%;}
   }
 
   @keyframes slide-out {
-    from {left: 55%;}
-    to {left: 42%;}
+    from {left: 54%;}
+    to {left: 44%;}
   }
 
   .slide-in {
