@@ -72,6 +72,19 @@ export default {
 					comment_cnt:"2",
 					comments: ["반가워요","안녕하세요"],
 					planet: 2
+				},
+				{
+					username: "조은누리",
+					date:"2022-01-01",
+					userImage:"https://i0.wp.com/dailypetcare.net/wp-content/uploads/2020/11/Screen-Shot-2020-11-24-at-9.10.35-PM-edited-e1606302091776.png?fit=1236%2C694&ssl=1",
+					postImage:"https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDTsmB9x2oiL4FX8nArPQ8YkocNQRGL2SeHg&usqp=CAU",
+					tag: ["우울행성","보았어요","밤하늘"],
+					likes: 49,
+					hasBeenLiked: false,
+					caption: "멍멍🐶",
+					comment_cnt:"2",
+					comments: ["반가워요","안녕하세요"],
+					planet: 2
 				}
 			],
 			planetStyles: [
@@ -126,9 +139,9 @@ export default {
 	#feed-container {
 		display: flex;
 		flex-direction: column;
+		justify-content: center;
 		align-items: center;
 		width: 100%;
-		padding: 1rem;
 	}
 
 	#no-result {
@@ -147,13 +160,14 @@ export default {
 
 	#filter {
 		display: flex;
-		justify-content: right;
 	}
 
 	#feeds {
+		width: 80%;
 		display: grid;
-		grid-template-columns: 1fr 1fr 1fr;
-		place-items: center;
-		gap: 2rem;
+		grid-template-columns: 1fr 1fr 1fr 1fr;
+		grid-auto-flow: row;
+		justify-content: center;
+		gap: 1rem;
 	}
 </style>

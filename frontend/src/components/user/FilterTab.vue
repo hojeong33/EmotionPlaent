@@ -1,7 +1,7 @@
 <template>
   <div id="filter-container">
 		<img id="planet_img" :src="require('@/assets/images/emotions/' + planet)">
-		<select id="selectbox" v-model="filterValue">
+		<select id="selectbox" v-model="filterValue" @change="filtering">
 			<option value="0">전체</option>
 			<option value="1">행복행성</option>
 			<option value="2">우울행성</option>
@@ -20,12 +20,12 @@ export default {
 		return {
 			planetStyles: [
 				{ id: 0, name: 'default'},
-        { id: 1, name: '행복행성', img: "1.png", color: '#ED5A8E' },
-        { id: 2, name: '우울행성', img: "2.png", color: '#6BD9E8' },
-        { id: 3, name: '중립행성', img: "3.png", color: '#C5D3DC' },
-        { id: 4, name: '공포행성', img: "4.png", color: '#FEA95C' },
-        { id: 5, name: '깜짝행성', img: "5.png", color: '#FB5D38' },
-        { id: 6, name: '분노행성', img: "6.png", color: '#2A61F0' },
+        { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
+        { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
+        { id: 3, name: '중립행성', img: "neutral.png", color: '#ABBECA' },
+        { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
+        { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
+        { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
       ],
 			filterValue: '0',
 		}
@@ -44,7 +44,7 @@ export default {
 			if (idx){
 				return this.planetStyles[idx].img
 			}
-			return "3.png"
+			return "neutral.png"
 		}
   },
 }

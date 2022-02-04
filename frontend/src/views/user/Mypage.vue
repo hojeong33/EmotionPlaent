@@ -186,7 +186,7 @@ export default {
     justify-content: center;
     align-items: flex-end;
     position: relative;
-    border-top: 0.1rem solid gainsboro;
+    border-top: 1px solid gainsboro;
     width: 100%;
     padding: 1rem;
   }

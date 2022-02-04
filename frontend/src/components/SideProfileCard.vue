@@ -1,5 +1,5 @@
 <template>
-  <div class="card_container">
+  <div class="card_container" v-show="isActive">
     <div class="card_header">
       <img id="profile_image" src="https://www.thesprucepets.com/thmb/meRd41is751DsQQjofaiKV_ZUBg=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cat-talk-eyes-553942-hero-df606397b6ff47b19f3ab98589c3e2ce.jpg" alt="">
       <div class="overlay_content">
@@ -37,13 +37,14 @@ export default {
   data() {
     return {
       planetStyles: [
-        { id: 1, name: '행복행성', img: "1.png", color: '#6BD9E8' },
-        { id: 2, name: '우울행성', img: "2.png", color: '#2A61F0' },
-        { id: 3, name: '중립행성', img: "3.png", color: '#ABBECA' },
-        { id: 4, name: '공포행성', img: "4.png", color: '#ED5A8E' },
-        { id: 5, name: '깜짝행성', img: "5.png", color: '#FEA95C' },
-        { id: 6, name: '분노행성', img: "6.png", color: '#FB5D38' },
-      ]
+        { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
+        { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
+        { id: 3, name: '중립행성', img: "neutral.png", color: '#ABBECA' },
+        { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
+        { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
+        { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
+      ],
+      isActive: false
     }
   },
   computed: {
@@ -56,8 +57,17 @@ export default {
    methods: {
     createFeed: function(){
       this.$store.commit('activateFeed')
+    },
+    resize(){
+      window.innerWidth > 1000 ? this.isActive = true: this.isActive = false
     }
   },
+  mounted(){
+    if (window.innerWidth > 1000){
+      this.isActive = true
+    }
+    window.addEventListener('resize', this.resize)
+  }
 }
 </script>
 
