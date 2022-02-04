@@ -21,8 +21,8 @@
         </span>
       </div>
       <div id="footer_buttons">
-        <button>피드 작성</button>
-        <button>테스트 다시하기</button>
+        <router-link to="/create"><button>피드 작성</button></router-link>
+        <router-link to="/emotiontest"><button>테스트 다시하기</button></router-link>
       </div>
     </div>  
   </div>  

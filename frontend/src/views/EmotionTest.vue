@@ -122,13 +122,13 @@
           })
           .then(res => {
             alert(`당신은 ${ res.data.name }행성 입니다!`)
-            location.reload()
+            this.$router.push({name:'Main'})
           })
           .catch(() => alert('잘못된 요청입니다.'))
         }
       },
       go_to_back: function(){
-        this.$router.push({ name: 'main' })
+        this.$router.push({ name: 'Main' })
       },
       refresh_keywords: function(){
         while (this.selected.length > 0){

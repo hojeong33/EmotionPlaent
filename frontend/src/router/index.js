@@ -7,11 +7,7 @@ import Mypage from '@/views/user/Mypage.vue'
 import Recommend from '@/components/MainPage/RecommendTab/Recommend.vue'
 import Feed from '@/components/MainPage/FeedTab/Feed.vue'
 import Main from '@/views/main/Main.vue'
-<<<<<<< HEAD
-import Setting from '@/views/Setting.vue'
-=======
 import Setting from '@/views/setting'
->>>>>>> e69eead3752a8e64664879f9ff608c7c4a88d210
 import UserInfo from '@/components/Settings/UserInfo'
 import PwChange from '@/components/Settings/PwChange'
 import Withdrawal from '@/components/Settings/Withdrawal'

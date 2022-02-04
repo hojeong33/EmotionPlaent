@@ -2,19 +2,19 @@
   <div id="app">
     <nav class="navbar navbar-expand-lg" id="navbar-default">
       <div class="container">
-        <a class="navbar-brand" href="#"><img src="@/assets/images/logo/EMOTION PLANET.png" id="logo_img" alt=""></a>
+        <router-link class="navbar-brand" to="/main"><img src="@/assets/images/logo/EMOTION PLANET.png" id="logo_img" alt=""></router-link>
         <form class="d-flex" id="searches">
           <input id="search_bar" class="form-control" type="search" placeholder="Search" aria-label="Search">
           <!-- <button class="btn btn-outline-success" type="submit" id="search"><img src="@/assets/images/search.png" id="search"></button> -->
           <img src="@/assets/images/icons/search.png" id="search" type="submit">
         </form>
         <router-link to="/create"><img @click="changeImg_write" :src="require(`@/assets/images/icons/${imgName_write}`)" id="write"></router-link>
-        <router-link to="/#"><img src="@/assets/images/icons/home.png" id="home"></router-link>
-        <router-link to="/#"><img @click="changeImg_profile" :src="require(`@/assets/images/icons/${imgName_profile}`)" id="my_page"></router-link>
+        <router-link to="/main"><img src="@/assets/images/icons/home.png" id="home"></router-link>
+        <router-link to="/mypage"><img @click="changeImg_profile" :src="require(`@/assets/images/icons/${imgName_profile}`)" id="my_page"></router-link>
         <div>
           <router-link to="/#"><img @click="changeImg_alarm" :src="require(`@/assets/images/icons/${imgName_alarm}`)" id="alarm"></router-link>
         </div>
-        <router-link to="/#"><img @click="changeImg_setting" :src="require(`@/assets/images/icons/${imgName_setting}`)" id="setting"></router-link>
+        <router-link to="/setting"><img @click="changeImg_setting" :src="require(`@/assets/images/icons/${imgName_setting}`)" id="setting"></router-link>
         <!-- <a class="nav-link active" aria-current="page" href="#"><img src="@/assets/images/more.png" id="write"></a>
         <a class="nav-link" href="#"><img src="@/assets/images/home.png" id="home"></a>
         <a class="nav-link "><img src="@/assets/images/user.png" id="my_page"></a>
