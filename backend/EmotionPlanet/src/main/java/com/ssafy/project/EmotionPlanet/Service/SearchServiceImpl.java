@@ -64,7 +64,7 @@ public class SearchServiceImpl implements SearchService {
 			}
 			return list;
 		} else {
-			return null;			
+			return null;
 		}
 	}
 
@@ -80,6 +80,9 @@ public class SearchServiceImpl implements SearchService {
 
 //	@Override
 //	public List<PickDto> recommendSelect(String name) {
+
+//		List<PickDto> list = searchDao.s(name);
+//		List<PickDto> list = searchDao.recommendSelect(name);
 //		List<PickDto> list = searchDao.recommendSelect(name);
 //		if(list.size() != 0) {
 //			for (PickDto pick : list) {

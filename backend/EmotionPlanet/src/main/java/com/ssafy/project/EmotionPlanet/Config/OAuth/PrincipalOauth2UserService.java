@@ -1,5 +1,10 @@
 package com.ssafy.project.EmotionPlanet.Config.OAuth;
 
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdToken;
+import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.gson.GsonFactory;
 import com.ssafy.project.EmotionPlanet.Config.auth.PrincipalDetails;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 import com.ssafy.project.EmotionPlanet.Service.UserService;
@@ -11,48 +16,62 @@ import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.security.GeneralSecurityException;
+import java.util.Arrays;
+import java.util.Collections;
+
 @Service
-public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
+public class PrincipalOauth2UserService {
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final NetHttpTransport transport = new NetHttpTransport();
+    private final JsonFactory jsonFactory = new GsonFactory();
+    private String clientId = "172274534251-7a2a6sthcuviratis75u7gu7utbkdp8d.apps.googleusercontent.com";
 
-    private final UserService userService;
+    public UserDto tokenVerify(String idToken) {
 
-    PrincipalOauth2UserService(@Lazy BCryptPasswordEncoder bCryptPasswordEncoder,
-                               @Lazy UserService userService){
-        this.userService = userService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
+        System.out.println("idToken : " + clientId);
 
-    @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        System.out.println("getClientRegistration: " + userRequest.getClientRegistration());
-        System.out.println("getAccessToken: " + userRequest.getAccessToken().getTokenValue());
-        System.out.println("getAttributes: " + super.loadUser(userRequest).getAttributes());
+        GoogleIdTokenVerifier gitVerifier = new GoogleIdTokenVerifier.Builder(transport, jsonFactory)
+                .setIssuers(Arrays.asList("https://accounts.google.com", "accounts.google.com"))
+                .setAudience(Collections.singletonList(clientId))
+                .build();
 
-        OAuth2User oAuth2User = super.loadUser(userRequest);
+        GoogleIdToken git = null;
 
-        String provider = userRequest.getClientRegistration().getClientId(); // google
-        String providerId = oAuth2User.getAttribute("sub");
-        String email = oAuth2User.getAttribute("email");
-        String username = provider + "_" + providerId;
-        String password = bCryptPasswordEncoder.encode("겟인데아");
-        String role = "ROLE_USER";
+        try {
+            git = gitVerifier.verify(idToken);
+        } catch (GeneralSecurityException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        UserDto userEntity = userService.userSelectByEmail(email);
-//
-//        if (userEntity == null) {
-//            userEntity = User.builder()
-//                    .username(username)
-//                    .password(password)
-//                    .email(email)
-//                    .role(role)
-//                    .provider(provider)
-//                    .providerId(providerId)
-//                    .build();
-//            userRepository.save(userEntity);
-//        }
+        UserDto user = new UserDto();
+        if (git == null) {
+            System.out.println("Google ID Token is invalid");
+        }else {
+            GoogleIdToken.Payload payload = git.getPayload();
 
-        return new PrincipalDetails(userEntity, oAuth2User.getAttributes());
+            // Print user identifier & Get profile information from payload
+            String userId = payload.getSubject();
+            System.out.println("User ID: " + userId);
+            String email = payload.getEmail();
+            boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
+            String name = (String) payload.get("name");
+            String pictureUrl = (String) payload.get("picture");
+            String locale = (String) payload.get("locale");
+            String familyName = (String) payload.get("family_name");
+            String givenName = (String) payload.get("given_name");
+
+            System.out.println("email: " + email);
+            System.out.println("name: " + name);
+            System.out.println("locale: " + locale);
+
+            user.setEmail(email);
+            user.setNickname(userId);
+            user.setProfileImg(pictureUrl);
+        }
+        return user;
     }
 }
