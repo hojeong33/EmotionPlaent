@@ -73,8 +73,9 @@ export default new Vuex.Store({
     // 추천피드 끝
     
     // 비밀번호 변경 시작
-    changePw: function (nextPw) {
+    changePw: function (state, nextPw) {
       const param = { no: this.state.userInfo.no, pw: nextPw }
+      console.log(nextPw)
       axios({
         method: 'put',
         url:'http://13.125.47.126:8080/users/',
