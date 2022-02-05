@@ -1,5 +1,5 @@
 package com.ssafy.project.EmotionPlanet.Controller;
-;
+
 import com.ssafy.project.EmotionPlanet.Config.auth.PrincipalDetails;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 import com.ssafy.project.EmotionPlanet.Service.UserService;
