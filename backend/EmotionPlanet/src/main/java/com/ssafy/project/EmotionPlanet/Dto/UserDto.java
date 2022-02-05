@@ -1,5 +1,7 @@
 package com.ssafy.project.EmotionPlanet.Dto;
 
+import lombok.Builder;
+
 public class UserDto {
 
     private int no;
@@ -9,6 +11,7 @@ public class UserDto {
     private String birth;
     private String profileImg;
     private String tel;
+	private String provider;
 	private int mood;
     private boolean publish;
 	public int getNo() {
@@ -65,6 +68,15 @@ public class UserDto {
 	public void setTel(String tel) {
 		this.tel = tel;
 	}
+
+	public String getProvider() {
+		return provider;
+	}
+
+	public void setProvider(String provider) {
+		this.provider = provider;
+	}
+
 	public UserDto() {}
 	public UserDto(int no, String email, String pw, String nickname, String birth, String profileImg, String tel,
 			int mood, boolean publish) {
@@ -79,6 +91,15 @@ public class UserDto {
 		this.mood = mood;
 		this.publish = publish;
 	}
+
+	@Builder
+	public UserDto(String email, String pw, String nickname, String provider) {
+		this.email = email;
+		this.pw = pw;
+		this.nickname = nickname;
+		this.provider = provider;
+	}
+
 	@Override
 	public String toString() {
 		return "UserDto [no=" + no + ", email=" + email + ", pw=" + pw + ", nickname=" + nickname + ", birth=" + birth
