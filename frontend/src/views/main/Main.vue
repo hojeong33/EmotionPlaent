@@ -34,7 +34,8 @@ import TabItem from './TabItem.vue'
 import Recommend from '../../components/MainPage/RecommendTab/Recommend.vue'
 import FeedList from '../../components/MainPage/FeedTab/FeedList.vue'
 import posts from '../../assets/data/posts.js'
-import SideProfileCard from '@/components/SideProfileCard.vue' 
+import SideProfileCard from '@/components/SideProfileCard.vue'
+
 export default {
 	name:'Main',
 	components: { TabItem, Recommend, FeedList ,SideProfileCard},
@@ -61,7 +62,9 @@ export default {
 		}
 	},
 	created() {
-		console.log(this.$store.state.userEmotion)
+		this.$store.dispatch('recommendMusic')
+		this.$store.dispatch('recommendMovie')
+		this.$store.dispatch('recommendActivity')
 	}
 }
 </script>

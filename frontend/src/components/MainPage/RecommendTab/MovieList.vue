@@ -6,9 +6,10 @@
         <div class="card-carousel">
             <div class="card-carousel--overflow-container">
                 <div class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
-                    <div class="card-carousel--card" v-for="item in items" :key="item.index"><img src="../../../assets/images/default_image.png"/>
+                    <div class="card-carousel--card" v-for="item in this.$store.state.recommendMovie" :key="item.index">
+                        <img :src="item.imgLink"/>
                         <div class="card-carousel--card--footer">
-                            <p>{{ item.name }}</p>
+                            <p>{{ item.title }}</p>
                         </div>
                     </div>
                 </div>
@@ -28,22 +29,11 @@ export default {
         currentOffset: 0,
         windowSize: 3,
         paginationFactor: 220,
-        items: [
-            {name: '제목'},
-            {name: '제목'},
-            {name: '제목'},
-            {name: '제목'},
-            {name: '제목'},
-            {name: '제목'},
-            {name: '제목'},
-            {name: '제목'},
-            {name: '제목'}
-        ]
         }
     },
     computed: {
         atEndOfList() {
-        return this.currentOffset <= (this.paginationFactor * -1) * (this.items.length - this.windowSize);
+        return this.currentOffset <= (this.paginationFactor * -1) * (this.$store.state.recommendMovie.length - this.windowSize);
         },
         atHeadOfList() {
         return this.currentOffset === 0;

@@ -6,9 +6,11 @@
         <div class="card-carousel">
             <div class="card-carousel--overflow-container">
                 <div class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
-                    <div class="card-carousel--card" v-for="item in items" :key="item.index"><img src="../../../assets/images/default_image.png"/>
+                    <div class="card-carousel--card" v-for="item in this.$store.state.recommendMusic" :key="item.index">
+                        <img :src="item.imgLink"/>
                         <div class="card-carousel--card--footer">
-                            <p>{{ item.name }}</p>
+                            <p>{{ item.artist }} - </p>
+                            <p>{{ item.title }}</p>
                             <p class="tag" v-for="(tag, index) in item.tag" :key="index" :class="index &gt; 0 ? 'secondary' : ''" >{{ tag }}</p>
                         </div>
                     </div>
@@ -29,22 +31,11 @@ export default {
         currentOffset: 0,
         windowSize: 3,
         paginationFactor: 220,
-        items: [
-            {name: '제목', tag: ["가수"]},
-            {name: '제목', tag: ["가수"]},
-            {name: '제목', tag: ["가수"]},
-            {name: '제목', tag: ["가수"]},
-            {name: '제목', tag: ["가수"]},
-            {name: '제목', tag: ["가수"]},
-            {name: '제목', tag: ["가수"]},
-            {name: '제목', tag: ["가수"]},
-            {name: '제목', tag: ["가수"]},
-        ]
         }
     },
     computed: {
         atEndOfList() {
-        return this.currentOffset <= (this.paginationFactor * -1) * (this.items.length - this.windowSize);
+        return this.currentOffset <= (this.paginationFactor * -1) * (this.$store.state.recommendMusic.length - this.windowSize);
         },
         atHeadOfList() {
         return this.currentOffset === 0;

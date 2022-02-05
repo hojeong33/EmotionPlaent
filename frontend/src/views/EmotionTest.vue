@@ -121,7 +121,7 @@
           .then(res => {
             alert(`당신은 ${ res.data.name }행성 입니다!`)
             this.$store.state.userEmotion = res.data.no
-            location.reload()
+            this.$router.push('Main')
           })
           .catch(() => alert('잘못된 요청입니다.'))
         }
