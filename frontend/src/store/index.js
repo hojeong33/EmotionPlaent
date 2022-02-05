@@ -13,6 +13,7 @@ export default new Vuex.Store({
     recommendMusic: [],
     recommendMovie: [],
     recommendActivity: [],
+    recommendReload: 0,
   },
   mutations: {
     activateFeed: function (state) {
@@ -28,7 +29,7 @@ export default new Vuex.Store({
     recommendMusic() {
 			axios({
         method: 'get',
-        url: 'http://13.125.47.126:8080/recommend/music/' + this.state.userEmotion + '/' + this.state.recommendType,
+        url: 'http://13.125.47.126:8080/recommend/music/' + this.state.userEmotion,
       })
       .then((res) => {
         console.log(res)
@@ -39,7 +40,7 @@ export default new Vuex.Store({
 		recommendMovie() {
 			axios({
         method: 'get',
-        url: 'http://13.125.47.126:8080/recommend/movie/' + this.state.userEmotion + '/' + this.state.recommendType,
+        url: 'http://13.125.47.126:8080/recommend/movie/' + this.state.userEmotion,
       })
       .then((res) => {
         console.log(res)
@@ -50,7 +51,7 @@ export default new Vuex.Store({
 		recommendActivity() {
 			axios({
         method: 'get',
-        url: 'http://13.125.47.126:8080/recommend/activity/' + this.state.recommendType,
+        url: 'http://13.125.47.126:8080/recommend/activity/',
       })
       .then((res) => {
         console.log(res)

@@ -62,9 +62,12 @@ export default {
 		}
 	},
 	created() {
-		this.$store.dispatch('recommendMusic')
-		this.$store.dispatch('recommendMovie')
-		this.$store.dispatch('recommendActivity')
+		if (this.$store.state.recommendReload === 0) {
+			this.$store.dispatch('recommendMusic')
+			this.$store.dispatch('recommendMovie')
+			this.$store.dispatch('recommendActivity')
+			this.$store.state.recommendReload = 1
+		}
 	}
 }
 </script>

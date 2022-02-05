@@ -5,8 +5,16 @@
         <div class="card-carousel--nav__left" @click="moveCarousel(-1)" :disabled="atHeadOfList"></div>
         <div class="card-carousel">
             <div class="card-carousel--overflow-container">
-                <div class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
-                    <div class="card-carousel--card" v-for="item in this.$store.state.recommendMovie" :key="item.index">
+                <div v-if="this.$store.state.recommendType === 1" class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
+                    <div class="card-carousel--card" v-for="item in this.$store.state.recommendMovie.slice(0, 6)" :key="item.index">
+                        <img :src="item.imgLink"/>
+                        <div class="card-carousel--card--footer">
+                            <p>{{ item.title }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="this.$store.state.recommendType === 0" class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
+                    <div class="card-carousel--card" v-for="item in this.$store.state.recommendMovie.slice(6)" :key="item.index">
                         <img :src="item.imgLink"/>
                         <div class="card-carousel--card--footer">
                             <p>{{ item.title }}</p>
