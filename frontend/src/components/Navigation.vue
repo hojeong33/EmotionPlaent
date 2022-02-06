@@ -4,7 +4,9 @@
       <div class="container">
         <a class="navbar-brand" href="#"><img src="@/assets/images/logo/EMOTION PLANET.png" id="logo_img" alt=""></a>
         <form class="d-flex" id="searches">
-          <input id="search_bar" class="form-control" type="search" placeholder="Search" aria-label="Search">
+          <input id="search_bar" class="form-control" autocomplete="off"
+          type="search" placeholder="Search" aria-label="Search"
+          @focus="searchOn" :value="searchWords" @input="search">
           <!-- <button class="btn btn-outline-success" type="submit" id="search"><img src="@/assets/images/search.png" id="search"></button> -->
           <img src="@/assets/images/icons/search.png" id="search" type="submit">
         </form>
@@ -35,7 +37,9 @@ export default {
       imgName_write: 'more.png',
       imgName_profile: 'user.png',
       imgName_setting: 'settings.png',
-      imgName_alarm: 'bell.png' 
+      imgName_alarm: 'bell.png' ,
+      searching: false,
+      searchWords: null,
     }
   },
   methods: {
@@ -74,6 +78,14 @@ export default {
         this.imgName_alarm = 'bell.png'
         this.isActive = false
       }
+    },
+    searchOn() {
+      this.$store.commit('activateSearch')
+    },
+    search( searchWords ) {
+      this.$store.commit('updateSearch', searchWords.target.value)
+      this.$store.dispatch('searchTag')
+      this.$store.dispatch('searchUser')
     }
   }
 }
