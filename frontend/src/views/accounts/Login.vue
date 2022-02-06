@@ -43,6 +43,9 @@
         <p>Kakao로 로그인</p>
         </button>
     </article>
+    <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&response_type=code&client_id=172274534251-rpo5d1a1i23k75l87vrcjiid99413h9a.apps.googleusercontent.com&redirect_uri=http://localhost:8080/auth/google/callback">구글로그인</a>
+    <div id="my-signin2"></div>
+    <button @click="signout">signout</button>
   </div>
 </template>
 
@@ -57,8 +60,21 @@ export default {
         email: null, 
         pw: null,
       },
+      googleUser: null,
     }
   },
+  mounted() {
+    window.gapi.signin2.render('my-signin2', {
+      scope: 'profile email',
+      width: 240,
+      height: 50,
+      longtitle: true,
+      theme: 'dark',
+      onsuccess: this.onSuccess,
+      onfailure: this.onFailure,
+    });
+  },
+
   methods: {
     login: function () {
       axios({
@@ -76,6 +92,43 @@ export default {
       })
       this.credentials.email = "";
       this.credentials.pw ="";
+    },
+
+    //OAUTH
+    onSuccess(googleUser) {
+      // eslint-disable-next-line
+      console.log(googleUser);
+      this.googleUser = googleUser;
+      this.tokenVerify()
+    },
+    onFailure(error) {
+      // eslint-disable-next-line
+      console.log(error);
+    },
+
+    signout() {
+      const authInst = window.gapi.auth2.getAuthInstance();
+      authInst.signOut().then(() => {
+        // eslint-disable-next-line
+        console.log('User Signed Out!!!');
+      })
+    },
+
+    tokenVerify() {
+      const url = 'http://localhost:8080/login/auth';
+      const params = new URLSearchParams();
+      params.append('idToken', this.googleUser.wc.id_token);
+      console.log(params)
+      axios.post(url, params).then((res) => {
+        // eslint-disable-next-line
+        console.log(res);
+      }).catch((error) => {
+        // eslint-disable-next-line
+        console.log(error);
+      }).then(() => {
+        // eslint-disable-next-line
+        console.log('tokenVerify End!!');
+      });
     },
   },
 }
