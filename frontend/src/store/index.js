@@ -11,7 +11,7 @@ export default new Vuex.Store({
   state: {
     feedActive: false,
     user: null,
-    userEmotion: 3,
+    userEmotion: null,
     recommendType: 1,
     recommendMusic: [],
     recommendMovie: [],
