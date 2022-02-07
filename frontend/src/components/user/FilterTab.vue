@@ -35,7 +35,7 @@ export default {
 	},
 	methods: {
 		filtering: function () {
-			this.$emit('filtering', this.filterValue)
+			this.$emit('filtering', Number(this.filterValue))
 		}
 	},
 	computed: {

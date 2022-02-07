@@ -1,44 +1,42 @@
 <template>
   <section id="mypage-container">
-    <side-profile-card
-      :user-info="userInfo"
-    >
-    </side-profile-card>
-    
-    <article id="container">
-      <div id="profile_container">
-        <img src="https://www.thesprucepets.com/thmb/meRd41is751DsQQjofaiKV_ZUBg=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cat-talk-eyes-553942-hero-df606397b6ff47b19f3ab98589c3e2ce.jpg" id="profile_img">
-        <div id="profile_card">
-          <div id="name_card">
-            <h1>{{ userInfo.username }}</h1>
-            <button @click="$router.push({name: 'Setting'})">프로필 수정</button>
-          </div>
-          <div id="info_card">
-            <h3>게시글 {{ userInfo.posts }}</h3>
-            <h3>팔로우 {{ userInfo.followings }}</h3>
-            <h3>팔로워 {{ userInfo.followers }}</h3>
-          </div>
+    <side-profile-card :user-info="userInfo" />
+    <article id="profile-container">
+      <img src="https://www.thesprucepets.com/thmb/meRd41is751DsQQjofaiKV_ZUBg=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cat-talk-eyes-553942-hero-df606397b6ff47b19f3ab98589c3e2ce.jpg" id="profile_img">
+      <div id="profile-card">
+        <div id="name-card">
+          <h1>{{ userInfo.username }}</h1>
+          <button @click="$router.push({name: 'Setting'})">프로필 수정</button>
+        </div>
+        <div id="info-card">
+          <h3>게시글 {{ userInfo.posts }}</h3>
+          <h3>팔로우 {{ userInfo.followings }}</h3>
+          <h3>팔로워 {{ userInfo.followers }}</h3>
         </div>
       </div>
     </article>
     <article id="tab">
-      <span id="dot1" :class="onPick ? 'slide-in':'slide-out'" />
-      <p @click="tapChange" :class="onFeed ? 'active': 'inactive'">게시글</p>
-      <p @click="tapChange" :class="onPick ? 'active': 'inactive'">찜 목록</p>
+      <span id="dot1" :class="myPageTab == 1 ? 'slide-out':'slide-in'" />
+      <p @click="myPageTab = 1" :class="myPageTab == 1 ? 'activate': ''">게시글</p>
+      <p @click="myPageTab = 2" :class="myPageTab == 2 ? 'activate': ''">찜 목록</p>
     </article>
-    <feed-list v-if="onFeed" :user-mood="userInfo.mood" />
-    <pick-list v-if="onPick" :user-mood="userInfo.mood" />
+    <article id="list-container">
+      <filter-tab :user-mood="userMood" @filtering="filtering" />
+      <feed-list v-if="myPageTab == 1" :user-mood="userInfo.mood" :filter="filter" />
+      <pick-list v-if="myPageTab == 2" :user-mood="userInfo.mood" :filter="filter" />
+    </article>
   </section>  
 </template>
 
 <script>
 import SideProfileCard from '@/components/SideProfileCard.vue'
+import FilterTab from '@/components/user/FilterTab.vue'
 import PickList from '@/components/user/PickList.vue'
 import FeedList from '@/components/user/FeedList.vue'
 
 export default {
   name: 'Mypage',
-  components: {SideProfileCard, PickList, FeedList},
+  components: {SideProfileCard, FilterTab, PickList, FeedList},
   data() {
     return {
       userInfo: {
@@ -48,17 +46,14 @@ export default {
       followings: 0,
       followers: 20100,
       },
-      onFeed: true,
-      onPick: false,
-      postlist: [],
-      picklist: [],
+      myPageTab: 1,
+      filter: 0
     }
   },
   methods: {
-    tapChange: function () {
-      this.onFeed = !this.onFeed
-      this.onPick = !this.onPick
-    },
+    filtering(payload){
+      this.filter = payload
+    }
   },
 }
 </script>
@@ -80,8 +75,8 @@ export default {
   }
 
   p {
-    color: black;
-    font-size: 1.4rem;
+    color: #777777;
+    font-size: 1.2rem;
     font-weight: bold;
     margin: 0 1rem;
     cursor: pointer;
@@ -176,14 +171,6 @@ export default {
     border-radius: 50%;
   }
 
-  
-  .inactive {
-    color: #777777;
-    font-size: 1.2rem;
-    font-weight: bold;
-  }
-
-
   #tab {
     display: flex;
     justify-content: center;
@@ -220,5 +207,10 @@ export default {
 
   .slide-out {
     animation: slide-out 0.5s ease-out forwards;
+  }
+
+  .activate {
+    color: black;
+    font-size: 1.3rem;
   }
 </style>

@@ -31,7 +31,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
   .feed {
 		position: relative;
 		width: 100%;

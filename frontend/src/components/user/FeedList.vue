@@ -1,19 +1,16 @@
 <template>
   <article id="feed-container">
-		<filter-tab :user-mood="userMood" 
-		@filtering="filterCheck" />
-		<div id="feeds" v-if="filteredFeeds"> 
+		<div id="feeds" v-if="filteredFeeds.length"> 
 			<feed-item v-for="(feed, idx) in filteredFeeds" :key="idx" :feed="feed" />
 		</div>
 		<div v-else id="no-result">
-			<img id="nothing" src="@/assets/images/etc/alien.png" alt="">
+			<img id="nothing" src="@/assets/images/etc/alien.png" alt="no result">
 			<p>게시글이 없어요...</p>
 		</div>
 	</article>
 </template>
 
 <script>
-import FilterTab from '@/components/user/FilterTab.vue'
 import FeedItem from '@/components/user/FeedItem'
 
 export default {
@@ -96,21 +93,16 @@ export default {
         { id: 5, name: '깜짝행성', img: "suprised.png", color: '#FB5D38' },
         { id: 6, name: '분노행성', img: "rage.png", color: '#2A61F0' },
       ],
-			filter: '0',
 		}
 	},
 	props: {
 		userMood: Number,
+		filter: Number
 	},
 	components: {
-		FilterTab,
 		FeedItem
 	},
 	methods: {
-		filterCheck: function (filterValue) {
-			console.log(filterValue)
-			this.filter = String(filterValue)
-		}
 	},
 	computed: {
 		filteredFeeds(){
@@ -133,8 +125,11 @@ export default {
 
 <style scoped>
 	p {
-		font-weight: bold;
-	}
+    color: #777777;
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin: 3rem;
+  }
 
 	#feed-container {
 		display: flex;
@@ -149,14 +144,14 @@ export default {
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		padding-top: 5vh;
+		padding-top: 20vh;
 	}
 
 	#nothing {
-		width: 10vh;
-		height: 10vh;
-		margin-bottom: 2vh;
-	}
+    width: 10%;
+    height: inherit;
+    aspect-ratio: 1/1;
+  }
 
 	#filter {
 		display: flex;

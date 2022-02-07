@@ -106,6 +106,8 @@ router.beforeEach((to, from, next) => {
   else if (to.name == 'Mypage'){store.commit('navActivate', 2)}
   else if (to.matched[0].path == '/setting'){store.commit('navActivate', 4)}
   else {store.commit('navActivate', -1)}
+
+  // if (to.name == 'Login' || to.name =='Signup')
 })
 // router.push의 중복 에러 해결방법
 const originalPush = VueRouter.prototype.push;

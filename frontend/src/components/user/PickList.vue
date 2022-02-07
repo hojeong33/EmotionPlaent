@@ -1,207 +1,129 @@
 <template>
-  <article id="pick_container">
-    <filter-tab
-      :user-mood="mood" 
-      @filtering="filterPicks"
-      ></filter-tab>
-    <div id="list_tab">
-      <span id="music_tab">
-        <p @click="toggleMusic" :class="onMusic ? 'active': 'inactive'">음악</p>
-        <span :class="onMusic ? 'on': 'off'"></span>
-      </span>
-      <span id="movie_tab">
-        <p @click="toggleMovie" :class="onMovie ? 'active': 'inactive'">영화</p>
-        <span :class="onMovie ? 'on': 'off'"></span>
-      </span>
-      <span id="activity_tab">
-        <p @click="toggleActivity" :class="onActivity ? 'active': 'inactive'">활동</p>
-        <span :class="onActivity ? 'on': 'off'"></span>
-      </span>
+  <article id="pick-container">
+    <div id="pick-lists">
+      <div id="list-tab">
+        <h3 @click="tap = 1" :class="tap == 1 ? 'active': ''">음악</h3>
+        <h3 @click="tap = 2" :class="tap == 2 ? 'active': ''">영화</h3>
+        <h3 @click="tap = 3" :class="tap == 3 ? 'active': ''">활동</h3>
+      </div>
+      <div id="picks" v-if="filteredPicks.length">
+        <picks v-for="(pick, idx) in filteredPicks" :key="idx" :pick="pick" />
+      </div>
+      <div v-else id="no-result">
+        <img id="nothing" src="@/assets/images/etc/alien.png" alt="no result">
+        <p>찜 목록이 없어요...</p>
+      </div>
     </div>
-    <music-pick 
-      :music-list="musicList"
-      :music-exist="musicExist"
-      v-if="onMusic"></music-pick>
-    <movie-pick 
-      :movie-list="movieList"
-      :movie-exist="movieExist"
-      v-if="onMovie"></movie-pick>
-    <activity-pick 
-      :activity-list="activityList"
-      :activity-exist="activityExist"
-      v-if="onActivity"></activity-pick>
+    <div id="list-items">
+
+    </div>
   </article>
 </template>
 
 <script>
-import MusicPick from './MusicPick.vue'
-import MoviePick from './MoviePick.vue'
-import ActivityPick from './ActivityPick.vue'
-import FilterTab from './FilterTab.vue'
-import picks from '../../assets/data/picks'
+import Picks from '@/components/user/Picks'
+import pickData from '../../assets/data/pickData'
 
 export default {
   name: 'PickList',
   data() {
     return {
-      picks,
-      mood: null,
-      
-      onMusic: true,
-      onMovie: false,
-      onActivity: false,
-
-      musicList: [],
-      movieList: [],
-      activityList: [],
-
-			musicExist: false,
-      movieExist: false,
-      activityExist: false,
+      pickData,
+      tap: 1,
     }
   },
   props: {
     userMood: Number,
+    filter: Number
   },
   components: {
-    MusicPick,
-    MoviePick,
-    ActivityPick,
-    FilterTab,
-  },
-  created() {
-    this.sortPicks()
-    this.mood = this.userMood
+    Picks
   },
   methods: {
-    toggleMusic: function () {
-      this.onMusic = true
-      this.onMovie = false
-      this.onActivity = false
-      console.log(this.mood)
-    },
-    toggleMovie: function () {
-      this.onMusic = false
-      this.onMovie = true
-      this.onActivity = false
-    },
-    toggleActivity: function () {
-      this.onMusic = false
-      this.onMovie = false
-      this.onActivity = true
-    },
-    sortPicks: function () {
-      this.picks.forEach(element => {
-        if (element.no === 1) {
-          this.musicList = this.musicList.concat(element.contentsList)
-        }
-        else if (element.no === 2) {
-          this.movieList = this.movieList.concat(element.contentsList)
-        }      
-        else if (element.no === 3) {
-          this.activityList = this.activityList.concat(element.contentsList)
-        } 
-      })
-      if (this.musicList.length != 0) {
-        this.musicExist = true
-      }
-      if (this.movieList.length != 0) {
-        this.movieExist = true
-      }
-      if (this.activityList.length != 0) {
-        this.activityExist = true
-      }
-      console.log(this.musicList)
-    },
-    filterPicks: function (filterValue) {
-      this.musicList = []
-      this.movieList = []
-      this.activityList = []
-      this.musicExist = false
-      this.movieExist = false
-      this.activityExist = false
-      
-      if (filterValue != '0') {
-				for (let pick of this.picks) {
-					if ( pick.no === 1 && pick.tagNo === Number(filterValue)) {
-						this.musicList = this.musicList.concat(pick.contentsList)
-					}
-					else if ( pick.no === 2 && pick.tagNo === Number(filterValue)) {
-						this.movieList = this.movieList.concat(pick.contentsList)
-					}
-					else if ( pick.no === 3 && pick.tagNo === Number(filterValue)) {
-						this.activityList = this.activityList.concat(pick.contentsList)
-					}
-				}
-        if (this.musicList.length != 0) {
-          this.musicExist = true
-        }
-        if (this.movieList.length != 0) {
-          this.movieExist = true
-        }
-        if (this.activityList.length != 0) {
-          this.activityExist = true
-        }
-      }
-      else {
-        this.sortPicks()
-      }
-		}
   },
+  computed: {
+    filteredPicks(){
+      const temp = []
+      this.pickData.forEach(ele => {
+        if (!this.filter && ele.no == this.tap){
+          temp.push(ele)
+        }
+        else if (ele.no == this.tap && ele.tagNo == this.filter){
+          temp.push(ele)
+        }
+      })
+      return temp
+    },
+  }
 }
 </script>
 
 <style scoped>
-  #pick_container {
+  h3 {
+    color: #777777;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+    cursor: pointer;
+  }
+  
+  p {
+    color: #777777;
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin: 3rem;
+  }
+
+  #pick-container {
     display: flex;
 		flex-direction: column;
 		align-items: center;
 		width: 100%;
-		/* padding: 1rem; */
   }
 
-  #list_tab {
+  #pick-lists {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+  }
+
+  #list-tab {
     display: flex;
     width: 40%;
     justify-content: space-evenly;
     align-items: center;
   }
 
-  #music_tab {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  #movie_tab {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  #activity_tab {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  #picks {
+    display: grid;
+    justify-content: center;
+    justify-items: start;
+    align-items: baseline;
+    grid-auto-rows: minmax(min-content, max-content);
+    grid-template-columns: 1fr 1fr 1fr;
+    width: 80%;
+    gap: 2rem;
+    margin: 5rem;
   }
 
-  p {
-    color: black;
-    font-size: 1.4rem;
-    font-weight: bold;
-    letter-spacing: 0.05rem;
+  #no-result {
+		display:flex;
+		flex-direction: column;
+		align-items: center;
+		padding-top: 16.4vh;
+	}
+
+  #nothing {
+    width: 10%;
+    height: inherit;
+    aspect-ratio: 1/1;
   }
 
   .active {
     color: black;
     font-size: 1.4rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-  }
-
-  .inactive {
-    color: #777777;
-    font-size: 1.2rem;
     font-weight: bold;
     margin-bottom: 0.5rem;
   }
