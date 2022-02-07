@@ -13,6 +13,8 @@ public class UserDto {
     private String tel;
 	private String provider;
 	private int mood;
+	private String refreshToken;
+
     private int publish;
 	public int getNo() {
 		return no;
@@ -68,6 +70,14 @@ public class UserDto {
 	}
 	public void setTel(String tel) {
 		this.tel = tel;
+	}
+
+	public String getRefreshToken() {
+		return refreshToken;
+	}
+
+	public void setRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
 	}
 
 	public String getProvider() {

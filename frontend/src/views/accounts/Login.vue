@@ -52,6 +52,9 @@
 <script>
 import axios from 'axios'
 
+const session = window.sessionStorage;
+const jwt = require('jsonwebtoken');
+
 export default {
   name: 'Login',
   data: function () {
@@ -76,24 +79,6 @@ export default {
   },
 
   methods: {
-    login: function () {
-      axios({
-        method: 'post',
-        url:'http://13.125.47.126:8080/login',
-        data: this.credentials
-      })
-      .then(()=>{
-        alert("로그인 성공")
-        this.$store.commit('userData', this.credentials)
-        this.$router.push({ name: 'Main' })
-      })
-      .catch(err=> {
-        alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
-      })
-      this.credentials.email = "";
-      this.credentials.pw ="";
-    },
-
     //OAUTH
     onSuccess(googleUser) {
       // eslint-disable-next-line
@@ -114,22 +99,114 @@ export default {
       })
     },
 
+    // login: function () {
+    //   axios({
+    //     method: 'post',
+    //     url:'http://localhost:8080/login',
+    //     data: this.credentials
+    //   })
+    //   .then((res)=>{
+    //     alert("로그인 성공")
+    //     this.$store.commit('userData', this.credentials)
+    //     this.$router.push({ name: 'Main' })
+    //   })
+    //   .catch(err=> {
+    //     alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
+    //   })
+    //   this.credentials.email = "";
+    //   this.credentials.pw ="";
+    // },
+
+    login: function () {
+      axios({
+        method: 'post',
+        url:'http://localhost:8080/login',
+        data: this.credentials
+      })
+      .then((res)=>{
+        alert("로그인 성공")
+        console.log(res.headers);
+        // storage 설정
+        session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+        session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
+
+        const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
+        console.log('decodeAccessToken data', decodeAccessToken);
+        this.sendToken();
+      })
+      .catch(err=> {
+        alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
+      })
+      this.credentials.email = "";
+      this.credentials.pw ="";
+    },
+
     tokenVerify() {
       const url = 'http://localhost:8080/login/auth';
       const params = new URLSearchParams();
       params.append('idToken', this.googleUser.wc.id_token);
       console.log(params)
       axios.post(url, params).then((res) => {
-        // eslint-disable-next-line
-        console.log(res);
+        alert("로그인 성공")
+        console.log(res.headers);
+        // storage 설정
+        session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+        session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
+
+        const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
+        console.log('decodeAccessToken data', decodeAccessToken);
+        this.sendToken();
+
       }).catch((error) => {
-        // eslint-disable-next-line
         console.log(error);
       }).then(() => {
-        // eslint-disable-next-line
         console.log('tokenVerify End!!');
       });
     },
+
+    sendToken() {
+      const decodeAccessToken = jwt.decode(session.getItem('at-jwt-access-token'));
+      let headers = null;
+      if(decodeAccessToken.exp < Date.now()/1000 + 60){
+        console.log('만료됨!!');
+        headers = {
+          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        }
+        console.log('headers : ', headers);
+      }else{
+        console.log('만료되지않음!!');
+        headers = {
+          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        }
+        console.log('headers : ', headers);
+      }
+    },
+
+    trans() {
+      let headers = {
+          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+      axios.get('http://localhost:8080/qss/list', {
+        headers: headers,
+      }).then((res) => {
+        console.log(res);
+        console.log('response header', res.headers);
+        if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
+          session.setItem('at-jwt-access-token', "");
+          session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+          console.log("Access Token을 교체합니다!!!")
+        }
+
+      }).catch((error) => {
+        console.log(error);
+      }).then(() => {
+        console.log('getQSSList End!!');
+      });
+    },
+    
   },
 }
 </script>

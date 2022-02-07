@@ -6,8 +6,10 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.ssafy.project.EmotionPlanet.Config.auth.PrincipalDetails;
+import com.ssafy.project.EmotionPlanet.Dao.UserDao;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 import com.ssafy.project.EmotionPlanet.Service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -23,6 +25,9 @@ import java.util.Collections;
 
 @Service
 public class PrincipalOauth2UserService {
+
+    @Autowired
+    UserDao userDao;
 
     private final NetHttpTransport transport = new NetHttpTransport();
     private final JsonFactory jsonFactory = new GsonFactory();
@@ -61,17 +66,23 @@ public class PrincipalOauth2UserService {
             String name = (String) payload.get("name");
             String pictureUrl = (String) payload.get("picture");
             String locale = (String) payload.get("locale");
-            String familyName = (String) payload.get("family_name");
-            String givenName = (String) payload.get("given_name");
-
-            System.out.println("email: " + email);
-            System.out.println("name: " + name);
-            System.out.println("locale: " + locale);
+            String pw = "security";
 
             user.setEmail(email);
-            user.setNickname(userId);
+            user.setNickname(name);
             user.setProfileImg(pictureUrl);
+            user.setPw(pw);
         }
         return user;
     }
+
+    public int insertUser(UserDto userDto) {
+        if (userDao.duplicateEmail(userDto.getEmail()) == 0) {
+            int result = userDao.userRegister(userDto);
+            return result;
+        } else {
+            return 1;
+        }
+    }
+
 }
