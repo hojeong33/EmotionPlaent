@@ -1,6 +1,5 @@
 package com.ssafy.project.EmotionPlanet.Controller;
 
-
 import com.ssafy.project.EmotionPlanet.Dto.FeedLikeDto;
 import com.ssafy.project.EmotionPlanet.Dto.PickDto;
 import com.ssafy.project.EmotionPlanet.Service.PickService;

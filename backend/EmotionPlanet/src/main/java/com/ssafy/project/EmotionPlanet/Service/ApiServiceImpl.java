@@ -46,7 +46,7 @@ public class ApiServiceImpl implements ApiService {
 	@Override
 	public List<MusicDto> Music(int mood, int type) {
 		String URL = "https://api.spotify.com/v1/recommendations/?seed_genres=" + musicemotion[mood - 1][type]
-				+ "&limit=6&market=KR";
+				+ "&limit=10&market=KR";
 		createAccesstoken create = new createAccesstoken();
 		final HttpHeaders headers = new HttpHeaders();
 		headers.set("Authorization", "Bearer " + create.accesstoken());
@@ -134,25 +134,6 @@ public class ApiServiceImpl implements ApiService {
 		int result = apiDao.MovieInsert(list);
 		return result;
 	}
-
-//	public void random(List<MovieDto> list, List<MovieDto> emt, int n, int m) {
-//		Random r = new Random();
-//		int number[] = new int[n];
-//		for (int i = 0; i < n; i++) {
-//			number[i] = r.nextInt(m);
-//			for (int j = 0; j < i; j++) {
-//				if (number[i] == number[j])
-//					i--;
-//			}
-//		}
-//		for (int i = 0; i < n; i++) {
-//			list.add(emt.get(number[i]));
-//		}
-//		Arrays.sort(number); // 정렬한 이유 : 중간 값을 빼버리면 리스트 뒤에 값이 앞당겨짐 즉 큰값부터 작은값순으로 제거하기 위해
-//		for (int i = n - 1; i >= 0; i--) {
-//			emt.remove(number[i]);
-//		}
-//	}
 
 	@Override
 	public List<ActivityDto> ActivitySelect(int type) {

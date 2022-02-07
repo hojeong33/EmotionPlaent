@@ -63,8 +63,8 @@ public class ApiController {
 	@GetMapping(value = "/activity") // 여기에 감정이랑 뭐 해소 or 심화 감정 데이터 같이 넘겨야 할듯? 갯수 제한도?
 	public ResponseEntity<List<ActivityDto>> Activity() {
 		List<ActivityDto> list = apiservice.ActivitySelect(1);
-		list.addAll(apiservice.ActivitySelect(0));
 		if (list != null) {
+			list.addAll(apiservice.ActivitySelect(0));
 			return new ResponseEntity<List<ActivityDto>>(list, HttpStatus.OK);
 		} else {
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "다시 시도해주세요");

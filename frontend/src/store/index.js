@@ -16,9 +16,15 @@ export default new Vuex.Store({
     recommendReload: 0,
   },
   mutations: {
+<<<<<<< HEAD
     activateFeed: function (state) {
       console.log(state)
+=======
+    activateFeed: function(state){
+      console.log(state.feedActive)
+>>>>>>> 377fab15da4efef2469dcf0c15a403535bd8959e
       state.feedActive = !state.feedActive
+      console.log(state.feedActive)
     },
     userInfo: function (state, payload) {
       console.log(payload)

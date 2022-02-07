@@ -3,7 +3,7 @@ package com.ssafy.project.EmotionPlanet.Dto;
 public class FollowDto {
 	private int sender;
 	private int receiver;
-	private boolean type; //0이면 대기중 1이면 이미 팔로우 완료  
+	private int type; //0이면 대기중 1이면 이미 팔로우 완료  
 	public int getSender() {
 		return sender;
 	}
@@ -16,14 +16,14 @@ public class FollowDto {
 	public void setReceiver(int receiver) {
 		this.receiver = receiver;
 	}
-	public boolean isType() {
+	public int getType() {
 		return type;
 	}
-	public void setType(boolean type) {
+	public void setType(int type) {
 		this.type = type;
 	}
-	public FollowDto() {};
-	public FollowDto(int sender, int receiver, boolean type) {
+	public FollowDto() {}
+	public FollowDto(int sender, int receiver, int type) {
 		super();
 		this.sender = sender;
 		this.receiver = receiver;
@@ -33,6 +33,7 @@ public class FollowDto {
 	public String toString() {
 		return "FollowDto [sender=" + sender + ", receiver=" + receiver + ", type=" + type + "]";
 	}
+	
 	
 	
 }

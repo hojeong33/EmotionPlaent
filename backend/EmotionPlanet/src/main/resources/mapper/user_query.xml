@@ -72,5 +72,19 @@
 		set pw = #{pw}, nickname = #{nickname} , mood
 		= #{mood} , publish = #{publish} , tel = #{tel}
 		where no = #{no}
-	</update> 
+	</update>
+
+	<update id="userRefreshToken"
+			parameterType="com.ssafy.project.EmotionPlanet.Dto.UserDto">
+		UPDATE user
+		SET refreshToken = #{refreshToken}
+		WHERE email = #{email};
+	</update>
+
+	<select id="selectRefreshToken" parameterType="String"
+			resultType="String">
+		select refreshToken
+		from user
+		where email = #{email}
+	</select>
 </mapper>
