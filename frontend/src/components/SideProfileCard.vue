@@ -54,10 +54,9 @@ export default {
       return style
     }
   },
-<<<<<<< HEAD
    methods: {
     createFeed: function(){
-      this.$store.commit('activateFeed')
+      this.$store.commit('navActivate', 0)
     },
     resize(){
       window.innerWidth > 1000 ? this.isActive = true: this.isActive = false
@@ -69,13 +68,6 @@ export default {
     }
     window.addEventListener('resize', this.resize)
   }
-=======
-  methods: {
-    createFeed: function(){
-      this.$store.commit('activateFeed')
-    }
-  },
->>>>>>> 377fab15da4efef2469dcf0c15a403535bd8959e
 }
 </script>
 

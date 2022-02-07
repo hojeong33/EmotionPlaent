@@ -3,7 +3,7 @@
     <nav class="navbar navbar-expand-lg" id="navbar-default">
       <div class="container">
         <div>
-          <img src="@/assets/images/logo/EMOTION PLANET.png" id="logo_img" alt="" @click="goMain">
+          <img src="@/assets/images/logo/EMOTION PLANET.png" id="logo_img" alt="logo" @click="navClick">
         </div>
         <form class="d-flex" id="searches">
           <input id="search_bar" class="form-control" type="search" placeholder="Search" aria-label="Search">
@@ -11,132 +11,66 @@
           <img src="@/assets/images/icons/search.png" id="search" type="submit">
         </form>
         <div id="icons">
-          <img @click="changeImg_write" :src="require(`@/assets/images/icons/${imgName_write}`)" id="write">
-          <img src="@/assets/images/icons/home.png" id="home" @click="goMain">
-          <img @click="changeImg_profile" :src="require(`@/assets/images/icons/${imgName_profile}`)" id="my_page">
-          <div>
-            <img @click="changeImg_alarm" :src="require(`@/assets/images/icons/${imgName_alarm}`)" id="alarm">
-          </div>
-          <img @click="changeImg_setting" :src="require(`@/assets/images/icons/${imgName_setting}`)" id="setting">
+          <img @click="navClick"  id="write"
+          :src="require(`@/assets/images/icons/${feed}`)">
+          <img @click="navClick" id="home"
+          :src="require(`@/assets/images/icons/${home}`)">
+          <img @click="navClick" id="my_page"
+          :src="require(`@/assets/images/icons/${myPage}`)">
+          <img @click="navClick" id="alarm"
+          :src="require(`@/assets/images/icons/${alarm}`)">
+          <img @click="navClick" id="setting"
+           :src="require(`@/assets/images/icons/${setting}`)">
         </div>
       </div>
     </nav>
   </div>
 </template>
 <script>
-// import {mapState} from 'vuex'
+// import {mapGetters} from 'vuex'
 
 export default {
   name: 'App',
   data: function (){
     return {
-      imgName_write: 'more.png',
-      imgName_profile: 'user.png',
-      imgName_setting: 'settings.png',
-      imgName_alarm: 'bell.png',
-      isActive: [false, false, false, false], //네브바에서 선택됐는지 여부를 파악,
-      searchInput: 'null',
-      // searchFinish,
-      
+
     }
   },
   methods: {
-    changeImg_write() {
-      if (this.isActive[0] === false) {
-        this.$store.commit('activateFeed')
-        this.imgName_write = 'more_selected.png'
-        this.isActive[0] = this.$store.state.feedActive
-
-        if (this.isActive[1] === true || this.isActive[2] === true || this.isActive[3] === true) {
-          this.imgName_profile = 'user.png'
-          this.imgName_alarm = 'bell.png'
-          this.imgName_setting = 'settings.png'
-          this.isActive[1] = false
-          this.isActive[2] = false
-          this.isActive[3] = false
-      
-
-        }
-      }
-
-        // 얘는 페이지 바뀌면 색이 빠지는 것을 어떻게 코드를 짜야 하나... ㅠㅠ
-
-    },
-    changeImg_profile() {
-      if (this.imgName_profile === 'user.png') {
-        this.imgName_profile = 'user_selected.png'
-        this.$router.push({name:'Mypage'})
-        this.isActive[1] = true
-        
-        if (this.isActive[0] === true || this.isActive[2] === true || this.isActive[3] === true) {
-          this.imgName_write = 'more.png'
-          this.imgName_alarm = 'bell.png'
-          this.imgName_setting = 'settings.png'
-          this.isActive[0] = false
-          this.isActive[2] = false
-          this.isActive[3] = false
-        }
-      } 
-    },
-    changeImg_alarm() {
-      if (this.imgName_alarm === 'bell.png') {
-        this.imgName_alarm = 'bell_selected.png'
-        this.$router.push('#')
-        this.isActive[2] = true
-
-        if (this.isActive[0] === true || this.isActive[1] === true || this.isActive[3] === true) {
-          this.imgName_write = 'more.png'
-          this.imgName_profile = 'user.png'
-          this.imgName_setting = 'settings.png'
-          this.isActive[0] = false
-          this.isActive[1] = false
-          this.isActive[3] = false
-        }
-      } 
-    },
-    changeImg_setting() {
-      if (this.imgName_setting === 'settings.png') {
-        this.imgName_setting = 'settings_selected.png'
-        this.$router.push({name: 'Setting'})
-        this.isActive[3] = true
-        
-        if (this.isActive[0] === true || this.isActive[1] === true || this.isActive[2] === true) {
-          this.imgName_write = 'more.png'
-          this.imgName_profile = 'user.png'
-          this.imgName_alarm = 'bell.png'
-          this.isActive[0] = false
-          this.isActive[1] = false
-          this.isActive[2] = false
-        }
-      } 
-    },
-    goMain() {
-      this.$router.push({name: 'Main'})
-      this.imgName_write = 'more.png'
-      this.imgName_profile = 'user.png'
-      this.imgName_alarm = 'bell.png'
-      this.imgName_setting = 'settings.png'
-    },
-    // search() {
-    //   if (this.searchInput) {
-    //     axios({
-
-    //     })
-    //     .then({
-
-    //     })
-    //     .catch(err => {
-    //       alert(err)
-    //     })
-    //   }
-    // }
-
+    navClick(event){
+      console.log(this.$router)
+      if (event.target.id == 'write'){this.$store.commit('navActivate', 0)}
+      else if (event.target.id == 'home' || event.target.id =='logo_img'){this.$router.push({ name:'Main' })}
+      else if (event.target.id == 'my_page'){this.$router.push({ name:'Mypage' })}
+      else if (event.target.id == 'alarm'){this.$store.commit('navActivate', 3)}
+      else {this.$router.push({ name:'Setting' })}
+    }
   },
-  //  computed: {
-  //   ...mapState([
-  //     'feedActive'
-  //   ]) 
-  // }
+  computed: {
+    feed(){
+      if (!this.navActive[0]){return 'more.png'}
+      else{return 'more_selected.png'}
+    },
+    home(){
+      if (!this.navActive[1]){return 'home.png'}
+      else{return 'home_selected.png'}
+    },
+    myPage(){
+      if (!this.navActive[2]){return 'user.png'}
+      return 'user_selected.png'
+    },
+    alarm(){
+      if (!this.navActive[3]){return 'bell.png'}
+      return 'bell_selected.png'
+    },
+    setting(){
+      if (!this.navActive[4]){return 'settings.png'}
+      return 'settings_selected.png'
+    },
+    navActive(){
+      return this.$store.state.navActive
+    }
+  }
 }
 </script>
 

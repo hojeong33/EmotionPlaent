@@ -27,7 +27,7 @@ export default {
   },
   methods: {
     out(){
-      this.$store.commit('activateFeed')
+      this.$store.commit('feedOut')
     }
   },
   mounted(){

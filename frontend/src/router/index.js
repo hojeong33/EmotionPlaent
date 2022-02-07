@@ -13,10 +13,7 @@ import PwChange from '@/components/Settings/PwChange'
 import Withdrawal from '@/components/Settings/Withdrawal'
 import FeedDetail from '@/components/FeedDetail'
 import PwFind from '@/components/Settings/PwFind'
-// import Create from '@/views/Create'
-// import CreateImg from '@/components/Create/CreateImg'
-// import CreateTag from '@/components/Create/CreateTag'
-// import CreateText from '@/components/Create/CreateText'
+import store from '../store/index.js'
 
 Vue.use(VueRouter)
 
@@ -56,11 +53,6 @@ const routes = [
     name: 'EmotionTest',
     component: EmotionTest
   },
-  // {
-  //   path: '/searchresult',
-  //   name: 'SearchResult',
-  //   component: SearchResult
-  // },
   {
     path: '/setting',
     name: 'Setting',
@@ -85,28 +77,7 @@ const routes = [
       }
     ],  
   },
-  // {
-  //   path: '/create',
-  //   name: 'Create',
-  //   component: Create,
-  //   children: [
-  //     {
-  //       path: 'Img',
-  //       component: CreateImg
-  //     },
-  //     {
-  //       path: 'Tags',
-  //       component: CreateTag,
-  //     },
-  //     {
-  //       path: 'Text',
-  //       component: CreateText,
-  //     }
-  //   ],  
-  // },
-
   {
-    // 경로도 이야기해야할듯
     path: '/feed/detail',
     name: 'FeedDetail',
     component: FeedDetail
@@ -130,6 +101,11 @@ router.beforeEach((to, from, next) => {
     body.removeAttribute('class')
     next()
   }
+  // 네비게이션 바 Active와 매칭
+  if (to.name == 'Main'){store.commit('navActivate', 1)}
+  else if (to.name == 'Mypage'){store.commit('navActivate', 2)}
+  else if (to.matched[0].path == '/setting'){store.commit('navActivate', 4)}
+  else {store.commit('navActivate', -1)}
 })
 // router.push의 중복 에러 해결방법
 const originalPush = VueRouter.prototype.push;
