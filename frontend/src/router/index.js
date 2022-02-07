@@ -56,18 +56,19 @@ const routes = [
     name: 'EmotionTest',
     component: EmotionTest
   },
-  {
-    path: '/searchresult',
-    name: 'SearchResult',
-    component: SearchResult
-  },
+  // {
+  //   path: '/searchresult',
+  //   name: 'SearchResult',
+  //   component: SearchResult
+  // },
   {
     path: '/setting',
     name: 'Setting',
+    redirect: '/setting/info',
     component: Setting,
     children: [
       {
-        path: '',
+        path: 'info',
         component: UserInfo
       },
       {
@@ -84,25 +85,25 @@ const routes = [
       }
     ],  
   },
-  {
-    path: '/create',
-    name: 'Create',
-    component: Create,
-    children: [
-      {
-        path: 'Img',
-        component: CreateImg
-      },
-      {
-        path: 'Tags',
-        component: CreateTag,
-      },
-      {
-        path: 'Text',
-        component: CreateText,
-      }
-    ],  
-  },
+  // {
+  //   path: '/create',
+  //   name: 'Create',
+  //   component: Create,
+  //   children: [
+  //     {
+  //       path: 'Img',
+  //       component: CreateImg
+  //     },
+  //     {
+  //       path: 'Tags',
+  //       component: CreateTag,
+  //     },
+  //     {
+  //       path: 'Text',
+  //       component: CreateText,
+  //     }
+  //   ],  
+  // },
 
   {
     // 경로도 이야기해야할듯
@@ -130,5 +131,12 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
+// router.push의 중복 에러 해결방법
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+	return originalPush.call(this, location).catch(err => {
+		if (err.name !== 'NavigationDuplicated') throw err;
+	});
+};
 
 export default router
