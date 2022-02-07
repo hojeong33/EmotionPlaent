@@ -23,7 +23,7 @@
       </div>
       <div id="us_password">
         <h3>비밀번호</h3>
-        <a href="#" @click="go_to_passwordchange">비밀번호 변경...</a>
+        <a href="" @click="go_to_passwordchange">비밀번호 변경...</a>
       </div>
       <div id="us_birth">
         <h3>생년월일</h3>
@@ -50,7 +50,7 @@
       </div>
       <div id="us_history">
         <h3>활동 내역</h3>
-        <a href="#">자세히...</a>
+        <a href="">자세히...</a>
       </div>
     </article>
     <button id="withdrawal" @click="go_to_withdrawal">회원 탈퇴</button>

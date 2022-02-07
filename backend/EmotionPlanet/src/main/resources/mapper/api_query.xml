@@ -15,7 +15,21 @@
 	<select id="MovieSelect" parameterType="String" resultType="com.ssafy.project.EmotionPlanet.Dto.MovieDto">
         select apiId, title, descr, year, imgLink, genre
         from movie
-        where genre like CONCAT('%',#{genre},'%');
+        where genre like CONCAT('%',#{genre},'%')
+        ORDER BY RAND() LIMIT 10;
+    </select>
+    
+    <select id="MovieSelectnomal" parameterType="String" resultType="com.ssafy.project.EmotionPlanet.Dto.MovieDto">
+        select apiId, title, descr, year, imgLink, genre
+        from movie
+        where genre like CONCAT('%',#{genre},'%') and year between date_add(now(),interval -1 MONTH) and now()
+        ORDER BY RAND() LIMIT 10;
     </select>
 	
+	<select id="ActivitySelect" parameterType="INT" resultType="com.ssafy.project.EmotionPlanet.Dto.ActivityDto">
+        select title, imgLink
+        from activity
+        where type = #{type}
+        ORDER BY RAND() LIMIT 10;
+    </select>
 </mapper>

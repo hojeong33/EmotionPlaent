@@ -1,5 +1,7 @@
 package com.ssafy.project.EmotionPlanet.Dto;
 
+import lombok.Builder;
+
 public class UserDto {
 
     private int no;
@@ -9,8 +11,11 @@ public class UserDto {
     private String birth;
     private String profileImg;
     private String tel;
+	private String provider;
 	private int mood;
-    private boolean publish;
+	private String refreshToken;
+
+    private int publish;
 	public int getNo() {
 		return no;
 	}
@@ -47,16 +52,17 @@ public class UserDto {
 	public void setProfileImg(String profileImg) {
 		this.profileImg = profileImg;
 	}
+
 	public int getMood() {
 		return mood;
 	}
 	public void setMood(int mood) {
 		this.mood = mood;
 	}
-	public boolean isPublish() {
+	public int getPublish() {
 		return publish;
 	}
-	public void setPublish(boolean publish) {
+	public void setPublish(int publish) {
 		this.publish = publish;
 	}
     public String getTel() {
@@ -65,9 +71,26 @@ public class UserDto {
 	public void setTel(String tel) {
 		this.tel = tel;
 	}
+
+	public String getRefreshToken() {
+		return refreshToken;
+	}
+
+	public void setRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
+	}
+
+	public String getProvider() {
+		return provider;
+	}
+
+	public void setProvider(String provider) {
+		this.provider = provider;
+	}
+
 	public UserDto() {}
 	public UserDto(int no, String email, String pw, String nickname, String birth, String profileImg, String tel,
-			int mood, boolean publish) {
+			int mood, int publish) {
 		super();
 		this.no = no;
 		this.email = email;
@@ -79,9 +102,19 @@ public class UserDto {
 		this.mood = mood;
 		this.publish = publish;
 	}
+
+	@Builder
+	public UserDto(String email, String pw, String nickname, String provider) {
+		this.email = email;
+		this.pw = pw;
+		this.nickname = nickname;
+		this.provider = provider;
+	}
+
 	@Override
 	public String toString() {
 		return "UserDto [no=" + no + ", email=" + email + ", pw=" + pw + ", nickname=" + nickname + ", birth=" + birth
 				+ ", profileImg=" + profileImg + ", tel=" + tel + ", mood=" + mood + ", publish=" + publish + "]";
 	}
+	
 }

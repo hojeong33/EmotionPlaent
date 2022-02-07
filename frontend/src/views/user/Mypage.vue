@@ -4,17 +4,20 @@
       :user-info="userInfo"
     >
     </side-profile-card>
-    <article id="profile-container">
-      <img src="https://www.thesprucepets.com/thmb/meRd41is751DsQQjofaiKV_ZUBg=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cat-talk-eyes-553942-hero-df606397b6ff47b19f3ab98589c3e2ce.jpg" id="profile_img">
-      <div id="profile-card">
-        <div id="name-card">
-          <h1>{{ userInfo.username }}</h1>
-          <button>프로필 수정</button>
-        </div>
-        <div id="info-card">
-          <h3>게시글 {{ userInfo.posts }}</h3>
-          <h3>팔로우 {{ userInfo.followings }}</h3>
-          <h3>팔로워 {{ userInfo.followers }}</h3>
+    
+    <article id="container">
+      <div id="profile_container">
+        <img src="https://www.thesprucepets.com/thmb/meRd41is751DsQQjofaiKV_ZUBg=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cat-talk-eyes-553942-hero-df606397b6ff47b19f3ab98589c3e2ce.jpg" id="profile_img">
+        <div id="profile_card">
+          <div id="name_card">
+            <h1>{{ userInfo.username }}</h1>
+            <button @click="$router.push({name: 'Setting'})">프로필 수정</button>
+          </div>
+          <div id="info_card">
+            <h3>게시글 {{ userInfo.posts }}</h3>
+            <h3>팔로우 {{ userInfo.followings }}</h3>
+            <h3>팔로워 {{ userInfo.followers }}</h3>
+          </div>
         </div>
       </div>
     </article>

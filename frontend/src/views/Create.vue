@@ -16,7 +16,8 @@ import CreateText from '@/components/Create/CreateText'
 export default {
   data(){
     return {
-      page: 0
+      page: 0,
+      createActive: null
     }
   },
   components: {

@@ -119,13 +119,19 @@
           })
           .then(res => {
             alert(`당신은 ${ res.data.name }행성 입니다!`)
-            location.reload()
+            this.$router.push({name:'Main'})
           })
           .catch(() => alert('잘못된 요청입니다.'))
         }
       },
       go_to_back: function(){
-        this.$router.go(-1)
+        // if문에서 이전 감정 데이터가 존재하지 않으면 {
+        //   this.$router.push({ name: 'Main' })
+
+        // } else {
+        //   this.$router.go(-1)
+        // }
+        this.$router.push({ name: 'Main' })
       },
       refresh_keywords: function(){
         while (this.selected.length > 0){

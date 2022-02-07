@@ -4,7 +4,7 @@
       <img id="profile_image" src="https://www.thesprucepets.com/thmb/meRd41is751DsQQjofaiKV_ZUBg=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cat-talk-eyes-553942-hero-df606397b6ff47b19f3ab98589c3e2ce.jpg" alt="">
       <div class="overlay_content">
         <h2>{{ userInfo.username }}</h2>
-        <button id="update">프로필 수정</button>
+        <button id="update" @click="$router.push({name: 'Setting'})">프로필 수정</button>
       </div>
     </div>
     <div class="card_body">
@@ -54,6 +54,7 @@ export default {
       return style
     }
   },
+<<<<<<< HEAD
    methods: {
     createFeed: function(){
       this.$store.commit('activateFeed')
@@ -68,6 +69,13 @@ export default {
     }
     window.addEventListener('resize', this.resize)
   }
+=======
+  methods: {
+    createFeed: function(){
+      this.$store.commit('activateFeed')
+    }
+  },
+>>>>>>> 377fab15da4efef2469dcf0c15a403535bd8959e
 }
 </script>
 

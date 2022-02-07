@@ -4,19 +4,27 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ssafy.project.EmotionPlanet.Dao.FollowDao;
+import com.ssafy.project.EmotionPlanet.Dao.UserDao;
 import com.ssafy.project.EmotionPlanet.Dto.FollowDto;
 import com.ssafy.project.EmotionPlanet.Dto.FollowResultDto;
+import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 
 @Service
 public class FollowServiceImpl implements FollowService {
 
 	@Autowired
 	FollowDao followDao;
+	
+	@Autowired
+	UserDao userDao;
 	private static final int SUCCESS = 1;
 	private static final int FAIL = -1;
 	
 	@Override
 	public int followRegister(FollowDto followDto) {
+		UserDto dto = userDao.userSelect(followDto.getReceiver());
+		if(dto.getPublish() != SUCCESS)
+			followDto.setType(SUCCESS);
 		if(followDao.followRegister(followDto) == SUCCESS)
 			return SUCCESS;
 		else
@@ -24,15 +32,15 @@ public class FollowServiceImpl implements FollowService {
 	}
 
 	@Override
-	public List<FollowDto> followSelect(int no) {
-		List<FollowDto> list = null;
+	public  List<UserDto>  followSelect(int no) {
+		List<UserDto> list = null;
 		list = followDao.followSelect(no);
 		return list;
 	}
 
 	@Override
-	public List<FollowDto> followingSelect(int no) {
-		List<FollowDto> list = null;
+	public  List<UserDto> followingSelect(int no) {
+		List<UserDto> list = null;
 		list = followDao.followingSelect(no);
 		return list;
 	}
@@ -59,13 +67,13 @@ public class FollowServiceImpl implements FollowService {
 		FollowDto followDto = followDao.select(sender, receiver);
 		
 		if(followDto != null) {
-			if(followDto.isType())
-				followResultDto.setFollowResult(1);
+			if(followDto.getType() == SUCCESS)
+				followResultDto.setFollowResult(SUCCESS);
 			else
-				followResultDto.setWaition(1);
+				followResultDto.setWaition(SUCCESS);
 		}
-		List<FollowDto> follower = followDao.followSelect(receiver);
-		List<FollowDto> following =  followDao.followingSelect(receiver);
+		List<UserDto> follower = followDao.followSelect(receiver);
+		List<UserDto> following =  followDao.followingSelect(receiver);
 		followResultDto.setFollower(follower);
 		followResultDto.setFollowing(following);
 		return followResultDto;
