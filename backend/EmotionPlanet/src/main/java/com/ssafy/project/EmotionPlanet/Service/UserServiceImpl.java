@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
 		} else if (changeuserDto.getNickname() != null) { // 활동명 변경
 			userDto.setNickname(changeuserDto.getNickname());
 		} else { // 계정 공개 비공개
-			userDto.setPublish(changeuserDto.isPublish());
+			userDto.setPublish(changeuserDto.getPublish());
 		}
 		if (userDao.userUpdate(userDto) == SUCCESS) // 변경된 기존 유저정보를 가지고 db내용을 변경함
 			return SUCCESS;
