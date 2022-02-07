@@ -10,8 +10,9 @@ export default new Vuex.Store({
   },
   mutations: {
     activateFeed: function(state){
-      console.log(state)
+      console.log(state.feedActive)
       state.feedActive = !state.feedActive
+      console.log(state.feedActive)
     },
     userInfo: function(state, payload){
       console.log(payload)
