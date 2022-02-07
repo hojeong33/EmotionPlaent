@@ -2,6 +2,9 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 
+const session = window.sessionStorage;
+// const jwt = require('jsonwebtoken');
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -28,38 +31,77 @@ export default new Vuex.Store({
   },
   actions: {
     recommendMusic() {
-			axios({
-        method: 'get',
-        url: 'http://13.125.47.126:8080/recommend/music/' + this.state.userEmotion,
-      })
-      .then((res) => {
-        console.log(res)
-				this.state.recommendMusic = res.data
-      })
-      .catch(() => alert('잘못된 요청입니다'))
-		},
-		recommendMovie() {
-			axios({
-        method: 'get',
-        url: 'http://13.125.47.126:8080/recommend/movie/' + this.state.userEmotion,
-      })
-      .then((res) => {
-        console.log(res)
-				this.state.recommendMovie = res.data
-      })
-      .catch(() => alert('잘못된 요청입니다'))
-		},
-		recommendActivity() {
-			axios({
-        method: 'get',
-        url: 'http://13.125.47.126:8080/recommend/activity/',
-      })
-      .then((res) => {
-        console.log(res)
-				this.state.recommendActivity = res.data
-      })
-      .catch(() => alert('잘못된 요청입니다'))
-		},
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+
+			axios.get('http://13.125.47.126:8080/recommend/music/' + this.state.userEmotion, {
+          headers: headers,
+        }).then((res) => {
+          this.state.recommendMusic = res.data
+          console.log(res);
+          console.log('response header', res.headers);
+          if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
+            session.setItem('at-jwt-access-token', "");
+            session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+            console.log("Access Token을 교체합니다!!!")
+          }
+        
+        }).catch((error) => {
+          console.log(error);
+        }).then(() => {
+          console.log('getQSSList End!!');
+        });
+      },
+    recommendMovie() {
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+
+			axios.get('http://13.125.47.126:8080/recommend/movie/' + this.state.userEmotion, {
+          headers: headers,
+        }).then((res) => {
+          this.state.recommendMovie = res.data
+          console.log(res);
+          console.log('response header', res.headers);
+          if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
+            session.setItem('at-jwt-access-token', "");
+            session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+            console.log("Access Token을 교체합니다!!!")
+          }
+        
+        }).catch((error) => {
+          console.log(error);
+        }).then(() => {
+          console.log('getQSSList End!!');
+        });
+      },
+    recommendActivity() {
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+
+			axios.get('http://13.125.47.126:8080/recommend/activity/', {
+          headers: headers,
+        }).then((res) => {
+          this.state.recommendActivity = res.data
+          console.log(res);
+          console.log('response header', res.headers);
+          if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
+            session.setItem('at-jwt-access-token', "");
+            session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+            console.log("Access Token을 교체합니다!!!")
+          }
+        
+        }).catch((error) => {
+          console.log(error);
+        }).then(() => {
+          console.log('getQSSList End!!');
+        });
+      },
   },
   modules: {
   }

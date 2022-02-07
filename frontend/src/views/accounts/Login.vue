@@ -120,7 +120,7 @@ export default {
     login: function () {
       axios({
         method: 'post',
-        url:'http://localhost:8080/login',
+        url:'http://13.125.47.126:8080/login',
         data: this.credentials
       })
       .then((res)=>{
@@ -142,7 +142,7 @@ export default {
     },
 
     tokenVerify() {
-      const url = 'http://localhost:8080/login/auth';
+      const url = 'http://13.125.47.126:8080/login/auth';
       const params = new URLSearchParams();
       params.append('idToken', this.googleUser.wc.id_token);
       console.log(params)

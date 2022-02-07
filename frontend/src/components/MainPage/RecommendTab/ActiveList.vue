@@ -6,7 +6,7 @@
         <div class="card-carousel">
             <div class="card-carousel--overflow-container">
                 <div v-if="this.$store.state.recommendType === 1" class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
-                    <div class="card-carousel--card" v-for="item in this.$store.state.recommendActivity.slice(0, 6)" :key="item.index">
+                    <div class="card-carousel--card" v-for="item in this.$store.state.recommendActivity.slice(0, 10)" :key="item.index">
                         <img :src="item.imgLink"/>
                         <div class="card-carousel--card--footer">
                             <p>{{ item.title }}</p>
@@ -15,7 +15,7 @@
                     </div>
                 </div>
                 <div v-if="this.$store.state.recommendType === 0" class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
-                    <div class="card-carousel--card" v-for="item in this.$store.state.recommendActivity.slice(6)" :key="item.index">
+                    <div class="card-carousel--card" v-for="item in this.$store.state.recommendActivity.slice(10)" :key="item.index">
                         <img :src="item.imgLink"/>
                         <div class="card-carousel--card--footer">
                             <p>{{ item.title }}</p>
