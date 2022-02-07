@@ -48,7 +48,7 @@ export default {
   },
   computed: {
     tmp: function () {
-      const mood = this.userInfo.mood
+      const mood = this.$store.state.userEmotion
       const style = this.planetStyles.find(el => el.id === mood) || {}
       return style
     }
