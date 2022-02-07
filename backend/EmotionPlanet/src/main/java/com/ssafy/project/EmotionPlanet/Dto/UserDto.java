@@ -14,8 +14,16 @@ public class UserDto {
 	private String provider;
 	private int mood;
 	private String refreshToken;
-
     private int publish;
+    private String intro;
+    
+    
+	public String getIntro() {
+		return intro;
+	}
+	public void setIntro(String intro) {
+		this.intro = intro;
+	}
 	public int getNo() {
 		return no;
 	}
@@ -90,7 +98,7 @@ public class UserDto {
 
 	public UserDto() {}
 	public UserDto(int no, String email, String pw, String nickname, String birth, String profileImg, String tel,
-			int mood, int publish) {
+			int mood, int publish, String intro) {
 		super();
 		this.no = no;
 		this.email = email;
@@ -101,6 +109,7 @@ public class UserDto {
 		this.tel = tel;
 		this.mood = mood;
 		this.publish = publish;
+		this.intro = intro;
 	}
 
 	@Builder
@@ -114,7 +123,7 @@ public class UserDto {
 	@Override
 	public String toString() {
 		return "UserDto [no=" + no + ", email=" + email + ", pw=" + pw + ", nickname=" + nickname + ", birth=" + birth
-				+ ", profileImg=" + profileImg + ", tel=" + tel + ", mood=" + mood + ", publish=" + publish + "]";
+				+ ", profileImg=" + profileImg + ", tel=" + tel + ", mood=" + mood + ", publish=" + publish + " , intro=" +intro+ "]";
 	}
 	
 }

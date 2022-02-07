@@ -10,7 +10,15 @@ public class UserSecretDto {
     private String tel;
     private int mood;
 
-    public UserSecretDto() {
+    
+    
+    @Override
+	public String toString() {
+		return "UserSecretDto [no=" + no + ", email=" + email + ", nickname=" + nickname + ", birth=" + birth
+				+ ", profileImg=" + profileImg + ", tel=" + tel + ", mood=" + mood + "]";
+	}
+
+	public UserSecretDto() {
 
     }
 

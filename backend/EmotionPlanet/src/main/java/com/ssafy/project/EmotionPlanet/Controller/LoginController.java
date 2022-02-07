@@ -65,6 +65,7 @@ public class LoginController {
             System.out.println(userDto);
 
             TokenDto atJWT = jwtService.create(userDto);
+            System.out.println("로그인 컨트롤 atJWT");
             System.out.println(atJWT);
             res.add("at-jwt-access-token", atJWT.getAccessJws());
             res.add("at-jwt-refresh-token", atJWT.getRefreshJws());
@@ -89,6 +90,7 @@ public class LoginController {
             principalOauth2UserService.insertUser(user);
 
             TokenDto atJWT = jwtService.create(userDto);
+            System.out.println("로그인 컨트롤 atJWT");
             System.out.println(atJWT);
             res.add("at-jwt-access-token", atJWT.getAccessJws());
             res.add("at-jwt-refresh-token", atJWT.getRefreshJws());
