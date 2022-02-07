@@ -120,12 +120,8 @@
           })
           .then(res => {
             alert(`당신은 ${ res.data.name }행성 입니다!`)
-<<<<<<< HEAD
             this.$store.state.userEmotion = res.data.no
             this.$router.push('Main')
-=======
-            this.$router.push({name:'Main'})
->>>>>>> 377fab15da4efef2469dcf0c15a403535bd8959e
           })
           .catch(() => alert('잘못된 요청입니다.'))
         }
