@@ -16,6 +16,14 @@
 		from user
 		where no = #{no}
 	</select>
+
+	<select id="userSelectByEmail" parameterType="string"
+			resultType="com.ssafy.project.EmotionPlanet.Dto.UserDto">
+		select no, email, pw, nickname, tel, birth, profile_img as
+		profileImg, publish
+		from user
+		where email = #{email}
+	</select>
 	
 	<select id="findPw" parameterType="String"
 		resultType="com.ssafy.project.EmotionPlanet.Dto.UserDto">
@@ -61,8 +69,22 @@
 	<update id="userUpdate"
 		parameterType="com.ssafy.project.EmotionPlanet.Dto.UserDto">
 		update user
-		set pw = #{pw}, nickname = #{nickname} ,profile_img = #{profileImg} , mood
+		set pw = #{pw}, nickname = #{nickname} , mood
 		= #{mood} , publish = #{publish} , tel = #{tel}
 		where no = #{no}
-	</update> 
+	</update>
+
+	<update id="userRefreshToken"
+			parameterType="com.ssafy.project.EmotionPlanet.Dto.UserDto">
+		UPDATE user
+		SET refreshToken = #{refreshToken}
+		WHERE email = #{email};
+	</update>
+
+	<select id="selectRefreshToken" parameterType="String"
+			resultType="String">
+		select refreshToken
+		from user
+		where email = #{email}
+	</select>
 </mapper>

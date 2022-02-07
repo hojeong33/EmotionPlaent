@@ -11,6 +11,8 @@ import Setting from '@/views/setting'
 import UserInfo from '@/components/Settings/UserInfo'
 import PwChange from '@/components/Settings/PwChange'
 import Withdrawal from '@/components/Settings/Withdrawal'
+import SearchResult from '@/views/SearchResult'
+import PwFind from '@/components/Settings/PwFind' 
 
 Vue.use(VueRouter)
 
@@ -31,17 +33,17 @@ const routes = [
     component: Mypage
   },
   {
-    path:'/Recommend',
+    path:'/recommend',
     name:'Recommend',
     component:Recommend
   },
   {
-    path:'/Feed',
+    path:'/feed',
     name:'Feed',
     component:Feed
   },
   {
-    path:'/Main',
+    path:'/main',
     name:'Main',
     component:Main
   },
@@ -49,6 +51,11 @@ const routes = [
     path: '/emotiontest',
     name: 'EmotionTest',
     component: EmotionTest
+  },
+  {
+    path: '/searchresult',
+    name: 'SearchResult',
+    component: SearchResult
   },
   {
     path: '/setting',
@@ -67,7 +74,11 @@ const routes = [
         path: 'withdrawal',
         component: Withdrawal
       },
-    ]
+      {
+        path: 'password-find',
+        component: PwFind
+      }
+    ],
   },
 ]
 
@@ -75,6 +86,19 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+router.beforeEach((to, from, next) => {
+  const body = document.querySelector('body')
+
+  if (to.name == 'Signup' || to.name == 'Login' || to.name == 'EmotionTest'){
+    body.setAttribute('class', 'astro')
+    next()
+  }
+  else {
+    body.removeAttribute('class')
+    next()
+  }
 })
 
 export default router

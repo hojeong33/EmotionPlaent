@@ -45,14 +45,11 @@
   import axios from 'axios'
 
   export default {
-    beforeCreate: function () {
-      document.body.className = 'astro';
-    },
     data: function(){
       return {
         page: 1,
         before_page: null,
-        keywords: null,
+        keywords: [],
         selected: [],
         testNum: 1
       }
@@ -64,15 +61,16 @@
     methods: {
       check: function(keyword){
         const idx = this.selected.indexOf(keyword)
-        if ((this.testNum == 1 && this.selected.length > 5) || 
-          (this.testNum == 2 && this.selected.length > 3))
-        {
-          alert('너무 많이 골랐어요..!')
-          this.$refs[keyword.no][0].isChecked = false
+        const nums = this.selected.length
+
+        if (idx != -1){
+          this.selected.splice(idx, 1)
         }
         else {
-          if (idx != -1){
-            this.selected.splice(idx, 1)
+          if ((this.testNum == 1 && nums > 5) ||
+          (this.testNum == 2 && nums > 3)){
+            alert('너무 많이 골랐어요..!')
+            this.$refs[keyword.no][0].isChecked = false
           }
           else {
             this.selected.push(keyword)
@@ -105,6 +103,7 @@
               alert('한 번만 더 선택해볼까요?')
               this.testNum = 2
               this.page = 1
+              console.log(this.page_of_keywords)
             })
             .catch(() => alert('잘못된 요청입니다'))
           }
@@ -126,30 +125,28 @@
         }
       },
       go_to_back: function(){
-        this.$router.push({ name: 'main' })
+        this.$router.go(-1)
       },
       refresh_keywords: function(){
-        axios({
-          method: 'get',
-          url: 'http://13.125.47.126:8080/test'
-        })
-        .then(res => {
-          this.keywords = res.data
-          this.keywords = this.keywords.sort(() => Math.random() - 0.5)
-          this.page = 1
-        })
-        .catch(() => alert('잘못된 요청입니다.'))
+        while (this.selected.length > 0){
+          const keyword = this.selected.pop()
+          this.$refs[keyword.no][0].isChecked = false
+        }
+        // axios({
+        //   method: 'get',
+        //   url: 'http://13.125.47.126:8080/test'
+        // })
+        // .then(res => {
+        //   this.keywords = res.data
+        //   this.keywords = this.keywords.sort(() => Math.random() - 0.5)
+        //   this.page = 1
+        // })
+        // .catch(() => alert('잘못된 요청입니다.'))
       }
     },
     computed: {
       page_of_keywords: function(){
-        if (this.keywords && this.keywords.length > 12){
-          return Math.floor(this.keywords.length / 12)
-        }
-        else if (this.keywords){
-          return 1
-        }
-        return 0
+        return Math.round(this.keywords.length / 12)
       }
     },
     created: function(){
@@ -181,7 +178,7 @@
     font-size: 1.25rem;
     font-weight: bold;
     letter-spacing: -1px;
-    line-height: 75%;
+    margin: 0;
   }
 
   label {

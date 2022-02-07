@@ -1,6 +1,5 @@
 <template>
   <div>
-    <navigation></navigation>
     <side-profile-card
       :user-info="userInfo"
     >
@@ -32,10 +31,10 @@
         </span>
       </div>
       <div v-if="onFeed === true">
-        <user-feed></user-feed>
+        <user-feed :user-mood="userInfo.mood"></user-feed>
       </div>
       <div v-else-if="onPick === true">
-        <pick-list></pick-list>
+        <pick-list :user-mood="userInfo.mood"></pick-list>
       </div>
     </div>
   </div>  
@@ -43,18 +42,17 @@
 
 <script>
 import SideProfileCard from '@/components/SideProfileCard.vue'
-import Navigation from '@/components/Navigation.vue'
 import PickList from '@/components/user/PickList.vue'
 import UserFeed from '@/components/user/UserFeed.vue'
 
 export default {
   name: 'Mypage',
-  components: {SideProfileCard, Navigation, PickList, UserFeed},
+  components: {SideProfileCard, PickList, UserFeed},
   data() {
     return {
       userInfo: {
       username: '최강상후',
-      mood: 5,
+      mood: 3,
       posts: 0,
       followings: 0,
       followers: 20100,
@@ -164,7 +162,7 @@ export default {
   }
   
   .inactive {
-    color: gray;
+    color: #777777;
     font-size: 1.2rem;
     font-weight: bold;
   }

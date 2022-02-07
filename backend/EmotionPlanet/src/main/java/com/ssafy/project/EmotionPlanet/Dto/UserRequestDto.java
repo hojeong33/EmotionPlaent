@@ -8,6 +8,8 @@ public class UserRequestDto {
     private String nickname;
     private String profileImg;
 
+    private UserSecretDto userInfo;
+
     public UserRequestDto() {
     }
 
@@ -15,6 +17,13 @@ public class UserRequestDto {
         this.no = no;
         this.nickname = nickname;
         this.profileImg = profileImg;
+    }
+
+    public UserRequestDto(int no, String nickname, String profileImg, UserSecretDto userInfo) {
+        this.no = no;
+        this.nickname = nickname;
+        this.profileImg = profileImg;
+        this.userInfo = userInfo;
     }
 
     public int getNo() {
@@ -41,4 +50,21 @@ public class UserRequestDto {
         this.profileImg = profileImg;
     }
 
+    public UserSecretDto getUserInfo() {
+        return userInfo;
+    }
+
+    public void setUserInfo(UserSecretDto userInfo) {
+        this.userInfo = userInfo;
+    }
+
+    @Override
+    public String toString() {
+        return "UserSecretDto{" +
+                "no=" + no +
+                ", nickname='" + nickname + '\'' +
+                ", profileImg='" + profileImg + '\'' +
+                ", userInfo=" + userInfo.toString() +
+                '}';
+    }
 }

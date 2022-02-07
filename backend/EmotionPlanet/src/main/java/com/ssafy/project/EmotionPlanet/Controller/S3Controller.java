@@ -7,7 +7,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:5500", allowCredentials = "true", allowedHeaders = "*", methods = {
@@ -30,12 +29,21 @@ public class S3Controller {
         else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "업로드 실패.");
     }
 
-    @PostMapping("/file2")
-    public ResponseEntity<List<String>> uploadFileReturnURL( @RequestPart List<MultipartFile> multipartFile) {
-        List<String> result = s3Service.uploadFileReturnURL(multipartFile);
+    @PostMapping(value = "/users/img") //회원 프로필 변경
+    public ResponseEntity<String> uploadFileReturnURL(@RequestPart String no, 
+    		@RequestPart MultipartFile multipartFile) {
+    	int userno = Integer.parseInt(no);
+    	String result  = s3Service.uploadFileReturnURL(userno,multipartFile);
 
-        if(result.size() != 0) return new ResponseEntity<List<String>>(result, HttpStatus.OK);
-        else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "업로드 실패.");
+        if(result != null) {
+        	System.out.println("프로필 변경 성공");
+        	System.out.println(result);
+        	return new ResponseEntity<String>(result, HttpStatus.OK);
+        }
+        else {
+        	System.out.println("프로필 변경 실패");
+        	throw new ResponseStatusException(HttpStatus.NOT_FOUND, "업로드 실패.");
+        }
     }
 
     @DeleteMapping("/file")

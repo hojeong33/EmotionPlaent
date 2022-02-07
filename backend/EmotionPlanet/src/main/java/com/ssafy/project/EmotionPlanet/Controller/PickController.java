@@ -1,19 +1,13 @@
 package com.ssafy.project.EmotionPlanet.Controller;
 
-
-import com.ssafy.project.EmotionPlanet.Dto.FeedDto;
 import com.ssafy.project.EmotionPlanet.Dto.FeedLikeDto;
-import com.ssafy.project.EmotionPlanet.Dto.ImgDto;
 import com.ssafy.project.EmotionPlanet.Dto.PickDto;
 import com.ssafy.project.EmotionPlanet.Service.PickService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
-
-import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(

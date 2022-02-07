@@ -24,7 +24,7 @@ public class SearchController {
 	@Autowired
 	SearchService searchService;
 
-	@GetMapping(value = "/serachs/byTag/{name}")  //태그 검색
+	@GetMapping(value = "/searchs/byTag/{name}")  //태그 검색
 	public ResponseEntity<List<TagDto>> tagSelect(@PathVariable String name) {
 		List<TagDto> list = searchService.tagSelect(name);
 		if (list != null) {
@@ -37,7 +37,7 @@ public class SearchController {
 		}
 	}
 	
-	@GetMapping(value = "/serachs/byTag/list/{name}")  //태그 리스트 검색
+	@GetMapping(value = "/searchs/byTag/list/{name}")  //태그 리스트 검색
 	public ResponseEntity<List<FeedDto>> tagListSelect(@PathVariable String name) {
 		List<FeedDto> list = searchService.tagListSelect(name);
 		if (list != null) {
@@ -50,7 +50,7 @@ public class SearchController {
 		}
 	}
 	
-	@GetMapping(value = "/serachs/byNickName/{name}")  //유저 검색
+	@GetMapping(value = "/searchs/byNickName/{name}")  //유저 검색
 	public ResponseEntity<List<UserDto>> userSelect(@PathVariable String name) {
 		List<UserDto> list = searchService.userSelect(name);
 		if (list != null) {
@@ -63,7 +63,7 @@ public class SearchController {
 		}
 	}
 	
-//	@GetMapping(value = "/serachs/byRecommend/{name}")  //찜목록 태그 검색
+//	@GetMapping(value = "/searchs/byRecommend/{name}")  //찜목록 태그 검색
 //	public ResponseEntity<List<PickDto>> recommendSelect(@PathVariable String name) {
 //		List<PickDto> list = searchService.recommendSelect(name);
 //		if (list != null) {
