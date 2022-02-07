@@ -11,7 +11,7 @@
         <div id="profile_card">
           <div id="name_card">
             <h1>{{ userInfo.username }}</h1>
-            <button>프로필 수정</button>
+            <button @click="$router.push({name: 'Setting'})">프로필 수정</button>
           </div>
           <div id="info_card">
             <h3>게시글 {{ userInfo.posts }}</h3>

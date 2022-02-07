@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
-import Login from '@/views/accounts/Login.vue'
-import Signup from '@/views/accounts/Signup.vue'
+import Login from '@/views/accounts/Login'
+import Signup from '@/views/accounts/Signup'
 import EmotionTest from '@/views/EmotionTest'
 import Mypage from '@/views/user/Mypage.vue'
 import Recommend from '@/components/MainPage/RecommendTab/Recommend.vue'
@@ -11,8 +11,12 @@ import Setting from '@/views/Setting'
 import UserInfo from '@/components/Settings/UserInfo'
 import PwChange from '@/components/Settings/PwChange'
 import Withdrawal from '@/components/Settings/Withdrawal'
-import SearchResult from '@/views/SearchResult'
-import PwFind from '@/components/Settings/PwFind' 
+import FeedDetail from '@/components/FeedDetail'
+import PwFind from '@/components/Settings/PwFind'
+// import Create from '@/views/Create'
+// import CreateImg from '@/components/Create/CreateImg'
+// import CreateTag from '@/components/Create/CreateTag'
+// import CreateText from '@/components/Create/CreateText'
 
 Vue.use(VueRouter)
 
@@ -52,18 +56,19 @@ const routes = [
     name: 'EmotionTest',
     component: EmotionTest
   },
-  {
-    path: '/searchresult',
-    name: 'SearchResult',
-    component: SearchResult
-  },
+  // {
+  //   path: '/searchresult',
+  //   name: 'SearchResult',
+  //   component: SearchResult
+  // },
   {
     path: '/setting',
     name: 'Setting',
+    redirect: '/setting/info',
     component: Setting,
     children: [
       {
-        path: '',
+        path: 'info',
         component: UserInfo
       },
       {
@@ -78,8 +83,34 @@ const routes = [
         path: 'password-find',
         component: PwFind
       }
-    ],
+    ],  
   },
+  // {
+  //   path: '/create',
+  //   name: 'Create',
+  //   component: Create,
+  //   children: [
+  //     {
+  //       path: 'Img',
+  //       component: CreateImg
+  //     },
+  //     {
+  //       path: 'Tags',
+  //       component: CreateTag,
+  //     },
+  //     {
+  //       path: 'Text',
+  //       component: CreateText,
+  //     }
+  //   ],  
+  // },
+
+  {
+    // 경로도 이야기해야할듯
+    path: '/feed/detail',
+    name: 'FeedDetail',
+    component: FeedDetail
+  }
 ]
 
 const router = new VueRouter({
@@ -100,5 +131,12 @@ router.beforeEach((to, from, next) => {
     next()
   }
 })
+// router.push의 중복 에러 해결방법
+const originalPush = VueRouter.prototype.push;
+VueRouter.prototype.push = function push(location) {
+	return originalPush.call(this, location).catch(err => {
+		if (err.name !== 'NavigationDuplicated') throw err;
+	});
+};
 
 export default router

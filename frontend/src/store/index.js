@@ -15,8 +15,9 @@ export default new Vuex.Store({
   },
   mutations: {
     activateFeed: function(state){
-      console.log(state)
+      console.log(state.feedActive)
       state.feedActive = !state.feedActive
+      console.log(state.feedActive)
     },
     GET_COMMENTS:function(state,data){
       state.comments=[]
