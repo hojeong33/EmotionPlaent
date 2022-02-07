@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-		<filter-tab @filtering="filterFeed" id="filter"></filter-tab>
+		<filter-tab 
+		:user-mood="mood" 
+		@filtering="filterFeed" id="filter"></filter-tab>
 		<br>
 		<div v-if="isExist">
 			<div @change="filterFeed">
@@ -91,8 +93,12 @@ export default {
       ],
 			feedList: [],
 			filteredFeed: [],
-			filteredExist: true		
+			filteredExist: true,
+			mood: null,
 		}
+	},
+	props: {
+		userMood: Number,
 	},
 	components: {
 		FilterTab
@@ -126,6 +132,7 @@ export default {
 		}
 	},
 	created: function () {
+		this.mood = this.userMood
 		for (let feed of this.user_feed) {
 			for (let emotion of this.planetStyles) {
 				if (feed.planet === emotion.id) {

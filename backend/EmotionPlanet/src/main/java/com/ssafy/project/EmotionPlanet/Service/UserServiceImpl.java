@@ -3,6 +3,7 @@ package com.ssafy.project.EmotionPlanet.Service;
 import com.ssafy.project.EmotionPlanet.Dao.UserDao;
 import com.ssafy.project.EmotionPlanet.Dto.FindEmailDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
+import com.ssafy.project.EmotionPlanet.Dto.UserSecretDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +25,11 @@ public class UserServiceImpl implements UserService {
 	@Override
 	public UserDto userSelect(int no) { // 회원 검색
 		return userDao.userSelect(no);
+	}
+
+	@Override
+	public UserDto userSelectByEmail(String email) {
+		return userDao.userSelectByEmail(email);
 	}
 
 	@Override
@@ -55,14 +61,12 @@ public class UserServiceImpl implements UserService {
 		//변경되는 유정 정보가 넘어왔을때 null또는 0값이 아닌 값 즉 변경되는 값을 찾아 기존 유저정보를 변경함
 		if (changeuserDto.getMood() != 0) { // 감정 정보 변경
 			userDto.setMood(changeuserDto.getMood());
-		} else if (changeuserDto.getProfileImg() != null) { // 프로필 변경 프로필 사진 받아오는것도 생각 해야함
-			userDto.setProfileImg(changeuserDto.getProfileImg());
 		} else if (changeuserDto.getPw() != null) { // 비밀 번호 변경
 			userDto.setPw(changeuserDto.getPw());
 		} else if (changeuserDto.getNickname() != null) { // 활동명 변경
 			userDto.setNickname(changeuserDto.getNickname());
 		} else { // 계정 공개 비공개
-			userDto.setPublish(changeuserDto.isPublish());
+			userDto.setPublish(changeuserDto.getPublish());
 		}
 		if (userDao.userUpdate(userDto) == SUCCESS) // 변경된 기존 유저정보를 가지고 db내용을 변경함
 			return SUCCESS;
@@ -98,8 +102,18 @@ public class UserServiceImpl implements UserService {
 			return null;
 		}
 	}
-	
-	 public String randomPassword(){ //랜덤 비밀번호 생성 메서드
+
+	@Override
+	public int userRefreshToken(UserDto userDto) {
+		return userDao.userRefreshToken(userDto);
+	}
+
+	@Override
+	public String selectRefreshToken(String email) {
+		return userDao.selectRefreshToken(email);
+	}
+
+	public String randomPassword(){ //랜덤 비밀번호 생성 메서드
 	        char[] charSet = new char[] { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'A', 'B', 'C', 'D', 'E', 'F',
 	                'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' };
 	        String str = "";

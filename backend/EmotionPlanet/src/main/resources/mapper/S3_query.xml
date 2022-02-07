@@ -12,5 +12,10 @@
     <delete id="delete" parameterType="String">
         delete from img where fileName = #{fileName}
     </delete>
-
+    
+    <update id="updateimg">
+		update user
+		set profile_img = #{imgLink}
+		where no = #{no}
+	</update> 
 </mapper>

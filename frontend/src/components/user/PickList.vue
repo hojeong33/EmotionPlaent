@@ -1,13 +1,23 @@
 <template>
   <div id="pick_container">
-    <filter-tab 
+    <filter-tab
+      :user-mood="mood" 
       @filtering="filterPicks"
       id="filter"
       ></filter-tab>
     <div id="list_tab">
-      <p @click="toggleMusic">음악</p>
-      <p @click="toggleMovie">영화</p>
-      <p @click="toggleActivity">활동</p>
+      <span id="music_tab">
+        <p @click="toggleMusic" :class="onMusic ? 'active': 'inactive'">음악</p>
+        <span :class="onMusic ? 'on': 'off'"></span>
+      </span>
+      <span id="movie_tab">
+        <p @click="toggleMovie" :class="onMovie ? 'active': 'inactive'">영화</p>
+        <span :class="onMovie ? 'on': 'off'"></span>
+      </span>
+      <span id="activity_tab">
+        <p @click="toggleActivity" :class="onActivity ? 'active': 'inactive'">활동</p>
+        <span :class="onActivity ? 'on': 'off'"></span>
+      </span>
     </div>
     <music-pick 
       :music-list="musicList"
@@ -36,6 +46,7 @@ export default {
   data() {
     return {
       picks,
+      mood: null,
       
       onMusic: true,
       onMovie: false,
@@ -50,6 +61,9 @@ export default {
       activityExist: false,
     }
   },
+  props: {
+    userMood: Number,
+  },
   components: {
     MusicPick,
     MoviePick,
@@ -58,12 +72,14 @@ export default {
   },
   created() {
     this.sortPicks()
+    this.mood = this.userMood
   },
   methods: {
     toggleMusic: function () {
       this.onMusic = true
       this.onMovie = false
       this.onActivity = false
+      console.log(this.mood)
     },
     toggleMovie: function () {
       this.onMusic = false
@@ -138,7 +154,7 @@ export default {
 
 <style scoped>
   #pick_container {
-    width: 100%;
+    width: 80vh;
     min-width: 700px;
     min-height: 100vh;
     padding-top: 1rem;
@@ -155,12 +171,30 @@ export default {
 
   #list_tab {
     display: flex;
-    justify-content: center;
     width: 40%;
     margin-left: 13.3rem;
     margin-top: 2rem;
     margin-bottom: 2rem;
     justify-content: space-evenly;
+    align-items: center;
+  }
+
+  #music_tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  #movie_tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  #activity_tab {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   p {
@@ -168,5 +202,30 @@ export default {
     font-size: 1.4rem;
     font-weight: bold;
     letter-spacing: 0.05rem;
+  }
+
+  .active {
+    color: black;
+    font-size: 1.4rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .inactive {
+    color: #777777;
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+  }
+
+  .on {
+    width: 70%;
+    border-bottom: 0.25rem solid #5E39B3;
+    border-radius: 20px;
+  }
+
+  .off {
+    width: 70%;
+    border-bottom: 0.2rem solid #ffffff;
   }
 </style>

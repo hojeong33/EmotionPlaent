@@ -11,6 +11,7 @@ export default new Vuex.Store({
     comments:[],
     commentsList:[],
     nowFeedNo:0,
+    user: null
   },
   mutations: {
     activateFeed: function(state){
@@ -21,7 +22,11 @@ export default new Vuex.Store({
       state.comments=[]
       state.comments=data
       state.commentsList=data.slice(0,2)
+    },
     
+    userInfo: function(state, payload){
+      console.log(payload)
+      state.user = payload
     }
   },
   actions: {

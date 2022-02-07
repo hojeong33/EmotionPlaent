@@ -2,6 +2,8 @@ package com.ssafy.project.EmotionPlanet.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import com.ssafy.project.EmotionPlanet.Dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -62,7 +64,7 @@ public class SearchServiceImpl implements SearchService {
 			}
 			return list;
 		} else {
-			return null;			
+			return null;
 		}
 	}
 
@@ -76,17 +78,20 @@ public class SearchServiceImpl implements SearchService {
 		}
 	}
 
-	@Override
-	public List<PickDto> recommendSelect(String name) {
-		List<PickDto> list = searchDao.recommendSelect(name);
-		if(list.size() != 0) {
-			for (PickDto pick : list) {
-				List<PickContentDto> pickcontents = searchDao.pickcontentSelect(pick.getNo());
-				//pick.setPickcontents(pickcontents);
-			}
-			return list;
-		}else {
-			return null;
-		}
-	}
+//	@Override
+//	public List<PickDto> recommendSelect(String name) {
+
+//		List<PickDto> list = searchDao.s(name);
+//		List<PickDto> list = searchDao.recommendSelect(name);
+//		List<PickDto> list = searchDao.recommendSelect(name);
+//		if(list.size() != 0) {
+//			for (PickDto pick : list) {
+//				List<PickContentDto> pickcontents = searchDao.pickcontentSelect(pick.getNo());
+//				//pick.setPickcontents(pickcontents);
+//			}
+//			return list;
+//		}else {
+//			return null;
+//		}
+//	}
 }
