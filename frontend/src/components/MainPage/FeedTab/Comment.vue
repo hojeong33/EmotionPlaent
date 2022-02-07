@@ -1,21 +1,22 @@
 <template>
   <div>
     <span style="position: absolute;">
-      <img id="comment_img" :src=comment.userImage alt="">
-      <span style="font-weight:bold; margin-left:">{{comment.username}} </span> {{comment.commentText}}
+      <!-- <img id="comment_img" :src=comment.userImage alt=""> -->
+      <span style="font-weight:bold; font-size:1.2rem;">{{comment.author}} </span> <span style="font-size:1.2rem">{{comment.descr}} </span>
     </span>
     <div style="text-align:right; margin-bottom:1rem">
       <i @click="onSetting" class="fas fa-ellipsis-v"></i>
       <div id="setting" v-if="isOpend">
-        <p>수정</p>
+        <p style="margin-bottom:0; margin-top:1rem;">수정</p>
         <hr>
-        <p>삭제</p>
+        <p @click="deleteComment">삭제</p>
       </div>
     </div>
   </div>
 </template>
 
 <script>
+// import axios from 'axios'
 export default {
     name:'Comment',
     props:{
@@ -33,8 +34,16 @@ export default {
         }else{
           this.isOpend=true
         }
-
-      }
+      },
+      // updateComment:function(){
+      //   axios({
+      //     method:'put',
+      //     url:'http://13.125.47.126:8080/comments',
+      //   })
+      //   .then((res)=>{
+      //     // console.log(res.data)
+      //   })
+      // },
     }
 
 }
@@ -49,13 +58,16 @@ export default {
   margin:2px;
 
 }
+
 #setting{
-  float:right;
   width: 10%;
   border:1px solid black;
   border-radius: 10px;
   text-align: center;
-  margin-left: auto;
+  display: flex;
+  flex-direction:column;
   position: absolute;
+  transform: translate(34rem,-10px);
+  background-color: white;
 }
 </style>

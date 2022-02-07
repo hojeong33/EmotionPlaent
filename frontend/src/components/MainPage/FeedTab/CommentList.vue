@@ -2,9 +2,9 @@
   <div id="comments">
     <div id="form-commentInfo">
       <div id="comment-count">댓글 
-          <span id="count">{{comments.length}}</span>
+          <span id="count">{{this.comments.length}}</span>
       </div>
-      <comment v-for="comment in commentsList"
+      <comment v-for="comment in this.commentsList"
       :comment="comment"
       :key="commentsList.indexOf(comment)">
       </comment>
@@ -12,45 +12,31 @@
       <p v-if="isAll" id="comment-more" @click="commentShort">댓글 닫기</p>
       <div id="comment_write">
         <input id="comment-input" @keyup.enter="createComment" v-model.trim="commentContent" placeholder="댓글을 입력해 주세요."> 
-        <img id="submit" @click="createComment" src="@/assets/images/icons/write.png" alt="" style="width:1.4rem;height:1.4rem;">
+        <img id="submit" @click="createComment" src="@/assets/images/icons/write.png" alt="" style="width:1.6rem;height:1.6rem; margin-bottom:3px;">
       </div>
     </div>
   </div>
 </template>
 
 <script>
-// import axios from 'axios'
 import Comment from './Comment.vue'
+
 export default {
   components: { Comment },
   name:'CommentList',
   data:function(){
     return{
       commentContent:null,
-      commentsList:this.comments.slice(0,2),
       isShort:true,
-      isAll:false
+      isAll:false,
+      
     }
   },
   props:{
-      comments:Array,
+      feedNo:Number,
   },
+ 
   methods:{
-    createComment:function(){
-      const commentItem={
-        commentText:this.commentContent,
-        username:'default',
-        userImage:'https://cdn.indiepost.co.kr/uploads/images/2018/12/11/VDbIX3-600x338.png'
-      }
-      if(commentItem.commentText){
-        this.comments.push(commentItem)
-        this.commentContent=null
-
-      }
-      else{
-        alert('내용을 채워주세요')
-      }
-    },
     commentMore:function(){
       this.commentsList=this.comments
       this.isShort=false
@@ -82,19 +68,21 @@ export default {
 }
 #comment-count{
   color:#777777;
+  font-size:1.2rem;
 }
 #comment-input{
-  width: 95%;
+  width: 93%;
+  padding:3px;
   height: 100%;
-  margin-bottom: 1rem;
-  margin-left:3px;
+  margin-left:5px;
   border-style:none;
   margin-bottom: 0;
   outline: none;
+  font-size: 1.5rem;
 }
 #comment-more{
   margin-top: 1rem;
-  font-size: 0.8rem;
+  font-size: 1.2rem;
   color:#777777;
 }
 

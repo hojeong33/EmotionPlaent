@@ -2,47 +2,52 @@
   <div id="feed">
     <div id="header">
       <section id="profile_image">
-        <img :src="post.userImage" />
+        <!-- <img :src="post.userImage" /> -->
       </section>
       <div id="profile_content">
-        <section id="username">{{post.username}}</section>
-        <section>{{post.date}}</section>
+        <section id="username" style="font-size:2rem;">{{post.author}}</section>
+        <section style="font-size:1.2rem;">{{post.date}}</section>
       </div>
       <div id="setting">
         <i class="fas fa-ellipsis-v"></i>
       </div>
     </div>
     <div id="post_image">
-      <img :src="post.postImage" alt="">
-      <p class="overlay_content" >{{post.username}}님은 {{post.planet}} <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p>
+      <div id="my_img" v-for="img in post.imgs" :key="img"><div><img :src="img.imgLink" alt=""></div></div>
+      <!-- <img :src="post.postImage" alt="" v> -->
+      <!-- <p class="overlay_content" >{{post.author}}님은 {{post.tag[0]}} <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p> -->
     </div>
     <div id="like">
       <div id="heart">
-        <i class="far fa-heart fa-lg" :class="{'fas': this.post.hasBeenLiked}" @click="like"></i>
+        <!-- <i class="far fa-heart fa-lg" :class="{'fas': this.post.hasBeenLiked}" @click="like"></i> -->
       </div>
-      <p class="likes" >{{post.likes}} likes</p>
+       <p id="feed_likes" v-for="like in post.likes" :key="like">#{{like["nickname"]}}</p>
+      <!-- <p class="likes" >{{post.likes}} likes</p> -->
     </div>
     <div id="content">
       <div id="tag">
-        <p id="my_tag" v-for="tag in post.tag" :key="tag">#{{tag}}</p>
+        <p id="my_tag" v-for="tag in post.tags" :key="tag">#{{tag["name"]}}</p>
       </div> 
-        <p id="caption">{{post.caption}}</p>
+        <p id="caption" style="font-size:1.4rem"><span style="font-weight:bold; margin-right:5px;">{{post.author}}</span>{{post.descr}}</p>
     </div>
-    <comment-list :comments="post.comments"></comment-list>
+    <comment-list :feedNo="post.no"></comment-list>
   </div>
 </template>
 
 <script>
 import CommentList from './CommentList.vue';
+import {mapActions} from 'vuex';
+
 export default {
   components: { CommentList },
   name: "Feed",
   props: {
     post: Object,
-    comments:Array
   },
   data(){
     return{
+      // date:this.post.date.toLocaleDateString(),
+      posts:[],
       planetStyles: [
         { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
         { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
@@ -61,11 +66,22 @@ export default {
     }
   },
   methods: {
+    ...mapActions([
+      'getComments'
+    ]),
+
     like() {
       this.post.hasBeenLiked ? this.post.likes-- : this.post.likes++;
       this.post.hasBeenLiked = !this.post.hasBeenLiked;
-    }
+    },
+    
+  },
+  mounted(){
+    this.getComments(this.post.no)
+    console.log('피드')
+    console.log(this.$store.state.comments)
   }
+  
 };
 </script>
 
@@ -105,6 +121,7 @@ export default {
   #my_tag{
     color:rgb(37, 37, 201);
     margin-bottom:3px;
+    font-size:1.2rem;
   }
   #header{
     display:flex;

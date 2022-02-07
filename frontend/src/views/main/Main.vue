@@ -19,7 +19,7 @@
 								<recommend :user-info="userInfo"/>
 							</div>
 							<div v-else>
-								<feed-list :posts="posts"/>
+								<feed-list/>
 							</div>
 						</section>
 					</transition>
@@ -33,14 +33,14 @@
 import TabItem from './TabItem.vue'
 import Recommend from '../../components/MainPage/RecommendTab/Recommend.vue'
 import FeedList from '../../components/MainPage/FeedTab/FeedList.vue'
-import posts from '../../assets/data/posts.js'
+// import posts from '../../assets/data/posts.js'
 import SideProfileCard from '@/components/SideProfileCard.vue' 
 export default {
 	name:'Main',
 	components: { TabItem, Recommend, FeedList ,SideProfileCard},
 	data() {
 		return {
-			posts,
+			// posts,
 			currentId: 1,
 			list: [
 				{ id: 1, label: '추천', content: '1' },
@@ -80,8 +80,8 @@ export default {
 	position: relative;
 	overflow: hidden;
 	width: 50vw;
-  min-width: 700px;
-  min-height: 92.5vh;
+	min-width: 700px;
+	min-height: 92.5vh;
 	/* 메인 피드 크기 -> 100vh-> 센터 */
 	min-height: 100vh;
 	border: 2px solid gainsboro;
@@ -105,6 +105,7 @@ export default {
 	.v-leave-to {
 	transform: translateX(100%);
 	}
+
 	.tabs{
 		display:flex;
     justify-content:center;
