@@ -18,40 +18,40 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class IndexController {
 
-    @Autowired
-    UserService userService;
-
-    @Autowired
-    BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    @GetMapping("/test/login")
-    public @ResponseBody String loginTest(
-            Authentication authentication,
-            @AuthenticationPrincipal PrincipalDetails userDetails) {
-        System.out.println("/test/login==============================");
-        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
-        System.out.println("authentication: " + principalDetails.getUser());
-
-        System.out.println("userDetails: " + userDetails.getUser());
-        return "세션 확인하기";
-    }
-
-    @GetMapping("/test/oauth/login")
-    public @ResponseBody String OAuthLoginTest(
-            Authentication authentication,
-            @AuthenticationPrincipal OAuth2User oauth) {
-        System.out.println("/test/oauth/login==============================");
-        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
-        System.out.println("authentication: " + oAuth2User.getAttributes());
-        System.out.println("oauth: " + oauth.getAttributes());
-        return "OAUTH 세션 확인하기";
-    }
-
-    @GetMapping("/user")
-    public @ResponseBody String user(@AuthenticationPrincipal PrincipalDetails principalDetails) {
-        System.out.println("principalDetails: " + principalDetails.getUser());
-        return "user";
-    }
+//    @Autowired
+//    UserService userService;
+//
+//    @Autowired
+//    BCryptPasswordEncoder bCryptPasswordEncoder;
+//
+//    @GetMapping("/test/login")
+//    public @ResponseBody String loginTest(
+//            Authentication authentication,
+//            @AuthenticationPrincipal PrincipalDetails userDetails) {
+//        System.out.println("/test/login==============================");
+//        PrincipalDetails principalDetails = (PrincipalDetails) authentication.getPrincipal();
+//        System.out.println("authentication: " + principalDetails.getUser());
+//
+//        System.out.println("userDetails: " + userDetails.getUser());
+//        return "세션 확인하기";
+//    }
+//
+//    @GetMapping("/test/oauth/login")
+//    public @ResponseBody String OAuthLoginTest(
+//            Authentication authentication,
+//            @AuthenticationPrincipal OAuth2User oauth) {
+//        System.out.println("/test/oauth/login==============================");
+//        OAuth2User oAuth2User = (OAuth2User) authentication.getPrincipal();
+//        System.out.println("authentication: " + oAuth2User.getAttributes());
+//        System.out.println("oauth: " + oauth.getAttributes());
+//        return "OAUTH 세션 확인하기";
+//    }
+//
+//    @GetMapping("/user")
+//    public @ResponseBody String user(@AuthenticationPrincipal PrincipalDetails principalDetails) {
+//        System.out.println("principalDetails: " + principalDetails.getUser());
+//        return "user";
+//    }
 
 
 //    @PostMapping("/join")

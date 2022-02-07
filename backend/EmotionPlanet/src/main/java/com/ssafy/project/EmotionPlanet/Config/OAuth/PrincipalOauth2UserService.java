@@ -14,45 +14,45 @@ import org.springframework.stereotype.Service;
 @Service
 public class PrincipalOauth2UserService extends DefaultOAuth2UserService {
 
-    private final BCryptPasswordEncoder bCryptPasswordEncoder;
-
-    private final UserService userService;
-
-    PrincipalOauth2UserService(@Lazy BCryptPasswordEncoder bCryptPasswordEncoder,
-                               @Lazy UserService userService){
-        this.userService = userService;
-        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
-    }
-
-    @Override
-    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
-        System.out.println("getClientRegistration: " + userRequest.getClientRegistration());
-        System.out.println("getAccessToken: " + userRequest.getAccessToken().getTokenValue());
-        System.out.println("getAttributes: " + super.loadUser(userRequest).getAttributes());
-
-        OAuth2User oAuth2User = super.loadUser(userRequest);
-
-        String provider = userRequest.getClientRegistration().getClientId(); // google
-        String providerId = oAuth2User.getAttribute("sub");
-        String email = oAuth2User.getAttribute("email");
-        String username = provider + "_" + providerId;
-        String password = bCryptPasswordEncoder.encode("겟인데아");
-        String role = "ROLE_USER";
-
-        UserDto userEntity = userService.userSelectByEmail(email);
+//    private final BCryptPasswordEncoder bCryptPasswordEncoder;
 //
-//        if (userEntity == null) {
-//            userEntity = User.builder()
-//                    .username(username)
-//                    .password(password)
-//                    .email(email)
-//                    .role(role)
-//                    .provider(provider)
-//                    .providerId(providerId)
-//                    .build();
-//            userRepository.save(userEntity);
-//        }
-
-        return new PrincipalDetails(userEntity, oAuth2User.getAttributes());
-    }
+//    private final UserService userService;
+//
+//    PrincipalOauth2UserService(@Lazy BCryptPasswordEncoder bCryptPasswordEncoder,
+//                               @Lazy UserService userService){
+//        this.userService = userService;
+//        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+//    }
+//
+//    @Override
+//    public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
+//        System.out.println("getClientRegistration: " + userRequest.getClientRegistration());
+//        System.out.println("getAccessToken: " + userRequest.getAccessToken().getTokenValue());
+//        System.out.println("getAttributes: " + super.loadUser(userRequest).getAttributes());
+//
+//        OAuth2User oAuth2User = super.loadUser(userRequest);
+//
+//        String provider = userRequest.getClientRegistration().getClientId(); // google
+//        String providerId = oAuth2User.getAttribute("sub");
+//        String email = oAuth2User.getAttribute("email");
+//        String username = provider + "_" + providerId;
+//        String password = bCryptPasswordEncoder.encode("겟인데아");
+//        String role = "ROLE_USER";
+//
+//        UserDto userEntity = userService.userSelectByEmail(email);
+////
+////        if (userEntity == null) {
+////            userEntity = User.builder()
+////                    .username(username)
+////                    .password(password)
+////                    .email(email)
+////                    .role(role)
+////                    .provider(provider)
+////                    .providerId(providerId)
+////                    .build();
+////            userRepository.save(userEntity);
+////        }
+//
+//        return new PrincipalDetails(userEntity, oAuth2User.getAttributes());
+//    }
 }

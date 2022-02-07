@@ -1,7 +1,6 @@
 package com.ssafy.project.EmotionPlanet.Controller;
 
 import javax.servlet.http.HttpSession;
-
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 import com.ssafy.project.EmotionPlanet.Service.LoginService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -20,7 +20,7 @@
 
 	<select id="userSelect" parameterType="String"
 		resultType="com.ssafy.project.EmotionPlanet.Dto.UserDto">
-		select no, nickname
+		select no, nickname, profile_img as profileImg
 		from user
 		where nickname like
 		CONCAT(#{name},'%');

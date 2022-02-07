@@ -10,7 +10,7 @@ public class UserDto {
     private String profileImg;
     private String tel;
 	private int mood;
-    private boolean publish;
+    private int publish;
 	public int getNo() {
 		return no;
 	}
@@ -47,27 +47,27 @@ public class UserDto {
 	public void setProfileImg(String profileImg) {
 		this.profileImg = profileImg;
 	}
+	public String getTel() {
+		return tel;
+	}
+	public void setTel(String tel) {
+		this.tel = tel;
+	}
 	public int getMood() {
 		return mood;
 	}
 	public void setMood(int mood) {
 		this.mood = mood;
 	}
-	public boolean isPublish() {
+	public int getPublish() {
 		return publish;
 	}
-	public void setPublish(boolean publish) {
+	public void setPublish(int publish) {
 		this.publish = publish;
-	}
-    public String getTel() {
-		return tel;
-	}
-	public void setTel(String tel) {
-		this.tel = tel;
 	}
 	public UserDto() {}
 	public UserDto(int no, String email, String pw, String nickname, String birth, String profileImg, String tel,
-			int mood, boolean publish) {
+			int mood, int publish) {
 		super();
 		this.no = no;
 		this.email = email;
@@ -84,4 +84,5 @@ public class UserDto {
 		return "UserDto [no=" + no + ", email=" + email + ", pw=" + pw + ", nickname=" + nickname + ", birth=" + birth
 				+ ", profileImg=" + profileImg + ", tel=" + tel + ", mood=" + mood + ", publish=" + publish + "]";
 	}
+	
 }
