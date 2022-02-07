@@ -17,6 +17,15 @@ export default new Vuex.Store({
     recommendMovie: [],
     recommendActivity: [],
     recommendReload: 0,
+    userInfo: [],
+    planetStyles: [
+      { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
+      { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
+      { id: 3, name: '중립행성', img: "neutral.png", color: '#ABBECA' },
+      { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
+      { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
+      { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
+    ],
   },
   mutations: {
     activateFeed: function(state){
@@ -36,7 +45,7 @@ export default new Vuex.Store({
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
 
-			axios.get('http://13.125.47.126:8080/recommend/music/' + this.state.userEmotion, {
+			axios.get('http://13.125.47.126:8080/recommend/music/' + this.state.userInfo.mood, {
           headers: headers,
         }).then((res) => {
           this.state.recommendMusic = res.data
@@ -60,7 +69,7 @@ export default new Vuex.Store({
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
 
-			axios.get('http://13.125.47.126:8080/recommend/movie/' + this.state.userEmotion, {
+			axios.get('http://13.125.47.126:8080/recommend/movie/' + this.state.userInfo.mood, {
           headers: headers,
         }).then((res) => {
           this.state.recommendMovie = res.data

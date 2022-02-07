@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h3>음악</h3>
+    <h3>{{ tmp.name }}에 흐르는 별소리</h3>
     <div class="card-carousel-wrapper">
         <div class="card-carousel--nav__left" @click="moveCarousel(-1)" :disabled="atHeadOfList"></div>
         <div class="card-carousel">
@@ -43,14 +43,19 @@ export default {
         paginationFactor: 220,
         }
     },
-    computed: {
-        atEndOfList() {
-        return this.currentOffset <= (this.paginationFactor * -1) * (this.$store.state.recommendMusic.length - this.windowSize);
-        },
-        atHeadOfList() {
-        return this.currentOffset === 0;
-        },
+  computed: {
+    tmp: function () {
+      const mood = this.$store.state.userInfo.mood
+      const style = this.$store.state.planetStyles.find(el => el.id === mood) || {}
+      return style
     },
+    atEndOfList() {
+    return this.currentOffset <= (this.paginationFactor * -1) * (this.$store.state.recommendMusic.length - this.windowSize);
+    },
+    atHeadOfList() {
+    return this.currentOffset === 0;
+    },
+},
     methods: {
         moveCarousel(direction) {
         if (direction === 1 && !this.atEndOfList) {

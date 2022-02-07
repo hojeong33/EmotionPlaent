@@ -17,11 +17,11 @@
         <span style="font-size:1rem; font-weight:bold">나는 지금...</span>
         <span id="at">
           <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)">
-          <p id="planet_name" style="font-size:1.4rem; font-weight:bold; margin-top:0.4rem; margin-left:0.3rem" :style="{color:tmp.color}">{{tmp.name }}</p>
+          <p id="planet_name" style="font-size:1.4rem; font-weight:bold; margin-top:0.4rem; margin-left:0.3rem" :style="{color:tmp.color}">{{tmp.name }} 탐험중</p>
         </span>
       </div>
       <div id="footer_buttons">
-        <button @click="createFeed">피드 작성</button>
+        <button @click="createFeed">이야기 들려주기</button>
         <button @click="$router.push({ name:'EmotionTest' })">테스트 다시하기</button>
       </div>
     </div>  
@@ -43,12 +43,12 @@ export default {
         { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
         { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
         { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
-      ]
+      ],
     }
   },
   computed: {
     tmp: function () {
-      const mood = this.$store.state.userEmotion
+      const mood = this.$store.state.userInfo.mood
       const style = this.planetStyles.find(el => el.id === mood) || {}
       return style
     }

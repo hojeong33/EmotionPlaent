@@ -23,7 +23,7 @@
       </p>
       <p @click="Feel" :class="onFeel ? 'active' : 'inactive'">탐험하기</p>
     </div>
-    <button @click="reload">새로고침</button>
+    <button @click="reload">좀 더 놀기</button>
     <music-list></music-list>
     <movie-list></movie-list>
     <active-list></active-list>
@@ -55,7 +55,7 @@ export default {
   },
   computed: {
     tmp: function () {
-      const mood = this.$store.state.userEmotion;
+      const mood = this.$store.state.userInfo.mood;
       const style = this.planetStyles.find((el) => el.id === mood) || {};
       return style;
     },
