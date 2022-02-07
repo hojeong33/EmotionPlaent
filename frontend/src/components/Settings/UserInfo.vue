@@ -12,7 +12,8 @@
         </span>
         <span>
           <h4>가입일 1234.56.78</h4>
-          <button>프로필사진 변경</button>
+          <!-- <button>프로필사진 변경</button> -->
+          <button @click="go_to_profilupdate">프로필 변경</button>
         </span>
       </div>
     </article>
@@ -21,9 +22,13 @@
         <h3>이메일</h3>
         <p>test@ssafy.com</p>
       </div>
-      <div id="us_password">
+      <!-- <div id="us_password">
         <h3>비밀번호</h3>
         <a href="" @click="go_to_passwordchange">비밀번호 변경...</a>
+      </div> -->
+      <div id="short_comment">
+        <h3>소개</h3>
+        <p>나는야 멋쟁이~</p>
       </div>
       <div id="us_birth">
         <h3>생년월일</h3>
@@ -48,10 +53,10 @@
           </span>
         </span>
       </div>
-      <div id="us_history">
+      <!-- <div id="us_history">
         <h3>활동 내역</h3>
         <a href="">자세히...</a>
-      </div>
+      </div> -->
     </article>
     <button id="withdrawal" @click="go_to_withdrawal">회원 탈퇴</button>
   </section>
@@ -72,6 +77,9 @@ export default {
     },
     go_to_withdrawal: function(){
       this.$router.push('/setting/withdrawal')
+    },
+    go_to_profilupdate: function () {
+      this.$router.push('/setting/profile-update')
     }
   },
 }
