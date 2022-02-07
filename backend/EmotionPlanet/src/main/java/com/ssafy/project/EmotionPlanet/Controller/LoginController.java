@@ -85,7 +85,7 @@ public class LoginController {
         UserDto user =  principalOauth2UserService.tokenVerify(idToken);
         UserSecretDto userDto = new UserSecretDto(user.getNo(), user.getEmail(), user.getNickname(), user.getBirth(), user.getProfileImg(), user.getTel(), user.getMood());
         HttpHeaders res = new HttpHeaders();
-
+        System.out.println(userDto);
         if (user.getEmail() != null) {
             principalOauth2UserService.insertUser(user);
 

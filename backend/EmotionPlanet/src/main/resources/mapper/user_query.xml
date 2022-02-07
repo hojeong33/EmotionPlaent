@@ -11,7 +11,7 @@
 	
 	<select id="userSelect" parameterType="int"
 		resultType="com.ssafy.project.EmotionPlanet.Dto.UserDto">
-		select no, email, pw, nickname, tel, birth, profile_img as
+		select no, email, pw, mood ,nickname, tel, birth, profile_img as
 		profileImg, publish, intro
 		from user
 		where no = #{no}

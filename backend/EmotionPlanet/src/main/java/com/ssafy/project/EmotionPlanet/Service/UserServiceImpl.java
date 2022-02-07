@@ -63,9 +63,12 @@ public class UserServiceImpl implements UserService {
 			userDto.setMood(changeuserDto.getMood());
 		} else if (changeuserDto.getPublish() != 0) { // 계정 공개 비공개
 			userDto.setPublish(changeuserDto.getPublish());
-		} else if (changeuserDto.getNickname() != null) { // 활동명, 비밀번호, 소개글 변경
+		} else if (changeuserDto.getPw() != null) { // 활동명, 비밀번호, 소개글 변경
 			userDto.setNickname(changeuserDto.getNickname());
 			userDto.setPw(changeuserDto.getPw());
+			userDto.setIntro(changeuserDto.getIntro());
+		} else {
+			userDto.setNickname(changeuserDto.getNickname());
 			userDto.setIntro(changeuserDto.getIntro());
 		}
 		if (userDao.userUpdate(userDto) == SUCCESS) // 변경된 기존 유저정보를 가지고 db내용을 변경함
