@@ -25,7 +25,7 @@
 </template>
 <script>
 // import {mapState} from 'vuex'
-
+// 똑같은 페이지 눌렀을 때 새로고침이 안 됨 - 수정 필요
 export default {
   name: 'App',
   data: function (){
@@ -34,7 +34,7 @@ export default {
       imgName_profile: 'user.png',
       imgName_setting: 'settings.png',
       imgName_alarm: 'bell.png',
-      isActive: [false, false, false, false], //네브바에서 선택됐는지 여부를 파악,
+      isActive: [false, false, false, false], //네브바에서 선택됐는지 여부를 파악
       searchInput: 'null',
       // searchFinish,
       
@@ -42,10 +42,10 @@ export default {
   },
   methods: {
     changeImg_write() {
-      if (this.isActive[0] === false) {
-        this.$store.commit('activateFeed')
+      this.$store.commit('activateFeed')
+      if (this.imgName_write === 'more.png') {
         this.imgName_write = 'more_selected.png'
-        this.isActive[0] = this.$store.state.feedActive
+        this.isActive[0] = true
 
         if (this.isActive[1] === true || this.isActive[2] === true || this.isActive[3] === true) {
           this.imgName_profile = 'user.png'
@@ -63,10 +63,15 @@ export default {
 
     },
     changeImg_profile() {
-      if (this.imgName_profile === 'user.png') {
+      this.$router.push({name:'Mypage'})
+      // console.log(this.$route.name)
+      // if (this.$route.name === 'Mypage') {
+      //   this.$router.go(0)
+      // } else {
+      this.isActive[1] = true
+      console.log(this.isActive)
+      if (this.isActive[1] === true) {
         this.imgName_profile = 'user_selected.png'
-        this.$router.push({name:'Mypage'})
-        this.isActive[1] = true
         
         if (this.isActive[0] === true || this.isActive[2] === true || this.isActive[3] === true) {
           this.imgName_write = 'more.png'
@@ -77,11 +82,14 @@ export default {
           this.isActive[3] = false
         }
       } 
+      this.isActive[1] = false
+      console.log(this.isActive)
+      // }
     },
     changeImg_alarm() {
+      this.$router.push('#')
       if (this.imgName_alarm === 'bell.png') {
         this.imgName_alarm = 'bell_selected.png'
-        this.$router.push('#')
         this.isActive[2] = true
 
         if (this.isActive[0] === true || this.isActive[1] === true || this.isActive[3] === true) {
@@ -95,9 +103,9 @@ export default {
       } 
     },
     changeImg_setting() {
+      this.$router.push({name: 'Setting'})
       if (this.imgName_setting === 'settings.png') {
         this.imgName_setting = 'settings_selected.png'
-        this.$router.push({name: 'Setting'})
         this.isActive[3] = true
         
         if (this.isActive[0] === true || this.isActive[1] === true || this.isActive[2] === true) {

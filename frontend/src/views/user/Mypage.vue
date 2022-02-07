@@ -18,6 +18,11 @@
             <h3>팔로우 {{ userInfo.followings }}</h3>
             <h3>팔로워 {{ userInfo.followers }}</h3>
           </div>
+          <br>
+          <!-- 소개글 코드 -->
+          <div id="short_comment">
+            <p id="my_comment">소개글~~~</p>
+          </div>
         </div>
       </div>
       <div id="tab">
@@ -235,5 +240,11 @@ export default {
     direction: row;
     justify-content: space-between;
   }
-
+  #short_comment {
+    text-align: left;
+  }
+  #my_comment {
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
   </style>

@@ -7,12 +7,13 @@ import Mypage from '@/views/user/Mypage.vue'
 import Recommend from '@/components/MainPage/RecommendTab/Recommend'
 import Feed from '@/components/MainPage/FeedTab/Feed'
 import Main from '@/views/main/Main'
-import Setting from '@/views/setting'
+import Setting from '@/views/Setting'
 import UserInfo from '@/components/Settings/UserInfo'
 import PwChange from '@/components/Settings/PwChange'
 import Withdrawal from '@/components/Settings/Withdrawal'
 import FeedDetail from '@/components/FeedDetail'
 import PwFind from '@/components/Settings/PwFind'
+import ProfileUpdate from '@/components/Settings/ProfileUpdate'
 // import Create from '@/views/Create'
 // import CreateImg from '@/components/Create/CreateImg'
 // import CreateTag from '@/components/Create/CreateTag'
@@ -82,6 +83,10 @@ const routes = [
       {
         path: 'password-find',
         component: PwFind
+      },
+      {
+        path:'profile-update',
+        component: ProfileUpdate,
       }
     ],  
   },
