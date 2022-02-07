@@ -1,9 +1,9 @@
 <template>
   <div>
-    <div v-if="movieExist" id="contain">
+    <div v-if="movieExist" id="movie-container">
       <div
         v-for="movie in movieList"
-        :movie="movie" class="item_container"
+        :movie="movie" class="movies"
         :key="movieList.indexOf(movie)">
           <img :src="movie.postImgLink" alt="" id="poster_img">
           <p id="info">{{ movie.name }}</p>
@@ -27,16 +27,22 @@ export default {
 </script>
 
 <style scoped>
-  #contain {
-    display: flex;
-    grid-template-columns: 1fr 1fr 1fr;
-    grid-gap: 15px;
-    margin: auto;
+  #movie-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-auto-flow: dense;
+    justify-content: center;
+    align-items: baseline;
+    /* grid-template-rows: min-content; */
+    justify-items: center;
+    gap: 1rem;
+    width: 100%;
+    padding: 1rem;
   }
 
-  .item_container {
-    grid-area: content;
-    width: 20.3vh;
+  .movies {
+    /* grid-area: content; */
+    width: 100%;
     display: flex;
     flex-direction: column;
     border: solid 1px;
@@ -45,7 +51,7 @@ export default {
   }
 
   #poster_img {
-    width: 20vh;
+    width: 100%;
     height: 30vh;
     border-radius: 10px;
   }

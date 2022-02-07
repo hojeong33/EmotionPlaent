@@ -157,7 +157,7 @@ export default {
 		flex-direction: column;
 		align-items: center;
 		width: 100%;
-		padding: 1rem;
+		/* padding: 1rem; */
   }
 
   #list_tab {
