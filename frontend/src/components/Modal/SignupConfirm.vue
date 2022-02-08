@@ -1,27 +1,26 @@
 <template>
-	<div id="comment_setting_modal">
-		<div id="modal">
-			<p>수정</p>
+	<div id="signup_confirm_modal">
+    <div id="modal">
+			<h4>시민권이 발급되었습니다</h4>
 			<hr>
-			<p style="color: red;">삭제</p>
-			<hr>
-			<p @click="cancel">취소</p>
-		</div>
+			<p @click="goLogin">확인</p>
+    </div>
 	</div>
 </template>
 
 <script>
 export default {
 	methods: {
-		cancel: function () {
-			this.$store.commit('commentSettingModalActivate')
+		goLogin: function () {
+		this.$store.commit('signupConfirmModalActivate')
+		this.$router.push({name: 'Login'})
 		}
 	}
 }
 </script>
 
 <style scoped>
-#comment_setting_modal {
+#signup_confirm_modal {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -36,18 +35,23 @@ export default {
 #modal {
 	display: flex;
 	flex-direction: column;
+	justify-content: center;
 	background-color: white;
 	border-radius: 20px;
 	width: 20vw;
-	height: 20vh;
-	text-align: center;
-}
-hr {
-	margin: 0rem;
+	height: 15vh;
 }
 p {
 	margin: auto;
 	font-weight: bold;
 	cursor: pointer;
+}
+hr {
+	margin: 0;
+}
+h4 {
+	margin: auto;
+	text-align: center;
+	font-weight: bold;
 }
 </style>

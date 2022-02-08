@@ -67,9 +67,10 @@ export default {
         data: this.credentials
       })
       .then(()=>{
-        alert("로그인 성공")
+        // alert("로그인 성공")
         this.$store.commit('userData', this.credentials)
-        this.$router.push({ name: 'Main' })
+        this.$store.commit('loginConfirmModalActivate')
+        // this.$router.push({ name: 'Main' })
       })
       .catch(err=> {
         alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.

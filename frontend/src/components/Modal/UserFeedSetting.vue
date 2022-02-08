@@ -15,7 +15,7 @@
 export default {
 	methods: {
 		cancel: function () {
-			this.$emit('cancel')
+			this.$store.commit('userFeedSettingModalActivate')
 		}
 	}
 }
@@ -26,12 +26,13 @@ export default {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	position: absolute;
-	width: 100vw;
-	height: 100vh;
+	width: 100%;
+	height: 100%;
+	background-color: rgb(0, 0, 0, 0.5);
+	position: fixed;
 	top: 0;
 	left: 0;
-	background-color: rgb(0, 0, 0, 0.5);
+	z-index: 999;
 }
 #modal {
 	display: flex;

@@ -1,7 +1,7 @@
 <template>
-	<div id="comment_setting_modal">
+	<div id="logout_modal">
 		<div id="modal">
-			<p>수정</p>
+			<p>로그아웃 모달</p>
 			<hr>
 			<p style="color: red;">삭제</p>
 			<hr>
@@ -14,14 +14,14 @@
 export default {
 	methods: {
 		cancel: function () {
-			this.$store.commit('commentSettingModalActivate')
+			this.$store.commit('logoutModalActivate')
 		}
 	}
 }
 </script>
 
 <style scoped>
-#comment_setting_modal {
+#logout_modal {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -38,12 +38,10 @@ export default {
 	flex-direction: column;
 	background-color: white;
 	border-radius: 20px;
-	width: 20vw;
+	width: 12vw;
 	height: 20vh;
 	text-align: center;
-}
-hr {
-	margin: 0rem;
+	color: black;
 }
 p {
 	margin: auto;

@@ -1,9 +1,10 @@
 <template>
-	<div id="comment_setting_modal">
+	<div id="profile_img_change_modal">
 		<div id="modal">
-			<p>수정</p>
+			<h3>프로필 사진 바꾸기</h3>
 			<hr>
-			<p style="color: red;">삭제</p>
+			<p>사진 업로드</p>
+			<p style="color: red;">현재 사진 삭제</p>
 			<hr>
 			<p @click="cancel">취소</p>
 		</div>
@@ -14,14 +15,14 @@
 export default {
 	methods: {
 		cancel: function () {
-			this.$store.commit('commentSettingModalActivate')
+			this.$store.commit('profileImgChangeModalActivate')
 		}
 	}
 }
 </script>
 
 <style scoped>
-#comment_setting_modal {
+#profile_img_change_modal {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -38,7 +39,7 @@ export default {
 	flex-direction: column;
 	background-color: white;
 	border-radius: 20px;
-	width: 20vw;
+	width: 12vw;
 	height: 20vh;
 	text-align: center;
 }
