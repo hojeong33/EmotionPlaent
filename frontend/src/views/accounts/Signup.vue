@@ -150,7 +150,7 @@
         if (this.credentials.pw === this.credentials.passwordConfirmation){ // 입력 비밀번호가 일치하면 회원가입 (나중에 여기다 벨류체크)
           axios({
             method: 'post',
-            url: 'http://13.125.47.126:8080/users',
+            url: 'http://localhost:8080/users',
             data: this.credentials
           })
           .then( () => {

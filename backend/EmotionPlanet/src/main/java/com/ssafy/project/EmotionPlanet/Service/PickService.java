@@ -11,7 +11,7 @@ public interface PickService {
 
     public List<PickDto> list(int userNo);
 
-    public PickDto select(int no);
+    public PickDto select(int no, int userNo);
 
     public int update(PickDto pickDto);
 

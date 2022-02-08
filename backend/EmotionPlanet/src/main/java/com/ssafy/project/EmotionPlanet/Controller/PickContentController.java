@@ -24,7 +24,7 @@ public class PickContentController {
 
     private static final int SUCCESS = 1;
 
-    @GetMapping(value ="/pickContent/{no}") // 목록 선탣
+    @GetMapping(value ="/pickContent/{no}") // 컨텐츠 선택
     public ResponseEntity<PickContentDto> select(@PathVariable String no) {
         int contentNo = Integer.parseInt(no);
         PickContentDto pickContentDto = pickContentService.select(contentNo);
@@ -35,7 +35,7 @@ public class PickContentController {
         }
     }
 
-    @DeleteMapping(value ="/pickContent/{no}") // 목록 삭제
+    @DeleteMapping(value ="/pickContent/{no}") // 컨텐츠 삭제
     public ResponseEntity<Integer> delete(@PathVariable String no) {
         int contentNo = Integer.parseInt(no);
         int result = pickContentService.delete(contentNo);

@@ -83,7 +83,7 @@ public class JwtInterceptor implements HandlerInterceptor {
 //            System.out.println("일치하지않습니다!!!");
 //            throw new IllegalArgumentException("Refresh Token Error!!!")
 //        }
-
+//
 //        if ("OPTIONS".equals(request.getMethod())) {
 //            System.out.println("request method is OPTIONS!!");
 //            return true;

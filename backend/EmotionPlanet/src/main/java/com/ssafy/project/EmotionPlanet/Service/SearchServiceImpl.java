@@ -73,17 +73,17 @@ public class SearchServiceImpl implements SearchService {
 		}
 	}
 
-	@Override
-	public List<PickDto> recommendSelect(String name) {
-		List<PickDto> list = searchDao.recommendSelect(name);
-		if(list.size() != 0) {
-			for (PickDto pick : list) {
-				List<PickContentDto> pickcontents = searchDao.pickcontentSelect(pick.getNo());
-				//pick.setPickcontents(pickcontents);
-			}
-			return list;
-		}else {
-			return null;
-		}
-	}
+//	@Override
+//	public List<PickDto> recommendSelect(String name) {
+//		List<PickDto> list = searchDao.recommendSelect(name);
+//		if(list.size() != 0) {
+//			for (PickDto pick : list) {
+//				List<PickContentDto> pickcontents = searchDao.pickcontentSelect(pick.getNo());
+//				//pick.setPickcontents(pickcontents);
+//			}
+//			return list;
+//		}else {
+//			return null;
+//		}
+//	}
 }
