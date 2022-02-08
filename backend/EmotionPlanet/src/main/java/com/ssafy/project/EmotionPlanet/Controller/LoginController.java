@@ -1,6 +1,7 @@
 package com.ssafy.project.EmotionPlanet.Controller;
 
 import javax.servlet.http.HttpSession;
+import javax.websocket.Session;
 
 import com.ssafy.project.EmotionPlanet.Config.JWT.JwtService;
 import com.ssafy.project.EmotionPlanet.Config.OAuth.PrincipalOauth2UserService;
@@ -55,7 +56,7 @@ public class LoginController {
 //    }
 
     @PostMapping(value = "/login")  // post 방식으로 들어옴
-    public ResponseEntity<?> login(@RequestBody UserDto dto, HttpSession session) { // 로그인
+    public ResponseEntity<?> login(@RequestBody UserDto dto) { // 로그인
         UserDto user = loginService.login(dto);
         UserSecretDto userDto = new UserSecretDto(user.getNo(), user.getEmail(), user.getNickname(), user.getBirth(), user.getProfileImg(), user.getTel(), user.getMood());
 
@@ -63,7 +64,6 @@ public class LoginController {
         if (userDto != null) {
         	System.out.println("로그인 성공");
             System.out.println(userDto);
-
             TokenDto atJWT = jwtService.create(userDto);
             System.out.println(atJWT);
             res.add("at-jwt-access-token", atJWT.getAccessJws());

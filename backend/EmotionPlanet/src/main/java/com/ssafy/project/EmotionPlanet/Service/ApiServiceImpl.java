@@ -120,7 +120,7 @@ public class ApiServiceImpl implements ApiService {
 					if(now.isBefore(day))
 						continue;
 					MovieDto dto = new MovieDto();
-					dto.setApiId(Integer.parseInt(resultbody.get("id").toString()));
+					dto.setNo(Integer.parseInt(resultbody.get("id").toString()));
 					dto.setTitle(resultbody.get("title").toString());
 					dto.setDescr(resultbody.get("overview").toString());
 					dto.setImgLink("https://image.tmdb.org/t/p/original" + resultbody.get("poster_path"));
