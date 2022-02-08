@@ -160,7 +160,12 @@ export default {
         this.$store.state.userInfo = decodeAccessToken.userInfo
         console.log(this.$store.state.userInfo.email)
         this.sendToken();
-        this.$router.push('EmotionTest')
+        if (this.$store.state.userInfo.tel === null) {
+          this.$router.push('MoreInfo')
+        }
+        else{
+          this.$router.push('EmotionTest')
+        }
       }).catch((error) => {
         console.log(error);
       }).then(() => {

@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '@/views/accounts/Login'
+import MoreInfo from '@/views/accounts/MoreInfo'
 import Signup from '@/views/accounts/Signup'
 import EmotionTest from '@/views/EmotionTest'
 
@@ -41,6 +42,11 @@ const routes = [
     path: '/signup',
     name: 'Signup',
     component: Signup
+  },
+  {
+    path: '/moreinfo',
+    name: 'MoreInfo',
+    component: MoreInfo
   },
   {
     path: '/mypage',
