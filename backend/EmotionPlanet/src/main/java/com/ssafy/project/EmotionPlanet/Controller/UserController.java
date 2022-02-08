@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -20,12 +21,19 @@ public class UserController {
 	UserService userService;
 
 	@Autowired
+	BCryptPasswordEncoder bCryptPasswordEncoder;
+
+	@Autowired
 	private JavaMailSender javaMailSender;
 	
 	private static final int SUCCESS = 1;
 
 	@PostMapping(value = "/users") // 회원가입
 	public ResponseEntity<Integer> register(@RequestBody UserDto userDto) {
+		String rawPassword = userDto.getPw();
+		String enPassword = bCryptPasswordEncoder.encode(rawPassword);
+		userDto.setPw(enPassword);
+
 		if (userService.userRegister(userDto) == SUCCESS) {
 			System.out.println("회원 가입 성공");
 			System.out.println(userDto); 

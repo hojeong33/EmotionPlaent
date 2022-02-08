@@ -1,23 +1,28 @@
 package com.ssafy.project.EmotionPlanet.Config.JWT;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.project.EmotionPlanet.Dto.TokenDto;
-import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserSecretDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
+import org.apache.commons.collections4.MapUtils;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class JwtService {
 
-
+//    @Value("{jwt.secret}")
+//    private String secret;
+//    private String encodeKey = secret;
     private final String encodeKey = "6ZIjhannFz8FQQhGkPM80cx8aKhZJB1zF-L0BYFumUNGPoNorcTfqNVisFU2oxH_ZrpjoozNFb7b-3_qDMCeiQ";
     private final Integer accessExpMin = 30;
     private final Integer refreshExpMin = 10080;
@@ -58,7 +63,6 @@ public class JwtService {
     }
 
     public String createJws(Integer expMin, UserSecretDto userInfo) {
-
         SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(encodeKey));
 
         //JWT Builder create
@@ -85,7 +89,6 @@ public class JwtService {
     }
 
     public boolean validate(String token) {
-
         Jws<Claims> jws;
 //        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 //        String encodeKey = Encoders.BASE64URL.encode(key.getEncoded());
@@ -115,8 +118,10 @@ public class JwtService {
         byte[] decodedBytes = decoder.decode(splitToken[1]);
 
         String decodedString = null;
+
         try {
             decodedString = new String(decodedBytes, "UTF-8");
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

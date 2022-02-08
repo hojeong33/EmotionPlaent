@@ -10,6 +10,7 @@ import com.ssafy.project.EmotionPlanet.Dao.UserDao;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 import com.ssafy.project.EmotionPlanet.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -29,9 +30,17 @@ public class PrincipalOauth2UserService {
     @Autowired
     UserDao userDao;
 
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    PrincipalOauth2UserService(@Lazy BCryptPasswordEncoder bCryptPasswordEncoder){
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
+
     private final NetHttpTransport transport = new NetHttpTransport();
     private final JsonFactory jsonFactory = new GsonFactory();
-    private String clientId = "172274534251-7a2a6sthcuviratis75u7gu7utbkdp8d.apps.googleusercontent.com";
+
+    @Value("${google.client-id}")
+    private String clientId;
 
     public UserDto tokenVerify(String idToken) {
 
@@ -63,10 +72,10 @@ public class PrincipalOauth2UserService {
             System.out.println("User ID: " + userId);
             String email = payload.getEmail();
             boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
-            String name = (String) payload.get("name");
+            String name = (String) payload.get("sub");
             String pictureUrl = (String) payload.get("picture");
             String locale = (String) payload.get("locale");
-            String pw = "security";
+            String pw = bCryptPasswordEncoder.encode("security");
 
             user.setEmail(email);
             user.setNickname(name);

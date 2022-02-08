@@ -9,6 +9,12 @@
         order by date desc
     </select>
 
+    <select id="read" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.CommentDto">
+        select co.no, co.descr, co.author, co.date, fc.feedNo
+        from comment co, feed_comment fc
+        where co.no = #{no} and fc.commentNo = #{no}
+    </select>
+
     <insert id="write" parameterType="com.ssafy.project.EmotionPlanet.Dto.CommentDto">
         insert into comment(descr, author) values (  #{descr}, #{author})
         <selectKey keyProperty="no" resultType="int" order="AFTER">

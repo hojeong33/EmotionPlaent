@@ -8,9 +8,13 @@ import java.util.List;
 @Mapper
 public interface PickContentDao {
 
-    public List<PickContentDto> list(int pickNo);
+    public List<PickContentDto> listOnMusic(int pickNo);
+    public List<PickContentDto> listOnMovie(int pickNo);
+    public List<PickContentDto> listOnActivity(int pickNo);
 
-    public PickContentDto select(int no);
+    public PickContentDto selectOnMusic(int no);
+    public PickContentDto selectOnMovie(int no);
+    public PickContentDto selectOnActivity(int no);
 
     public int delete(int no);
 

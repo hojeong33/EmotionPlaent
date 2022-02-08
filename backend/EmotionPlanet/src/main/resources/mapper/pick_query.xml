@@ -41,6 +41,12 @@
         values (  #{pickNo}, #{userNo} )
     </insert>
 
+    <select id="liking" parameterType="map" resultType="int">
+        select count(*)
+        from pick_like
+        where pickNo = #{pickNo} and userNo = #{userNo}
+    </select>
+
     <delete id="unlike" parameterType="map">
         delete from pick_like where pickNo = #{pickNo} and userNo = #{userNo}
     </delete>
