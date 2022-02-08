@@ -41,8 +41,7 @@
         <p>Kakao로 로그인</p>
         </button>
     </article>
-    <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&response_type=code&client_id=172274534251-rpo5d1a1i23k75l87vrcjiid99413h9a.apps.googleusercontent.com&redirect_uri=http://localhost:8080/auth/google/callback">구글로그인</a>
-    <div id="my-signin2"></div>
+    <div id="g-signin2"></div>
     <button @click="signout">signout</button>
   </div>
 </template>
@@ -65,7 +64,7 @@ export default {
     }
   },
   mounted() {
-    window.gapi.signin2.render('my-signin2', {
+    window.gapi.signin2.render('g-signin2', {
       scope: 'profile email',
       width: 240,
       height: 50,
@@ -96,24 +95,6 @@ export default {
         console.log('User Signed Out!!!');
       })
     },
-
-    // login: function () {
-    //   axios({
-    //     method: 'post',
-    //     url:'http://localhost:8080/login',
-    //     data: this.credentials
-    //   })
-    //   .then((res)=>{
-    //     alert("로그인 성공")
-    //     this.$store.commit('userData', this.credentials)
-    //     this.$router.push({ name: 'Main' })
-    //   })
-    //   .catch(err=> {
-    //     alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
-    //   })
-    //   this.credentials.email = "";
-    //   this.credentials.pw ="";
-    // },
 
     login: function() {
       axios({

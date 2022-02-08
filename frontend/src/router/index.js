@@ -190,6 +190,7 @@ router.beforeEach((to, from, next) => {
   else if (to.matched[0].path == '/setting'){store.commit('navActivate', 4)}
   else {store.commit('navActivate', -1)}
 
+  console.log(token)
   //로그인이 필요한 서비스의 경우 로그인 페이지로 redirect
   if (to.meta.loginRequired && !token){
     next({ name:'Login' })

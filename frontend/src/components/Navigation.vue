@@ -26,6 +26,7 @@
           :src="require(`@/assets/images/icons/${alarm}`)">
           <img @click="navClick" id="setting"
            :src="require(`@/assets/images/icons/${setting}`)">
+           <button @click="signout">logout</button>
         </div>
       </div>
     </nav>
@@ -35,6 +36,8 @@
 // import {mapState} from 'vuex'
 // 똑같은 페이지 눌렀을 때 새로고침이 안 됨 - 수정 필요
 import Search from '@/components/Search/Search'
+
+const session = window.sessionStorage
 
 export default {
   name: 'App',
@@ -71,6 +74,21 @@ export default {
       this.$store.dispatch('searchUser')
     },
     // 검색 끝
+    signout() {
+      const authInst = window.gapi.auth2.getAuthInstance();
+      console.log('signout called', authInst)
+      authInst.signOut()
+      .then(() => {
+        // eslint-disable-next-line
+        console.log('User Signed Out!!!');
+        authInst.disconnect();
+        session.clear();
+      })
+      .then(() => {
+        this.$router.push({ name:'Login' })
+      })
+      .catch(() => alert('fail'))
+    },
   },
   computed: {
     feed(){
