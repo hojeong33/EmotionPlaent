@@ -7,7 +7,7 @@
       </div>
       <div id="us_header_info">
         <span>
-          <h2>나는멋쟁이</h2>
+          <h2>{{ this.$store.state.userInfo.nickname }}</h2>
           <button>로그아웃</button>
         </span>
         <span>
@@ -20,7 +20,7 @@
     <article id="us_body">
       <div id="us_email">
         <h3>이메일</h3>
-        <p>test@ssafy.com</p>
+        <p>{{ this.$store.state.userInfo.email }}</p>
       </div>
       <!-- <div id="us_password">
         <h3>비밀번호</h3>
@@ -28,12 +28,12 @@
       </div> -->
       <div id="short_comment">
         <h3>소개</h3>
-        <p>나는야 멋쟁이~</p>
+        <p>{{ this.$store.state.userInfo.intro }}</p>
       </div>
       <div id="us_birth">
         <h3>생년월일</h3>
         <span>
-          <p>1994.11.07</p>
+          <p>{{ this.$store.state.userInfo.birth }}</p>
           <span>
             <input type="checkbox" id="show_birth" v-model="birthShow">
             <label for="show_birth">비공개</label>
