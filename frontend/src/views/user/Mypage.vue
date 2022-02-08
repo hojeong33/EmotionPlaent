@@ -206,7 +206,6 @@ export default {
   .slide-in {
     animation: slide-in 0.5s ease-out forwards;
   }
-<<<<<<< HEAD
   #short_comment {
     text-align: left;
   }
@@ -214,9 +213,6 @@ export default {
     font-size: 1.1rem;
     font-weight: bold;
   }
-  </style>
-=======
-
   .slide-out {
     animation: slide-out 0.5s ease-out forwards;
   }
@@ -225,5 +221,5 @@ export default {
     color: black;
     font-size: 1.3rem;
   }
+
 </style>
->>>>>>> origin/feature/fe/mypage
