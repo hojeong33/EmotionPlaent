@@ -4,6 +4,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.ssafy.project.EmotionPlanet.Dao.FollowDao;
+import com.ssafy.project.EmotionPlanet.Dao.UserDao;
 import com.ssafy.project.EmotionPlanet.Dto.FollowDto;
 import com.ssafy.project.EmotionPlanet.Dto.FollowResultDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
@@ -13,11 +14,19 @@ public class FollowServiceImpl implements FollowService {
 
 	@Autowired
 	FollowDao followDao;
+	
+	@Autowired
+	UserDao userDao;
 	private static final int SUCCESS = 1;
 	private static final int FAIL = -1;
 	
 	@Override
 	public int followRegister(FollowDto followDto) {
+		UserDto dto = userDao.userSelect(followDto.getReceiver());
+		if(dto.getPublish() != SUCCESS)
+			followDto.setType(SUCCESS);
+		else
+			followDto.setType(2);
 		if(followDao.followRegister(followDto) == SUCCESS)
 			return SUCCESS;
 		else
@@ -48,6 +57,7 @@ public class FollowServiceImpl implements FollowService {
 
 	@Override
 	public int followUpdate(FollowDto followDto) {
+		followDto.setType(1);
 		if(followDao.followUpdate(followDto) == SUCCESS)
 			return SUCCESS;
 		else
@@ -60,10 +70,10 @@ public class FollowServiceImpl implements FollowService {
 		FollowDto followDto = followDao.select(sender, receiver);
 		
 		if(followDto != null) {
-			if(followDto.isType())
-				followResultDto.setFollowResult(1);
+			if(followDto.getType() == SUCCESS)
+				followResultDto.setFollowResult(SUCCESS);
 			else
-				followResultDto.setWaition(1);
+				followResultDto.setWaition(SUCCESS);
 		}
 		List<UserDto> follower = followDao.followSelect(receiver);
 		List<UserDto> following =  followDao.followingSelect(receiver);

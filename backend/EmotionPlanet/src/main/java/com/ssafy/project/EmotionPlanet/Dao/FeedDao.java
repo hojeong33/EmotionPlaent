@@ -21,6 +21,9 @@ public interface FeedDao {
     public int like(
             @Param("userNo") int userNo,
             @Param("feedNo") int feedNo);
+    public int liking(
+            @Param("userNo") int userNo,
+            @Param("feedNo") int feedNo);
     public int unlike(
             @Param("userNo") int userNo,
             @Param("feedNo")int feedNo);

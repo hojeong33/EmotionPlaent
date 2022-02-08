@@ -6,8 +6,11 @@ import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
 import com.ssafy.project.EmotionPlanet.Config.auth.PrincipalDetails;
+import com.ssafy.project.EmotionPlanet.Dao.UserDao;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 import com.ssafy.project.EmotionPlanet.Service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -24,9 +27,20 @@ import java.util.Collections;
 @Service
 public class PrincipalOauth2UserService {
 
+    @Autowired
+    UserDao userDao;
+
+    private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+    PrincipalOauth2UserService(@Lazy BCryptPasswordEncoder bCryptPasswordEncoder){
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
+
     private final NetHttpTransport transport = new NetHttpTransport();
     private final JsonFactory jsonFactory = new GsonFactory();
-    private String clientId = "172274534251-7a2a6sthcuviratis75u7gu7utbkdp8d.apps.googleusercontent.com";
+
+
+    private final String clientId = "172274534251-rpo5d1a1i23k75l87vrcjiid99413h9a.apps.googleusercontent.com";
 
     public UserDto tokenVerify(String idToken) {
 
@@ -58,20 +72,26 @@ public class PrincipalOauth2UserService {
             System.out.println("User ID: " + userId);
             String email = payload.getEmail();
             boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
-            String name = (String) payload.get("name");
+            String name = (String) payload.get("sub");
             String pictureUrl = (String) payload.get("picture");
             String locale = (String) payload.get("locale");
-            String familyName = (String) payload.get("family_name");
-            String givenName = (String) payload.get("given_name");
-
-            System.out.println("email: " + email);
-            System.out.println("name: " + name);
-            System.out.println("locale: " + locale);
+            String pw = bCryptPasswordEncoder.encode("security");
 
             user.setEmail(email);
-            user.setNickname(userId);
+            user.setNickname(name);
             user.setProfileImg(pictureUrl);
+            user.setPw(pw);
         }
         return user;
     }
+
+    public int insertUser(UserDto userDto) {
+        if (userDao.duplicateEmail(userDto.getEmail()) == 0) {
+            int result = userDao.userRegister(userDto);
+            return result;
+        } else {
+            return 1;
+        }
+    }
+
 }

@@ -2,12 +2,14 @@ package com.ssafy.project.EmotionPlanet.Controller;
 
 import com.ssafy.project.EmotionPlanet.Dto.FindEmailDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
+import com.ssafy.project.EmotionPlanet.Dto.UserSecretDto;
 import com.ssafy.project.EmotionPlanet.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -20,12 +22,19 @@ public class UserController {
 	UserService userService;
 
 	@Autowired
+	BCryptPasswordEncoder bCryptPasswordEncoder;
+
+	@Autowired
 	private JavaMailSender javaMailSender;
 	
 	private static final int SUCCESS = 1;
 
 	@PostMapping(value = "/users") // 회원가입
 	public ResponseEntity<Integer> register(@RequestBody UserDto userDto) {
+		String rawPassword = userDto.getPw();
+		String enPassword = bCryptPasswordEncoder.encode(rawPassword);
+		userDto.setPw(enPassword);
+
 		if (userService.userRegister(userDto) == SUCCESS) {
 			System.out.println("회원 가입 성공");
 			System.out.println(userDto); 
@@ -37,13 +46,15 @@ public class UserController {
 	}
 
 	@GetMapping(value = "/users/{no}") // 회원번호로 회원 정보 반환
-	public ResponseEntity<UserDto> select(@PathVariable String no) {
+	public ResponseEntity<UserSecretDto> select(@PathVariable String no) {
 		int userNo = Integer.parseInt(no);
 		UserDto userDto = userService.userSelect(userNo);
-		if (userDto != null) {
+		UserSecretDto userSecretDto = new UserSecretDto(userDto.getNo(), userDto.getEmail(), userDto.getNickname(),
+				userDto.getBirth(), userDto.getProfileImg(), userDto.getTel(), userDto.getMood());
+		if (userSecretDto != null) {
 			System.out.println("회원 번호 검색 성공");
-			System.out.println(userDto);
-			return new ResponseEntity<UserDto>(userDto, HttpStatus.OK);
+			System.out.println(userSecretDto);
+			return new ResponseEntity<UserSecretDto>(userSecretDto, HttpStatus.OK);
 		} else {
 			System.out.println("회원 번호 검색 실패");
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하는 유저가 없습니다.");

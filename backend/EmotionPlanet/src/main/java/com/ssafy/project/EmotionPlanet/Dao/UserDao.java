@@ -2,6 +2,7 @@ package com.ssafy.project.EmotionPlanet.Dao;
 
 import com.ssafy.project.EmotionPlanet.Dto.FindEmailDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
+import com.ssafy.project.EmotionPlanet.Dto.UserSecretDto;
 import org.apache.ibatis.annotations.Mapper;
 
 @Mapper
@@ -16,4 +17,6 @@ public interface UserDao {
     public int duplicateTel(String tel);
     public String findEamil(String tel);
     public UserDto findPw(FindEmailDto findEmailDto);
+    public int userRefreshToken(UserDto userDto);
+    public String selectRefreshToken(String email);
 }

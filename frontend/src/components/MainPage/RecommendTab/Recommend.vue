@@ -23,6 +23,7 @@
       </p>
       <p @click="Feel" :class="onFeel ? 'active' : 'inactive'">탐험하기</p>
     </div>
+    <button @click="reload">좀 더 놀기</button>
     <music-list></music-list>
     <movie-list></movie-list>
     <active-list></active-list>
@@ -54,7 +55,7 @@ export default {
   },
   computed: {
     tmp: function () {
-      const mood = this.userInfo.mood;
+      const mood = this.$store.state.userInfo.mood;
       const style = this.planetStyles.find((el) => el.id === mood) || {};
       return style;
     },
@@ -64,19 +65,16 @@ export default {
       this.onRefresh = true;
       this.onFeel = false;
       this.$store.state.recommendType = 1;
-      this.$store.dispatch("recommendMusic");
-      this.$store.dispatch("recommendMovie");
-      this.$store.dispatch("recommendActivity");
-      // console.log(this.$store.state.recommendType)
     },
     Feel: function () {
       this.onRefresh = false;
       this.onFeel = true;
       this.$store.state.recommendType = 0;
-      this.$store.dispatch("recommendMusic");
-      this.$store.dispatch("recommendMovie");
-      this.$store.dispatch("recommendActivity");
-      // console.log(this.$store.state.recommendType)
+    },
+    reload() {
+      this.$store.dispatch('recommendMusic')
+			this.$store.dispatch('recommendMovie')
+			this.$store.dispatch('recommendActivity')
     },
   },
 };

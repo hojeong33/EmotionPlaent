@@ -1,11 +1,9 @@
 <template>
   <div id="feed-list">
-    <div>
-      <feed v-for="post in posts"
-        :post="post"
-        :key="posts.indexOf(post)">
-        </feed>
-    </div>
+    <feed v-for="post in posts"
+      :post="post"
+      :key="posts.indexOf(post)">
+      </feed>
   </div>
 </template>
 
@@ -22,6 +20,10 @@ export default {
 </script>
 
 <style scoped>
-
+  #feed-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 
 </style>

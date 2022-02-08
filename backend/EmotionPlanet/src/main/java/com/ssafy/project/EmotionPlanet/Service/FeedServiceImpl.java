@@ -25,6 +25,9 @@ public class FeedServiceImpl implements FeedService{
     ImgDao imgDao;
 
     @Autowired
+    UserDao userDao;
+
+    @Autowired
     TagService tagService;
 
     @Autowired
@@ -47,6 +50,19 @@ public class FeedServiceImpl implements FeedService{
     }
 
     @Override
+    public List<Integer> listReturnNo(int no) {
+
+        List<FeedDto> feeds = feedDao.list(no);
+        List<Integer> numbers = new ArrayList<>();
+
+        for (FeedDto feedDto : feeds) {
+            numbers.add(feedDto.getNo());
+        }
+
+        return numbers;
+    }
+
+    @Override
     public List<FeedDto> myList(int no) {
 
         List<FeedDto> feeds = feedDao.myList(no);
@@ -63,15 +79,34 @@ public class FeedServiceImpl implements FeedService{
     }
 
     @Override
-    public FeedDto read(int no) {
+    public List<Integer> myListReturnNo(int no) {
+
+        List<FeedDto> feeds = feedDao.myList(no);
+        List<Integer> numbers = new ArrayList<>();
+
+        for (FeedDto feedDto : feeds) {
+            numbers.add(feedDto.getNo());
+        }
+
+        return numbers;
+    }
+
+    @Override
+    public FeedDto read(int no, int userNo) {
 
         FeedDto feed = feedDao.read(no);
         List<CommentDto> comments = commentDao.list(feed.getNo());
         List<TagDto> tags = tagDao.list(feed.getNo());
         List<ImgDto> imgs = imgDao.list(feed.getNo());
+        UserDto user = userDao.userSelect(feed.getAuthor());
+        UserRequestDto userDetail = new UserRequestDto(user.getNo(), user.getNickname(), user.getProfileImg());
+        if(userNo == feed.getAuthor()) feed.setOwner(true);
+        if(feedDao.liking(userNo, feed.getNo()) == 1) feed.setLike(true);
+        else feed.setLike(false);
         feed.setComments(comments);
         feed.setTags(tags);
         feed.setImgs(imgs);
+        feed.setAuthorDetail(userDetail);
         return feed;
 
     }

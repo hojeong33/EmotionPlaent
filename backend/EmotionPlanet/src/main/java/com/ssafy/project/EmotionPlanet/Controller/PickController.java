@@ -1,6 +1,6 @@
 package com.ssafy.project.EmotionPlanet.Controller;
 
-
+import com.ssafy.project.EmotionPlanet.Config.JWT.JwtService;
 import com.ssafy.project.EmotionPlanet.Dto.FeedLikeDto;
 import com.ssafy.project.EmotionPlanet.Dto.PickDto;
 import com.ssafy.project.EmotionPlanet.Service.PickService;
@@ -24,6 +24,9 @@ public class PickController {
     @Autowired
     PickService pickService;
 
+    @Autowired
+    JwtService jwtService;
+
     private static final int SUCCESS = 1;
 
     @PostMapping(value ="/picks") // 목록 생성
@@ -38,9 +41,20 @@ public class PickController {
     }
 
     @GetMapping(value ="/picks/{no}") // 해당 목록 가져오기
-    public ResponseEntity<PickDto> list(@PathVariable String no) {
+    public ResponseEntity<PickDto> list(@RequestHeader(value="at-jwt-access-token") String jwt, @PathVariable String no) {
         int pickNo = Integer.parseInt(no);
-        PickDto pick = pickService.select(pickNo);
+        String decode = jwtService.decode(jwt);
+        System.out.println("디코딩 내용 : " + decode);
+        String[] arr = decode.split("\\{|\\}| |,|\"|:");
+        String userNo = "";
+        for(int i = 0; i < arr.length; i++){
+            if (arr[i].equals("no")) {
+                userNo = arr[i + 2];
+                break;
+            }
+        }
+
+        PickDto pick = pickService.select(pickNo, Integer.parseInt(userNo));
         if(pick != null) {
             return new ResponseEntity<PickDto>(pick, HttpStatus.OK);
         } else {

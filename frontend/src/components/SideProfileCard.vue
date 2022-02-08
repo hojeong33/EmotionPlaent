@@ -1,10 +1,10 @@
 <template>
-  <div class="card_container">
+  <div class="card_container" v-show="isActive">
     <div class="card_header">
       <img id="profile_image" src="https://www.thesprucepets.com/thmb/meRd41is751DsQQjofaiKV_ZUBg=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cat-talk-eyes-553942-hero-df606397b6ff47b19f3ab98589c3e2ce.jpg" alt="">
       <div class="overlay_content">
         <h2>{{ userInfo.username }}</h2>
-        <button id="update">프로필 수정</button>
+        <button id="update" @click="$router.push({name: 'Setting'})">프로필 수정</button>
       </div>
     </div>
     <div class="card_body">
@@ -17,11 +17,11 @@
         <span style="font-size:1rem; font-weight:bold">나는 지금...</span>
         <span id="at">
           <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)">
-          <p id="planet_name" style="font-size:1.4rem; font-weight:bold; margin-top:0.4rem; margin-left:0.3rem" :style="{color:tmp.color}">{{tmp.name }}</p>
+          <p id="planet_name" style="font-size:1.4rem; font-weight:bold; margin-top:0.4rem; margin-left:0.3rem" :style="{color:tmp.color}">{{tmp.name }} 탐험중</p>
         </span>
       </div>
       <div id="footer_buttons">
-        <button @click="createFeed">피드 작성</button>
+        <button @click="createFeed">이야기 들려주기</button>
         <button @click="$router.push({ name:'EmotionTest' })">테스트 다시하기</button>
       </div>
     </div>  
@@ -43,21 +43,31 @@ export default {
         { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
         { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
         { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
-      ]
+      ],
+      isActive: false
     }
   },
   computed: {
     tmp: function () {
-      const mood = this.userInfo.mood
+      const mood = this.$store.state.userInfo.mood
       const style = this.planetStyles.find(el => el.id === mood) || {}
       return style
     }
   },
-  methods: {
+   methods: {
     createFeed: function(){
-      this.$store.commit('activateFeed')
+      this.$store.commit('navActivate', 0)
+    },
+    resize(){
+      window.innerWidth > 1000 ? this.isActive = true: this.isActive = false
     }
   },
+  mounted(){
+    if (window.innerWidth > 1000){
+      this.isActive = true
+    }
+    window.addEventListener('resize', this.resize)
+  }
 }
 </script>
 

@@ -27,7 +27,8 @@ public class ApiServiceImpl implements ApiService {
 
 	private final RestTemplate restTemplate = new RestTemplate();
 
-	private String[][] musicemotion = new String[][] { { "happy", "sad" }, // 행복 너무행복해서 슬프려한다?
+	private String[][] musicemotion = new String[][] { { "k-pop", "k-pop" }, // 우주선
+			{ "happy", "sad" }, // 행복 너무행복해서 슬프려한다?
 			{ "sad", "happy" }, // 우울
 			{ "k-pop", "k-pop" }, // 중립
 			{ "goth", "acoustic" }, // 공포
@@ -35,7 +36,8 @@ public class ApiServiceImpl implements ApiService {
 			{ "rock-n-roll", "funk" } // 분노
 	};
 	// https://api.themoviedb.org/3/genre/movie/list?api_key=a571ca19d9fd38ff2298025d4a8475f5
-	private String[][] movieemotion = new String[][] { { "35", "18" }, // 행복 Comedy Drama
+	private String[][] movieemotion = new String[][] { { "", "" }, // 우주선
+			{ "35", "18" }, // 행복 Comedy Drama
 			{ "18", "35" }, // 우울 Drama Comedy
 			{ "", "" }, // 중립은 그냥 둘다 추천? => 최신 개봉한거 위주
 			{ "27", "10751" }, // 공포 Horror, Family
@@ -45,8 +47,8 @@ public class ApiServiceImpl implements ApiService {
 
 	@Override
 	public List<MusicDto> Music(int mood, int type) {
-		String URL = "https://api.spotify.com/v1/recommendations/?seed_genres=" + musicemotion[mood - 1][type]
-				+ "&limit=6&market=KR";
+		String URL = "https://api.spotify.com/v1/recommendations/?seed_genres=" + musicemotion[mood][type]
+				+ "&limit=10&market=KR";
 		createAccesstoken create = new createAccesstoken();
 		final HttpHeaders headers = new HttpHeaders();
 		headers.set("Authorization", "Bearer " + create.accesstoken());
@@ -85,9 +87,9 @@ public class ApiServiceImpl implements ApiService {
 	public List<MovieDto> Movie(int mood, int type) {
 		List<MovieDto> list = null;
 		if(mood == 3) {
-			list = apiDao.MovieSelectnomal(movieemotion[mood - 1][type]);
-		}else {
-			list = apiDao.MovieSelect(movieemotion[mood - 1][type]);
+			list = apiDao.MovieSelectnomal(movieemotion[mood][type]); // 여기가 중립 
+ 		}else {
+			list = apiDao.MovieSelect(movieemotion[mood][type]);
 		}
 		if (list.size() != 0)
 			return list;
@@ -118,7 +120,7 @@ public class ApiServiceImpl implements ApiService {
 					if(now.isBefore(day))
 						continue;
 					MovieDto dto = new MovieDto();
-					dto.setApiId(Integer.parseInt(resultbody.get("id").toString()));
+					dto.setNo(Integer.parseInt(resultbody.get("id").toString()));
 					dto.setTitle(resultbody.get("title").toString());
 					dto.setDescr(resultbody.get("overview").toString());
 					dto.setImgLink("https://image.tmdb.org/t/p/original" + resultbody.get("poster_path"));
@@ -134,25 +136,6 @@ public class ApiServiceImpl implements ApiService {
 		int result = apiDao.MovieInsert(list);
 		return result;
 	}
-
-//	public void random(List<MovieDto> list, List<MovieDto> emt, int n, int m) {
-//		Random r = new Random();
-//		int number[] = new int[n];
-//		for (int i = 0; i < n; i++) {
-//			number[i] = r.nextInt(m);
-//			for (int j = 0; j < i; j++) {
-//				if (number[i] == number[j])
-//					i--;
-//			}
-//		}
-//		for (int i = 0; i < n; i++) {
-//			list.add(emt.get(number[i]));
-//		}
-//		Arrays.sort(number); // 정렬한 이유 : 중간 값을 빼버리면 리스트 뒤에 값이 앞당겨짐 즉 큰값부터 작은값순으로 제거하기 위해
-//		for (int i = n - 1; i >= 0; i--) {
-//			emt.remove(number[i]);
-//		}
-//	}
 
 	@Override
 	public List<ActivityDto> ActivitySelect(int type) {

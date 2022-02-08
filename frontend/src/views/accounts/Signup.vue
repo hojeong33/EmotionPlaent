@@ -109,7 +109,9 @@
   </div>
 </template>
 
+
 <script>
+// 회원가입 완료 후 로그인 페이지로 이동하게 만들어야 함
   import axios from 'axios'
 
   export default {
@@ -154,9 +156,8 @@
             data: this.credentials
           })
           .then( () => {
-            if (alert('가입이 완료되었습니다.')){
-              this.$router.push({name:'Login'}) // 가입 완료시 로그인 페이지로 이동
-            }
+            alert('가입이 완료되었습니다.')
+            this.$router.push({name:'Login'}) // 가입 완료시 로그인 페이지로 이동
           })
           .catch(res => {
             alert(res.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.

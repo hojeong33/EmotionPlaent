@@ -51,6 +51,12 @@
         values (  #{feedNo}, #{userNo} )
     </insert>
 
+    <select id="liking" parameterType="map" resultType="int">
+        select count(*)
+        from feed_like
+        where feedNo = #{feedNo} and userNo = #{userNo}
+    </select>
+
     <delete id="unlike" parameterType="map">
         delete from feed_like where feedNo = #{feedNo} and userNo = #{userNo}
     </delete>
@@ -64,7 +70,7 @@
     <select id="likeListUnFollow" parameterType="map" resultType="com.ssafy.project.EmotionPlanet.Dto.UserRequestDto">
         select u.no, u.nickname, u.profile_img
         from user u join feed_like fl
-        on fl.feedNo = 115 and u.no = fl.userNo and u.no not in (
+        on fl.feedNo = #{feedNo} and u.no = fl.userNo and u.no not in (
                                                                     select u.no
                                                                     from user u, feed_like fl, follow f
                                                                     where fl.feedNo = #{feedNo} and u.no = fl.userNo and f.sender = fl.userNo and f.receiver = #{userNo}
