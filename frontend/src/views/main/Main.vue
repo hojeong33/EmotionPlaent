@@ -34,7 +34,10 @@ import TabItem from './TabItem.vue'
 import Recommend from '../../components/MainPage/RecommendTab/Recommend.vue'
 import FeedList from '../../components/MainPage/FeedTab/FeedList.vue'
 import posts from '../../assets/data/posts.js'
-import SideProfileCard from '@/components/SideProfileCard.vue' 
+import SideProfileCard from '@/components/SideProfileCard.vue'
+
+const session = window.sessionStorage;
+
 export default {
 	name:'Main',
 	components: { TabItem, Recommend, FeedList ,SideProfileCard},
@@ -43,12 +46,12 @@ export default {
 			posts,
 			currentId: 1,
 			list: [
-				{ id: 1, label: '추천', content: '1' },
-				{ id: 2, label: '피드', content: '2' },
+				{ id: 1, label: '놀거리', content: '1' },
+				{ id: 2, label: '이야기', content: '2' },
 				],
 			userInfo: {
       username: '최강상후',
-      mood: 3,
+      mood: null,
       posts: 0,
       followings: 0,
       followers: 20100,
@@ -58,6 +61,15 @@ export default {
 	computed: {
 		current() {
 			return this.list.find(el => el.id === this.currentId) || {}
+		}
+	},
+	created() {
+		if (this.$store.state.recommendReload === 0) {
+			this.$store.dispatch('recommendMusic')
+			this.$store.dispatch('recommendMovie')
+			this.$store.dispatch('recommendActivity')
+			console.log(session.userInfo)
+			this.$store.state.recommendReload = 1
 		}
 	}
 }
@@ -100,7 +112,7 @@ export default {
 	position: absolute;
 	}
 	.v-enter {
-	transform: translateX(-100%);
+	transform: translateX(100%);
 	}
 	.v-leave-to {
 	transform: translateX(100%);

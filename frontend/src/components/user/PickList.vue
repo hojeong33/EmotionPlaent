@@ -1,231 +1,108 @@
 <template>
-  <div id="pick_container">
-    <filter-tab
-      :user-mood="mood" 
-      @filtering="filterPicks"
-      id="filter"
-      ></filter-tab>
-    <div id="list_tab">
-      <span id="music_tab">
-        <p @click="toggleMusic" :class="onMusic ? 'active': 'inactive'">음악</p>
-        <span :class="onMusic ? 'on': 'off'"></span>
-      </span>
-      <span id="movie_tab">
-        <p @click="toggleMovie" :class="onMovie ? 'active': 'inactive'">영화</p>
-        <span :class="onMovie ? 'on': 'off'"></span>
-      </span>
-      <span id="activity_tab">
-        <p @click="toggleActivity" :class="onActivity ? 'active': 'inactive'">활동</p>
-        <span :class="onActivity ? 'on': 'off'"></span>
-      </span>
-    </div>
-    <music-pick 
-      :music-list="musicList"
-      :music-exist="musicExist"
-      v-if="onMusic"></music-pick>
-    <movie-pick 
-      :movie-list="movieList"
-      :movie-exist="movieExist"
-      v-if="onMovie"></movie-pick>
-    <activity-pick 
-      :activity-list="activityList"
-      :activity-exist="activityExist"
-      v-if="onActivity"></activity-pick>
-  </div>
+  <article class="picks" @click="go_to_detail" @mouseover="isHover = true" @mouseout="isHover = false">
+    <img :class="{planet, 'movie-planet':pick.no == 2}" :src="require(`@/assets/images/emotions/${planet}`)" alt="">
+    <img :class="{'movie-picks':pick.no == 2}" :src="thumbNail" alt="thumbnail">
+    <h3>{{ title }}</h3>
+    <span v-show="isHover" class="picks-info">
+      <p>Go to Detail</p>
+    </span>
+  </article>
 </template>
 
 <script>
-import MusicPick from './MusicPick.vue'
-import MoviePick from './MoviePick.vue'
-import ActivityPick from './ActivityPick.vue'
-import FilterTab from './FilterTab.vue'
-import picks from '../../assets/data/picks'
-
 export default {
-  name: 'PickList',
-  data() {
+  data(){
     return {
-      picks,
-      mood: null,
-      
-      onMusic: true,
-      onMovie: false,
-      onActivity: false,
-
-      musicList: [],
-      movieList: [],
-      activityList: [],
-
-			musicExist: false,
-      movieExist: false,
-      activityExist: false,
+      planetStyles: [
+				{ id: 0, name: 'default'},
+        { id: 1, name: '행복행성', img: "happy.png", color: '#ED5A8E' },
+        { id: 2, name: '우울행성', img: "depressed.png", color: '#6BD9E8' },
+        { id: 3, name: '중립행성', img: "neutral.png", color: '#C5D3DC' },
+        { id: 4, name: '공포행성', img: "fear.png", color: '#FEA95C' },
+        { id: 5, name: '깜짝행성', img: "suprised.png", color: '#FB5D38' },
+        { id: 6, name: '분노행성', img: "rage.png", color: '#2A61F0' },
+      ],
+      isHover: false
     }
   },
   props: {
-    userMood: Number,
-  },
-  components: {
-    MusicPick,
-    MoviePick,
-    ActivityPick,
-    FilterTab,
-  },
-  created() {
-    this.sortPicks()
-    this.mood = this.userMood
+    pick: Object
   },
   methods: {
-    toggleMusic: function () {
-      this.onMusic = true
-      this.onMovie = false
-      this.onActivity = false
-      console.log(this.mood)
-    },
-    toggleMovie: function () {
-      this.onMusic = false
-      this.onMovie = true
-      this.onActivity = false
-    },
-    toggleActivity: function () {
-      this.onMusic = false
-      this.onMovie = false
-      this.onActivity = true
-    },
-    sortPicks: function () {
-      this.picks.forEach(element => {
-        if (element.no === 1) {
-          this.musicList = this.musicList.concat(element.contentsList)
-        }
-        else if (element.no === 2) {
-          this.movieList = this.movieList.concat(element.contentsList)
-        }      
-        else if (element.no === 3) {
-          this.activityList = this.activityList.concat(element.contentsList)
-        } 
-      })
-      if (this.musicList.length != 0) {
-        this.musicExist = true
-      }
-      if (this.movieList.length != 0) {
-        this.movieExist = true
-      }
-      if (this.activityList.length != 0) {
-        this.activityExist = true
-      }
-      console.log(this.musicList)
-    },
-    filterPicks: function (filterValue) {
-      this.musicList = []
-      this.movieList = []
-      this.activityList = []
-      this.musicExist = false
-      this.movieExist = false
-      this.activityExist = false
-      
-      if (filterValue != '0') {
-				for (let pick of this.picks) {
-					if ( pick.no === 1 && pick.tagNo === Number(filterValue)) {
-						this.musicList = this.musicList.concat(pick.contentsList)
-					}
-					else if ( pick.no === 2 && pick.tagNo === Number(filterValue)) {
-						this.movieList = this.movieList.concat(pick.contentsList)
-					}
-					else if ( pick.no === 3 && pick.tagNo === Number(filterValue)) {
-						this.activityList = this.activityList.concat(pick.contentsList)
-					}
-				}
-        if (this.musicList.length != 0) {
-          this.musicExist = true
-        }
-        if (this.movieList.length != 0) {
-          this.movieExist = true
-        }
-        if (this.activityList.length != 0) {
-          this.activityExist = true
-        }
-      }
-      else {
-        this.sortPicks()
-      }
-		}
+    go_to_detail(){
+      this.$router.push({path: `/mypage/item/${this.pick.userNo}/${this.pick.tagNo}/${this.pick.no}`})
+    }
   },
+  computed: {
+    thumbNail(){
+      return this.pick.contentsList[0].postImgLink
+    },
+    title(){
+      return this.pick.name
+    },
+    planet(){
+      return this.planetStyles[this.pick.tagNo].img
+    }
+  }
 }
 </script>
 
 <style scoped>
-  #pick_container {
-    width: 80vh;
-    min-width: 700px;
-    min-height: 100vh;
-    padding-top: 1rem;
-    margin: 2rem auto;
-    display: flex;
-    flex-direction: column;
-    /* border: 0.1rem solid gainsboro; */
-  }
-
-  #filter {
-    display: flex;
-    justify-content: right;
-  }
-
-  #list_tab {
-    display: flex;
-    width: 40%;
-    margin-left: 13.3rem;
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-    justify-content: space-evenly;
-    align-items: center;
-  }
-
-  #music_tab {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  #movie_tab {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-
-  #activity_tab {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  h3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin: 0.5rem;
+    word-break: keep-all;
   }
 
   p {
-    color: black;
-    font-size: 1.4rem;
-    font-weight: bold;
-    letter-spacing: 0.05rem;
+    margin: 0;
+    font-size: 1.5rem;
+    color: rgb(255, 255, 255, 0.75);
   }
 
-  .active {
-    color: black;
-    font-size: 1.4rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
+  img {
+    width: 100%;
+    height: inherit;
+    aspect-ratio: 1/1;
   }
 
-  .inactive {
-    color: #777777;
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
+  .picks {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px #cccccc solid;
+    cursor: pointer;
+    position: relative;
   }
 
-  .on {
-    width: 70%;
-    border-bottom: 0.25rem solid #5E39B3;
-    border-radius: 20px;
+  .movie-picks {
+    aspect-ratio: 2/3;
   }
 
-  .off {
-    width: 70%;
-    border-bottom: 0.2rem solid #ffffff;
+  .planet {
+    width: 20%;
+    border: 3px white solid;
+    border-radius: 50%;
+    position: absolute;
+    left: 5%;
+    bottom: 25%;
+  }
+
+  .movie-planet {
+    bottom: 20%;
+  }
+
+  .picks-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgb(0, 0, 0, 0.5);
+    z-index: 1;
   }
 </style>

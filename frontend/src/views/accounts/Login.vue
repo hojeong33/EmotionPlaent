@@ -120,7 +120,7 @@ export default {
     login: function () {
       axios({
         method: 'post',
-        url:'http://localhost:8080/login',
+        url:'http://13.125.47.126:8080/login',
         data: this.credentials
       })
       .then((res)=>{
@@ -129,10 +129,12 @@ export default {
         // storage 설정
         session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
         session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
-
         const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
+        this.$store.state.userInfo = decodeAccessToken.userInfo
+        console.log(this.$store.state.userInfo.email)
         console.log('decodeAccessToken data', decodeAccessToken);
         this.sendToken();
+        this.$router.push('EmotionTest')
       })
       .catch(err=> {
         alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
@@ -142,7 +144,7 @@ export default {
     },
 
     tokenVerify() {
-      const url = 'http://localhost:8080/login/auth';
+      const url = 'http://13.125.47.126:8080/login/auth';
       const params = new URLSearchParams();
       params.append('idToken', this.googleUser.wc.id_token);
       console.log(params)
@@ -155,8 +157,10 @@ export default {
 
         const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
         console.log('decodeAccessToken data', decodeAccessToken);
+        this.$store.state.userInfo = decodeAccessToken.userInfo
+        console.log(this.$store.state.userInfo.email)
         this.sendToken();
-
+        this.$router.push('EmotionTest')
       }).catch((error) => {
         console.log(error);
       }).then(() => {
@@ -189,7 +193,7 @@ export default {
           'at-jwt-access-token': session.getItem('at-jwt-access-token'),
           'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
         };
-      axios.get('http://localhost:8080/qss/list', {
+      axios.get('http://13.125.47.126:8080/qss/list', {
         headers: headers,
       }).then((res) => {
         console.log(res);

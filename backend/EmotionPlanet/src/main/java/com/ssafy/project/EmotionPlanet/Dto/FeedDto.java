@@ -15,6 +15,10 @@ public class FeedDto {
     private List<FeedLikeDto> likes;
     private List<ImgDto> imgs;
 
+    private UserRequestDto authorDetail;
+    private boolean like = false;
+    private boolean owner = false;
+
 
     public int getNo() {
         return no;
@@ -80,6 +84,29 @@ public class FeedDto {
         this.imgs = imgs;
     }
 
+    public UserRequestDto getAuthorDetail() {
+        return authorDetail;
+    }
+
+    public void setAuthorDetail(UserRequestDto authorDetail) {
+        this.authorDetail = authorDetail;
+    }
+
+    public boolean isLike() {
+        return like;
+    }
+
+    public void setLike(boolean like) {
+        this.like = like;
+    }
+
+    public boolean isOwner() {
+        return owner;
+    }
+
+    public void setOwner(boolean owner) {
+        this.owner = owner;
+    }
 
     public FeedDto() {
     }

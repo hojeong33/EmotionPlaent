@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -20,12 +21,19 @@ public class UserController {
 	UserService userService;
 
 	@Autowired
+	BCryptPasswordEncoder bCryptPasswordEncoder;
+
+	@Autowired
 	private JavaMailSender javaMailSender;
 	
 	private static final int SUCCESS = 1;
 
 	@PostMapping(value = "/users") // 회원가입
 	public ResponseEntity<Integer> register(@RequestBody UserDto userDto) {
+		String rawPassword = userDto.getPw();
+		String enPassword = bCryptPasswordEncoder.encode(rawPassword);
+		userDto.setPw(enPassword);
+
 		if (userService.userRegister(userDto) == SUCCESS) {
 			System.out.println("회원 가입 성공");
 			System.out.println(userDto); 
@@ -85,7 +93,6 @@ public class UserController {
 	
 	@PutMapping(value ="/users") //회원 수정
 	public ResponseEntity<Integer> update(@RequestBody UserDto changeuserDto) {
-		System.out.println("das");
 		UserDto userDto = userService.userSelect(changeuserDto.getNo()); //입력받은 유저 번호로 기존 유저 정보 가져옴	
 		if(userService.userUpdate(userDto, changeuserDto) == SUCCESS) { // 기존정보와 입력받은 정보를 비교해서 새로 갱신
 			System.out.println("회원 수정 성공");

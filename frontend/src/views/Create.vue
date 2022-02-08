@@ -16,7 +16,8 @@ import CreateText from '@/components/Create/CreateText'
 export default {
   data(){
     return {
-      page: 0
+      page: 0,
+      createActive: null
     }
   },
   components: {
@@ -26,8 +27,12 @@ export default {
   },
   methods: {
     out(){
-      this.$store.commit('activateFeed')
+      this.$store.commit('feedOut')
     }
+  },
+  mounted(){
+   const container = document.getElementById('create_container')
+   container.setAttribute('style', `height:${window.innerHeight}px`)
   }
 }
 </script>
@@ -38,9 +43,8 @@ export default {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 100%;
     background-color: rgb(0, 0, 0, 0.5);
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
     z-index: 999;
