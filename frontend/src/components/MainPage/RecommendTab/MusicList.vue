@@ -2,32 +2,32 @@
   <div>
     <h3>{{ tmp.name }}에 흐르는 별소리</h3>
     <div class="card-carousel-wrapper">
-        <div class="card-carousel--nav__left" @click="moveCarousel(-1)" :disabled="atHeadOfList"></div>
-        <div class="card-carousel">
-            <div class="card-carousel--overflow-container">
-                <div v-if="this.$store.state.recommendType === 1" class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
-                    <div class="card-carousel--card" v-for="item in this.$store.state.recommendMusic.slice(0, 10)" :key="item.index">
-                        <img :src="item.imgLink"/>
-                        <div class="card-carousel--card--footer">
-                            <p>{{ item.artist }} - </p>
-                            <p>{{ item.title }}</p>
-                            <p class="tag" v-for="(tag, index) in item.tag" :key="index" :class="index &gt; 0 ? 'secondary' : ''" >{{ tag }}</p>
-                        </div>
-                    </div>
-                </div>
-                <div v-if="this.$store.state.recommendType === 0" class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
-                    <div class="card-carousel--card" v-for="item in this.$store.state.recommendMusic.slice(10)" :key="item.index">
-                        <img :src="item.imgLink"/>
-                        <div class="card-carousel--card--footer">
-                            <p>{{ item.artist }} - </p>
-                            <p>{{ item.title }}</p>
-                            <p class="tag" v-for="(tag, index) in item.tag" :key="index" :class="index &gt; 0 ? 'secondary' : ''" >{{ tag }}</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="card-carousel--nav__right" @click="moveCarousel(1)" :disabled="atEndOfList"></div>
+			<div class="card-carousel--nav__left" @click="moveCarousel(-1)" :disabled="atHeadOfList"></div>
+			<div class="card-carousel">
+				<div class="card-carousel--overflow-container">
+					<div v-if="this.$store.state.recommendType === 1" class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
+						<div class="card-carousel--card" v-for="item in this.$store.state.recommendMusic.slice(0, 10)" :key="item.index">
+							<img :src="item.imgLink"/>
+							<div class="card-carousel--card--footer">
+									<p>{{ item.artist }} - </p>
+									<p>{{ item.title }}</p>
+									<p class="tag" v-for="(tag, index) in item.tag" :key="index" :class="index &gt; 0 ? 'secondary' : ''" >{{ tag }}</p>
+							</div>
+					</div>
+			</div>
+			<div v-if="this.$store.state.recommendType === 0" class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
+					<div class="card-carousel--card" v-for="item in this.$store.state.recommendMusic.slice(10)" :key="item.index">
+							<img :src="item.imgLink"/>
+							<div class="card-carousel--card--footer">
+									<p>{{ item.artist }} - </p>
+									<p>{{ item.title }}</p>
+									<p class="tag" v-for="(tag, index) in item.tag" :key="index" :class="index &gt; 0 ? 'secondary' : ''" >{{ tag }}</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="card-carousel--nav__right" @click="moveCarousel(1)" :disabled="atEndOfList"></div>
     </div>
     <p style="text-align:right; margin-right:5rem;">더보기</p>
   </div>

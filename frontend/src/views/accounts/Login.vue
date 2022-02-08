@@ -1,0 +1,364 @@
+<template>
+  <div id="login_container">
+    <div id="login_header">
+      <h1>어서오세요!</h1>
+      <h1>오늘은 어떤 이야기를</h1>
+      <h1>들려주실건가요? 😉</h1>
+      <!-- <div>
+        <img src="../../assets/images/sun.png" id="sun">
+      </div> -->
+    </div>
+    <section id="login_body">
+      <article id="email_form">
+        <label for="email">이메일</label>
+        <input type="text"
+        id="email"
+        v-model="credentials.email"
+        placeholder="이메일을 입력해주세요"
+        autocomplete="off">
+      </article>
+      <article id="password_form">
+        <label for="pw">비밀번호</label>
+        <input type="password" 
+        id="pw"
+        v-model="credentials.pw"
+        placeholder="비밀번호를 입력해주세요">
+      </article>
+    </section>
+    <article id="link">
+      <a href="#">이메일 찾기</a>
+      <a href="#">비밀번호 찾기</a>
+      <router-link :to="{ name: 'Signup' }" class="gosignup">회원가입</router-link>
+    </article>
+    <article>
+      <button id="login_btn" @click="login">로그인</button>
+    </article>
+    <button id="google" class="social_login">
+      <img id="google" src="../../assets/images/etc/Google__G__Logo.png">
+      <p>Google로 로그인</p>
+    </button>
+    <article>
+      <button id="kakao" class="social_login">
+        <img id="kakao" src="../../assets/images/etc/kakao.png">
+        <p>Kakao로 로그인</p>
+        </button>
+    </article>
+    <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&response_type=code&client_id=172274534251-rpo5d1a1i23k75l87vrcjiid99413h9a.apps.googleusercontent.com&redirect_uri=http://localhost:8080/auth/google/callback">구글로그인</a>
+    <div id="my-signin2"></div>
+    <button @click="signout">signout</button>
+  </div>
+</template>
+
+<script>
+import axios from 'axios'
+
+const session = window.sessionStorage;
+const jwt = require('jsonwebtoken');
+
+export default {
+  name: 'Login',
+  data: function () {
+    return {
+      credentials: {
+        email: null, 
+        pw: null,
+      },
+      googleUser: null,
+    }
+  },
+  mounted() {
+    window.gapi.signin2.render('my-signin2', {
+      scope: 'profile email',
+      width: 240,
+      height: 50,
+      longtitle: true,
+      theme: 'dark',
+      onsuccess: this.onSuccess,
+      onfailure: this.onFailure,
+    });
+  },
+
+  methods: {
+    //OAUTH
+    onSuccess(googleUser) {
+      // eslint-disable-next-line
+      console.log(googleUser);
+      this.googleUser = googleUser;
+      this.tokenVerify()
+    },
+    onFailure(error) {
+      // eslint-disable-next-line
+      console.log(error);
+    },
+
+    signout() {
+      const authInst = window.gapi.auth2.getAuthInstance();
+      authInst.signOut().then(() => {
+        // eslint-disable-next-line
+        console.log('User Signed Out!!!');
+      })
+    },
+
+    // login: function () {
+    //   axios({
+    //     method: 'post',
+    //     url:'http://localhost:8080/login',
+    //     data: this.credentials
+    //   })
+    //   .then((res)=>{
+    //     alert("로그인 성공")
+    //     this.$store.commit('userData', this.credentials)
+    //     this.$router.push({ name: 'Main' })
+    //   })
+    //   .catch(err=> {
+    //     alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
+    //   })
+    //   this.credentials.email = "";
+    //   this.credentials.pw ="";
+    // },
+
+    login: function () {
+      axios({
+        method: 'post',
+        url:'http://13.125.47.126:8080/login',
+        data: this.credentials
+      })
+      .then((res)=>{
+        alert("로그인 성공")
+        console.log(res.headers);
+        // storage 설정
+        session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+        session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
+        const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
+        this.$store.state.userInfo = decodeAccessToken.userInfo
+        console.log(this.$store.state.userInfo.email)
+        console.log('decodeAccessToken data', decodeAccessToken);
+        this.sendToken();
+        this.$router.push('EmotionTest')
+      })
+      .catch(err=> {
+        alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
+      })
+      this.credentials.email = "";
+      this.credentials.pw ="";
+    },
+
+    tokenVerify() {
+      const url = 'http://13.125.47.126:8080/login/auth';
+      const params = new URLSearchParams();
+      params.append('idToken', this.googleUser.wc.id_token);
+      console.log(params)
+      axios.post(url, params).then((res) => {
+        alert("로그인 성공")
+        console.log(res.headers);
+        // storage 설정
+        session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+        session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
+
+        const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
+        console.log('decodeAccessToken data', decodeAccessToken);
+        this.$store.state.userInfo = decodeAccessToken.userInfo
+        console.log(this.$store.state.userInfo.email)
+        this.sendToken();
+        this.$router.push('EmotionTest')
+      }).catch((error) => {
+        console.log(error);
+      }).then(() => {
+        console.log('tokenVerify End!!');
+      });
+    },
+
+    sendToken() {
+      const decodeAccessToken = jwt.decode(session.getItem('at-jwt-access-token'));
+      let headers = null;
+      if(decodeAccessToken.exp < Date.now()/1000 + 60){
+        console.log('만료됨!!');
+        headers = {
+          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        }
+        console.log('headers : ', headers);
+      }else{
+        console.log('만료되지않음!!');
+        headers = {
+          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        }
+        console.log('headers : ', headers);
+      }
+    },
+
+    trans() {
+      let headers = {
+          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+      axios.get('http://localhost:8080/qss/list', {
+        headers: headers,
+      }).then((res) => {
+        console.log(res);
+        console.log('response header', res.headers);
+        if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
+          session.setItem('at-jwt-access-token', "");
+          session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+          console.log("Access Token을 교체합니다!!!")
+        }
+
+      }).catch((error) => {
+        console.log(error);
+      }).then(() => {
+        console.log('getQSSList End!!');
+      });
+    },
+    
+  },
+}
+</script>
+
+<style scoped>
+  @import '../../assets/styles/globalstyle.css';
+  
+  label {
+    color: #5E39B3;
+    font-weight: bold;
+    margin-left: 0.5rem;
+    font-size: 1.125rem;
+  }
+
+  input {
+    border: 2px #5E39B3 solid;
+    border-radius: 20px;
+    width: 35vh;
+    min-width: 350px;
+    height: 4.5vh;
+    min-height: 40px;
+    padding: 0.75rem;
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+
+  input:focus {
+    outline: none;
+    background-color: #afa0d6;
+    color: white;
+    text-shadow: 0 1px 2px rgb(0, 0, 0, 0.5);
+  }
+
+  input[type="password"] {
+    font-size: 3rem;
+  }
+
+  input::placeholder {
+    font-size: 1rem !important;
+    font-weight: initial;
+    text-shadow: none;
+    position: absolute;
+    top: 20%;
+  }
+
+  input:focus::placeholder {
+    color: transparent;
+  }
+
+  a {
+    color: black;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: bold;
+    letter-spacing: -1px;
+  }
+
+  button {
+    background-color: #5E39B3;
+    color: white;
+    font-size: 1.125rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 20px;
+    padding: 0.4rem 1.125rem;
+    margin-bottom: 1.125rem;
+    cursor: pointer;
+  }
+
+  img {
+    width: 5vh;
+    height: 5vh;
+  }
+
+  p {
+    margin: 0;
+  }
+
+  #login_container{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    background-color: white;
+    width: 45vh;
+    min-width: 450px;
+    border-radius: 20px;
+    margin: 2rem auto;
+    padding: 2rem;
+  }
+
+  #login_header{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: flex-start;
+  }
+
+  #login_header h1 {
+    margin: 0;
+    font-size: 2rem;
+    font-weight: bold;
+    letter-spacing: -1px;
+  }
+
+  #login_body{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 1.5rem;
+  }
+
+  #login_body article {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  #login_body > *:first-child {
+    margin-bottom: 1.25rem;
+  }
+
+  #link{
+    width: 75%;
+    display: flex;
+    justify-content: space-evenly;
+    margin-bottom: 1.25rem;
+  }
+
+  #login_btn{
+    padding: 0.5rem 2rem;
+    width: 15vh;
+    min-width: 150px;
+  }
+
+  .social_login {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    background-color: #F0EDE7;
+    color: black;
+    width: 30vh;
+    min-width: 300px;
+    height: 4.5vh;
+    min-height: 45px;
+    margin: 0.75rem;
+  }
+
+  /* #kakao{
+    width: 3.5vh;
+  } */
+</style>

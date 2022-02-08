@@ -1,27 +1,18 @@
 <template>
-  <div>
-    <div>
-      <div id="container">
-        <div>
-          <img
-            id="planet_img"
-            :src="require('@/assets/images/emotions/' + tmp.img)"
-          />
-        </div>
-        <div id="header">
-          <h1 style="font-size: 2.5rem">어서오세요</h1>
-          <span id="planet_name" :style="{ color: tmp.color }">{{
-            tmp.name
-          }}</span>
-          <span style="font-size: 2.5rem">입니다</span>
-        </div>
-      </div>
+  <div id="recommand-container">
+    <div id="recommand-header">
+      <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)">
+      <h1>어서오세요</h1>
+      <h2 id="planet_name">{{ tmp.name }}</h2>
+      <h2>입니다</h2>
     </div>
-    <div class="tab">
-      <p @click="Refresh" :class="onRefresh ? 'active' : 'inactive'">
-        &nbsp;&nbsp;&nbsp; 떠나기
+    <div id="recommand-tab">
+      <p @click="Refresh" :class="onRefresh ? 'active' : ''">
+        떠나기
       </p>
-      <p @click="Feel" :class="onFeel ? 'active' : 'inactive'">탐험하기</p>
+      <p @click="Feel" :class="onFeel ? 'active' : ''">
+        탐험하기
+      </p>
     </div>
     <button @click="reload">좀 더 놀기</button>
     <music-list></music-list>
@@ -93,14 +84,14 @@ p {
   font-size: 3rem;
   font-weight: bold;
 }
-#container {
-  /* border: 2px solid black; */
+#recommand-container {
   display: flex;
   width: 100%;
   padding-top: 1rem;
   background-color: rgb(216, 216, 216, 0.2);
   padding: 2rem;
   justify-content: center;
+  position: absolute;
 }
 #header {
   text-align: left;
