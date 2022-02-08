@@ -162,16 +162,6 @@
           const keyword = this.selected.pop()
           this.$refs[keyword.no][0].isChecked = false
         }
-        // axios({
-        //   method: 'get',
-        //   url: 'http://13.125.47.126:8080/test'
-        // })
-        // .then(res => {
-        //   this.keywords = res.data
-        //   this.keywords = this.keywords.sort(() => Math.random() - 0.5)
-        //   this.page = 1
-        // })
-        // .catch(() => alert('잘못된 요청입니다.'))
       }
     },
     computed: {

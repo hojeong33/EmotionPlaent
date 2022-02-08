@@ -9,15 +9,17 @@
 <script>
 import Create from '@/views/Create'
 import Navigation from '@/components/Navigation'
-import { mapState } from 'vuex'
 
 export default {
   components: {
     Create,
     Navigation,
   },
-  computed:
-    mapState(['feedActive', 'searchActive'])
+  computed:{
+    feedActive(){
+      return this.$store.state.navActive[0]
+    }
+  }
 }
 
 </script>

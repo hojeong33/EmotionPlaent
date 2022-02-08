@@ -3,7 +3,7 @@
     <nav class="navbar navbar-expand-lg" id="navbar-default">
       <div class="container">
         <div>
-          <img src="@/assets/images/logo/EMOTION PLANET.png" id="logo_img" alt="" @click="goMain">
+          <img src="@/assets/images/logo/EMOTION PLANET.png" id="logo_img" alt="logo" @click="navClick">
         </div>
         <form class="d-flex" id="searches">
           <div class="search_menu" v-on:cancel="searchOff">
@@ -16,13 +16,16 @@
           <img src="@/assets/images/icons/search.png" id="search" type="submit">
         </form>
         <div id="icons">
-          <img @click="changeImg_write" :src="require(`@/assets/images/icons/${imgName_write}`)" id="write">
-          <img src="@/assets/images/icons/home.png" id="home" @click="goMain">
-          <img @click="changeImg_profile" :src="require(`@/assets/images/icons/${imgName_profile}`)" id="my_page">
-          <div>
-            <img @click="changeImg_alarm" :src="require(`@/assets/images/icons/${imgName_alarm}`)" id="alarm">
-          </div>
-          <img @click="changeImg_setting" :src="require(`@/assets/images/icons/${imgName_setting}`)" id="setting">
+          <img @click="navClick"  id="write"
+          :src="require(`@/assets/images/icons/${feed}`)">
+          <img @click="navClick" id="home"
+          :src="require(`@/assets/images/icons/${home}`)">
+          <img @click="navClick" id="my_page"
+          :src="require(`@/assets/images/icons/${myPage}`)">
+          <img @click="navClick" id="alarm"
+          :src="require(`@/assets/images/icons/${alarm}`)">
+          <img @click="navClick" id="setting"
+           :src="require(`@/assets/images/icons/${setting}`)">
         </div>
       </div>
     </nav>
@@ -37,11 +40,6 @@ export default {
   name: 'App',
   data: function (){
     return {
-      imgName_write: 'more.png',
-      imgName_profile: 'user.png',
-      imgName_setting: 'settings.png',
-      imgName_alarm: 'bell.png',
-      isActive: [false, false, false, false], //네브바에서 선택됐는지 여부를 파악
       //검색입니둥
       searching: false,
       searchWords: null,
@@ -49,89 +47,35 @@ export default {
   },
   components: { Search },
   methods: {
-    changeImg_write() {
-      this.$store.commit('activateFeed')
-      if (this.imgName_write === 'more.png') {
-        this.imgName_write = 'more_selected.png'
-        this.isActive[0] = true
-
-        if (this.isActive[1] === true || this.isActive[2] === true || this.isActive[3] === true) {
-          this.imgName_profile = 'user.png'
-          this.imgName_alarm = 'bell.png'
-          this.imgName_setting = 'settings.png'
-          this.isActive[1] = false
-          this.isActive[2] = false
-          this.isActive[3] = false
-      
-
-        }
-      }
-
-        // 얘는 페이지 바뀌면 색이 빠지는 것을 어떻게 코드를 짜야 하나... ㅠㅠ
-
+    navClick(event){
+      console.log(this.$router)
+      if (event.target.id == 'write'){this.$store.commit('navActivate', 0)}
+      else if (event.target.id == 'home' || event.target.id =='logo_img'){this.$router.push({ name:'Main' })}
+      else if (event.target.id == 'my_page'){this.$router.push({ name:'Mypage' })}
+      else if (event.target.id == 'alarm'){this.$store.commit('navActivate', 3)}
+      else {this.$router.push({ name:'Setting' })}
+    }
+  },
+  computed: {
+    feed(){
+      if (!this.navActive[0]){return 'more.png'}
+      else{return 'more_selected.png'}
     },
-    changeImg_profile() {
-      this.$router.push({name:'Mypage'})
-      // console.log(this.$route.name)
-      // if (this.$route.name === 'Mypage') {
-      //   this.$router.go(0)
-      // } else {
-      this.isActive[1] = true
-      console.log(this.isActive)
-      if (this.isActive[1] === true) {
-        this.imgName_profile = 'user_selected.png'
-        
-        if (this.isActive[0] === true || this.isActive[2] === true || this.isActive[3] === true) {
-          this.imgName_write = 'more.png'
-          this.imgName_alarm = 'bell.png'
-          this.imgName_setting = 'settings.png'
-          this.isActive[0] = false
-          this.isActive[2] = false
-          this.isActive[3] = false
-        }
-      } 
-      this.isActive[1] = false
-      console.log(this.isActive)
-      // }
+    home(){
+      if (!this.navActive[1]){return 'home.png'}
+      else{return 'home_selected.png'}
     },
-    changeImg_alarm() {
-      this.$router.push('#')
-      if (this.imgName_alarm === 'bell.png') {
-        this.imgName_alarm = 'bell_selected.png'
-        this.isActive[2] = true
-
-        if (this.isActive[0] === true || this.isActive[1] === true || this.isActive[3] === true) {
-          this.imgName_write = 'more.png'
-          this.imgName_profile = 'user.png'
-          this.imgName_setting = 'settings.png'
-          this.isActive[0] = false
-          this.isActive[1] = false
-          this.isActive[3] = false
-        }
-      } 
+    myPage(){
+      if (!this.navActive[2]){return 'user.png'}
+      return 'user_selected.png'
     },
-    changeImg_setting() {
-      this.$router.push({name: 'Setting'})
-      if (this.imgName_setting === 'settings.png') {
-        this.imgName_setting = 'settings_selected.png'
-        this.isActive[3] = true
-        
-        if (this.isActive[0] === true || this.isActive[1] === true || this.isActive[2] === true) {
-          this.imgName_write = 'more.png'
-          this.imgName_profile = 'user.png'
-          this.imgName_alarm = 'bell.png'
-          this.isActive[0] = false
-          this.isActive[1] = false
-          this.isActive[2] = false
-        }
-      } 
+    alarm(){
+      if (!this.navActive[3]){return 'bell.png'}
+      return 'bell_selected.png'
     },
-    goMain() {
-      this.$router.push({name: 'Main'})
-      this.imgName_write = 'more.png'
-      this.imgName_profile = 'user.png'
-      this.imgName_alarm = 'bell.png'
-      this.imgName_setting = 'settings.png'
+    setting(){
+      if (!this.navActive[4]){return 'settings.png'}
+      return 'settings_selected.png'
     },
     //검색 부분입니둥
     searchOn() {
@@ -148,26 +92,12 @@ export default {
       this.$store.dispatch('searchTag')
       this.$store.dispatch('searchUser')
     },
+    // 검색 끝
+    
+    navActive(){
+      return this.$store.state.navActive
+    }
   }
-    // search() {
-    //   if (this.searchInput) {
-    //     axios({
-
-    //     })
-    //     .then({
-
-    //     })
-    //     .catch(err => {
-    //       alert(err)
-    //     })
-    //   }
-    // }
-
-  //  computed: {
-  //   ...mapState([
-  //     'feedActive'
-  //   ]) 
-  // }
 }
 </script>
 

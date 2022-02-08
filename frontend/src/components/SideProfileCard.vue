@@ -1,5 +1,5 @@
 <template>
-  <div class="card_container">
+  <div class="card_container" v-show="isActive">
     <div class="card_header">
       <img id="profile_image" src="https://www.thesprucepets.com/thmb/meRd41is751DsQQjofaiKV_ZUBg=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cat-talk-eyes-553942-hero-df606397b6ff47b19f3ab98589c3e2ce.jpg" alt="">
       <div class="overlay_content">
@@ -44,6 +44,7 @@ export default {
         { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
         { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
       ],
+      isActive: false
     }
   },
   computed: {
@@ -53,11 +54,20 @@ export default {
       return style
     }
   },
-  methods: {
+   methods: {
     createFeed: function(){
-      this.$store.commit('activateFeed')
+      this.$store.commit('navActivate', 0)
+    },
+    resize(){
+      window.innerWidth > 1000 ? this.isActive = true: this.isActive = false
     }
   },
+  mounted(){
+    if (window.innerWidth > 1000){
+      this.isActive = true
+    }
+    window.addEventListener('resize', this.resize)
+  }
 }
 </script>
 
