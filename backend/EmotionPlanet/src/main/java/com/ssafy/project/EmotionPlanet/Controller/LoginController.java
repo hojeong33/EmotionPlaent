@@ -70,6 +70,7 @@ public class LoginController {
         	System.out.println("로그인 성공");
             System.out.println(userDto);
             TokenDto atJWT = jwtService.create(userDto);
+            System.out.println("로그인 컨트롤 atJWT");
             System.out.println(atJWT);
             res.add("at-jwt-access-token", atJWT.getAccessJws());
             res.add("at-jwt-refresh-token", atJWT.getRefreshJws());
@@ -90,11 +91,12 @@ public class LoginController {
         user = userService.userSelectByEmail(user.getEmail());
         UserSecretDto userDto = new UserSecretDto(user.getNo(), user.getEmail(), user.getNickname(), user.getBirth(), user.getProfileImg(), user.getTel(), user.getMood());
         HttpHeaders res = new HttpHeaders();
-
+        System.out.println(userDto);
         if (user.getEmail() != null) {
             principalOauth2UserService.insertUser(user);
 
             TokenDto atJWT = jwtService.create(userDto);
+            System.out.println("로그인 컨트롤 atJWT");
             System.out.println(atJWT);
             res.add("at-jwt-access-token", atJWT.getAccessJws());
             res.add("at-jwt-refresh-token", atJWT.getRefreshJws());
