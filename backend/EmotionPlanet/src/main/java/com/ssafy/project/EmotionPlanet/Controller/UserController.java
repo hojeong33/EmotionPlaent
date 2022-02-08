@@ -93,7 +93,6 @@ public class UserController {
 	
 	@PutMapping(value ="/users") //회원 수정
 	public ResponseEntity<Integer> update(@RequestBody UserDto changeuserDto) {
-		System.out.println("das");
 		UserDto userDto = userService.userSelect(changeuserDto.getNo()); //입력받은 유저 번호로 기존 유저 정보 가져옴	
 		if(userService.userUpdate(userDto, changeuserDto) == SUCCESS) { // 기존정보와 입력받은 정보를 비교해서 새로 갱신
 			System.out.println("회원 수정 성공");

@@ -5,7 +5,14 @@ public class TokenDto {
     private String accessJws;
     private String refreshJws;
 
-    public String getAccessJws() {
+    
+    
+    @Override
+	public String toString() {
+		return "TokenDto [accessJws=" + accessJws + ", refreshJws=" + refreshJws + "]";
+	}
+
+	public String getAccessJws() {
         return accessJws;
     }
 
