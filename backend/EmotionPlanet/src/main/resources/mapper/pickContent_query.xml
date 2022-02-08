@@ -28,35 +28,27 @@
                        )
     </select>
 
-<!--    <select id="selectOnMusic" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.PickContentDto">-->
-<!--        select no, pickNo, apiId, author apiId title descr year imgLink-->
-<!--        from music-->
-<!--        where pickNo = #{pickNo}-->
-<!--    </select>-->
+    <select id="selectOnMusic" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.PickContentDto">
+        select no, pickNo, apiId, author apiId title descr year imgLink
+        from music
+        where no = #{no}
+    </select>
 
-<!--    <select id="selectOnMovie" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.PickContentDto">-->
-<!--        select m.no, pm.pickNo, m.title, m.descr, m.year, m.imgLink, m.genre-->
-<!--        from movie m-->
-<!--        where m.no in (-->
-<!--        select pm.movieNo-->
-<!--        from pick_movie pm-->
-<!--        wher-->
-<!--        )-->
-<!--    </select>-->
+    <select id="selectOnMovie" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.PickContentDto">
+        select m.no, pm.pickNo, m.title, m.descr, m.year, m.imgLink, m.genre
+        from music m
+        where no = #{no}
+    </select>
 
-<!--    <select id="selectOnMusic" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.PickContentDto">-->
-<!--        select ac.no, pa.pickNo, ac.title, ac.imgLink, ac.type-->
-<!--        from activity ac-->
-<!--        where m.no in (-->
-<!--        select pa.activityNo-->
-<!--        from pick_activity pa-->
-<!--        where pa.pickNo = #{pickNo}-->
-<!--        )-->
-<!--    </select>-->
+    <select id="selectOnMusic" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.PickContentDto">
+        select ac.no, pa.pickNo, ac.title, ac.imgLink, ac.type
+        from activity ac
+        where no = #{no}
+    </select>
 
 
     <delete id="delete" parameterType="int">
-        delete from  where no = #{no}
+        delete from pick_movie where movieNo = #{no}
     </delete>
 
 </mapper>
