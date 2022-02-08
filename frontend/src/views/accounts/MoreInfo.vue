@@ -3,7 +3,7 @@
     <section id="signup_header">
       <h1>앗!</h1>
       <span id="signup_header_title">
-        <h1 style="color: #5E39B3">당신의 시민권</h1>
+        <h1 style="color: #5E39B3">당신의 여행티켓</h1>
         <h1>에 </h1>
       </span>
       <h1>갱신절차가 필요해요👽</h1>
@@ -57,7 +57,7 @@
         <input type="date" id="birth" v-model="credentials.birth">
       </article>
       <article id="btn_container">
-        <button @click="signup" id="signup_btn">시민권 등록하기</button>
+        <button @click="signup" id="signup_btn">여행티켓 등록하기</button>
         <button @click="go_to_back" id="back_to_btn">다음에 할게요</button>
       </article>
     </section>
@@ -74,40 +74,34 @@
     data: function () {
       return {
         credentials: {
-
           nickname: null,
-
           tel: null,
           birth: null,
         },
         isValid: {
-          validateEmail: false, // 이메일 형식 체크
-          validateEmailcheck : false, // 중복 이메일 여부
           validateNicknamecheck : false, // 중복 닉네임 여부
-          validatePw: false, // 비밀번호 길이 체크
-          validatePwConf: false, // 비밀번호와 비밀번호 확인 일치 여부
           validateTel: false // 휴대전화 중복 여부
         },
       }
     },
     methods: {
-       validateEmail: function(){
-        let regexp =
-        /^[0-9a-zA-Z]([-.]?[0-9a-zA-Z])*@[0-9a-zA-Z]([-.]?[0-9a-zA-Z])*\.[a-zA-Z]{2,3}$/i;
-        this.isValid.validateEmail = regexp.test(this.credentials.email) ? true : false; //이메일 형식에 맞으면 true 아니면 false
-        if(this.isValid.validateEmail){ //현재 이메일이 이메일 형식에 맞다면 중복검사 하러감
-          this.checkEmail()
-        }
-        else{ //현재 이메일이 이메일 형식에 맞지 않다면 중복 이메일 여부를 false로 둠 => true값으로 변경됬을경우를 대비
-          this.isValid.validateEmailcheck = false
-        }
-      },
       signup: function () {
         this.$store.state.userInfo.nickname = this.credentials.nickname
         this.$store.state.userInfo.tel = this.credentials.tel
         this.$store.state.userInfo.birth = this.credentials.birth
-        alert('갱신이 완료되었습니다!')
-        this.$router.push('Login')
+        const info = { no: this.$store.state.userInfo.no, nickname: this.credentials.nickname, tel: this.credentials.tel, birth: this.credentials.birth  }
+        axios({
+            method: 'put',
+            url: 'http://13.125.47.126:8080/users',
+            data: info,
+          })
+          .then( () => {
+            alert('갱신이 완료되었습니다!')
+            this.$router.push('Login')
+          })
+          .catch(res => {
+            alert(res.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
+          })
       },
       checkEmail: function(){
         axios({
@@ -133,22 +127,6 @@
           .catch(() => { //중복 닉네임 있는 경우
             this.isValid.validateNicknamecheck = false
         })
-      },
-      pwCheck: function(){
-        if (this.credentials.pw && this.credentials.pw.length >= 8 && this.credentials.pw.length <= 20){
-          this.isValid.validatePw = true
-        }
-        else {
-          this.isValid.validatePw = false
-        }
-      },
-      pwConfCheck: function(){
-        if (this.credentials.passwordConfirmation && this.credentials.pw === this.credentials.passwordConfirmation){
-          this.isValid.validatePwConf = true
-        }
-        else {
-          this.isValid.validatePwConf = false
-        }
       },
       tel_helper: function(event){
         const nums = this.credentials.tel.length
@@ -196,7 +174,7 @@
         })
       },
       go_to_back: function(){
-        this.$router.go(-1)
+        this.$router.push('Login')
       }
     },
   }
@@ -280,7 +258,7 @@
     background-color: white;
     width: 30%;
     min-width: 450px;
-    margin: 4.5rem auto;
+    margin: 4rem auto;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -329,24 +307,25 @@
   }
 
   #btn_container {
-    width: 100%;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    align-items: center;
+    margin: 2rem 0 1rem;
   }
 
   #signup_btn {
     font-size: 1.35rem;
     padding: 0.5rem 2rem;
-    width: 21vh;
-    min-width: 100px;
+    width: 25vh;
+    min-width: 250px;
   }
 
   #back_to_btn {
     background-color: #777777;
     font-size: 1.35rem;
     padding: 0.5rem 2rem;
-    width: 21vh;
-    min-width: 100px;
+    width: 25vh;
+    min-width: 250px;
     margin-bottom: 0;
   }
 
