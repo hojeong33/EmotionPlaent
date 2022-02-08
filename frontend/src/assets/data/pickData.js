@@ -27,7 +27,7 @@ export default [
     {"no":2,"pickNo":2,"apiId":"1","name":"아메리칸 셰프","descr":"슬픈 영화2","author":"존 파브로","year":2014,"postImgLink":"https://ww.namu.la/s/2e9840623b0a2600e5f7bf454023569fceb623c269ad74d9d20e10e09856749c1eb41d659c3332784c711f299e44ca597cddde49ba39eaea7da45116c195d8e6e0467ff140a0904843072db76fd779bbac149d851142f11f1a9cf0c13824a84b","type":0},
     ]
   },
-  {"no":2,"userNo":1,"tagNo":2,
+  {"no":2,"userNo":1,"tagNo":6,
   "name":"최강상후가 화날 때 보는 영화 리스트","date":"2022-01-25T08:00:00",
   "contentsList":[
     {"no":1,"pickNo":2,"apiId":"1","name":"아메리칸셰프","descr":"슬픈 영화1","author":"낸시 마이어스","year":2015,"postImgLink":"https://w.namu.la/s/c6d5960cf47878fb2a94431456588b25209803351a1cb8580f7e56cfc3093b9a7f699bbaa0ceb086a9edb064e5ad261c77c3281cc8d47e0d1f9de9ce44896fcf7af901750ff86f0073014a7a27cb8b92bac2aaa412b933ab856b356e02be1b67","type":0},

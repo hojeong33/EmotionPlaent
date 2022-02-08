@@ -10,7 +10,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     feedActive: false,
-    user: null,
+
     userEmotion: null,
     recommendType: 1,
     recommendMusic: [],
@@ -26,15 +26,32 @@ export default new Vuex.Store({
       { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
       { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
     ],
+    navActive: [false, false, false, false, false],
+    user: null,
   },
   mutations: {
-    activateFeed: function(state){
-      console.log(state.feedActive)
-      state.feedActive = !state.feedActive
-      console.log(state.feedActive)
+    navActivate: function({ navActive }, payload){
+      if (payload == -1){
+        navActive.forEach((ele, idx) => {
+          Vue.set(navActive, idx, false)
+        })
+        return
+      }
+      if (payload == 0 || payload == 3){
+        Vue.set(navActive, payload, !navActive[payload])
+        return 0
+      }
+      navActive.forEach((ele, idx) => {
+        navActive[idx] = false
+      })
+      Vue.set(navActive, payload, true)
     },
-    userInfo: function (state, payload) {
-      console.log(payload)
+    
+    feedOut({ navActive }){
+      Vue.set(navActive, 0, false)
+    },
+
+    userInfo: function(state, payload){
       state.user = payload
     },
   },
@@ -113,5 +130,5 @@ export default new Vuex.Store({
       },
   },
   modules: {
-  }
+  },
 })
