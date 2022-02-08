@@ -15,7 +15,6 @@ export default new Vuex.Store({
     tagSearch: [],
     userSearch: [],
     //메인 추천탭 부분
-    user: null,
     userEmotion: null,
     recommendType: 1,
     recommendMusic: [],

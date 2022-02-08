@@ -54,7 +54,23 @@ export default {
       else if (event.target.id == 'my_page'){this.$router.push({ name:'Mypage' })}
       else if (event.target.id == 'alarm'){this.$store.commit('navActivate', 3)}
       else {this.$router.push({ name:'Setting' })}
-    }
+    },
+    //검색 부분입니둥
+    searchOn() {
+      this.searching = true
+    },
+    searchOff() {
+      this.searching = false
+      this.$store.state.words = null
+      this.$store.state.tagSearch = []
+      this.$store.state.userSearch = []
+    },
+    search( searchWords ) {
+      this.$store.commit('updateSearch', searchWords.target.value)
+      this.$store.dispatch('searchTag')
+      this.$store.dispatch('searchUser')
+    },
+    // 검색 끝
   },
   computed: {
     feed(){
@@ -77,23 +93,6 @@ export default {
       if (!this.navActive[4]){return 'settings.png'}
       return 'settings_selected.png'
     },
-    //검색 부분입니둥
-    searchOn() {
-      this.searching = true
-    },
-    searchOff() {
-      this.searching = false
-      this.$store.state.words = null
-      this.$store.state.tagSearch = []
-      this.$store.state.userSearch = []
-    },
-    search( searchWords ) {
-      this.$store.commit('updateSearch', searchWords.target.value)
-      this.$store.dispatch('searchTag')
-      this.$store.dispatch('searchUser')
-    },
-    // 검색 끝
-    
     navActive(){
       return this.$store.state.navActive
     }

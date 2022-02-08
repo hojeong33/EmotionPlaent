@@ -157,7 +157,6 @@ export default {
 
         const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
         console.log('decodeAccessToken data', decodeAccessToken);
-        // 여기는 유저넘버 안넘겨주는 상태임
         this.$store.state.userInfo = decodeAccessToken.userInfo
         console.log(this.$store.state.userInfo.email)
         this.sendToken();
