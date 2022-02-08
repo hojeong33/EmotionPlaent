@@ -156,8 +156,12 @@
             data: this.credentials
           })
           .then( () => {
-            alert('가입이 완료되었습니다.')
-            this.$router.push({name:'Login'}) // 가입 완료시 로그인 페이지로 이동
+            this.$store.commit('signupConfirmModalActivate')
+            // this.$router.push({name:'Login'}) // 가입 완료시 로그인 페이지로 이동
+
+            // if (alert('가입이 완료되었습니다.')){
+            //   this.$router.push({name:'Login'}) // 가입 완료시 로그인 페이지로 이동
+            // }
           })
           .catch(res => {
             alert(res.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.

@@ -3,17 +3,17 @@ img{
     height:10rem;
 }
 .card-carousel-wrapper {
-display: flex;
-align-items: center;
-justify-content: center;
-margin: 20px 0 40px;
-color: #666a73;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	margin: 20px 0 40px;
+	color: #666a73;
 }
 
 .card-carousel {
 display: flex;
 justify-content: center;
-width: 33rem;
+width: 85%;
 }
 .card-carousel--overflow-container {
 overflow: hidden;

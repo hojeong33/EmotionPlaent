@@ -63,14 +63,20 @@
 </template>
 
 <script>
+// import LogoutModal from '@/components/Modal/LogoutModal.vue'
+
 export default {
   data: function(){
     return {
       birthShow: false,
       showAll: false,
-      showFollow: true
+      showFollow: true,
+      // modalActive: false,
     }
   },
+  // components: {
+  //   LogoutModal,
+  // },
   methods: {
     go_to_passwordchange: function(){
       this.$router.push('/setting/password')
@@ -80,7 +86,10 @@ export default {
     },
     go_to_profilupdate: function () {
       this.$router.push('/setting/profile-update')
-    }
+    },
+    logoutModal:function(){
+      this.$store.commit('logoutModalActivate')
+		}
   },
 }
 </script>
