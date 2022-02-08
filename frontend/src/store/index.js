@@ -75,6 +75,31 @@ export default new Vuex.Store({
     feedOut({ navActive }){
       Vue.set(navActive, 0, false)
     },
+    // 모달부분입니다
+    commentSettingModalActivate: function (state) {
+      state.commentSettingModalActive = !state.commentSettingModalActive
+      console.log(state.commentSettingModalActive)
+    },
+    logoutModalActivate: function (state) {
+      state.logoutModalActive = !state.logoutModalActive
+      console.log(state.logoutModalActive)
+    },
+    userFeedSettingModalActivate: function (state) {
+      state.userFeedSettingModalActive = !state.userFeedSettingModalActive
+      console.log(state.userFeedSettingModalActive)
+    },
+    profileImgChangeModalActivate: function (state) {
+      state.profileImgChangeModalActive = !state.profileImgChangeModalActive
+      console.log(state.profileImgChangeModalActive)
+    },
+    loginConfirmModalActivate:function (state) {
+      state.loginConfirmModalActive = !state.loginConfirmModalActive
+      console.log(state.loginConfirmModalActive)
+    },
+    signupConfirmModalActivate:function (state) {
+      state.signupConfirmModalActive = !state.signupConfirmModalActive
+      console.log(state.signupConfirmModalActive)
+    },
   },
   actions: {
     //여기 검색부분입니다
@@ -196,32 +221,6 @@ export default new Vuex.Store({
     //   console.log(payload)
     //   state.user = payload
     // },
-    commentSettingModalActivate: function (state) {
-      state.commentSettingModalActive = !state.commentSettingModalActive
-      console.log(state.commentSettingModalActive)
-    },
-    logoutModalActivate: function (state) {
-      state.logoutModalActive = !state.logoutModalActive
-      console.log(state.logoutModalActive)
-    },
-    userFeedSettingModalActivate: function (state) {
-      state.userFeedSettingModalActive = !state.userFeedSettingModalActive
-      console.log(state.userFeedSettingModalActive)
-    },
-    profileImgChangeModalActivate: function (state) {
-      state.profileImgChangeModalActive = !state.profileImgChangeModalActive
-      console.log(state.profileImgChangeModalActive)
-    },
-    loginConfirmModalActivate:function (state) {
-      state.loginConfirmModalActive = !state.loginConfirmModalActive
-      console.log(state.loginConfirmModalActive)
-    },
-    signupConfirmModalActivate:function (state) {
-      state.signupConfirmModalActive = !state.signupConfirmModalActive
-      console.log(state.signupConfirmModalActive)
-    }
-  },
-  actions: { 
   },
   modules: {
     

@@ -122,7 +122,6 @@ export default {
         data: this.credentials
       })
       .then((res)=>{
-        alert("로그인 성공")
         console.log(res.headers);
         // storage 설정
         session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
