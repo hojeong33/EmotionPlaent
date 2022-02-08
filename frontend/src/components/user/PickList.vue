@@ -1,141 +1,108 @@
 <template>
-  <article id="pick-container">
-    <div id="pick-lists">
-      <div id="list-tab">
-        <h3 @click="tap = 1" :class="tap == 1 ? 'active': ''">음악</h3>
-        <h3 @click="tap = 2" :class="tap == 2 ? 'active': ''">영화</h3>
-        <h3 @click="tap = 3" :class="tap == 3 ? 'active': ''">활동</h3>
-      </div>
-      <div id="picks" v-if="filteredPicks.length">
-        <picks v-for="(pick, idx) in filteredPicks" :key="idx" :pick="pick" />
-      </div>
-      <div v-else id="no-result">
-        <img id="nothing" src="@/assets/images/etc/alien.png" alt="no result">
-        <p>찜 목록이 없어요...</p>
-      </div>
-    </div>
-    <div id="list-items">
-
-    </div>
+  <article class="picks" @click="go_to_detail" @mouseover="isHover = true" @mouseout="isHover = false">
+    <img :class="{planet, 'movie-planet':pick.no == 2}" :src="require(`@/assets/images/emotions/${planet}`)" alt="">
+    <img :class="{'movie-picks':pick.no == 2}" :src="thumbNail" alt="thumbnail">
+    <h3>{{ title }}</h3>
+    <span v-show="isHover" class="picks-info">
+      <p>Go to Detail</p>
+    </span>
   </article>
 </template>
 
 <script>
-import Picks from '@/components/user/Picks'
-import pickData from '../../assets/data/pickData'
-
 export default {
-  name: 'PickList',
-  data() {
+  data(){
     return {
-      pickData,
-      tap: 1,
+      planetStyles: [
+				{ id: 0, name: 'default'},
+        { id: 1, name: '행복행성', img: "happy.png", color: '#ED5A8E' },
+        { id: 2, name: '우울행성', img: "depressed.png", color: '#6BD9E8' },
+        { id: 3, name: '중립행성', img: "neutral.png", color: '#C5D3DC' },
+        { id: 4, name: '공포행성', img: "fear.png", color: '#FEA95C' },
+        { id: 5, name: '깜짝행성', img: "suprised.png", color: '#FB5D38' },
+        { id: 6, name: '분노행성', img: "rage.png", color: '#2A61F0' },
+      ],
+      isHover: false
     }
   },
   props: {
-    userMood: Number,
-    filter: Number
-  },
-  components: {
-    Picks
+    pick: Object
   },
   methods: {
+    go_to_detail(){
+      this.$router.push({path: `/mypage/item/${this.pick.userNo}/${this.pick.tagNo}/${this.pick.no}`})
+    }
   },
   computed: {
-    filteredPicks(){
-      const temp = []
-      this.pickData.forEach(ele => {
-        if (!this.filter && ele.no == this.tap){
-          temp.push(ele)
-        }
-        else if (ele.no == this.tap && ele.tagNo == this.filter){
-          temp.push(ele)
-        }
-      })
-      return temp
+    thumbNail(){
+      return this.pick.contentsList[0].postImgLink
     },
+    title(){
+      return this.pick.name
+    },
+    planet(){
+      return this.planetStyles[this.pick.tagNo].img
+    }
   }
 }
 </script>
 
 <style scoped>
   h3 {
-    color: #777777;
-    font-size: 1.2rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-    cursor: pointer;
-  }
-  
-  p {
-    color: #777777;
     font-size: 1.25rem;
     font-weight: bold;
-    margin: 3rem;
+    margin: 0.5rem;
+    word-break: keep-all;
   }
 
-  #pick-container {
-    display: flex;
-		flex-direction: column;
-		align-items: center;
-		width: 100%;
+  p {
+    margin: 0;
+    font-size: 1.5rem;
+    color: rgb(255, 255, 255, 0.75);
   }
 
-  #pick-lists {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  img {
     width: 100%;
-  }
-
-  #list-tab {
-    display: flex;
-    width: 40%;
-    justify-content: space-evenly;
-    align-items: center;
-  }
-
-  #picks {
-    display: grid;
-    justify-content: center;
-    justify-items: start;
-    align-items: baseline;
-    grid-auto-rows: minmax(min-content, max-content);
-    grid-template-columns: 1fr 1fr 1fr;
-    width: 80%;
-    gap: 2rem;
-    margin: 5rem;
-  }
-
-  #no-result {
-		display:flex;
-		flex-direction: column;
-		align-items: center;
-		padding-top: 16.4vh;
-	}
-
-  #nothing {
-    width: 10%;
     height: inherit;
     aspect-ratio: 1/1;
   }
 
-  .active {
-    color: black;
-    font-size: 1.4rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
+  .picks {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border: 1px #cccccc solid;
+    cursor: pointer;
+    position: relative;
   }
 
-  .on {
-    width: 70%;
-    border-bottom: 0.25rem solid #5E39B3;
-    border-radius: 20px;
+  .movie-picks {
+    aspect-ratio: 2/3;
   }
 
-  .off {
-    width: 70%;
-    border-bottom: 0.2rem solid #ffffff;
+  .planet {
+    width: 20%;
+    border: 3px white solid;
+    border-radius: 50%;
+    position: absolute;
+    left: 5%;
+    bottom: 25%;
+  }
+
+  .movie-planet {
+    bottom: 20%;
+  }
+
+  .picks-info {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgb(0, 0, 0, 0.5);
+    z-index: 1;
   }
 </style>

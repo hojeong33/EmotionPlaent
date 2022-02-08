@@ -16,27 +16,22 @@
       </div>
     </article>
     <article id="tab">
-      <span id="dot1" :class="myPageTab == 1 ? 'slide-out':'slide-in'" />
-      <p @click="myPageTab = 1" :class="myPageTab == 1 ? 'activate': ''">게시글</p>
-      <p @click="myPageTab = 2" :class="myPageTab == 2 ? 'activate': ''">찜 목록</p>
+      <span id="dot1" :class="myPageTab == 'feed' ? 'slide-out':'slide-in'" />
+      <p @click="changeTab('feed')" :class="myPageTab == 'feed' ? 'activate': ''">게시글</p>
+      <p @click="changeTab('pick')" :class="myPageTab == 'pick' ? 'activate': ''">찜 목록</p>
     </article>
     <article id="list-container">
-      <filter-tab :user-mood="userMood" @filtering="filtering" />
-      <feed-list v-if="myPageTab == 1" :user-mood="userInfo.mood" :filter="filter" />
-      <pick-list v-if="myPageTab == 2" :user-mood="userInfo.mood" :filter="filter" />
+      <router-view/>
     </article>
   </section>  
 </template>
 
 <script>
 import SideProfileCard from '@/components/SideProfileCard.vue'
-import FilterTab from '@/components/user/FilterTab.vue'
-import PickList from '@/components/user/PickList.vue'
-import FeedList from '@/components/user/FeedList.vue'
 
 export default {
   name: 'Mypage',
-  components: {SideProfileCard, FilterTab, PickList, FeedList},
+  components: {SideProfileCard},
   data() {
     return {
       userInfo: {
@@ -46,15 +41,23 @@ export default {
       followings: 0,
       followers: 20100,
       },
-      myPageTab: 1,
+      myPageTab: 'feed',
       filter: 0
     }
   },
   methods: {
-    filtering(payload){
-      this.filter = payload
+    changeTab(tap){
+      this.myPageTab = tap
+      this.$router.push({ path: `/mypage/${tap}` })
     }
   },
+  created(){
+    window.addEventListener('load', () => {
+      if (this.$route.params.tap != 'feed'){
+        this.myPageTab = 'pick'
+      }
+    })
+  }
 }
 </script>
 
@@ -164,13 +167,6 @@ export default {
     justify-content: center;
   }
 
-  #profile_img {
-    width: 14vh;
-    height: 14vh;
-    min-width: 50px;
-    border-radius: 50%;
-  }
-
   #tab {
     display: flex;
     justify-content: center;
@@ -189,6 +185,12 @@ export default {
     top: -15%;
     left: 44%;
     background-color: #5E39B3;
+  }
+
+  #list-container {
+    width: 100%;
+    display: flex;
+    justify-content: center;
   }
 
   @keyframes slide-in {

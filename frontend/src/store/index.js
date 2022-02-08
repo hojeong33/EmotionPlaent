@@ -6,7 +6,7 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     navActive: [false, false, false, false, false],
-    user: null
+    user: null,
   },
   mutations: {
     navActivate: function({ navActive }, payload){
@@ -25,12 +25,14 @@ export default new Vuex.Store({
       })
       Vue.set(navActive, payload, true)
     },
+    
     feedOut({ navActive }){
       Vue.set(navActive, 0, false)
     },
+
     userInfo: function(state, payload){
       state.user = payload
-    }
+    },
   },
   actions: {
   },

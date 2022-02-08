@@ -61,12 +61,11 @@ export default {
 
 	#planet_img {
 		width: 5%;
-		height: 5%;
+		height: inherit;
+		aspect-ratio: 1/1;
 	}
 
 	select { 
-		/* width: 20%;
-		height: 10%; */
 		padding: 0.2rem 2rem 0;
 		border: none;
 		border-radius:0; /* 아이폰 사파리 보더 없애기 */ 

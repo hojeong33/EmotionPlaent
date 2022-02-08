@@ -3,7 +3,11 @@ import VueRouter from 'vue-router'
 import Login from '@/views/accounts/Login'
 import Signup from '@/views/accounts/Signup'
 import EmotionTest from '@/views/EmotionTest'
+
 import Mypage from '@/views/user/Mypage.vue'
+import List from '@/components/user/List'
+import PickItem from '@/components/user/PickItem'
+
 import Recommend from '@/components/MainPage/RecommendTab/Recommend.vue'
 import Feed from '@/components/MainPage/FeedTab/Feed.vue'
 import Main from '@/views/main/Main.vue'
@@ -31,7 +35,21 @@ const routes = [
   {
     path: '/mypage',
     name: 'Mypage',
-    component: Mypage
+    redirect: '/mypage/feed',
+    component: Mypage,
+    children: [
+      {
+        path: ':tap',
+        default: '',
+        component: List,
+        props: true
+      },
+      {
+        path: 'item/:id/:tag/:index',
+        component: PickItem,
+        props: true
+      }
+    ]
   },
   {
     path:'/recommend',
