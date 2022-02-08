@@ -213,7 +213,13 @@ export default {
   .slide-in {
     animation: slide-in 0.5s ease-out forwards;
   }
-
+  #short_comment {
+    text-align: left;
+  }
+  #my_comment {
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
   .slide-out {
     animation: slide-out 0.5s ease-out forwards;
   }
@@ -222,4 +228,5 @@ export default {
     color: black;
     font-size: 1.3rem;
   }
+
 </style>

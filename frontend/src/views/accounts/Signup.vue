@@ -109,7 +109,9 @@
   </div>
 </template>
 
+
 <script>
+// 회원가입 완료 후 로그인 페이지로 이동하게 만들어야 함
   import axios from 'axios'
 
   export default {

@@ -17,11 +17,21 @@ import PwChange from '@/components/Settings/PwChange'
 import Withdrawal from '@/components/Settings/Withdrawal'
 import FeedDetail from '@/components/FeedDetail'
 import PwFind from '@/components/Settings/PwFind'
+import ProfileUpdate from '@/components/Settings/ProfileUpdate'
+// import Create from '@/views/Create'
+// import CreateImg from '@/components/Create/CreateImg'
+// import CreateTag from '@/components/Create/CreateTag'
+// import CreateText from '@/components/Create/CreateText'
 import store from '../store/index.js'
 
 Vue.use(VueRouter)
 
 const routes = [
+  {
+    path: '/',
+    name: 'Login',
+    component: Login
+  },
   {
     path: '/login',
     name: 'Login',
@@ -92,6 +102,10 @@ const routes = [
       {
         path: 'password-find',
         component: PwFind
+      },
+      {
+        path:'profile-update',
+        component: ProfileUpdate,
       }
     ],  
   },

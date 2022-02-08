@@ -117,7 +117,7 @@ export default {
     login: function () {
       axios({
         method: 'post',
-        url:'http://localhost:8080/login',
+        url:'http://13.125.47.126:8080/login',
         data: this.credentials
       })
       .then((res)=>{
@@ -126,10 +126,12 @@ export default {
         // storage 설정
         session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
         session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
-
         const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
+        this.$store.state.userInfo = decodeAccessToken.userInfo
+        console.log(this.$store.state.userInfo.email)
         console.log('decodeAccessToken data', decodeAccessToken);
         this.sendToken();
+        this.$router.push('EmotionTest')
       })
       .catch(err=> {
         console.log(err.response.data)
@@ -140,7 +142,7 @@ export default {
     },
 
     tokenVerify() {
-      const url = 'http://localhost:8080/login/auth';
+      const url = 'http://13.125.47.126:8080/login/auth';
       const params = new URLSearchParams();
       params.append('idToken', this.googleUser.wc.id_token);
       console.log(params)
@@ -153,8 +155,10 @@ export default {
 
         const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
         console.log('decodeAccessToken data', decodeAccessToken);
+        this.$store.state.userInfo = decodeAccessToken.userInfo
+        console.log(this.$store.state.userInfo.email)
         this.sendToken();
-
+        this.$router.push('EmotionTest')
       }).catch((error) => {
         console.log(error);
       }).then(() => {

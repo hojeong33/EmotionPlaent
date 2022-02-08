@@ -13,7 +13,7 @@ import Navigation from '@/components/Navigation'
 export default {
   components: {
     Create,
-    Navigation
+    Navigation,
   },
   computed:{
     feedActive(){
