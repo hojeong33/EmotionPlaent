@@ -3,7 +3,6 @@ package com.ssafy.project.EmotionPlanet.Service;
 import com.ssafy.project.EmotionPlanet.Dao.UserDao;
 import com.ssafy.project.EmotionPlanet.Dto.FindEmailDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
-import com.ssafy.project.EmotionPlanet.Dto.UserSecretDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
