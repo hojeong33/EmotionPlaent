@@ -17,7 +17,6 @@ public class UserDto {
     private int publish;
     private String intro;
     
-    
 	public String getIntro() {
 		return intro;
 	}

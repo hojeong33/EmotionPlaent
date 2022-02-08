@@ -70,7 +70,7 @@
 		parameterType="com.ssafy.project.EmotionPlanet.Dto.UserDto">
 		update user
 		set pw = #{pw}, nickname = #{nickname} , mood
-		= #{mood} , publish = #{publish} , tel = #{tel}, intro = #{intro}
+		= #{mood} , publish = #{publish} , tel = #{tel}, intro = #{intro}, birth = #{birth}
 		where no = #{no}
 	</update>
 

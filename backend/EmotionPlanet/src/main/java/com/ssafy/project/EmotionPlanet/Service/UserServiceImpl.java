@@ -3,7 +3,6 @@ package com.ssafy.project.EmotionPlanet.Service;
 import com.ssafy.project.EmotionPlanet.Dao.UserDao;
 import com.ssafy.project.EmotionPlanet.Dto.FindEmailDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
-import com.ssafy.project.EmotionPlanet.Dto.UserSecretDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -63,6 +62,10 @@ public class UserServiceImpl implements UserService {
 			userDto.setMood(changeuserDto.getMood());
 		} else if (changeuserDto.getPublish() != 0) { // 계정 공개 비공개
 			userDto.setPublish(changeuserDto.getPublish());
+		}  else if (changeuserDto.getTel() != null) {  // 구글 로그인 회원 기본 정보 갱신
+			userDto.setNickname(changeuserDto.getNickname());
+			userDto.setTel(changeuserDto.getTel());
+			userDto.setBirth(changeuserDto.getBirth());
 		} else if (changeuserDto.getPw() != null) { // 활동명, 비밀번호, 소개글 변경
 			userDto.setNickname(changeuserDto.getNickname());
 			userDto.setPw(changeuserDto.getPw());
