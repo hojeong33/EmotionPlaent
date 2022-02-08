@@ -2,7 +2,7 @@
   <section id="mypage-container">
     <side-profile-card :user-info="userInfo" />
     <article id="profile-container">
-      <img src="https://www.thesprucepets.com/thmb/meRd41is751DsQQjofaiKV_ZUBg=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cat-talk-eyes-553942-hero-df606397b6ff47b19f3ab98589c3e2ce.jpg" id="profile_img">
+      <img id="profile-img"  src="https://www.thesprucepets.com/thmb/meRd41is751DsQQjofaiKV_ZUBg=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cat-talk-eyes-553942-hero-df606397b6ff47b19f3ab98589c3e2ce.jpg">
       <div id="profile-card">
         <div id="name-card">
           <h1>{{ userInfo.username }}</h1>
@@ -137,6 +137,13 @@ export default {
     align-items: center;
     width: 80%;
     padding: 2rem 1rem;
+  }
+
+  #profile-img {
+    width: 20%;
+    height: inherit;
+    aspect-ratio: 1/1;
+    border-radius: 50%;
   }
 
   #profile-card {

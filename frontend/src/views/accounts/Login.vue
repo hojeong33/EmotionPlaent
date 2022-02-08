@@ -4,11 +4,8 @@
       <h1>어서오세요!</h1>
       <h1>오늘은 어떤 이야기를</h1>
       <h1>들려주실건가요? 😉</h1>
-      <!-- <div>
-        <img src="../../assets/images/sun.png" id="sun">
-      </div> -->
     </div>
-    <section id="login_body">
+    <form @submit.prevent="login" id="login_body">
       <article id="email_form">
         <label for="email">이메일</label>
         <input type="text"
@@ -24,15 +21,15 @@
         v-model="credentials.pw"
         placeholder="비밀번호를 입력해주세요">
       </article>
-    </section>
-    <article id="link">
-      <a href="#">이메일 찾기</a>
-      <a href="#">비밀번호 찾기</a>
-      <router-link :to="{ name: 'Signup' }" class="gosignup">회원가입</router-link>
-    </article>
-    <article>
-      <button id="login_btn" @click="login">로그인</button>
-    </article>
+      <div id="link">
+        <a href="#">이메일 찾기</a>
+        <a href="#">비밀번호 찾기</a>
+        <router-link :to="{ name: 'Signup' }" class="gosignup">회원가입</router-link>
+      </div>
+      <article>
+        <button id="login_btn" @click="login">로그인</button>
+      </article>
+    </form>
     <button id="google" class="social_login">
       <img id="google" src="../../assets/images/etc/Google__G__Logo.png">
       <p>Google로 로그인</p>
@@ -135,6 +132,7 @@ export default {
         this.sendToken();
       })
       .catch(err=> {
+        console.log(err.response.data)
         alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
       })
       this.credentials.email = "";
