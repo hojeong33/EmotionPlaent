@@ -3,36 +3,47 @@
     <navigation />
     <create v-if="feedActive" />
     <router-view/>
+    <logout-modal v-if="logoutModalActive" />
+    <user-feed-setting v-if="userFeedSettingModalActive" />
+    <comment-setting v-if="commentSettingModalActive" />
+    <profile-img-change v-if="profileImgChangeModalActive" />
+    <login-confirm v-if="loginConfirmModalActive" />
+    <signup-confirm v-if="signupConfirmModalActive" />
   </div>
 </template>
 
 <script>
-  import Create from '@/views/Create'
-  import Navigation from '@/components/Navigation'
+import Create from '@/views/Create'
+import Navigation from '@/components/Navigation'
+import LogoutModal from '@/components/Modal/LogoutModal.vue'
+import UserFeedSetting from '@/components/Modal/UserFeedSetting.vue'
+import CommentSetting from '@/components/Modal/CommentSetting.vue'
+import ProfileImgChange from '@/components/Modal/ProfileImgChange.vue'
+import LoginConfirm from '@/components/Modal/LoginConfirm.vue'
+import SignupConfirm from '@/components/Modal/SignupConfirm.vue'
+import { mapState } from 'vuex'
 
-  // const jwt = require('jsonwebtoken');
-  // const token = window.sessionStorage.getItem('at-jwt-access-token');
 
-  export default {
-    components: {
-      Create,
-      Navigation,
+export default {
+  components: {
+    Create,
+    Navigation,
+    LogoutModal,
+    UserFeedSetting,
+    CommentSetting,
+    ProfileImgChange,
+    LoginConfirm,
+    SignupConfirm,
+  },
+  computed:
+    mapState([
+      'feedActive', 'modalActive', 'profileImgChangeModalActive', 'commentSettingModalActive', 'logoutModalActive', 'userFeedSettingModalActive', 'loginConfirmModalActive', 
+      'signupConfirmModalActive',
+    ]),
+    feedActive(){
+      return this.$store.state.navActive[0]
     },
-    computed:{
-      feedActive(){
-        return this.$store.state.navActive[0]
-      }
-    },
-    // beforeCreate(){
-    //   window.addEventListener('load', () => {
-    //     console.log('loaded!')
-    //     if (token){
-    //       const decodeAccessToken = jwt.decode(token)
-    //       this.$store.commit('userUpdate', decodeAccessToken.userInfo)
-    //     }
-    //   })
-    // }
-  }
+}
 
 </script>
 

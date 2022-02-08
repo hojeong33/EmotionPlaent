@@ -8,7 +8,7 @@
 				<img id="profile_img" src="../../assets/images/KakaoTalk_20220112_170830193.jpg" alt="">
 				<p id="user_id">유저 아이디</p>
 				<div id="profile_img_change">
-					<button id="profile_img_change_button">사진 변경</button>
+					<button id="profile_img_change_button" @click="profileImgChangeModal">사진 변경</button>
 				</div>
 			</article>
 			<br>
@@ -128,6 +128,9 @@ export default {
     go_to_back: function(){
       this.$router.go(-1)
     },
+    profileImgChangeModal:function(){
+      this.$store.commit('profileImgChangeModalActivate')
+		}
   }
 }
 </script>
@@ -321,7 +324,11 @@ export default {
     display: flex;
     flex-direction: row !important;
     justify-content: center;
-    margin: 1rem;
+    margin: 1rem 4rem 1rem;
+  }
+  #pu_button {
+    margin-left:auto;
+    margin-right: auto;
   }
 
   #pu_buttons > *:last-child {

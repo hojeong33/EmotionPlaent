@@ -130,7 +130,9 @@ export default {
         const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
         this.$store.commit('userUpdate', decodeAccessToken.userInfo)
         this.sendToken();
-        this.$router.push('EmotionTest')
+        this.$store.commit('loginConfirmModalActivate')
+        // this.$router.push('EmotionTest')
+        // this.$router.push({ name: 'Main' })
       })
       .catch(err=> {
         console.log('나는 에러야!', err)

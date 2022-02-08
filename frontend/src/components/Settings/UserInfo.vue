@@ -8,7 +8,8 @@
       <div id="us_header_info">
         <span>
           <h2>나는멋쟁이</h2>
-          <button>로그아웃</button>
+          <button @click="logoutModal">로그아웃</button>
+          <!-- <logout-modal v-if="modalActive" @cancel="modalActive=false"></logout-modal> -->
         </span>
         <span>
           <h4>가입일 1234.56.78</h4>
@@ -63,14 +64,20 @@
 </template>
 
 <script>
+// import LogoutModal from '@/components/Modal/LogoutModal.vue'
+
 export default {
   data: function(){
     return {
       birthShow: false,
       showAll: false,
-      showFollow: true
+      showFollow: true,
+      // modalActive: false,
     }
   },
+  // components: {
+  //   LogoutModal,
+  // },
   methods: {
     go_to_passwordchange: function(){
       this.$router.push('/setting/password')
@@ -80,7 +87,10 @@ export default {
     },
     go_to_profilupdate: function () {
       this.$router.push('/setting/profile-update')
-    }
+    },
+    logoutModal:function(){
+      this.$store.commit('logoutModalActivate')
+		}
   },
 }
 </script>
