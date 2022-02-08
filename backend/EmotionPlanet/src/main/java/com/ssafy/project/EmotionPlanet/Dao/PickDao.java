@@ -23,6 +23,9 @@ public interface PickDao {
     public int like(
             @Param("userNo") int userNo,
             @Param("pickNo") int pickNo);
+    public int liking(
+            @Param("userNo") int userNo,
+            @Param("pickNo") int pickNo);
     public int unlike(
             @Param("userNo") int userNo,
             @Param("pickNo")int pickNo);

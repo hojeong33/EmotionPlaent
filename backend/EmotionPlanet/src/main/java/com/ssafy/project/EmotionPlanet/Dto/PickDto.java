@@ -10,18 +10,22 @@ public class PickDto {
     private int tagNo;
     private String name;
     private LocalDateTime date;
+    private int type; //0 노래 1 영화 2 활동
+
+    private boolean owner;
 
     List<PickContentDto> contentsList;
 
     public PickDto() {
     }
 
-    public PickDto(int no, int userNo, int tagNo, String name, LocalDateTime date) {
+    public PickDto(int no, int userNo, int tagNo, String name, LocalDateTime date, int type) {
         this.no = no;
         this.userNo = userNo;
         this.tagNo = tagNo;
         this.name = name;
         this.date = date;
+        this.type = type;
     }
 
     public int getNo() {
@@ -70,6 +74,22 @@ public class PickDto {
 
     public void setContentsList(List<PickContentDto> contentsList) {
         this.contentsList = contentsList;
+    }
+
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public boolean isOwner() {
+        return owner;
+    }
+
+    public void setOwner(boolean owner) {
+        this.owner = owner;
     }
 }
 //=======

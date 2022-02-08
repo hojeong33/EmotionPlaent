@@ -9,6 +9,7 @@ import java.util.List;
 @Mapper
 public interface CommentDao {
     public List<CommentDto> list(int no);
+    public CommentDto read(int no);
     public int write(CommentDto commentDto);
     public int update(CommentDto commentDto);
     public int delete(int no);

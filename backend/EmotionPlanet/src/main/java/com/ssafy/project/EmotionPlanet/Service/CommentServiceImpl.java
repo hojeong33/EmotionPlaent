@@ -14,8 +14,16 @@ public class CommentServiceImpl implements CommentService{
     CommentDao commentDao;
 
     @Override
-    public List<CommentDto> list(int no) {
-        return commentDao.list(no);
+    public List<CommentDto> list(int feedNo) {
+        return commentDao.list(feedNo);
+    }
+
+    @Override
+    public CommentDto read(int no, int userNo) {
+        CommentDto commentDto = commentDao.read(no);
+        if(userNo == commentDto.getAuthor()) commentDto.setOwner(true);
+        else commentDto.setOwner(false);
+        return commentDto;
     }
 
     @Override

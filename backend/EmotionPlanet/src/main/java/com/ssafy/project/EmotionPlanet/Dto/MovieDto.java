@@ -1,17 +1,17 @@
 package com.ssafy.project.EmotionPlanet.Dto;
 
 public class MovieDto {
-	private int apiId;
+	private int no;
 	private String title;
 	private String descr;
 	private String year;
 	private String imgLink;
 	private String genre;
-	public int getApiId() {
-		return apiId;
+	public int getNo() {
+		return no;
 	}
-	public void setApiId(int apiId) {
-		this.apiId = apiId;
+	public void setNo(int no) {
+		this.no = no;
 	}
 	public String getTitle() {
 		return title;
@@ -44,9 +44,9 @@ public class MovieDto {
 		this.genre = genre;
 	}
 	public MovieDto() {}
-	public MovieDto(int apiId, String title, String descr, String year, String imgLink, String genre) {
+	public MovieDto(int no, String title, String descr, String year, String imgLink, String genre) {
 		super();
-		this.apiId = apiId;
+		this.no = no;
 		this.title = title;
 		this.descr = descr;
 		this.year = year;
@@ -55,8 +55,7 @@ public class MovieDto {
 	}
 	@Override
 	public String toString() {
-		return "MovieDto [apiId=" + apiId + ", title=" + title + ", descr=" + descr + ", year=" + year + ", imgLink="
+		return "MovieDto [no=" + no + ", title=" + title + ", descr=" + descr + ", year=" + year + ", imgLink="
 				+ imgLink + ", genre=" + genre + "]";
 	}
-	
 }
