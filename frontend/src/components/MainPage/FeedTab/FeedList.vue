@@ -16,7 +16,7 @@ export default {
   props: {
     posts: Array,
   },
-  components: {Feed,
+  components: {Feed
   }
 };
 </script>

@@ -321,7 +321,11 @@ export default {
     display: flex;
     flex-direction: row !important;
     justify-content: center;
-    margin: 1rem;
+    margin: 1rem 4rem 1rem;
+  }
+  #pu_button {
+    margin-left:auto;
+    margin-right: auto;
   }
 
   #pu_buttons > *:last-child {
