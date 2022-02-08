@@ -21,7 +21,7 @@ export default new Vuex.Store({
     recommendMovie: [],
     recommendActivity: [],
     recommendReload: 0,
-    userInfo: [],
+    userInfo: null,
     planetStyles: [
       { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
       { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
@@ -31,7 +31,6 @@ export default new Vuex.Store({
       { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
     ],
     navActive: [false, false, false, false, false],
-    user: null,
   },
   mutations: {
     navActivate: function({ navActive }, payload){
@@ -55,9 +54,16 @@ export default new Vuex.Store({
       console.log(state)
       state.words = searchWords
     },
-    //
-    userInfo: function (state, payload) {
-      console.log(payload)
+    userUpdate(state, payload){
+      if (!session.getItem('userInfo')){
+        session.setItem('userInfo', JSON.stringify(payload))
+      }
+      const userdata = JSON.parse(session.getItem('userInfo'))
+      if(typeof(payload) == 'number'){
+        userdata.mood = payload
+        session.setItem('userInfo', JSON.stringify(userdata))
+      }
+      state.userInfo = userdata
     },
     feedOut({ navActive }){
       Vue.set(navActive, 0, false)
@@ -173,13 +179,14 @@ export default new Vuex.Store({
             console.log("Access Token을 교체합니다!!!")
           }
         
-        }).catch((error) => {
-          console.log(error);
-        }).then(() => {
-          console.log('getQSSList End!!');
-        });
-      },
+      }).catch((error) => {
+        console.log(error);
+      }).then(() => {
+        console.log('getQSSList End!!');
+      });
+    },
   },
   modules: {
-  },
+    
+  }
 })

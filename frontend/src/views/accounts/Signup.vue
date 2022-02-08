@@ -152,13 +152,12 @@
         if (this.credentials.pw === this.credentials.passwordConfirmation){ // 입력 비밀번호가 일치하면 회원가입 (나중에 여기다 벨류체크)
           axios({
             method: 'post',
-            url: 'http://localhost:8080/users',
+            url: 'http://13.125.47.126:8080/users',
             data: this.credentials
           })
           .then( () => {
-            if (alert('가입이 완료되었습니다.')){
-              this.$router.push({name:'Login'}) // 가입 완료시 로그인 페이지로 이동
-            }
+            alert('가입이 완료되었습니다.')
+            this.$router.push({name:'Login'}) // 가입 완료시 로그인 페이지로 이동
           })
           .catch(res => {
             alert(res.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.

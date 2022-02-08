@@ -7,20 +7,32 @@
 </template>
 
 <script>
-import Create from '@/views/Create'
-import Navigation from '@/components/Navigation'
+  import Create from '@/views/Create'
+  import Navigation from '@/components/Navigation'
 
-export default {
-  components: {
-    Create,
-    Navigation,
-  },
-  computed:{
-    feedActive(){
-      return this.$store.state.navActive[0]
-    }
+  // const jwt = require('jsonwebtoken');
+  // const token = window.sessionStorage.getItem('at-jwt-access-token');
+
+  export default {
+    components: {
+      Create,
+      Navigation,
+    },
+    computed:{
+      feedActive(){
+        return this.$store.state.navActive[0]
+      }
+    },
+    // beforeCreate(){
+    //   window.addEventListener('load', () => {
+    //     console.log('loaded!')
+    //     if (token){
+    //       const decodeAccessToken = jwt.decode(token)
+    //       this.$store.commit('userUpdate', decodeAccessToken.userInfo)
+    //     }
+    //   })
+    // }
   }
-}
 
 </script>
 
