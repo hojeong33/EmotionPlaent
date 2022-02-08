@@ -10,10 +10,11 @@ Vue.use(Vuex)
 export default new Vuex.Store({
   state: {
     feedActive: false,
-    searchActive: false,
+    //검색부분
     words: null,
     tagSearch: [],
     userSearch: [],
+    //메인 추천탭 부분
     user: null,
     userEmotion: null,
     recommendType: 1,
@@ -37,18 +38,12 @@ export default new Vuex.Store({
       state.feedActive = !state.feedActive
       console.log(state.feedActive)
     },
-    activateSearch: function(state){
-      console.log(state)
-      state.searchActive = true
-    },
-    deactivateSearch: function(state){
-      console.log(state)
-      state.searchActive = false
-    },
+    //검색부분
     updateSearch: function(state, searchWords){
       console.log(state)
       state.words = searchWords
     },
+    //
     userInfo: function (state, payload) {
       console.log(payload)
       state.user = payload
@@ -57,11 +52,15 @@ export default new Vuex.Store({
   actions: {
     //여기 검색부분입니다
     searchTag() {
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
       axios({
         method: 'get',
         url:'http://13.125.47.126:8080/searchs/byTag/' + this.state.words,
-      })
-      .then((res)=>{
+        headers: headers,
+      }).then(res => {
         this.state.tagSearch = res.data
         console.log('then')
         console.log(res.data)
@@ -73,9 +72,14 @@ export default new Vuex.Store({
       })
     },
     searchUser() {
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
       axios({
         method: 'get',
         url:'http://13.125.47.126:8080/searchs/byNickName/' + this.state.words,
+        headers: headers,
       })
       .then((res)=>{
         this.state.userSearch = res.data

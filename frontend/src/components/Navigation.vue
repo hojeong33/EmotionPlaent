@@ -6,9 +6,12 @@
           <img src="@/assets/images/logo/EMOTION PLANET.png" id="logo_img" alt="" @click="goMain">
         </div>
         <form class="d-flex" id="searches">
-          <input id="search_bar" class="form-control" autocomplete="off"
-          type="search" placeholder="Search" aria-label="Search"
-          @focus="searchOn" :value="searchWords" @input="search">
+          <div class="search_menu" v-on:cancel="searchOff">
+            <input id="search_bar" class="form-control" autocomplete="off"
+            type="search" placeholder="Search" aria-label="Search"
+            @focus="searchOn" :value="searchWords" @input="search">
+            <search v-if="searching" v-on:cancel="searchOff" id="dropdown"></search>
+          </div>
           <!-- <button class="btn btn-outline-success" type="submit" id="search"><img src="@/assets/images/search.png" id="search"></button> -->
           <img src="@/assets/images/icons/search.png" id="search" type="submit">
         </form>
@@ -28,6 +31,8 @@
 <script>
 // import {mapState} from 'vuex'
 // 똑같은 페이지 눌렀을 때 새로고침이 안 됨 - 수정 필요
+import Search from '@/components/Search/Search'
+
 export default {
   name: 'App',
   data: function (){
@@ -37,11 +42,12 @@ export default {
       imgName_setting: 'settings.png',
       imgName_alarm: 'bell.png',
       isActive: [false, false, false, false], //네브바에서 선택됐는지 여부를 파악
-      searchInput: 'null',
-      // searchFinish,
-      
+      //검색입니둥
+      searching: false,
+      searchWords: null,
     }
   },
+  components: { Search },
   methods: {
     changeImg_write() {
       this.$store.commit('activateFeed')
@@ -120,15 +126,6 @@ export default {
         }
       } 
     },
-    changeImg_alarm() {
-      if (this.imgName_alarm === 'bell.png') {
-        this.imgName_alarm = 'bell_selected.png'
-        this.isActive = true
-      } else {
-        this.imgName_alarm = 'bell.png'
-        this.isActive = false
-      }
-    },
     goMain() {
       this.$router.push({name: 'Main'})
       this.imgName_write = 'more.png'
@@ -138,7 +135,13 @@ export default {
     },
     //검색 부분입니둥
     searchOn() {
-      this.$store.commit('activateSearch')
+      this.searching = true
+    },
+    searchOff() {
+      this.searching = false
+      this.$store.state.words = null
+      this.$store.state.tagSearch = []
+      this.$store.state.userSearch = []
     },
     search( searchWords ) {
       this.$store.commit('updateSearch', searchWords.target.value)
@@ -264,9 +267,25 @@ export default {
   width: 25px;
   height: 25px;
   margin: 10px;
+  position: relative;
 } 
 img{
   cursor: pointer;
+}
+
+.search_menu {
+  display: flex;
+  flex-direction: column;
+}
+
+#dropdown {
+  z-index: 10;
+  width: 25%;
+  min-width: 150px;
+  height: 15%;
+  position: absolute;
+  background-color: white;
+  margin-top: 3.5rem;
 }
 </style>
 
