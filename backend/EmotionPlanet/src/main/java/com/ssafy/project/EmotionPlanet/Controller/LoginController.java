@@ -1,6 +1,7 @@
 package com.ssafy.project.EmotionPlanet.Controller;
 
 import javax.servlet.http.HttpSession;
+import javax.websocket.Session;
 
 import com.ssafy.project.EmotionPlanet.Config.JWT.JwtService;
 import com.ssafy.project.EmotionPlanet.Config.OAuth.PrincipalOauth2UserService;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -39,6 +41,10 @@ public class LoginController {
     @Autowired
     LoginService loginService;
 
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+
+
 //    @PostMapping(value = "/login")  // post 방식으로 들어옴
 //    public ResponseEntity<?> login(@RequestBody UserDto dto, HttpSession session) { // 로그인
 //        UserDto userDto = loginService.login(dto);
@@ -55,7 +61,7 @@ public class LoginController {
 //    }
 
     @PostMapping(value = "/login")  // post 방식으로 들어옴
-    public ResponseEntity<?> login(@RequestBody UserDto dto, HttpSession session) { // 로그인
+    public ResponseEntity<?> login(@RequestBody UserDto dto) { // 로그인
         UserDto user = loginService.login(dto);
         UserSecretDto userDto = new UserSecretDto(user.getNo(), user.getEmail(), user.getNickname(), user.getBirth(), user.getProfileImg(), user.getTel(), user.getMood());
 
@@ -63,8 +69,8 @@ public class LoginController {
         if (userDto != null) {
         	System.out.println("로그인 성공");
             System.out.println(userDto);
-
             TokenDto atJWT = jwtService.create(userDto);
+            System.out.println("로그인 컨트롤 atJWT");
             System.out.println(atJWT);
             res.add("at-jwt-access-token", atJWT.getAccessJws());
             res.add("at-jwt-refresh-token", atJWT.getRefreshJws());
@@ -82,13 +88,15 @@ public class LoginController {
     public ResponseEntity<?> tokenVerify(String idToken){
         System.out.println("RequestBody value : " + idToken);
         UserDto user =  principalOauth2UserService.tokenVerify(idToken);
+        user = userService.userSelectByEmail(user.getEmail());
         UserSecretDto userDto = new UserSecretDto(user.getNo(), user.getEmail(), user.getNickname(), user.getBirth(), user.getProfileImg(), user.getTel(), user.getMood());
         HttpHeaders res = new HttpHeaders();
-
+        System.out.println(userDto);
         if (user.getEmail() != null) {
             principalOauth2UserService.insertUser(user);
 
             TokenDto atJWT = jwtService.create(userDto);
+            System.out.println("로그인 컨트롤 atJWT");
             System.out.println(atJWT);
             res.add("at-jwt-access-token", atJWT.getAccessJws());
             res.add("at-jwt-refresh-token", atJWT.getRefreshJws());

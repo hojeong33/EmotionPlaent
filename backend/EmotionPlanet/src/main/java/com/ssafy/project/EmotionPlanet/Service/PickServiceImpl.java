@@ -31,16 +31,20 @@ public class PickServiceImpl implements PickService{
         List<PickDto> pickDtos = pickDao.list(userNo);
 
         for (PickDto pickDto : pickDtos) {
-            pickDto.setContentsList(pickContentDao.list(pickDto.getNo()));
+            if(userNo == pickDto.getUserNo()) pickDto.setOwner(true);
+            else pickDto.setOwner(false);
+            //pickDto.setContentsList(pickContentDao.list(pickDto.getNo()));
         }
 
         return pickDtos;
     }
 
     @Override
-    public PickDto select(int no) {
+    public PickDto select(int no, int userNo) {
         PickDto pickDto = pickDao.select(no);
-        pickDto.setContentsList(pickContentDao.list(pickDto.getNo()));
+        if(userNo == pickDto.getUserNo()) pickDto.setOwner(true);
+        else pickDto.setOwner(false);
+        //pickDto.setContentsList(pickContentDao.list(pickDto.getNo()));
         return pickDto;
     }
 

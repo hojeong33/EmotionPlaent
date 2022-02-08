@@ -11,8 +11,8 @@
 	
 	<select id="userSelect" parameterType="int"
 		resultType="com.ssafy.project.EmotionPlanet.Dto.UserDto">
-		select no, email, pw, nickname, tel, birth, profile_img as
-		profileImg, publish
+		select no, email, pw, mood ,nickname, tel, birth, profile_img as
+		profileImg, publish, intro
 		from user
 		where no = #{no}
 	</select>
@@ -70,7 +70,7 @@
 		parameterType="com.ssafy.project.EmotionPlanet.Dto.UserDto">
 		update user
 		set pw = #{pw}, nickname = #{nickname} , mood
-		= #{mood} , publish = #{publish} , tel = #{tel}
+		= #{mood} , publish = #{publish} , tel = #{tel}, intro = #{intro}, birth = #{birth}
 		where no = #{no}
 	</update>
 

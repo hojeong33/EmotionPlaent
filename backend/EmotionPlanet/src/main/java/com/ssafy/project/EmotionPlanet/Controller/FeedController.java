@@ -1,19 +1,26 @@
 package com.ssafy.project.EmotionPlanet.Controller;
 
+import com.ssafy.project.EmotionPlanet.Config.JWT.JwtService;
 import com.ssafy.project.EmotionPlanet.Dto.*;
 import com.ssafy.project.EmotionPlanet.Service.FeedService;
 import com.ssafy.project.EmotionPlanet.Service.ImgService;
 import com.ssafy.project.EmotionPlanet.Service.S3Service;
 import com.ssafy.project.EmotionPlanet.Service.TagService;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 
 @CrossOrigin(
         origins = "http://localhost:5500",
@@ -32,6 +39,9 @@ public class FeedController {
 
     @Autowired
     ImgService imgService;
+
+    @Autowired
+    JwtService jwtService;
 
     private static final int SUCCESS = 1;
 
@@ -71,6 +81,28 @@ public class FeedController {
         }
     }
 
+    @GetMapping(value ="/feeds/returnNo/{no}") // 최신 피드 목록
+    public ResponseEntity<List<Integer>> listReturnNo(@PathVariable String no) {
+        int userNo = Integer.parseInt(no);
+        List<Integer> feeds = feedService.listReturnNo(userNo);
+        if(feeds != null) {
+            return new ResponseEntity<List<Integer>>(feeds, HttpStatus.OK);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "최신피드가 없습니다.");
+        }
+    }
+
+    @GetMapping(value ="/feeds/my/returnNo{no}") // 내가 작성한 피드 목록
+    public ResponseEntity<List<Integer>> myListReturnNo(@PathVariable String no) {
+        int userNo = Integer.parseInt(no);
+        List<Integer> feeds = feedService.myListReturnNo(userNo);
+        if(feeds != null) {
+            return new ResponseEntity<List<Integer>>(feeds, HttpStatus.OK);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "내가 작성한 피드가 없습니다.");
+        }
+    }
+
     @GetMapping(value ="/feeds/my/{no}") // 내가 작성한 피드 목록
     public ResponseEntity<List<FeedDto>> myList(@PathVariable String no) {
         int userNo = Integer.parseInt(no);
@@ -82,10 +114,23 @@ public class FeedController {
         }
     }
 
+
     @GetMapping(value ="/feed/{no}") // 피드 정보
-    public ResponseEntity<FeedDto> read(@PathVariable String no) {
+    public ResponseEntity<FeedDto> read(@RequestHeader(value="at-jwt-access-token") String jwt, @PathVariable String no) {
+
         int feedNo = Integer.parseInt(no);
-        FeedDto feed = feedService.read(feedNo);
+        String decode = jwtService.decode(jwt);
+        System.out.println("디코딩 내용 : " + decode);
+        String[] arr = decode.split("\\{|\\}| |,|\"|:");
+        String userNo = "";
+        for(int i = 0; i < arr.length; i++){
+            if (arr[i].equals("no")) {
+                userNo = arr[i + 2];
+                break;
+            }
+        }
+
+        FeedDto feed = feedService.read(feedNo, Integer.parseInt(userNo));
         if(feed != null) {
             return new ResponseEntity<FeedDto>(feed, HttpStatus.OK);
         } else {
