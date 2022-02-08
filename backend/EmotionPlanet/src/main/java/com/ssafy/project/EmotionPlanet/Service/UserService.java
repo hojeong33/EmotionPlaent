@@ -2,6 +2,7 @@ package com.ssafy.project.EmotionPlanet.Service;
 
 import com.ssafy.project.EmotionPlanet.Dto.FindEmailDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
+import com.ssafy.project.EmotionPlanet.Dto.UserSecretDto;
 
 public interface UserService {
     public int userRegister(UserDto dto);
@@ -14,4 +15,6 @@ public interface UserService {
     public int duplicateTel(String tel);
     public String findEamil(String tel);
     public String findPw(FindEmailDto findEmailDto);
+    public int userRefreshToken(UserDto userDto);
+    public String selectRefreshToken(String email);
 }

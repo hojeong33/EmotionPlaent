@@ -11,12 +11,17 @@
         <div id="profile_card">
           <div id="name_card">
             <h1>{{ userInfo.username }}</h1>
-            <button>프로필 수정</button>
+            <button @click="$router.push({name: 'Setting'})">프로필 수정</button>
           </div>
           <div id="info_card">
             <h3>게시글 {{ userInfo.posts }}</h3>
             <h3>팔로우 {{ userInfo.followings }}</h3>
             <h3>팔로워 {{ userInfo.followers }}</h3>
+          </div>
+          <br>
+          <!-- 소개글 코드 -->
+          <div id="short_comment">
+            <p id="my_comment">소개글~~~</p>
           </div>
         </div>
       </div>
@@ -235,5 +240,11 @@ export default {
     direction: row;
     justify-content: space-between;
   }
-
+  #short_comment {
+    text-align: left;
+  }
+  #my_comment {
+    font-size: 1.1rem;
+    font-weight: bold;
+  }
   </style>

@@ -43,6 +43,8 @@
   import TestKeyword from '@/components/EmotionTest/EmotionKeyword'
   import SelectedKeyword from '@/components/EmotionTest/SelectedKeyword'
   import axios from 'axios'
+  // import index from '@/store/index.js'
+  const session = window.sessionStorage;
 
   export default {
     data: function(){
@@ -88,24 +90,35 @@
         }
       },
       nextTest: function(){
+        let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
         if (this.testNum == 1){
           if (this.selected.length >= 2){
             axios({
               method: 'post',
               url: 'http://13.125.47.126:8080/detailtest',
-              data: this.selected
-            })
-            .then((res) => {
-              console.log(res)
-              this.keywords = res.data
-              this.keywords = this.keywords.sort(() => Math.random() - 0.5)
-              this.selected = []
-              alert('한 번만 더 선택해볼까요?')
-              this.testNum = 2
-              this.page = 1
-              console.log(this.page_of_keywords)
-            })
-            .catch(() => alert('잘못된 요청입니다'))
+              data: this.selected,
+              headers: headers,
+            }).then((res) => {
+                console.log(res)
+                this.keywords = res.data
+                this.keywords = this.keywords.sort(() => Math.random() - 0.5)
+                this.selected = []
+                alert('한 번만 더 선택해볼까요?')
+                this.testNum = 2
+                this.page = 1
+                console.log(this.page_of_keywords)
+                console.log(res);
+                console.log('response header', res.headers);
+                if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
+                  session.setItem('at-jwt-access-token', "");
+                  session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+                  console.log("Access Token을 교체합니다!!!")
+                  }
+                })
+                .catch(() => alert('잘못된 요청입니다'))
           }
           else {
             alert('조금만 더 골라주세요🤣')
@@ -113,19 +126,36 @@
         }
         else {
           axios({
-            method: 'post',
-            url: 'http://13.125.47.126:8080/resulttest',
-            data: this.selected
-          })
-          .then(res => {
+              method: 'post',
+              url: 'http://13.125.47.126:8080/resulttest',
+              data: this.selected,
+              headers: headers,
+            }).then(res => {
             alert(`당신은 ${ res.data.name }행성 입니다!`)
-            location.reload()
+            this.$store.state.userInfo.mood = res.data.no
+            const body = { no: this.$store.state.userInfo.no, mood: res.data.no }
+            axios({
+              method: 'put',
+              url: 'http://13.125.47.126:8080/users',
+              data: body,
+            }).then(res => {
+              console.log(res)
+              this.$router.push('Main')
+            }).catch(err => {
+              console.log(err)
+            })
           })
           .catch(() => alert('잘못된 요청입니다.'))
         }
       },
       go_to_back: function(){
-        this.$router.go(-1)
+        // if문에서 이전 감정 데이터가 존재하지 않으면 {
+        //   this.$router.push({ name: 'Main' })
+
+        // } else {
+        //   this.$router.go(-1)
+        // }
+        this.$router.push({ name: 'Main' })
       },
       refresh_keywords: function(){
         while (this.selected.length > 0){
@@ -150,19 +180,31 @@
       }
     },
     created: function(){
-      axios({
-        method: 'get',
-        url: 'http://13.125.47.126:8080/test'
-      })
-      .then(res => {
-        this.keywords = res.data
-        this.keywords = this.keywords.sort(() => Math.random() - 0.5)
-      })
-      .catch(() => {
-        alert('잘못된 요청입니다.')
-        this.$router.push({ name: 'main' })
-      })
-    }
+      this.$store.state.recommendReload = 0
+      let headers = {
+      'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+      'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+			axios.get('http://13.125.47.126:8080/test', {
+          headers: headers,
+        }).then((res) => {
+          this.keywords = res.data
+          this.keywords = this.keywords.sort(() => Math.random() - 0.5)
+          console.log(res);
+          console.log('response header', res.headers);
+          if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
+            session.setItem('at-jwt-access-token', "");
+            session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+            console.log("Access Token을 교체합니다!!!")
+          }
+          }).catch((error) => {
+            alert('잘못된 요청입니다.')
+            this.$router.push({ name: 'main' })
+            console.log(error);
+          }).then(() => {
+            console.log('getQSSList End!!');
+          });
+      }
   }
 </script>
 

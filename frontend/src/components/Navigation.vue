@@ -1,8 +1,10 @@
 <template>
-  <div id="app">
+  <div id="nav">
     <nav class="navbar navbar-expand-lg" id="navbar-default">
       <div class="container">
-        <a class="navbar-brand" href="#"><img src="@/assets/images/logo/EMOTION PLANET.png" id="logo_img" alt=""></a>
+        <div>
+          <img src="@/assets/images/logo/EMOTION PLANET.png" id="logo_img" alt="" @click="goMain">
+        </div>
         <form class="d-flex" id="searches">
           <input id="search_bar" class="form-control" autocomplete="off"
           type="search" placeholder="Search" aria-label="Search"
@@ -10,66 +12,115 @@
           <!-- <button class="btn btn-outline-success" type="submit" id="search"><img src="@/assets/images/search.png" id="search"></button> -->
           <img src="@/assets/images/icons/search.png" id="search" type="submit">
         </form>
-        <router-link to="/create"><img @click="changeImg_write" :src="require(`@/assets/images/icons/${imgName_write}`)" id="write"></router-link>
-        <router-link to="/#"><img src="@/assets/images/icons/home.png" id="home"></router-link>
-        <router-link to="/#"><img @click="changeImg_profile" :src="require(`@/assets/images/icons/${imgName_profile}`)" id="my_page"></router-link>
-        <div>
-          <router-link to="/#"><img @click="changeImg_alarm" :src="require(`@/assets/images/icons/${imgName_alarm}`)" id="alarm"></router-link>
+        <div id="icons">
+          <img @click="changeImg_write" :src="require(`@/assets/images/icons/${imgName_write}`)" id="write">
+          <img src="@/assets/images/icons/home.png" id="home" @click="goMain">
+          <img @click="changeImg_profile" :src="require(`@/assets/images/icons/${imgName_profile}`)" id="my_page">
+          <div>
+            <img @click="changeImg_alarm" :src="require(`@/assets/images/icons/${imgName_alarm}`)" id="alarm">
+          </div>
+          <img @click="changeImg_setting" :src="require(`@/assets/images/icons/${imgName_setting}`)" id="setting">
         </div>
-        <router-link to="/#"><img @click="changeImg_setting" :src="require(`@/assets/images/icons/${imgName_setting}`)" id="setting"></router-link>
-        <!-- <a class="nav-link active" aria-current="page" href="#"><img src="@/assets/images/more.png" id="write"></a>
-        <a class="nav-link" href="#"><img src="@/assets/images/home.png" id="home"></a>
-        <a class="nav-link "><img src="@/assets/images/user.png" id="my_page"></a>
-        <a class="nav-link "><img src="@/assets/images/bell.png" id="alarm"></a>
-        <a class="nav-link "><img src="@/assets/images/settings.png" id="setting"></a>
-        <a class="nav-link "><img src="@/assets/images/bell_selected.png" id="setting"></a> -->
       </div>
     </nav>
   </div>
 </template>
 <script>
-
+// import {mapState} from 'vuex'
+// 똑같은 페이지 눌렀을 때 새로고침이 안 됨 - 수정 필요
 export default {
   name: 'App',
   data: function (){
     return {
-      isActive: false,
       imgName_write: 'more.png',
       imgName_profile: 'user.png',
       imgName_setting: 'settings.png',
-      imgName_alarm: 'bell.png' ,
-      searching: false,
-      searchWords: null,
+      imgName_alarm: 'bell.png',
+      isActive: [false, false, false, false], //네브바에서 선택됐는지 여부를 파악
+      searchInput: 'null',
+      // searchFinish,
+      
     }
   },
   methods: {
     changeImg_write() {
+      this.$store.commit('activateFeed')
       if (this.imgName_write === 'more.png') {
         this.imgName_write = 'more_selected.png'
-        this.isActive = true
-      } else {
-        this.imgName_write = 'more.png'
-        this.isActive = false
+        this.isActive[0] = true
+
+        if (this.isActive[1] === true || this.isActive[2] === true || this.isActive[3] === true) {
+          this.imgName_profile = 'user.png'
+          this.imgName_alarm = 'bell.png'
+          this.imgName_setting = 'settings.png'
+          this.isActive[1] = false
+          this.isActive[2] = false
+          this.isActive[3] = false
+      
+
+        }
       }
+
+        // 얘는 페이지 바뀌면 색이 빠지는 것을 어떻게 코드를 짜야 하나... ㅠㅠ
+
     },
     changeImg_profile() {
-      if (this.imgName_profile === 'user.png') {
+      this.$router.push({name:'Mypage'})
+      // console.log(this.$route.name)
+      // if (this.$route.name === 'Mypage') {
+      //   this.$router.go(0)
+      // } else {
+      this.isActive[1] = true
+      console.log(this.isActive)
+      if (this.isActive[1] === true) {
         this.imgName_profile = 'user_selected.png'
-        this.isActive = true
-      } else {
-        this.imgName_profile = 'user.png'
-        this.isActive = false
-      }
+        
+        if (this.isActive[0] === true || this.isActive[2] === true || this.isActive[3] === true) {
+          this.imgName_write = 'more.png'
+          this.imgName_alarm = 'bell.png'
+          this.imgName_setting = 'settings.png'
+          this.isActive[0] = false
+          this.isActive[2] = false
+          this.isActive[3] = false
+        }
+      } 
+      this.isActive[1] = false
+      console.log(this.isActive)
+      // }
+    },
+    changeImg_alarm() {
+      this.$router.push('#')
+      if (this.imgName_alarm === 'bell.png') {
+        this.imgName_alarm = 'bell_selected.png'
+        this.isActive[2] = true
+
+        if (this.isActive[0] === true || this.isActive[1] === true || this.isActive[3] === true) {
+          this.imgName_write = 'more.png'
+          this.imgName_profile = 'user.png'
+          this.imgName_setting = 'settings.png'
+          this.isActive[0] = false
+          this.isActive[1] = false
+          this.isActive[3] = false
+        }
+      } 
     },
     changeImg_setting() {
+      this.$router.push({name: 'Setting'})
       if (this.imgName_setting === 'settings.png') {
         this.imgName_setting = 'settings_selected.png'
-        this.isActive = true
-      } else {
-        this.imgName_setting = 'settings.png'
-        this.isActive = false
-      }
+        this.isActive[3] = true
+        
+        if (this.isActive[0] === true || this.isActive[1] === true || this.isActive[2] === true) {
+          this.imgName_write = 'more.png'
+          this.imgName_profile = 'user.png'
+          this.imgName_alarm = 'bell.png'
+          this.isActive[0] = false
+          this.isActive[1] = false
+          this.isActive[2] = false
+        }
+      } 
     },
+<<<<<<< HEAD
     changeImg_alarm() {
       if (this.imgName_alarm === 'bell.png') {
         this.imgName_alarm = 'bell_selected.png'
@@ -88,20 +139,47 @@ export default {
       this.$store.dispatch('searchUser')
     }
   }
+=======
+    goMain() {
+      this.$router.push({name: 'Main'})
+      this.imgName_write = 'more.png'
+      this.imgName_profile = 'user.png'
+      this.imgName_alarm = 'bell.png'
+      this.imgName_setting = 'settings.png'
+    },
+    // search() {
+    //   if (this.searchInput) {
+    //     axios({
+
+    //     })
+    //     .then({
+
+    //     })
+    //     .catch(err => {
+    //       alert(err)
+    //     })
+    //   }
+    // }
+
+  },
+  //  computed: {
+  //   ...mapState([
+  //     'feedActive'
+  //   ]) 
+  // }
+>>>>>>> 1a397d6a7e488500490d885577e5dca73b367a3a
 }
 </script>
 
 <style scoped>
-#app {
+#nav {
   font-family: Avenir, Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-}
-
-#nav {
-  padding: 30px;
+  width: 100%;
+  min-width: 700px;
 }
 
 #nav a {
@@ -123,17 +201,27 @@ export default {
 .container{
   display:flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   flex-wrap: nowrap;
+  width: 52%;
+  min-width: 700px;
 }
 #search_bar{
-  width: 150px;
+  width: 20vw;
   height: 35px;
+  margin-top:auto;
+  margin-bottom: auto;
 }
+
 #search{
   width: 25px;
   height: 25px;
-  margin: 10px;
+}
+
+#icons {
+  display: flex;
+  flex-direction: row;
+  margin-left: 0px;
 }
 #setting{
   width: 25px;
@@ -180,6 +268,9 @@ export default {
   height: 25px;
   margin: 10px;
 } 
+img{
+  cursor: pointer;
+}
 </style>
 
 <!-- 알림버튼 숫자표시 
