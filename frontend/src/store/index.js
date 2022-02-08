@@ -54,9 +54,16 @@ export default new Vuex.Store({
       console.log(state)
       state.words = searchWords
     },
-    userUpdate: function (state, payload) {
-      // console.log(payload)
-      state.userInfo = payload
+    userUpdate(state, payload){
+      if (!session.getItem('userInfo')){
+        session.setItem('userInfo', JSON.stringify(payload))
+      }
+      const userdata = JSON.parse(session.getItem('userInfo'))
+      if(typeof(payload) == 'number'){
+        userdata.mood = payload
+        session.setItem('userInfo', JSON.stringify(userdata))
+      }
+      state.userInfo = userdata
     },
     feedOut({ navActive }){
       Vue.set(navActive, 0, false)
@@ -172,13 +179,14 @@ export default new Vuex.Store({
             console.log("Access Token을 교체합니다!!!")
           }
         
-        }).catch((error) => {
-          console.log(error);
-        }).then(() => {
-          console.log('getQSSList End!!');
-        });
-      },
+      }).catch((error) => {
+        console.log(error);
+      }).then(() => {
+        console.log('getQSSList End!!');
+      });
+    },
   },
   modules: {
-  },
+    
+  }
 })

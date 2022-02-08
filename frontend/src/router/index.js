@@ -194,12 +194,12 @@ router.beforeEach((to, from, next) => {
   if (to.meta.loginRequired && !token){
     next({ name:'Login' })
   }
-  //페이지 새로고침 등 발생했을 때 유저정보 store 재 생성
+  //페이지 새로고침 등 발생했을 때 유저정보 store 갱신
   if (to.meta.loginRequired && token && !store.state.userInfo){
     userUpdate
     .then(() => next())
   }
-
+  //감정 테스트가 필요한 경우 테스트페이지로 redirect
   if (to.meta.testRequired && !store.state.userInfo.mood){
     console.log(store.state.userInfo.mood)
     next({ name:'EmotionTest' })

@@ -29,9 +29,7 @@
         <a href="#">비밀번호 찾기</a>
         <router-link :to="{ name: 'Signup' }" class="gosignup">회원가입</router-link>
       </div>
-      <article>
-        <button id="login_btn" @click="login">로그인</button>
-      </article>
+      <button id="login_btn">로그인</button>
     </form>
     <button id="google" class="social_login">
       <img id="google" src="../../assets/images/etc/Google__G__Logo.png">
