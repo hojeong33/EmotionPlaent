@@ -120,7 +120,6 @@ export default {
         }
       } 
     },
-<<<<<<< HEAD
     changeImg_alarm() {
       if (this.imgName_alarm === 'bell.png') {
         this.imgName_alarm = 'bell_selected.png'
@@ -130,16 +129,6 @@ export default {
         this.isActive = false
       }
     },
-    searchOn() {
-      this.$store.commit('activateSearch')
-    },
-    search( searchWords ) {
-      this.$store.commit('updateSearch', searchWords.target.value)
-      this.$store.dispatch('searchTag')
-      this.$store.dispatch('searchUser')
-    }
-  }
-=======
     goMain() {
       this.$router.push({name: 'Main'})
       this.imgName_write = 'more.png'
@@ -147,6 +136,16 @@ export default {
       this.imgName_alarm = 'bell.png'
       this.imgName_setting = 'settings.png'
     },
+    //검색 부분입니둥
+    searchOn() {
+      this.$store.commit('activateSearch')
+    },
+    search( searchWords ) {
+      this.$store.commit('updateSearch', searchWords.target.value)
+      this.$store.dispatch('searchTag')
+      this.$store.dispatch('searchUser')
+    },
+  }
     // search() {
     //   if (this.searchInput) {
     //     axios({
@@ -167,7 +166,6 @@ export default {
   //     'feedActive'
   //   ]) 
   // }
->>>>>>> 1a397d6a7e488500490d885577e5dca73b367a3a
 }
 </script>
 
