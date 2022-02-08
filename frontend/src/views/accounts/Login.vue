@@ -8,7 +8,7 @@
         <img src="../../assets/images/sun.png" id="sun">
       </div> -->
     </div>
-    <section id="login_body">
+    <form @submit.prevent="login" id="login_body">
       <article id="email_form">
         <label for="email">이메일</label>
         <input type="text"
@@ -24,15 +24,15 @@
         v-model="credentials.pw"
         placeholder="비밀번호를 입력해주세요">
       </article>
-    </section>
-    <article id="link">
-      <a href="#">이메일 찾기</a>
-      <a href="#">비밀번호 찾기</a>
-      <router-link :to="{ name: 'Signup' }" class="gosignup">회원가입</router-link>
-    </article>
-    <article>
-      <button id="login_btn" @click="login">로그인</button>
-    </article>
+      <div id="link">
+        <a href="#">이메일 찾기</a>
+        <a href="#">비밀번호 찾기</a>
+        <router-link :to="{ name: 'Signup' }" class="gosignup">회원가입</router-link>
+      </div>
+      <article>
+        <button id="login_btn" @click="login">로그인</button>
+      </article>
+    </form>
     <button id="google" class="social_login">
       <img id="google" src="../../assets/images/etc/Google__G__Logo.png">
       <p>Google로 로그인</p>
@@ -117,7 +117,7 @@ export default {
     //   this.credentials.pw ="";
     // },
 
-    login: function () {
+    login: function() {
       axios({
         method: 'post',
         url:'http://13.125.47.126:8080/login',
@@ -130,13 +130,12 @@ export default {
         session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
         session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
         const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
-        this.$store.state.userInfo = decodeAccessToken.userInfo
-        console.log(this.$store.state.userInfo.email)
-        console.log('decodeAccessToken data', decodeAccessToken);
+        this.$store.commit('userUpdate', decodeAccessToken.userInfo)
         this.sendToken();
         this.$router.push('EmotionTest')
       })
       .catch(err=> {
+        console.log('나는 에러야!', err)
         alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
       })
       this.credentials.email = "";
@@ -157,7 +156,7 @@ export default {
 
         const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
         console.log('decodeAccessToken data', decodeAccessToken);
-        this.$store.state.userInfo = decodeAccessToken.userInfo
+        this.$store.commit('userUpdate', decodeAccessToken.userInfo)
         console.log(this.$store.state.userInfo.email)
         this.sendToken();
         if (this.$store.state.userInfo.tel === null) {

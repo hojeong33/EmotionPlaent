@@ -1,7 +1,6 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '@/views/accounts/Login'
-import MoreInfo from '@/views/accounts/MoreInfo'
 import Signup from '@/views/accounts/Signup'
 import EmotionTest from '@/views/EmotionTest'
 
@@ -9,8 +8,6 @@ import Mypage from '@/views/user/Mypage.vue'
 import List from '@/components/user/List'
 import PickItem from '@/components/user/PickItem'
 
-import Recommend from '@/components/MainPage/RecommendTab/Recommend.vue'
-import Feed from '@/components/MainPage/FeedTab/Feed.vue'
 import Main from '@/views/main/Main.vue'
 import Setting from '@/views/Setting'
 import UserInfo from '@/components/Settings/UserInfo'
@@ -19,10 +16,7 @@ import Withdrawal from '@/components/Settings/Withdrawal'
 import FeedDetail from '@/components/FeedDetail'
 import PwFind from '@/components/Settings/PwFind'
 import ProfileUpdate from '@/components/Settings/ProfileUpdate'
-// import Create from '@/views/Create'
-// import CreateImg from '@/components/Create/CreateImg'
-// import CreateTag from '@/components/Create/CreateTag'
-// import CreateText from '@/components/Create/CreateText'
+
 import store from '../store/index.js'
 
 Vue.use(VueRouter)
@@ -31,94 +25,138 @@ const routes = [
   {
     path: '/',
     name: 'Login',
-    component: Login
+    component: Login,
+    meta: {
+      loginRequired: false,
+      testRequired: false
+    }
   },
   {
     path: '/login',
     name: 'Login',
-    component: Login
+    component: Login,
+    meta: {
+      loginRequired: false,
+      testRequired: false
+    }
   },
   {
     path: '/signup',
     name: 'Signup',
-    component: Signup
-  },
-  {
-    path: '/moreinfo',
-    name: 'MoreInfo',
-    component: MoreInfo
+    component: Signup,
+    meta: {
+      loginRequired: false,
+      testRequired: false
+    }
   },
   {
     path: '/mypage',
     name: 'Mypage',
     redirect: '/mypage/feed',
     component: Mypage,
+    meta: {
+      loginRequired: true,
+      testRequired: true
+    },
     children: [
       {
         path: ':tap',
-        default: '',
         component: List,
-        props: true
+        props: true,
+        meta: {
+          loginRequired: true,
+          testRequired: true
+        },
       },
       {
         path: 'item/:id/:tag/:index',
         component: PickItem,
-        props: true
+        props: true,
+        meta: {
+          loginRequired: true,
+          testRequired: true
+        },
       }
     ]
   },
   {
-    path:'/recommend',
-    name:'Recommend',
-    component:Recommend
-  },
-  {
-    path:'/feed',
-    name:'Feed',
-    component:Feed
-  },
-  {
     path:'/main',
     name:'Main',
-    component:Main
+    component:Main,
+    meta: {
+      loginRequired: true,
+      testRequired: true
+    },
   },
   {
     path: '/emotiontest',
     name: 'EmotionTest',
-    component: EmotionTest
+    component: EmotionTest,
+    meta: {
+      loginRequired: true,
+      testRequired: false
+    },
   },
   {
     path: '/setting',
     name: 'Setting',
     redirect: '/setting/info',
     component: Setting,
+    meta: {
+      loginRequired: true,
+      testRequired: true
+    },
     children: [
       {
         path: 'info',
-        component: UserInfo
+        component: UserInfo,
+        meta: {
+          loginRequired: true,
+          testRequired: true
+        },
       },
       {
         path: 'password',
-        component: PwChange
+        component: PwChange,
+        meta: {
+          loginRequired: true,
+          testRequired: true
+        },
       },
       {
         path: 'withdrawal',
-        component: Withdrawal
+        component: Withdrawal,
+        meta: {
+          loginRequired: true,
+          testRequired: true
+        },
       },
       {
         path: 'password-find',
-        component: PwFind
+        component: PwFind,
+        meta: {
+          loginRequired: true,
+          testRequired: true
+        },
       },
       {
         path:'profile-update',
         component: ProfileUpdate,
+        meta: {
+          loginRequired: true,
+          testRequired: true
+        },
       }
     ],  
   },
   {
     path: '/feed/detail',
     name: 'FeedDetail',
-    component: FeedDetail
+    component: FeedDetail,
+    meta: {
+      loginRequired: true,
+      testRequired: true
+    },
   }
 ]
 
@@ -126,6 +164,13 @@ const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
+})
+
+const token = window.sessionStorage.getItem('at-jwt-access-token');
+const jwt = require('jsonwebtoken');
+const decodeAccessToken = jwt.decode(token)
+const userUpdate = new Promise(() => {
+  store.commit('userUpdate', decodeAccessToken.userInfo)
 })
 
 router.beforeEach((to, from, next) => {
@@ -145,7 +190,22 @@ router.beforeEach((to, from, next) => {
   else if (to.matched[0].path == '/setting'){store.commit('navActivate', 4)}
   else {store.commit('navActivate', -1)}
 
-  // if (to.name == 'Login' || to.name =='Signup')
+  //로그인이 필요한 서비스의 경우 로그인 페이지로 redirect
+  if (to.meta.loginRequired && !token){
+    next({ name:'Login' })
+  }
+  //페이지 새로고침 등 발생했을 때 유저정보 store 재 생성
+  if (to.meta.loginRequired && token && !store.state.userInfo){
+    userUpdate
+    .then(() => next())
+  }
+
+  if (to.meta.testRequired && !store.state.userInfo.mood){
+    console.log(store.state.userInfo.mood)
+    next({ name:'EmotionTest' })
+  }
+
+  // if (to.meta.testRequired && )
 })
 // router.push의 중복 에러 해결방법
 const originalPush = VueRouter.prototype.push;
