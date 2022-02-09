@@ -45,7 +45,7 @@
   import axios from 'axios'
   // import index from '@/store/index.js'
   const session = window.sessionStorage;
-  const jwt = require('jsonwebtoken');
+  // const jwt = require('jsonwebtoken');
 
   export default {
     data: function(){
