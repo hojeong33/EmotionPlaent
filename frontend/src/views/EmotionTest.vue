@@ -127,7 +127,7 @@
         else {
           axios({
               method: 'post',
-              url: 'http://localhost:8080/resulttest',
+              url: 'http://13.125.47.126:8080/resulttest',
               data: this.selected,
               headers: headers,
             }).then(res => {
@@ -145,7 +145,7 @@
               this.$store.dispatch('accessTokenRefresh', res)
               this.$store.commit('emotionTestResultModalActivate')
               // this.$router.push('Main')
-              this.$route.go(0)
+              // this.$route.go(0)
              
             }).catch(err => {
               console.log(err)
