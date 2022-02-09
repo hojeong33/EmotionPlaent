@@ -66,7 +66,7 @@ public class LoginController {
         UserSecretDto userDto = new UserSecretDto(user.getNo(), user.getEmail(), user.getNickname(), user.getBirth(), user.getProfileImg(), user.getTel(), user.getMood());
 
         HttpHeaders res = new HttpHeaders();
-        if (userDto != null) {
+        if (user.getEmail() != null) {
         	System.out.println("로그인 성공");
             System.out.println(userDto);
             TokenDto atJWT = jwtService.create(userDto);

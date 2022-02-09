@@ -60,7 +60,7 @@ public class UserController {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하는 유저가 없습니다.");
 		}
 	}
-
+	
 	@GetMapping(value = "/users/checkByEmail/{email}") // 이메일 중복검사
 	public ResponseEntity<Integer> duplicateEmail(@PathVariable String email) {
 		if (userService.duplicateEmail(email) == SUCCESS) {
@@ -96,6 +96,11 @@ public class UserController {
 	
 	@PutMapping(value ="/users") //회원 수정
 	public ResponseEntity<Integer> update(@RequestBody UserDto changeuserDto) {
+		if(changeuserDto.getPw() != null) {
+			String rawPassword = changeuserDto.getPw();
+			String enPassword = bCryptPasswordEncoder.encode(rawPassword);
+			changeuserDto.setPw(enPassword);
+		} 
 		UserDto userDto = userService.userSelect(changeuserDto.getNo()); //입력받은 유저 번호로 기존 유저 정보 가져옴	
 		if(userService.userUpdate(userDto, changeuserDto) == SUCCESS) { // 기존정보와 입력받은 정보를 비교해서 새로 갱신
 			System.out.println("회원 수정 성공");

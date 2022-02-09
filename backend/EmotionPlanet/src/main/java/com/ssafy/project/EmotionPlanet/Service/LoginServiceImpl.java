@@ -17,7 +17,7 @@ public class LoginServiceImpl implements LoginService {
     @Override
     public UserDto login(UserDto dto) { // 로그인 처리
         UserDto userDto = loginDao.login(dto.getEmail());
-        if(userDto != null && !passwordEncoder.matches(userDto.getPw(), dto.getPw())) { //이메일에 대한 회원 정보가 존재하고 비밀번호가 같으면 로그인 성공
+        if(userDto != null && passwordEncoder.matches(userDto.getPw(), dto.getPw())) { //이메일에 대한 회원 정보가 존재하고 비밀번호가 같으면 로그인 성공
             return userDto;
         }else {
             return null;

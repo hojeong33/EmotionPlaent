@@ -134,6 +134,7 @@ export default {
         console.log(this.$store.state.userInfo.email)
         console.log('decodeAccessToken data', decodeAccessToken);
         this.sendToken();
+        this.$store.dispatch('connect')
         this.$router.push('EmotionTest')
       })
       .catch(err=> {

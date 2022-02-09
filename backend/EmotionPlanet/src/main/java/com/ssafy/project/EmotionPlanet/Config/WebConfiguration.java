@@ -16,7 +16,7 @@ public class WebConfiguration implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedMethods("GET", "POST")
+                .allowedMethods("GET", "POST", "PUT", "DELETE")  
                 .exposedHeaders("at-jwt-token", "at-jwt-access-token", "at-jwt-refresh-token")
                 .maxAge(3000);
     }
@@ -27,7 +27,8 @@ public class WebConfiguration implements WebMvcConfigurer {
         registry.addInterceptor(jwtInterceptor)
                 .addPathPatterns("/**")
                 .excludePathPatterns("/login/**")
+                .excludePathPatterns("/alarm/**")
                 .excludePathPatterns("/users/**");
     }
-
+  
 }
