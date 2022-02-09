@@ -136,9 +136,7 @@ export default {
       session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
       session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
 
-      const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
-      console.log('decodeAccessToken data', decodeAccessToken);
-      this.$store.commit('userUpdate', decodeAccessToken.userInfo)
+      this.$store.commit('userUpdate', res.headers['at-jwt-access-token'])
     })
     .then(() => {
       console.log(this.$store.state.userInfo.email)

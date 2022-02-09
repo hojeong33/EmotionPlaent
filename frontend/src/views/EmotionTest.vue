@@ -135,6 +135,7 @@
               headers: headers,
             }).then(res => {
             alert(`당신은 ${ res.data.name }행성 입니다!`)
+            console.log(this.$store.state.userInfo)
             this.$store.commit('userUpdate', res.data.no)
             const body = { no: this.$store.state.userInfo.no, mood: res.data.no }
             axios({
