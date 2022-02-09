@@ -24,14 +24,24 @@
 				<p id="introduce">소개</p>
         <textarea  
         id="short_comment"
-        placeholder="대충디폴트소개글"></textarea>
+        v-model="this.$store.state.userInfo.intro"
+        readonly></textarea>
 			</article>
 			
 			<br>
+
       <article id="pu_form">
-        <label for="next_pw">변경할 비밀번호</label>
+        <div id="pwactive">
+          <label for="next_pw">변경할 비밀번호</label>
+          <article id="pwchange">
+            <input style="margin-top:auto;margin-bottom:auto;" 
+            type="checkbox" @click="activatePw"
+            >
+            <h5 style="margin-top:auto;margin-bottom:auto;">비밀번호 변경하기</h5>
+          </article>
+        </div>
         <input type="password" 
-        id="next_pw"
+        id="next_pw_input"
         v-model="credentials.nextPw"
         @input="pwCheck"
         placeholder="비밀번호는 8자 이상, 20자 이하입니다.">
@@ -47,7 +57,7 @@
 			<br>
       <article id="pu_form">
         <label for="pw_conf">비밀번호 확인</label>
-        <input type="password" id="pw_conf"
+        <input type="password" id="pw_conf_input"
         v-model="credentials.pwConf"
         @input="pwConfCheck"
         placeholder="비밀번호를 다시 입력해주세요.">
@@ -111,7 +121,8 @@ export default {
         beforeIntro: null,
         beforePw: null,
         nextPw: null,
-        pwConf: null
+        pwConf: null,
+        pwChange: false,
       },
       isValid: {
         validateNextPw: false,
@@ -157,6 +168,7 @@ export default {
             })
             .then(() => { //중복 닉네임 없는 경우
               // this.isValid.validateNicknamecheck = true
+              console.log(this.$store.state.userInfo)
               console.log('중복없다~')
             })
             .catch((el) => { //중복 닉네임 있는 경우
@@ -167,7 +179,7 @@ export default {
         }
         else {
           // p태그 만들어서 보여주고, 밑에 else에서 지우기
-          alert('닉네임 길이는 2자 이상 10자 이하로 만들어주세요')
+          console.log('닉네임 길이는 2자 이상 10자 이하로 만들어주세요')
         }
       }
     },
@@ -215,7 +227,23 @@ export default {
         }
       })
     },
-  }, 
+    activatePw() {
+      this.pwChange = !this.pwChange
+      console.log(this.pwChange)
+      const tmp1 = document.getElementById('next_pw_input')
+      const tmp2 = document.getElementById('pw_conf_input')
+      if (this.pwChange === false) {
+        tmp1.setAttribute("disabled", true)
+        tmp1.setAttribute('style', 'cursor:not-allowed')
+        tmp2.setAttribute("disabled", true)
+        tmp2.setAttribute('style', 'cursor:not-allowed')
+      }
+      else {
+        tmp1.setAttribute("disabled", false)
+        tmp2.setAttribute("disabled", false)
+      }
+    },
+  },
   created() {
     this.credentials.beforeNick = this.$store.state.userInfo.nickname
   }
@@ -282,7 +310,7 @@ export default {
 		margin-left: 1rem;
   }
 
-  #pw_conf {
+  #pw_conf_input {
     border: 2px #5E39B3 solid;
     border-radius: 30px;
     width: 95%;
@@ -296,7 +324,7 @@ export default {
 		margin-left: 1rem;
   }
   
-  #next_pw {
+  #next_pw_input {
     border: 2px #5E39B3 solid;
     border-radius: 30px;
     width: 95%;
@@ -328,13 +356,13 @@ export default {
     color: white;
     text-shadow: 0 1px 2px rgb(0, 0, 0, 0.5);
   }
-  #pw_conf:focus {
+  #pw_conf_input:focus {
     outline: none;
     background-color: #afa0d6;
     color: white;
     text-shadow: 0 1px 2px rgb(0, 0, 0, 0.5);
   }
-  #next_pw:focus {
+  #next_pw_input:focus {
     outline: none;
     background-color: #afa0d6;
     color: white;
@@ -374,25 +402,25 @@ export default {
     color: transparent;
   }
 
-  #pw_conf::placeholder {
+  #pw_conf_input::placeholder {
     font-size: 1.1rem !important;
     font-weight: initial;
     text-shadow: none;
     position: absolute;
     top: 18%;
   }
-  #pw_conf:focus::placeholder {
+  #pw_conf_input:focus::placeholder {
     color: transparent;
   }
 
-  #next_pw::placeholder {
+  #next_pw_input::placeholder {
     font-size: 1.1rem !important;
     font-weight: initial;
     text-shadow: none;
     position: absolute;
     top: 18%;
   }
-  #next_pw:focus::placeholder {
+  #next_pw_input:focus::placeholder {
     color: transparent;
   }
 	
@@ -581,5 +609,16 @@ export default {
     background-color: #777777;
   }
 
+  #pwchange {
+    display: flex;
+    justify-content: center;
+    width: 40%;
+  }
+
+  #pwactive {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
   
 </style>

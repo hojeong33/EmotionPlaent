@@ -300,7 +300,7 @@ export default new Vuex.Store({
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
 
-			axios.get('http://localhost:8080/recommend/music/' + this.state.userInfo.mood, {
+			axios.get('http://13.125.47.126:8080/recommend/music/' + this.state.userInfo.mood, {
           headers: headers,
         }).then((res) => {
           this.state.recommendMusic = res.data
