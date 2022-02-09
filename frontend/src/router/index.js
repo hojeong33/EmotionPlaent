@@ -23,7 +23,7 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
+    path: '/login',
     name: 'Login',
     component: Login,
     meta: {
@@ -31,15 +31,6 @@ const routes = [
       testRequired: false
     }
   },
-  // {
-  //   path: '/login',
-  //   name: 'Login',
-  //   component: Login,
-  //   meta: {
-  //     loginRequired: false,
-  //     testRequired: false
-  //   }
-  // },
   {
     path: '/signup',
     name: 'Signup',
@@ -169,11 +160,21 @@ const router = new VueRouter({
 const token = window.sessionStorage.getItem('at-jwt-access-token');
 const jwt = require('jsonwebtoken');
 const decodeAccessToken = jwt.decode(token)
+
+//유저 정보 업데이트
 const userUpdate = new Promise(() => {
+  console.log('user data updated!')
   store.commit('userUpdate', decodeAccessToken.userInfo)
 })
 
 router.beforeEach((to, from, next) => {
+  console.log(to)
+  //지정되지 않은 라우트로 이동할 경우 메인으로 redirect
+  if (!to.matched.length){
+    console.log('do not matched!!')
+    next({ name:'Main' })
+  }
+
   const body = document.querySelector('body')
 
   if (to.name == 'Signup' || to.name == 'Login' || to.name == 'EmotionTest'){
@@ -186,7 +187,7 @@ router.beforeEach((to, from, next) => {
   }
   // 네비게이션 바 Active와 매칭
   if (to.name == 'Main'){store.commit('navActivate', 1)}
-  else if (to.name == 'Mypage'){store.commit('navActivate', 2)}
+  else if (to.matched[0].path == '/mypage'){store.commit('navActivate', 2)}
   else if (to.matched[0].path == '/setting'){store.commit('navActivate', 4)}
   else {store.commit('navActivate', -1)}
 
@@ -196,16 +197,17 @@ router.beforeEach((to, from, next) => {
   }
   //페이지 새로고침 등 발생했을 때 유저정보 store 갱신
   if (to.meta.loginRequired && token && !store.state.userInfo){
-    userUpdate
-    .then(() => next())
+    userUpdate.then(() => next())
   }
   //감정 테스트가 필요한 경우 테스트페이지로 redirect
   if (to.meta.testRequired && !store.state.userInfo.mood){
     console.log(store.state.userInfo.mood)
     next({ name:'EmotionTest' })
   }
-
-  // if (to.meta.testRequired && )
+  //로그인 된 사용자가 로그인 or 회원가입 페이지로 가려고 할 경우
+  if (!to.meta.loginRequired && store.state.userInfo){
+    next({ name:'Main' })
+  }
 })
 // router.push의 중복 에러 해결방법
 const originalPush = VueRouter.prototype.push;

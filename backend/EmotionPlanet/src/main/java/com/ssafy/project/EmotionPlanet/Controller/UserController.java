@@ -1,10 +1,13 @@
 package com.ssafy.project.EmotionPlanet.Controller;
 
+import com.ssafy.project.EmotionPlanet.Config.JWT.JwtService;
 import com.ssafy.project.EmotionPlanet.Dto.FindEmailDto;
+import com.ssafy.project.EmotionPlanet.Dto.TokenDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserSecretDto;
 import com.ssafy.project.EmotionPlanet.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
@@ -26,10 +29,13 @@ public class UserController {
 
 	@Autowired
 	private JavaMailSender javaMailSender;
+
+	@Autowired
+	JwtService jwtService;
 	
 	private static final int SUCCESS = 1;
 
-	@PostMapping(value = "/users") // 회원가입
+	@PostMapping(value = "/register") // 회원가입
 	public ResponseEntity<Integer> register(@RequestBody UserDto userDto) {
 		String rawPassword = userDto.getPw();
 		String enPassword = bCryptPasswordEncoder.encode(rawPassword);
@@ -50,7 +56,8 @@ public class UserController {
 		int userNo = Integer.parseInt(no);
 		UserDto userDto = userService.userSelect(userNo);
 		UserSecretDto userSecretDto = new UserSecretDto(userDto.getNo(), userDto.getEmail(), userDto.getNickname(),
-				userDto.getBirth(), userDto.getProfileImg(), userDto.getTel(), userDto.getMood());
+				userDto.getBirth(), userDto.getProfileImg(), userDto.getTel(), userDto.getIntro()
+				, userDto.getPublish(), userDto.getMood());
 		if (userSecretDto != null) {
 			System.out.println("회원 번호 검색 성공");
 			System.out.println(userSecretDto);
@@ -60,7 +67,7 @@ public class UserController {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하는 유저가 없습니다.");
 		}
 	}
-
+	
 	@GetMapping(value = "/users/checkByEmail/{email}") // 이메일 중복검사
 	public ResponseEntity<Integer> duplicateEmail(@PathVariable String email) {
 		if (userService.duplicateEmail(email) == SUCCESS) {
@@ -95,11 +102,14 @@ public class UserController {
 	}
 	
 	@PutMapping(value ="/users") //회원 수정
-	public ResponseEntity<Integer> update(@RequestBody UserDto changeuserDto) {
+	public ResponseEntity<?> update(@RequestBody UserDto changeuserDto) {
+		if(changeuserDto.getPw() != null) {
+			String rawPassword = changeuserDto.getPw();
+			String enPassword = bCryptPasswordEncoder.encode(rawPassword);
+			changeuserDto.setPw(enPassword);
+		} 
 		UserDto userDto = userService.userSelect(changeuserDto.getNo()); //입력받은 유저 번호로 기존 유저 정보 가져옴	
 		if(userService.userUpdate(userDto, changeuserDto) == SUCCESS) { // 기존정보와 입력받은 정보를 비교해서 새로 갱신
-			System.out.println("회원 수정 성공");
-			System.out.println("수정된 정보 " + changeuserDto); 
 			return new ResponseEntity<Integer>(SUCCESS, HttpStatus.OK);
 		}else {
 			System.out.println("회원 수정 실패");

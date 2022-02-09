@@ -4,9 +4,6 @@
       <h1>어서오세요!</h1>
       <h1>오늘은 어떤 이야기를</h1>
       <h1>들려주실건가요? 😉</h1>
-      <!-- <div>
-        <img src="../../assets/images/sun.png" id="sun">
-      </div> -->
     </div>
     <form @submit.prevent="login" id="login_body">
       <article id="email_form">
@@ -31,7 +28,7 @@
       </div>
       <button id="login_btn">로그인</button>
     </form>
-    <button id="google" class="social_login">
+    <button id="google" class="social_login" @click="handleClickSignIn">
       <img id="google" src="../../assets/images/etc/Google__G__Logo.png">
       <p>Google로 로그인</p>
     </button>
@@ -41,9 +38,6 @@
         <p>Kakao로 로그인</p>
         </button>
     </article>
-    <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&response_type=code&client_id=172274534251-rpo5d1a1i23k75l87vrcjiid99413h9a.apps.googleusercontent.com&redirect_uri=http://localhost:8080/auth/google/callback">구글로그인</a>
-    <div id="my-signin2"></div>
-    <button @click="signout">signout</button>
   </div>
 </template>
 
@@ -64,31 +58,96 @@ export default {
       googleUser: null,
     }
   },
-  mounted() {
-    window.gapi.signin2.render('my-signin2', {
-      scope: 'profile email',
-      width: 240,
-      height: 50,
-      longtitle: true,
-      theme: 'dark',
-      onsuccess: this.onSuccess,
-      onfailure: this.onFailure,
+  methods: {
+    //OAUTH
+  async handleClickSignIn() {
+    try {
+      const googleUser = await this.$gAuth.signIn();
+      if (!googleUser) {
+        return null;
+      }
+      console.log("googleUser", googleUser);
+      console.log("getId", googleUser.getId());
+      console.log("getBasicProfile", googleUser.getBasicProfile());
+      console.log("getAuthResponse", googleUser.getAuthResponse());
+      console.log(
+        "getAuthResponse",
+        this.$gAuth.GoogleAuth.currentUser.get().getAuthResponse()
+      );
+      this.isSignIn = this.$gAuth.isAuthorized;
+      this.onSuccess(googleUser)
+    } catch (error) {
+      //on fail do something
+      this.onFailure(error)
+    }
+  },
+  onSuccess(googleUser) {
+    // eslint-disable-next-line
+    console.log(googleUser);
+    this.googleUser = googleUser;
+    this.tokenVerify()
+  },
+  onFailure(error) {
+    // eslint-disable-next-line
+    console.log(error);
+  },
+
+  login: function() {
+    axios({
+      method: 'post',
+      url:'http://13.125.47.126:8080/login',
+      data: this.credentials
+    })
+    .then((res)=>{
+      alert("로그인 성공")
+      console.log(res.headers);
+      // storage 설정
+      this.$store.dispatch('allTokenRefresh',res)
+      this.sendToken();
+    })
+    .then(() => window.location.reload())
+    .catch(err=> {
+      console.log('나는 에러야!', err)
+      alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
+    })
+    this.credentials.email = "";
+    this.credentials.pw ="";
+  },
+
+  tokenVerify() {
+    const url = 'http://13.125.47.126:8080/login/auth';
+    const params = new URLSearchParams();
+    console.log('나는 params!', params)
+    params.append('idToken', this.googleUser.wc.id_token);
+    // params['idToken'] =  this.googleUser.wc.id_token;
+    console.log('넘길 데이터!', params)
+    axios.post(url, params)
+    .then((res) => {
+      alert("로그인 성공")
+      console.log('Loged in!', res.headers);
+      // storage 설정
+      this.$store.dispatch('allTokenRefresh', res)
+    })
+    .then(() => {
+      console.log(this.$store.state.userInfo.email)
+      this.sendToken();
+      if (this.$store.state.userInfo.tel === null) {
+        window.location.reload()
+      }
+      else{
+        window.location.reload()
+      }
+    })
+    .catch((error) => {
+      console.log(error);
+    })
+    .finally(() => {
+      console.log('tokenVerify End!!');
     });
   },
 
-  methods: {
-    //OAUTH
-    onSuccess(googleUser) {
-      // eslint-disable-next-line
-      console.log(googleUser);
-      this.googleUser = googleUser;
-      this.tokenVerify()
-    },
-    onFailure(error) {
-      // eslint-disable-next-line
-      console.log(error);
-    },
 
+<<<<<<< HEAD
     signout() {
       const authInst = window.gapi.auth2.getAuthInstance();
       authInst.signOut().then(() => {
@@ -191,24 +250,40 @@ export default {
           'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
         }
         console.log('headers : ', headers);
+=======
+  sendToken() {
+    console.log('나는 sendToken!')
+    const decodeAccessToken = jwt.decode(session.getItem('at-jwt-access-token'));
+    let headers = null;
+    if(decodeAccessToken.exp < Date.now()/1000 + 60){
+      console.log('만료됨!!');
+      headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+>>>>>>> 0f77e693203d859c022517d3bffd6a6500998cd7
       }
-    },
+      console.log('headers : ', headers);
+    }else{
+      console.log('만료되지않음!!');
+      headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      }
+      console.log('headers : ', headers);
+    }
+  },
 
-    trans() {
-      let headers = {
-          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        };
-      axios.get('http://13.125.47.126:8080/qss/list', {
-        headers: headers,
+  trans() {
+    let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+    axios.get('http://13.125.47.126:8080/qss/list', {
+      headers: headers, // 넣는거 까먹지 마세요
       }).then((res) => {
-        console.log(res);
-        console.log('response header', res.headers);
-        if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
-          session.setItem('at-jwt-access-token', "");
-          session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-          console.log("Access Token을 교체합니다!!!")
-        }
+
+      this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+      this.dispatch('accessTokenRefresh', res) // store에서
 
       }).catch((error) => {
         console.log(error);
@@ -216,7 +291,6 @@ export default {
         console.log('getQSSList End!!');
       });
     },
-    
   },
 }
 </script>
