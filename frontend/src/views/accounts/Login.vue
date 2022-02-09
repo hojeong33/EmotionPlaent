@@ -135,7 +135,7 @@ export default {
       })
       .catch(err=> {
         console.log('나는 에러야!', err)
-        this.$store.commit('loginFailModalActivate')
+        this.$store.commit('loginFailModalActivate', err.response.data.message)
         // alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
       })
       this.credentials.email = "";

@@ -51,6 +51,7 @@ export default new Vuex.Store({
     commentNeedContentModalActive:false,
     moreInfoConfirmModalActive: false,
     serverErrorMessage: null,
+    loginErrorMessage: null,
   },
   mutations: {
     navActivate: function({ navActive }, payload){
@@ -137,7 +138,8 @@ export default new Vuex.Store({
       state.ReturnToLoginModalActive = !state.ReturnToLoginModalActive
       console.log(state.ReturnToLoginModalActive)
     },
-    loginFailModalActivate: function (state) {
+    loginFailModalActivate: function (state, errormessage) {
+      state.loginErrorMessage = errormessage 
       state.loginFailModalActive = !state.loginFailModalActive
       console.log(state.loginFailModalActive)
     },

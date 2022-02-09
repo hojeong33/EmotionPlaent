@@ -101,7 +101,8 @@
             // this.$router.push('Login')
           })
           .catch(res => {
-            alert(res.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
+            // alert(res.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
+            this.$store.commit('signupFailModalActivate1', res.response.data.message)
           })
       },
       checkEmail: function(){

@@ -1,7 +1,7 @@
 <template>
 	<div id="login_fail">
     <div id="modal">
-			<h4> 로그인에 실패했습니다.</h4>
+			<h4> {{serverErrorMessage}}</h4>
 			<hr>
 			<p @click="loginAgain">확인</p>
     </div>
@@ -9,6 +9,8 @@
 </template>
 
 <script>
+import { mapState } from 'vuex'
+
 export default {
 	methods: {
 		loginAgain: function () {
@@ -17,7 +19,11 @@ export default {
 			this.$store.commit('loginFailModalActivate')
 			this.$router.go(0)
 		}
-	}
+	},
+	computed: 
+		mapState([
+			'serverErrorMessage'
+		])
 }
 </script>
 
