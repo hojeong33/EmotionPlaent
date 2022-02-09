@@ -164,8 +164,9 @@ const decodeAccessToken = jwt.decode(token)
 //유저 정보 업데이트
 const userUpdate = new Promise(() => {
   console.log('user data updated!')
-  if(decodeAccessToken != null)
-    store.commit('userUpdate', decodeAccessToken.userInfo)
+  if(decodeAccessToken != null){
+  store.commit('userUpdate', decodeAccessToken.userInfo)
+  }
 })
 
 router.beforeEach((to, from, next) => {

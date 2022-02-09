@@ -107,6 +107,7 @@ export default {
       // storage 설정
       this.$store.dispatch('allTokenRefresh',res)
       this.sendToken();
+      
     })
     .then(() => window.location.reload())
     .catch(err=> {
