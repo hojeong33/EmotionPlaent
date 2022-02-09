@@ -104,13 +104,14 @@ export default {
       data: this.credentials
     })
     .then((res)=>{
+      alert("로그인 성공")
       console.log(res.headers);
       // storage 설정
       session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
       session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
-      this.$store.commit('userUpdate', res.headers['at-jwt-access-token'])
+      const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
+      this.$store.commit('userUpdate', decodeAccessToken.userInfo)
       this.sendToken();
-      this.$store.commit('loginConfirmModalActivate')
     })
     .then(() => window.location.reload())
     .catch(err=> {
@@ -120,7 +121,7 @@ export default {
     this.credentials.email = "";
     this.credentials.pw ="";
   },
-  
+
   tokenVerify() {
     const url = 'http://13.125.47.126:8080/login/auth';
     const params = new URLSearchParams();
@@ -136,7 +137,9 @@ export default {
       session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
       session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
 
-      this.$store.commit('userUpdate', res.headers['at-jwt-access-token'])
+      const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
+      console.log('decodeAccessToken data', decodeAccessToken);
+      this.$store.commit('userUpdate', decodeAccessToken.userInfo)
     })
     .then(() => {
       console.log(this.$store.state.userInfo.email)

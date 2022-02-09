@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import axios from 'axios'
 
 const session = window.sessionStorage;
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken');
 
 Vue.use(Vuex)
 import Stomp from "webstomp-client";
@@ -69,16 +69,13 @@ export default new Vuex.Store({
       console.log(state)
       state.words = searchWords
     },
-    // 세션에 유저정보 넣거나 갱신하는 부분
     userUpdate(state, payload){
-      const decodeAccessToken = jwt.decode(payload);
-
       if (!session.getItem('userInfo')){
-        session.setItem('userInfo', JSON.stringify(decodeAccessToken))
+        session.setItem('userInfo', JSON.stringify(payload))
       }
       const userdata = JSON.parse(session.getItem('userInfo'))
-      if(typeof(decodeAccessToken) == 'number'){
-        userdata.mood = decodeAccessToken
+      if(typeof(payload) == 'number'){
+        userdata.mood = payload
         session.setItem('userInfo', JSON.stringify(userdata))
       }
       state.userInfo = userdata
@@ -303,7 +300,7 @@ export default new Vuex.Store({
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
 
-			axios.get('http://13.125.47.126:8080/recommend/music/' + this.state.userInfo.mood, {
+			axios.get('http://localhost:8080/recommend/music/' + this.state.userInfo.mood, {
           headers: headers,
         }).then((res) => {
           this.state.recommendMusic = res.data

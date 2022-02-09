@@ -45,6 +45,7 @@
   import axios from 'axios'
   // import index from '@/store/index.js'
   const session = window.sessionStorage;
+  const jwt = require('jsonwebtoken');
 
   export default {
     data: function(){
@@ -144,6 +145,14 @@
               data: body,
             }).then(res => {
               console.log(res)
+
+              session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+              session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
+
+              const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
+
+              this.$store.commit('userUpdate', decodeAccessToken.userInfo)
+
               this.$router.push('Main')
             }).catch(err => {
               console.log(err)
