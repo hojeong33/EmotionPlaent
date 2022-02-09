@@ -5,34 +5,28 @@
     </section>
     <section id="pu_body">
 			<article id="profile_head">
-				<img id="profile_img" src="../../assets/images/KakaoTalk_20220112_170830193.jpg" alt="">
-				<p id="user_id">유저 아이디</p>
-				<div id="profile_img_change">
-					<button id="profile_img_change_button" @click="profileImgChangeModal">사진 변경</button>
-				</div>
+				<img id="profile_img" :src="this.$store.state.userInfo.profileImg" alt="">
+        <p id="user_id">{{ this.$store.state.userInfo.nickname }}</p>
+        <div id="profile_img_change">
+          <button id="profile_img_change_button" @click="profileImgChangeModal">사진 변경</button>
+        </div>
 			</article>
 			<br>
 			<article id="pu_form">
         <label for="username">닉네임</label>
         <input 
         id="nickname"
-        placeholder="나는멋쟁이">
+        v-model="credentials.beforeNick"
+        @input="checkNickname">
 			</article>
 			<br>
 			<article id="pu_form">
 				<p id="introduce">소개</p>
         <textarea  
         id="short_comment"
-        placeholder="나는야 멋쟁이~"></textarea>
+        placeholder="대충디폴트소개글"></textarea>
 			</article>
-			<br>
-      <article id="pu_form">
-        <label for="before_pw">기존 비밀번호</label>
-        <input type="password" 
-        id="before_pw"
-        v-model="credentials.beforePw"
-        placeholder="사용중인 비밀번호를 입력해주세요.">
-      </article>
+			
 			<br>
       <article id="pu_form">
         <label for="next_pw">변경할 비밀번호</label>
@@ -81,6 +75,23 @@
         placeholder="등록하신 PIN 번호를 입력해주세요.">
       </article> -->
       <a @click="pwFind">비밀번호를 잊었나요?</a>
+      <br>
+      <article id="pu_form_radio">
+        <label for="">계정 공개 여부</label>
+        <div id="check_radio">
+          <div id="on">
+            <input type="radio" id="show_all" style="width:20px;height:20px;border:1px;"
+            :checked="this.publish == 1 ? 'checked': false" readonly>
+            <h5>모두에게 공개</h5>
+          </div>
+          <div id="off">
+            <input type="radio" id="show_followers" style="width:20px;height:20px;border:1px;"
+            :checked="this.publish == 2 ? 'checked': false" readonly>
+            <h5>팔로워에게 공개</h5>
+          </div>
+        </div>
+        <br>
+      </article>
       <article id="pu_buttons">
         <button id="pu_button">변경하기</button>
         <button id="pu_button" @click="go_to_back">뒤로가기</button>
@@ -90,10 +101,14 @@
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   data: function(){
     return {
       credentials : {
+        beforeNick: null,
+        beforeIntro: null,
         beforePw: null,
         nextPw: null,
         pwConf: null
@@ -130,7 +145,79 @@ export default {
     },
     profileImgChangeModal:function(){
       this.$store.commit('profileImgChangeModalActivate')
-		}
+		},
+    checkNickname: function(el){
+      this.credentials.beforeNick = el.target.value
+      if (this.credentials.beforeNick !== this.$store.state.userInfo.nickname) {
+        if (this.credentials.beforeNick.length >= 2 && this.credentials.beforeNick.length <= 10) {
+          // this.credentials.beforeNick = el.target.value // 한글 입력 이슈 해결하기 위해 사용. 한박자 느린거?
+          axios({
+            method: 'get',
+            url: 'http://13.125.47.126:8080/users/checkByNickname/' + this.credentials.beforeNick,
+            })
+            .then(() => { //중복 닉네임 없는 경우
+              // this.isValid.validateNicknamecheck = true
+              console.log('중복없다~')
+            })
+            .catch((el) => { //중복 닉네임 있는 경우
+              // this.isValid.validateNicknamecheck = false
+              console.log(el.response)
+              console.log('중복있어')
+          })
+        }
+        else {
+          // p태그 만들어서 보여주고, 밑에 else에서 지우기
+          alert('닉네임 길이는 2자 이상 10자 이하로 만들어주세요')
+        }
+      }
+    },
+    tel_helper: function(event){
+      const nums = this.credentials.tel.length
+      const n = this.credentials.tel.charCodeAt(nums-1)
+      const poss = ['010', '011', '012', '013', '014',
+                    '015', '016', '017', '018', '019']
+      console.log(nums)
+      if (event.inputType == 'deleteContentBackward'){
+        if (nums == 3 || nums == 8){
+          this.credentials.tel = this.credentials.tel.slice(0, nums - 1)
+        }
+        return
+      }
+      if (n > 47 && n < 58){
+        if (nums == 3 || nums == 8){
+          this.credentials.tel += '-'
+        }
+      }
+      else {
+        this.credentials.tel = this.credentials.tel.slice(0, nums - 1)
+      }
+      if (nums == 13 && poss.indexOf(this.credentials.tel.slice(0,3)) > -1){
+        console.log(poss.indexOf(this.credentials.tel.slice(0,3)))
+        console.log(nums)
+        this.telCheck()
+      }
+      else {
+        this.isValid.validateTel = false
+      }
+    },
+    telCheck: function(){
+      axios({
+        method: 'get',
+        url: 'http://13.125.47.126:8080/users/checkByTel/' + this.credentials.tel
+      })
+      .then(res => {
+        console.log(res)
+        if (res.data){
+          this.isValid.validateTel = true
+        }
+        else {
+          this.isValid.validateTel = false
+        }
+      })
+    },
+  }, 
+  created() {
+    this.credentials.beforeNick = this.$store.state.userInfo.nickname
   }
 }
 </script>
@@ -153,7 +240,7 @@ export default {
 		margin-bottom: 0.5rem;
 	}
 
-  input {
+  #nickname {
     border: 2px #5E39B3 solid;
     border-radius: 30px;
     width: 95%;
@@ -167,22 +254,145 @@ export default {
 		margin-left: 1rem;
   }
 
-  input:focus {
+  #intro {
+    border: 2px #5E39B3 solid;
+    border-radius: 30px;
+    width: 95%;
+    min-width: 300px;
+    height: 5vh;
+    min-height: 40px;
+    padding: 0.75rem;
+    font-size: 3.5rem;
+    letter-spacing: -1px;
+    font-weight: bold;
+		margin-left: 1rem;
+  }
+
+  #password {
+    border: 2px #5E39B3 solid;
+    border-radius: 30px;
+    width: 95%;
+    min-width: 300px;
+    height: 5vh;
+    min-height: 40px;
+    padding: 0.75rem;
+    font-size: 3.5rem;
+    letter-spacing: -1px;
+    font-weight: bold;
+		margin-left: 1rem;
+  }
+
+  #pw_conf {
+    border: 2px #5E39B3 solid;
+    border-radius: 30px;
+    width: 95%;
+    min-width: 300px;
+    height: 5vh;
+    min-height: 40px;
+    padding: 0.75rem;
+    font-size: 3.5rem;
+    letter-spacing: -1px;
+    font-weight: bold;
+		margin-left: 1rem;
+  }
+  
+  #next_pw {
+    border: 2px #5E39B3 solid;
+    border-radius: 30px;
+    width: 95%;
+    min-width: 300px;
+    height: 5vh;
+    min-height: 40px;
+    padding: 0.75rem;
+    font-size: 3.5rem;
+    letter-spacing: -1px;
+    font-weight: bold;
+		margin-left: 1rem;
+  }
+
+  #nickname:focus {
+    outline: none;
+    background-color: #afa0d6;
+    color: white;
+    text-shadow: 0 1px 2px rgb(0, 0, 0, 0.5);
+  }
+  #intro:focus {
+    outline: none;
+    background-color: #afa0d6;
+    color: white;
+    text-shadow: 0 1px 2px rgb(0, 0, 0, 0.5);
+  }
+  #password:focus {
+    outline: none;
+    background-color: #afa0d6;
+    color: white;
+    text-shadow: 0 1px 2px rgb(0, 0, 0, 0.5);
+  }
+  #pw_conf:focus {
+    outline: none;
+    background-color: #afa0d6;
+    color: white;
+    text-shadow: 0 1px 2px rgb(0, 0, 0, 0.5);
+  }
+  #next_pw:focus {
     outline: none;
     background-color: #afa0d6;
     color: white;
     text-shadow: 0 1px 2px rgb(0, 0, 0, 0.5);
   }
 
-  input::placeholder {
+  #nickname::placeholder {
     font-size: 1.1rem !important;
     font-weight: initial;
     text-shadow: none;
     position: absolute;
     top: 18%;
   }
+  #nickname:focus::placeholder {
+    color: transparent;
+  }
 
-  input:focus::placeholder {
+  #intro::placeholder {
+    font-size: 1.1rem !important;
+    font-weight: initial;
+    text-shadow: none;
+    position: absolute;
+    top: 18%;
+  }
+  #intro:focus::placeholder {
+    color: transparent;
+  }
+
+  #password::placeholder {
+    font-size: 1.1rem !important;
+    font-weight: initial;
+    text-shadow: none;
+    position: absolute;
+    top: 18%;
+  }
+  #password:focus::placeholder {
+    color: transparent;
+  }
+
+  #pw_conf::placeholder {
+    font-size: 1.1rem !important;
+    font-weight: initial;
+    text-shadow: none;
+    position: absolute;
+    top: 18%;
+  }
+  #pw_conf:focus::placeholder {
+    color: transparent;
+  }
+
+  #next_pw::placeholder {
+    font-size: 1.1rem !important;
+    font-weight: initial;
+    text-shadow: none;
+    position: absolute;
+    top: 18%;
+  }
+  #next_pw:focus::placeholder {
     color: transparent;
   }
 	
@@ -233,7 +443,8 @@ export default {
 	#profile_img {
 		width:130px;
 		height: 130px;
-		border-radius: 130px;		
+		border-radius: 130px;
+    margin-left: 0.5rem;		
 	}
 
 	#user_id {
@@ -255,18 +466,53 @@ export default {
     color: white;
 		width: 6.9rem;
 		height: 2rem;
+    margin-right: 1rem;
 		font-size: 0.9rem;
 		font-weight: bold;
 		border-radius: 20px;
 		border: none;
 	}
-	#pu_form {
-		text-align: left;
-	}
-   h3 {
+
+  #pu_form {
+    text-align: left;
+  }
+  
+  #pu_form_radio {
+    text-align: left;
+  }
+
+  #check_radio {
+    display: flex;
+    justify-content: space-evenly;
+    width: 95%;
+    min-width: 300px;
+    height: 5vh;
+    min-height: 40px;
+    padding: 0.75rem;
+    font-size: 3.5rem;
+    letter-spacing: -1px;
+    font-weight: bold;
+		margin-left: 1rem;
+  }
+
+  #on {
+    display: flex;
+    width: 39%;
+  }
+
+  #off {
+    display: flex;
+    width: 39%;
+  }
+
+  h3 {
     font-size: 1.5rem;
     font-weight: bold;
     margin: 0;
+  }
+
+  h5 {
+    font-size: 1.2rem;
   }
 
   p {
@@ -334,4 +580,6 @@ export default {
   #pu_buttons > *:last-child {
     background-color: #777777;
   }
+
+  
 </style>

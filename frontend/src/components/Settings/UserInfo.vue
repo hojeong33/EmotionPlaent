@@ -44,11 +44,13 @@
         <h3>계정 공개</h3>
         <span>
           <span>
-            <input type="radio" id="show_all" v-model="showAll">
+            <input type="radio" id="show_all" onclick="return false;"
+            :checked="this.publish == 1 ? 'checked': false" readonly>
             <label for="show_all">모두에게 공개</label>
           </span>
           <span>
-            <input type="radio" id="show_followers" v-model="showFollow">
+            <input type="radio" id="show_followers" onclick="return false;"
+            :checked="this.publish == 2 ? 'checked': false" readonly>
             <label for="show_followers">팔로워에게 공개</label>
           </span>
         </span>
@@ -69,8 +71,7 @@ export default {
   data: function(){
     return {
       birthShow: false,
-      showAll: false,
-      showFollow: true,
+      publish: 1,
       // modalActive: false,
     }
   },
@@ -89,8 +90,21 @@ export default {
     },
     logoutModal:function(){
       this.$store.commit('logoutModalActivate')
-		}
+		},
+    // onPublish() {
+    //   this.showAll
+    // }
   },
+  created() {
+    if (this.$store.state.userInfo.publish === 1) {
+      this.showAll = true
+      this.showFollow = false
+    }
+    else {
+      this.showAll = false
+      this.showFollow = true
+    }
+  }
 }
 </script>
 

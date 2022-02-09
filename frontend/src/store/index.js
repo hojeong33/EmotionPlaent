@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import axios from 'axios'
 
 const session = window.sessionStorage;
-// const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 Vue.use(Vuex)
 
@@ -61,13 +61,16 @@ export default new Vuex.Store({
       console.log(state)
       state.words = searchWords
     },
+    // 세션에 유저정보 넣거나 갱신하는 부분
     userUpdate(state, payload){
+      const decodeAccessToken = jwt.decode(payload);
+
       if (!session.getItem('userInfo')){
-        session.setItem('userInfo', JSON.stringify(payload))
+        session.setItem('userInfo', JSON.stringify(decodeAccessToken))
       }
       const userdata = JSON.parse(session.getItem('userInfo'))
-      if(typeof(payload) == 'number'){
-        userdata.mood = payload
+      if(typeof(decodeAccessToken) == 'number'){
+        userdata.mood = decodeAccessToken
         session.setItem('userInfo', JSON.stringify(userdata))
       }
       state.userInfo = userdata

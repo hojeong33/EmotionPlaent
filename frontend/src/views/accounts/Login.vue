@@ -126,8 +126,8 @@ export default {
         // storage 설정
         session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
         session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
-        const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
-        this.$store.commit('userUpdate', decodeAccessToken.userInfo)
+
+        this.$store.commit('userUpdate', res.headers['at-jwt-access-token'])
         this.sendToken();
         this.$store.commit('loginConfirmModalActivate')
         // this.$router.push('EmotionTest')
@@ -153,9 +153,7 @@ export default {
         session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
         session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
 
-        const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
-        console.log('decodeAccessToken data', decodeAccessToken);
-        this.$store.commit('userUpdate', decodeAccessToken.userInfo)
+        this.$store.commit('userUpdate', res.headers['at-jwt-access-token'])
         console.log(this.$store.state.userInfo.email)
         this.sendToken();
         if (this.$store.state.userInfo.tel === null) {
