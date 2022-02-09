@@ -34,6 +34,7 @@ export default {
 			console.log(this.$store.state.userInfo)
 			this.$store.commit('emotionTestResultModalActivate')
 			this.$router.push({name: 'Main'})
+
 		}
 	},
 	created: function () {
