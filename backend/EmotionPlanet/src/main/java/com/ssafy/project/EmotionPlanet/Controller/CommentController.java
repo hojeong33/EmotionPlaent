@@ -53,6 +53,17 @@ public class CommentController {
 //        }
     }
 
+    @GetMapping(value ="/comments/returnNo{no}") // 댓글 목록
+    public ResponseEntity<?> myListReturnNo(@PathVariable String no) {
+        int userNo = Integer.parseInt(no);
+        List<Integer> comments = commentService.listOnNo(userNo);
+        if(comments != null) {
+            return new ResponseEntity<List<Integer>>(comments, HttpStatus.OK);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "내가 작성한 피드가 없습니다.");
+        }
+    }
+
     @GetMapping(value = "/comment/{no}")
     public ResponseEntity<CommentDto> read(@RequestHeader(value="at-jwt-access-token") String jwt, @PathVariable String no) {
         int commentNo = Integer.parseInt(no);

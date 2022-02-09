@@ -28,11 +28,11 @@ public class PickContentServiceImpl implements PickContentService{
         int type = pickDto.getType();
 
         if (type == 0) {
-
+            list = pickContentDao.listOnMusic(pickNo);
         } else if (type == 1) {
-
+            list = pickContentDao.listOnMovie(pickNo);
         } else {
-
+            list = pickContentDao.listOnActivity(pickNo);
         }
         System.out.println("dao 갯수 -----------" + list.size());
         return list;
@@ -40,11 +40,51 @@ public class PickContentServiceImpl implements PickContentService{
 
     @Override
     public PickContentDto select(int no) {
-        return null;
+        PickDto pickDto = pickDao.select(no);
+        int type = pickDto.getType();
+
+        PickContentDto pickContentDto = new PickContentDto();
+
+        if (type == 0) {
+            pickContentDto = pickContentDao.selectOnMusic(no);
+        } else if (type == 1) {
+            pickContentDto = pickContentDao.selectOnMovie(no);
+        } else {
+            pickContentDto = pickContentDao.selectOnActivity(no);
+        }
+
+        return pickContentDto;
     }
 
     @Override
-    public int delete(int no) {
-        return pickContentDao.delete(no);
+    public int create(PickContentDto pickContentDto) {
+
+        int result = 0;
+        int type = pickContentDto.getType();
+        if (type == 0) {
+            result = pickContentDao.createOnMusic(pickContentDto);
+        } else if (type == 1) {
+            result = pickContentDao.createOnMovie(pickContentDto);
+        } else {
+            result = pickContentDao.createOnActivity(pickContentDto);
+        }
+
+        return result;
+    }
+
+    @Override
+    public int delete(PickContentDto pickContentDto) {
+        int result = 0;
+        int type = pickContentDto.getType();
+        int no = pickContentDto.getNo();
+        if (type == 0) {
+            result = pickContentDao.deleteOnMusic(no);
+        } else if (type == 1) {
+            result = pickContentDao.deleteOnMovie(no);
+        } else {
+            result = pickContentDao.deleteOnActivity(no);
+        }
+
+        return result;
     }
 }

@@ -105,10 +105,7 @@ export default {
       alert("로그인 성공")
       console.log(res.headers);
       // storage 설정
-      session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-      session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
-      const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
-      this.$store.commit('userUpdate', decodeAccessToken.userInfo)
+      this.$store.dispatch('allTokenRefresh',res)
       this.sendToken();
     })
     .then(() => window.location.reload())
@@ -132,12 +129,7 @@ export default {
       alert("로그인 성공")
       console.log('Loged in!', res.headers);
       // storage 설정
-      session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-      session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
-
-      const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
-      console.log('decodeAccessToken data', decodeAccessToken);
-      this.$store.commit('userUpdate', decodeAccessToken.userInfo)
+      this.$store.dispatch('allTokenRefresh', res)
     })
     .then(() => {
       console.log(this.$store.state.userInfo.email)
@@ -185,15 +177,11 @@ export default {
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
     axios.get('http://13.125.47.126:8080/qss/list', {
-      headers: headers,
+      headers: headers, // 넣는거 까먹지 마세요
       }).then((res) => {
-      console.log(res);
-      console.log('response header', res.headers);
-      if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
-        session.setItem('at-jwt-access-token', "");
-        session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-        console.log("Access Token을 교체합니다!!!")
-      }
+
+      this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+      this.dispatch('accessTokenRefresh', res) // store에서
 
       }).catch((error) => {
         console.log(error);

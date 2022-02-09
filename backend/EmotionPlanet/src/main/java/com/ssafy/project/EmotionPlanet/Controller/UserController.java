@@ -1,10 +1,13 @@
 package com.ssafy.project.EmotionPlanet.Controller;
 
+import com.ssafy.project.EmotionPlanet.Config.JWT.JwtService;
 import com.ssafy.project.EmotionPlanet.Dto.FindEmailDto;
+import com.ssafy.project.EmotionPlanet.Dto.TokenDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserSecretDto;
 import com.ssafy.project.EmotionPlanet.Service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.mail.SimpleMailMessage;
@@ -26,10 +29,13 @@ public class UserController {
 
 	@Autowired
 	private JavaMailSender javaMailSender;
+
+	@Autowired
+	JwtService jwtService;
 	
 	private static final int SUCCESS = 1;
 
-	@PostMapping(value = "/users") // 회원가입
+	@PostMapping(value = "/register") // 회원가입
 	public ResponseEntity<Integer> register(@RequestBody UserDto userDto) {
 		String rawPassword = userDto.getPw();
 		String enPassword = bCryptPasswordEncoder.encode(rawPassword);
@@ -50,7 +56,8 @@ public class UserController {
 		int userNo = Integer.parseInt(no);
 		UserDto userDto = userService.userSelect(userNo);
 		UserSecretDto userSecretDto = new UserSecretDto(userDto.getNo(), userDto.getEmail(), userDto.getNickname(),
-				userDto.getBirth(), userDto.getProfileImg(), userDto.getTel(), userDto.getMood());
+				userDto.getBirth(), userDto.getProfileImg(), userDto.getTel(), userDto.getIntro()
+				, userDto.getPublish(), userDto.getMood());
 		if (userSecretDto != null) {
 			System.out.println("회원 번호 검색 성공");
 			System.out.println(userSecretDto);
@@ -60,8 +67,8 @@ public class UserController {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하는 유저가 없습니다.");
 		}
 	}
-
-	@GetMapping(value = "/users/checkByEmail/{email}") // 이메일 중복검사
+	
+	@GetMapping(value = "/register/checkByEmail/{email}") // 이메일 중복검사
 	public ResponseEntity<Integer> duplicateEmail(@PathVariable String email) {
 		if (userService.duplicateEmail(email) == SUCCESS) {
 			System.out.println("이메일 중복 검사 미사용 " + email);
@@ -72,7 +79,7 @@ public class UserController {
 		}
 	} 
 
-	@GetMapping(value = "/users/checkByNickname/{nickname}") // 닉네임 중복검사
+	@GetMapping(value = "/register/checkByNickname/{nickname}") // 닉네임 중복검사
 	public ResponseEntity<Integer> duplicateNickname(@PathVariable String nickname) {
 		if (userService.duplicateNickname(nickname) == SUCCESS) {
 			System.out.println("닉네임 중복 검사 미사용 " + nickname);
@@ -83,7 +90,7 @@ public class UserController {
 		}
 	}
 	
-	@GetMapping(value = "/users/checkByTel/{tel}") // 전화번호 중복검사
+	@GetMapping(value = "/register/checkByTel/{tel}") // 전화번호 중복검사
 	public ResponseEntity<Integer> duplicateTel(@PathVariable String tel) {
 		if (userService.duplicateTel(tel) == SUCCESS) {
 			System.out.println("전화번호 중복 검사 미사용 " + tel);
@@ -95,11 +102,14 @@ public class UserController {
 	}
 	
 	@PutMapping(value ="/users") //회원 수정
-	public ResponseEntity<Integer> update(@RequestBody UserDto changeuserDto) {
+	public ResponseEntity<?> update(@RequestBody UserDto changeuserDto) {
+		if(changeuserDto.getPw() != null) {
+			String rawPassword = changeuserDto.getPw();
+			String enPassword = bCryptPasswordEncoder.encode(rawPassword);
+			changeuserDto.setPw(enPassword);
+		} 
 		UserDto userDto = userService.userSelect(changeuserDto.getNo()); //입력받은 유저 번호로 기존 유저 정보 가져옴	
 		if(userService.userUpdate(userDto, changeuserDto) == SUCCESS) { // 기존정보와 입력받은 정보를 비교해서 새로 갱신
-			System.out.println("회원 수정 성공");
-			System.out.println("수정된 정보 " + changeuserDto); 
 			return new ResponseEntity<Integer>(SUCCESS, HttpStatus.OK);
 		}else {
 			System.out.println("회원 수정 실패");
@@ -120,7 +130,7 @@ public class UserController {
 		}
 	}
 	
-	@GetMapping(value = "/users/findEmail/{tel}") // 이메일 찾기
+	@GetMapping(value = "/register/findEmail/{tel}") // 이메일 찾기
 	public ResponseEntity<String> findemail(@PathVariable String tel) {
 		String email = userService.findEamil(tel);
 		if(email != null) {
@@ -133,7 +143,7 @@ public class UserController {
 		}
 	}
 	
-	@PostMapping(value = "/users/findPw") // 비밀번호 찾기
+	@PostMapping(value = "/register/findPw") // 비밀번호 찾기
 	public void sendmail(@RequestBody FindEmailDto findEmailDto) {
 		String Pw = userService.findPw(findEmailDto);
 		if(Pw != null) {

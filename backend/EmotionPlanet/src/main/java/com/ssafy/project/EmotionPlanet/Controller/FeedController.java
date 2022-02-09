@@ -5,22 +5,15 @@ import com.ssafy.project.EmotionPlanet.Dto.*;
 import com.ssafy.project.EmotionPlanet.Service.FeedService;
 import com.ssafy.project.EmotionPlanet.Service.ImgService;
 import com.ssafy.project.EmotionPlanet.Service.S3Service;
-import com.ssafy.project.EmotionPlanet.Service.TagService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin(
         origins = "http://localhost:5500",
@@ -174,9 +167,9 @@ public class FeedController {
     }
 
     @PostMapping(value ="/feeds/like") // 좋아요
-    public ResponseEntity<Integer> like(@RequestBody FeedLikeDto feedLikeDto) {
-        int feedNo = feedLikeDto.getFeedNo();
-        int userNo = feedLikeDto.getUserNo();
+    public ResponseEntity<Integer> like(@RequestBody LikeDto likeDto) {
+        int feedNo = likeDto.getTargetNo();
+        int userNo = likeDto.getUserNo();
 
         int result = feedService.like(userNo, feedNo);
         if(result == SUCCESS) {
@@ -187,9 +180,9 @@ public class FeedController {
     }
 
     @DeleteMapping(value ="/feeds/like") // 좋아요 취소
-    public ResponseEntity<Integer> unlike(@RequestBody FeedLikeDto feedLikeDto) {
-        int feedNo = feedLikeDto.getFeedNo();
-        int userNo = feedLikeDto.getUserNo();
+    public ResponseEntity<Integer> unlike(@RequestBody LikeDto likeDto) {
+        int feedNo = likeDto.getTargetNo();
+        int userNo = likeDto.getUserNo();
 
         int result = feedService.unlike(userNo, feedNo);
         if(result == SUCCESS) {
