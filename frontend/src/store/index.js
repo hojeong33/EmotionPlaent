@@ -142,7 +142,7 @@ export default new Vuex.Store({
     },
 
     connect() { // 웹 소켓 연결하는 부분.
-      const serverURL = "http://localhost:8080";
+      const serverURL = "http://13.125.47.126:8080";
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket);
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
@@ -184,7 +184,7 @@ export default new Vuex.Store({
     alarmselect(){ // 디비에 있는 알림 가져오기
       axios({
         method: 'get',
-        url:'http://localhost:8080/alarm/' + this.state.userInfo.no,
+        url:'http://13.125.47.126:8080/alarm/' + this.state.userInfo.no,
       })
       .then((res)=>{
         console.log('알림 가져오기 성공')
@@ -199,7 +199,7 @@ export default new Vuex.Store({
     alarmdelete(state ,el){ // 읽은 알림 지우기=> 알림번호 넘겨주는거 생각해야함
       axios({
         method: 'delete',
-        url:'http://localhost:8080/alarm/' + el, // 여기 알림번호 넘겨줘야한다.
+        url:'http://13.125.47.126:8080/alarm/' + el, // 여기 알림번호 넘겨줘야한다.
       })
       .then((res)=>{
         console.log('알림 삭제 성공')
