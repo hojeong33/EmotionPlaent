@@ -20,7 +20,7 @@ public class LoginServiceImpl implements LoginService {
         if(userDto != null && passwordEncoder.matches(dto.getPw(), userDto.getPw())) { //이메일에 대한 회원 정보가 존재하고 비밀번호가 같으면 로그인 성공
             return userDto;
         }else {
-            return userDto;
+            return null;
         }
     }
 

@@ -3,7 +3,7 @@ import Vuex from 'vuex'
 import axios from 'axios'
 
 const session = window.sessionStorage;
-// const jwt = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 Vue.use(Vuex)
 import Stomp from "webstomp-client";
@@ -79,6 +79,9 @@ export default new Vuex.Store({
         session.setItem('userInfo', JSON.stringify(userdata))
       }
       state.userInfo = userdata
+    },
+    tokenTest(){
+      console.log("test")
     },
     feedOut({ navActive }){
       Vue.set(navActive, 0, false)
@@ -225,6 +228,7 @@ export default new Vuex.Store({
         url:'http://13.125.47.126:8080/alarm/' + this.state.userInfo.no,
       })
       .then((res)=>{
+        this.dispatch('accessTokenRefresh', res)
         console.log('알림 가져오기 성공')
         console.log(res.data)
       })
@@ -240,6 +244,7 @@ export default new Vuex.Store({
         url:'http://13.125.47.126:8080/alarm/' + el, // 여기 알림번호 넘겨줘야한다.
       })
       .then((res)=>{
+        this.dispatch('accessTokenRefresh', res)
         console.log('알림 삭제 성공')
         console.log(res.data)
       })
@@ -262,6 +267,7 @@ export default new Vuex.Store({
         url:'http://13.125.47.126:8080/searchs/byTag/' + this.state.words,
         headers: headers,
       }).then(res => {
+        this.dispatch('accessTokenRefresh', res)
         this.state.tagSearch = res.data
         console.log('then')
         console.log(res.data)
@@ -283,6 +289,7 @@ export default new Vuex.Store({
         headers: headers,
       })
       .then((res)=>{
+        this.dispatch('accessTokenRefresh', res)
         this.state.userSearch = res.data
         console.log('then')
         console.log(res.data)
@@ -304,13 +311,7 @@ export default new Vuex.Store({
           headers: headers,
         }).then((res) => {
           this.state.recommendMusic = res.data
-          console.log(res);
-          console.log('response header', res.headers);
-          if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
-            session.setItem('at-jwt-access-token', "");
-            session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-            console.log("Access Token을 교체합니다!!!")
-          }
+          this.dispatch('accessTokenRefresh', res)
         
         }).catch((error) => {
           console.log(error);
@@ -328,13 +329,7 @@ export default new Vuex.Store({
           headers: headers,
         }).then((res) => {
           this.state.recommendMovie = res.data
-          console.log(res);
-          console.log('response header', res.headers);
-          if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
-            session.setItem('at-jwt-access-token', "");
-            session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-            console.log("Access Token을 교체합니다!!!")
-          }
+          this.dispatch('accessTokenRefresh', res)
         
         }).catch((error) => {
           console.log(error);
@@ -352,19 +347,33 @@ export default new Vuex.Store({
           headers: headers,
         }).then((res) => {
           this.state.recommendActivity = res.data
-          console.log(res);
-          console.log('response header', res.headers);
-          if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
-            session.setItem('at-jwt-access-token', "");
-            session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-            console.log("Access Token을 교체합니다!!!")
-          }
+          this.dispatch('accessTokenRefresh', res)
         
       }).catch((error) => {
         console.log(error);
       }).then(() => {
         console.log('getQSSList End!!');
       });
+    },
+
+    accessTokenRefresh({commit}, res) {
+      console.log("accesstoken : " + res.headers)
+      if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
+        session.setItem('at-jwt-access-token', "");
+        session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+        console.log("Access Token을 교체합니다!!!")
+      }
+      commit('tokenTest')
+    },
+
+    allTokenRefresh({commit},res){
+      console.log("alltoken : " + res.headers)
+      session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+      session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
+
+      const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
+      console.log('decodeAccessToken data', decodeAccessToken);
+      commit('userUpdate', decodeAccessToken.userInfo)
     },
     // userInfo: function(state, payload){
     //   console.log(payload)

@@ -115,7 +115,7 @@ public class LoginController {
             userService.userRefreshToken(user);
         }
 
-        return ResponseEntity.ok().headers(res).body(userDto);
+        return ResponseEntity.ok().headers(res).body(user);
     }
 
     @GetMapping(value = "/qss/list")
