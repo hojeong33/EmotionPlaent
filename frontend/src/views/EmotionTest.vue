@@ -98,7 +98,7 @@
           if (this.selected.length >= 2){
             axios({
               method: 'post',
-              url: 'http://localhost:8080/detailtest',
+              url: 'http://13.125.47.126:8080/detailtest',
               data: this.selected,
               headers: headers,
             }).then((res) => {
@@ -127,7 +127,7 @@
         else {
           axios({
               method: 'post',
-              url: 'http://localhost:8080/resulttest',
+              url: 'http://13.125.47.126:8080/resulttest',
               data: this.selected,
               headers: headers,
             }).then(res => {
@@ -175,7 +175,7 @@
       'at-jwt-access-token': session.getItem('at-jwt-access-token'),
       'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
-			axios.get('http://localhost:8080/test', {
+			axios.get('http://13.125.47.126:8080/test', {
           headers: headers,
         }).then((res) => {
           this.keywords = res.data

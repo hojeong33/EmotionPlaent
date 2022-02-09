@@ -39,8 +39,7 @@ public class PrincipalOauth2UserService {
     private final NetHttpTransport transport = new NetHttpTransport();
     private final JsonFactory jsonFactory = new GsonFactory();
 
-    @Value("${google.client-id}")
-    private String clientId;
+    private final String clientId = "172274534251-7a2a6sthcuviratis75u7gu7utbkdp8d.apps.googleusercontent.com";
 
     public UserDto tokenVerify(String idToken) {
 
