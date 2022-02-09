@@ -43,7 +43,6 @@
         <p>Kakao로 로그인</p>
         </button>
     </article>
-    <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&response_type=code&client_id=172274534251-rpo5d1a1i23k75l87vrcjiid99413h9a.apps.googleusercontent.com&redirect_uri=http://localhost:8080/auth/google/callback">구글로그인</a>
     <div id="my-signin2"></div>
     <button @click="signout">signout</button>
   </div>
@@ -97,6 +96,8 @@ export default {
         // eslint-disable-next-line
         console.log('User Signed Out!!!');
       })
+      authInst.disconnect();
+      session.clear();
     },
 
     // login: function () {
@@ -120,7 +121,7 @@ export default {
     login: function () {
       axios({
         method: 'post',
-        url:'http://13.125.47.126:8080/login',
+        url:'http://localhost:8080/login',
         data: this.credentials
       })
       .then((res)=>{
@@ -137,6 +138,7 @@ export default {
         this.$router.push('EmotionTest')
       })
       .catch(err=> {
+        console.log(err.response.data);
         alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
       })
       this.credentials.email = "";
@@ -144,7 +146,7 @@ export default {
     },
 
     tokenVerify() {
-      const url = 'http://13.125.47.126:8080/login/auth';
+      const url = 'http://localhost:8080/login/auth';
       const params = new URLSearchParams();
       params.append('idToken', this.googleUser.wc.id_token);
       console.log(params)

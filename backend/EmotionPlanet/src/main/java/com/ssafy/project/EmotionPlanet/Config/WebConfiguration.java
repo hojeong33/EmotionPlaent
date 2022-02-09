@@ -28,6 +28,7 @@ public class WebConfiguration implements WebMvcConfigurer {
                 .addPathPatterns("/**")
                 .excludePathPatterns("/login/**")
                 .excludePathPatterns("/users/**");
+
     }
 
 }

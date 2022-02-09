@@ -20,6 +20,9 @@ public interface PickDao {
     public int delete(int no);
 
     //map - @param
+
+    public int likes(int pickNo);
+
     public int like(
             @Param("userNo") int userNo,
             @Param("pickNo") int pickNo);
