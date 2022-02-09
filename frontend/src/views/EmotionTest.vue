@@ -121,7 +121,7 @@
         else {
           axios({
               method: 'post',
-              url: 'http://localhost:8080/resulttest',
+              url: 'http://13.125.47.126:8080/resulttest',
               data: this.selected,
               headers: headers,
             }).then(res => {
