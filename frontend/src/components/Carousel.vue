@@ -2,8 +2,9 @@
   <div id="carousel">
     <div id="carousel-frame">
       <transition-group id="carousel-rail" :name="page > beforePage ? 'slide':'slide-reverse'">
-        <img class="carousel-items" v-for="(item, idx) in data" 
-        :src="item.img" :alt="'item no.' + idx" :key="idx" v-show="page <= idx">
+        <img class="carousel-items" v-for="idx in temp" 
+        :src="data[idx].img" :alt="'item no.' + idx" :key="idx" 
+        v-show="page <= idx">
       </transition-group>
     </div>
     <button @click="move(true)" id="btn-left" />
@@ -47,6 +48,16 @@ export default {
     len(){
       return this.data.length
     },
+    start(){
+      const temp = []
+      for (let i=this.page; i<this.page + this.nums; i++){
+        if (i >= this.len){
+          i = i - this.len
+        }
+        temp.push(i)
+      }
+      return temp
+    }
   },
   mounted(){
     const carousel = document.getElementById('carousel')
