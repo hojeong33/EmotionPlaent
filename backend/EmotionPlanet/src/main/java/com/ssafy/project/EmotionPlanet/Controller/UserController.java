@@ -35,7 +35,7 @@ public class UserController {
 	
 	private static final int SUCCESS = 1;
 
-	@PostMapping(value = "/users") // 회원가입
+	@PostMapping(value = "/register") // 회원가입
 	public ResponseEntity<Integer> register(@RequestBody UserDto userDto) {
 		String rawPassword = userDto.getPw();
 		String enPassword = bCryptPasswordEncoder.encode(rawPassword);
@@ -110,21 +110,7 @@ public class UserController {
 		} 
 		UserDto userDto = userService.userSelect(changeuserDto.getNo()); //입력받은 유저 번호로 기존 유저 정보 가져옴	
 		if(userService.userUpdate(userDto, changeuserDto) == SUCCESS) { // 기존정보와 입력받은 정보를 비교해서 새로 갱신
-			UserSecretDto userSecretDto = new UserSecretDto();
-			if(userDto != null) userSecretDto = new UserSecretDto(userDto.getNo(), userDto.getEmail(),
-					userDto.getNickname(), userDto.getBirth(), userDto.getProfileImg(), userDto.getTel(),
-					userDto.getIntro(), userDto.getPublish(), userDto.getMood());
-
-			HttpHeaders res = new HttpHeaders();
-			TokenDto atJWT = jwtService.create(userSecretDto);
-			res.add("at-jwt-access-token", atJWT.getAccessJws());
-			res.add("at-jwt-refresh-token", atJWT.getRefreshJws());
-			userDto.setRefreshToken(atJWT.getRefreshJws());
-			userService.userRefreshToken(userDto);
-
-			System.out.println("회원 수정 성공");
-			System.out.println("수정된 정보 " + changeuserDto);
-			return ResponseEntity.ok().headers(res).body(userSecretDto);
+			return new ResponseEntity<Integer>(SUCCESS, HttpStatus.OK);
 		}else {
 			System.out.println("회원 수정 실패");
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "수정할 내용을 확인해 주세요.");

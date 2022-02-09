@@ -110,13 +110,7 @@
             this.testNum = 2
             this.page = 1
             console.log(this.page_of_keywords)
-            console.log(res);
-            console.log('response header', res.headers);
-            if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
-              session.setItem('at-jwt-access-token', "");
-              session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-              console.log("Access Token을 교체합니다!!! 이모션 테스트 2")
-              }
+            this.$store.dispatch('accessTokenRefresh', res)
             })
             .catch(() => alert('잘못된 요청입니다'))
           }
@@ -138,8 +132,10 @@
               method: 'put',
               url: 'http://13.125.47.126:8080/users',
               data: body,
-            }).then(res => { 
+              headers: headers,
+            }).then(res => {
               console.log(res)
+              this.$store.dispatch('accessTokenRefresh', res)
               this.$router.push('Main')
             }).catch(err => {
               console.log(err)
@@ -181,12 +177,7 @@
           this.keywords = res.data
           this.keywords = this.keywords.sort(() => Math.random() - 0.5)
           console.log(res);
-          console.log('response header', res.headers);
-          if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
-            session.setItem('at-jwt-access-token', "");
-            session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-            console.log("Access Token을 교체합니다!!!이모션 테스트 1")
-          }
+          this.$store.dispatch('accessTokenRefresh', res)
           }).catch((error) => {
             alert('잘못된 요청입니다.')
             this.$router.push({ name: 'main' })

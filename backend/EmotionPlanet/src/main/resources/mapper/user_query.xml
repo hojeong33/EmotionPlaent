@@ -20,7 +20,7 @@
 	<select id="userSelectByEmail" parameterType="string"
 			resultType="com.ssafy.project.EmotionPlanet.Dto.UserDto">
 		select no, email, pw, nickname, tel, birth, profile_img as
-		profileImg, publish
+		profileImg, publish, intro
 		from user
 		where email = #{email}
 	</select>
@@ -28,7 +28,7 @@
 	<select id="findPw" parameterType="String"
 		resultType="com.ssafy.project.EmotionPlanet.Dto.UserDto">
 		select no, email, pw, nickname, tel, birth, profile_img as
-		profileImg, publish
+		profileImg, publish, intro
 		from user
 		where email = #{email} and tel = #{tel}
 	</select>
