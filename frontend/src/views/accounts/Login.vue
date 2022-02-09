@@ -157,6 +157,7 @@ export default {
     });
   },
 
+
   sendToken() {
     console.log('나는 sendToken!')
     const decodeAccessToken = jwt.decode(session.getItem('at-jwt-access-token'));
