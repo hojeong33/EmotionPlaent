@@ -6,6 +6,8 @@ const session = window.sessionStorage;
 const jwt = require('jsonwebtoken');
 
 Vue.use(Vuex)
+import Stomp from "webstomp-client";
+import SockJS from "sockjs-client";
 
 export default new Vuex.Store({
   state: {
@@ -38,6 +40,12 @@ export default new Vuex.Store({
     profileImgChangeModalActive: false,
     loginConfirmModalActive: false,
     signupConfirmModalActive: false,
+
+    // 알림 부분
+    alarm: [], 
+    lookuser : 2,
+    alarmcheck : 0, // 이걸로 알람온거 체크할수 있을거 같은데...
+    socketcount : 0, // 소켓 연결 일정시간 이상 안되면 재로그인 시키기
   },
   mutations: {
     navActivate: function({ navActive }, payload){
@@ -105,6 +113,147 @@ export default new Vuex.Store({
     },
   },
   actions: {
+    // 여기는 알림 시작 --------------------------------------------------------
+    follow() { //팔로우 알림 보내는 부분
+      console.log("팔로우 알림");
+      if (this.stompClient && this.stompClient.connected) {
+        const msg = {
+          sender: this.state.userInfo.no,
+          receiver: this.state.lookuser,
+          type: 1, 
+        };
+        this.stompClient.send(
+          "/alarm/send/" + this.state.lookuser,
+          JSON.stringify(msg),
+          {}
+        );
+      }
+    },
+
+    comment() { // 댓글달면 누가 댓글달았는지 알려주는 부분
+      console.log("댓글 알림");
+      if (this.stompClient && this.stompClient.connected) {
+        const msg = {
+          sender: this.state.userInfo.no,
+          receiver: this.state.lookuser,
+          feedno: 1, // 여기 나중에 수정해야함
+          commentno: 2,
+          type: 2, 
+        };
+        this.stompClient.send(
+          "/alarm/send/" + this.state.lookuser,
+          JSON.stringify(msg),
+          {}
+        );
+      }
+    },
+
+    feedlike() { //피드 좋아요누르면 누가 좋아요 눌렀는지 알려주는 부분
+      console.log("좋아요 알림");
+      if (this.stompClient && this.stompClient.connected) {
+        const msg = {
+          sender: this.state.userInfo.no,
+          receiver: this.state.lookuser,
+          feedno: 1, // 여기 나중에 수정해야함
+          type: 3, 
+        };
+        this.stompClient.send(
+          "/alarm/send/" + this.state.lookuser,
+          JSON.stringify(msg),
+          {}
+        );
+      }
+    },
+
+    picklike() { //피드 좋아요누르면 누가 좋아요 눌렀는지 알려주는 부분
+      console.log("좋아요 알림");
+      if (this.stompClient && this.stompClient.connected) {
+        const msg = {
+          sender: this.state.userInfo.no,
+          receiver: this.state.lookuser,
+          pickno: 1, // 여기 나중에 수정해야함
+          type: 4, 
+        };
+        this.stompClient.send(
+          "/alarm/send/" + this.state.lookuser,
+          JSON.stringify(msg),
+          {}
+        );
+      }
+    },
+
+    connect() { // 웹 소켓 연결하는 부분.
+      const serverURL = "http://13.125.47.126:8080";
+      let socket = new SockJS(serverURL);
+      this.stompClient = Stomp.over(socket);
+      console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
+      this.stompClient.connect(
+        {},
+        (frame) => {
+          // 소켓 연결 성공
+          this.connected = true;
+          console.log("소켓 연결 성공",frame);
+          // 서버의 메시지 전송 endpoint를 구독합니다.
+          // 이런형태를 pub sub 구조라고 합니다.
+          this.stompClient.subscribe(`/alarm/receive/${this.state.userInfo.no}`, (res) => {
+            console.log("---------------------------------")
+            const obj = JSON.parse(res.body);
+            console.log("보낸사람 아이디 " + obj.sender)
+            console.log("보낸사람 닉네임 " + obj.senderNickname)
+            console.log("보낸사람 프로필 " + obj.senderImg)
+            console.log("피드 번호 " + obj.feedno)
+            console.log("댓글 번호 " + obj.commentno)
+            console.log("알림 날짜 " + obj.date)
+            console.log("알림 타입 " + obj.type)
+            console.log("알림 내용 " + obj.message)
+            alert(obj.message)
+            console.log("---------------------------------")
+            this.state.alarmcheck++; // 이거 실시간 알람오는거 증가시켜서 알림보여주기 알림보면 0으로 초기화?
+            console.log(this.state.alarmcheck)
+          });
+        },
+        (error) => {
+          // 소켓 연결 실패
+          console.log("소켓 연결 실패", error);
+          this.connected = false;
+          this.dispatch('connect'); // 소켓 재연결 시도
+        }
+      );
+    },
+
+    // 이부분은 나중에 알림 부분에서 사용할 예정
+    alarmselect(){ // 디비에 있는 알림 가져오기
+      axios({
+        method: 'get',
+        url:'http://13.125.47.126:8080/alarm/' + this.state.userInfo.no,
+      })
+      .then((res)=>{
+        console.log('알림 가져오기 성공')
+        console.log(res.data)
+      })
+      .catch(err=> {
+        console.log('알림 가져오기 실패')
+        console.log(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
+      })
+    },
+    
+    alarmdelete(state ,el){ // 읽은 알림 지우기=> 알림번호 넘겨주는거 생각해야함
+      axios({
+        method: 'delete',
+        url:'http://13.125.47.126:8080/alarm/' + el, // 여기 알림번호 넘겨줘야한다.
+      })
+      .then((res)=>{
+        console.log('알림 삭제 성공')
+        console.log(res.data)
+      })
+      .catch(err=> {
+        console.log('알림 삭제 실패')
+        console.log(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
+      })
+    },
+    // 여기는 알림 끝 -----------------------------------------------------
+
+
     //여기 검색부분입니다
     searchTag() {
       let headers = {

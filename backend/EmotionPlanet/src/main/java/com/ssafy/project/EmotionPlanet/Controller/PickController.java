@@ -1,7 +1,7 @@
 package com.ssafy.project.EmotionPlanet.Controller;
 
 import com.ssafy.project.EmotionPlanet.Config.JWT.JwtService;
-import com.ssafy.project.EmotionPlanet.Dto.FeedLikeDto;
+import com.ssafy.project.EmotionPlanet.Dto.LikeDto;
 import com.ssafy.project.EmotionPlanet.Dto.PickDto;
 import com.ssafy.project.EmotionPlanet.Service.PickService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,6 +73,17 @@ public class PickController {
         }
     }
 
+    @GetMapping(value ="/picks/user/returnNo/{no}") // 유저가 만든 목록 번호
+    public ResponseEntity<?> listOnNo(@PathVariable String no) {
+        int userNo = Integer.parseInt(no);
+        List<Integer> picks = pickService.listOnNo(userNo);
+        if(picks != null) {
+            return new ResponseEntity<List<Integer>>(picks, HttpStatus.OK);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "작성된 목록이 없습니다.");
+        }
+    }
+
     @PutMapping(value ="/picks") // 목록 수정
     public ResponseEntity<Integer> update(@RequestBody PickDto pickDto) {
         int result = pickService.update(pickDto);
@@ -95,9 +106,9 @@ public class PickController {
     }
 
     @PostMapping(value ="/picks/like") // 좋아요
-    public ResponseEntity<Integer> like(@RequestBody FeedLikeDto feedLikeDto) {
-        int pickNo = feedLikeDto.getFeedNo();
-        int userNo = feedLikeDto.getUserNo();
+    public ResponseEntity<Integer> like(@RequestBody LikeDto likeDto) {
+        int pickNo = likeDto.getTargetNo();
+        int userNo = likeDto.getUserNo();
 
         int result = pickService.like(userNo, pickNo);
         if(result == SUCCESS) {
@@ -108,9 +119,9 @@ public class PickController {
     }
 
     @DeleteMapping(value ="/picks/like") // 좋아요 취소
-    public ResponseEntity<Integer> unlike(@RequestBody FeedLikeDto feedLikeDto) {
-        int pickNo = feedLikeDto.getFeedNo();
-        int userNo = feedLikeDto.getUserNo();
+    public ResponseEntity<Integer> unlike(@RequestBody LikeDto likeDto) {
+        int pickNo = likeDto.getTargetNo();
+        int userNo = likeDto.getUserNo();
 
         int result = pickService.unlike(userNo, pickNo);
         if(result == SUCCESS) {

@@ -12,7 +12,7 @@ public class FeedDto {
     private LocalDateTime date;
 
     private List<CommentDto> comments;
-    private List<FeedLikeDto> likes;
+    private List<LikeDto> likes;
     private List<ImgDto> imgs;
 
     private UserRequestDto authorDetail;
@@ -60,11 +60,11 @@ public class FeedDto {
         this.descr = descr;
     }
 
-    public List<FeedLikeDto> getLikes() {
+    public List<LikeDto> getLikes() {
         return likes;
     }
 
-    public void setLikes(List<FeedLikeDto> likes) {
+    public void setLikes(List<LikeDto> likes) {
         this.likes = likes;
     }
 
