@@ -35,7 +35,7 @@
 						<div id="comment_setting">
 							<i @click="onCommentSetting" class="fas fa-ellipsis-v"></i>
 							<!-- 댓글 하나하나에 유저데이터가 들어가서 해당 유저의 댓글이 지워져야 함-->							
-							<comment-setting v-if="isCommentSettingOpened" @cancel="isCommentSettingOpened=false"></comment-setting>
+							<!-- <comment-setting v-if="isCommentSettingOpened" @cancel="isCommentSettingOpened=false"></comment-setting> -->
 						</div>
 					</div>
 				</div>
@@ -61,14 +61,9 @@
 </template>
 
 <script>
-import CommentSetting from '@/components/Modal/CommentSetting.vue'
-import UserFeedSetting from '@/components/Modal/UserFeedSetting.vue'
+
 
 export default {
-  components: { 
-		CommentSetting,
-    UserFeedSetting, 
-	},
 	data: function () {
 		return {
 			username: "조은누리",
@@ -102,10 +97,6 @@ export default {
 		}
 	},
 	methods: {
-		// createComment: function (input) {
-		// 	let commentContent = 
-		// 	}
-		// }
 		like: function () {
 			this.liked = !this.liked
 			console.log(this.liked)
@@ -126,18 +117,20 @@ export default {
       }
 		},
 		onCommentSetting:function(){
-			if(this.isCommentSettingOpened){
-				this.isCommentSettingOpened=false
-			}else{
-				this.isCommentSettingOpened=true
-			}
+			this.$store.commit('commentSettingModalActivate')
+			// if(this.isCommentSettingOpened){
+			// 	this.isCommentSettingOpened=false
+			// }else{
+			// 	this.isCommentSettingOpened=true
+			// }
 		},
 		onUserFeedSetting:function(){
-			if(this.isUserFeedSettingOpened){
-				this.isUserFeedSettingOpened=false
-			}else{
-				this.isUserFeedSettingOpened=true
-			}
+			this.$store.commit('userFeedSettingModalActivate')
+			// if(this.isUserFeedSettingOpened){
+			// 	this.isUserFeedSettingOpened=false
+			// }else{
+			// 	this.isUserFeedSettingOpened=true
+			// }
 		}
 	}
 }

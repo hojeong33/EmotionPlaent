@@ -48,6 +48,8 @@ export default new Vuex.Store({
     loginFailModalActive: false,
     signupFailModalActive1: false,
     signupFailModalActive2: false,
+    commentNeedContentModalActive:false,
+    moreInfoConfirmModalActive: false,
     serverErrorMessage: null,
   },
   mutations: {
@@ -91,13 +93,13 @@ export default new Vuex.Store({
       state.commentSettingModalActive = !state.commentSettingModalActive
       console.log(state.commentSettingModalActive)
     },
-    logoutModalActivate: function (state) {
-      state.logoutModalActive = !state.logoutModalActive
-      console.log(state.logoutModalActive)
-    },
     userFeedSettingModalActivate: function (state) {
       state.userFeedSettingModalActive = !state.userFeedSettingModalActive
       console.log(state.userFeedSettingModalActive)
+    },
+    logoutModalActivate: function (state) {
+      state.logoutModalActive = !state.logoutModalActive
+      console.log(state.logoutModalActive)
     },
     profileImgChangeModalActivate: function (state) {
       state.profileImgChangeModalActive = !state.profileImgChangeModalActive
@@ -147,6 +149,14 @@ export default new Vuex.Store({
     signupFailModalActivate2: function (state) {
       state.signupFailModalActive2 = !state.signupFailModalActive2
       console.log(state.signupFailModalActive2)
+    },
+    commentNeedContentModalActivate: function (state) {
+      state.commentNeedContentModalActive = !state.commentNeedContentModalActive
+      console.log(state.commentNeedContentModalActive)
+    },
+    moreInfoConfirmModalActivate: function (state) {
+      state.moreInfoConfirmModalActive = !state.moreInfoConfirmModalActive
+      console.log(state.moreInfoConfirmModalActive)
     },
   },
   actions: {

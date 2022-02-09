@@ -96,8 +96,9 @@
             data: info,
           })
           .then( () => {
-            alert('갱신이 완료되었습니다!')
-            this.$router.push('Login')
+            this.$store.commit('moreInfoConfirmModalActivate')
+            // alert('갱신이 완료되었습니다!')
+            // this.$router.push('Login')
           })
           .catch(res => {
             alert(res.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.

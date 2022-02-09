@@ -13,7 +13,6 @@
       </div> -->
       <div id="setting">
         <i @click="onUserFeedSetting" class="fas fa-ellipsis-v"></i>
-        <!-- <user-feed-setting v-if="isUserFeedSettingOpened" @cancel="isUserFeedSettingOpened=false"></user-feed-setting> -->
       </div>
     </div>
     <div id="post_image">
@@ -38,7 +37,6 @@
 
 <script>
 import CommentList from './CommentList.vue';
-// import UserFeedSetting from '@/components/Modal/UserFeedSetting.vue'
 
 export default {
   components: { CommentList, },
@@ -57,7 +55,6 @@ export default {
         { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
         { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
       ],
-      // isUserFeedSettingOpened: false,
     }
   },
    computed: {
