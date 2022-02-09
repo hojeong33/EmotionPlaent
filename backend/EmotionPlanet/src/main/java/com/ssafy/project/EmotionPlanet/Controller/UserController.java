@@ -68,7 +68,7 @@ public class UserController {
 		}
 	}
 	
-	@GetMapping(value = "/users/checkByEmail/{email}") // 이메일 중복검사
+	@GetMapping(value = "/register/checkByEmail/{email}") // 이메일 중복검사
 	public ResponseEntity<Integer> duplicateEmail(@PathVariable String email) {
 		if (userService.duplicateEmail(email) == SUCCESS) {
 			System.out.println("이메일 중복 검사 미사용 " + email);
@@ -79,7 +79,7 @@ public class UserController {
 		}
 	} 
 
-	@GetMapping(value = "/users/checkByNickname/{nickname}") // 닉네임 중복검사
+	@GetMapping(value = "/register/checkByNickname/{nickname}") // 닉네임 중복검사
 	public ResponseEntity<Integer> duplicateNickname(@PathVariable String nickname) {
 		if (userService.duplicateNickname(nickname) == SUCCESS) {
 			System.out.println("닉네임 중복 검사 미사용 " + nickname);
@@ -90,7 +90,7 @@ public class UserController {
 		}
 	}
 	
-	@GetMapping(value = "/users/checkByTel/{tel}") // 전화번호 중복검사
+	@GetMapping(value = "/register/checkByTel/{tel}") // 전화번호 중복검사
 	public ResponseEntity<Integer> duplicateTel(@PathVariable String tel) {
 		if (userService.duplicateTel(tel) == SUCCESS) {
 			System.out.println("전화번호 중복 검사 미사용 " + tel);
@@ -130,7 +130,7 @@ public class UserController {
 		}
 	}
 	
-	@GetMapping(value = "/users/findEmail/{tel}") // 이메일 찾기
+	@GetMapping(value = "/register/findEmail/{tel}") // 이메일 찾기
 	public ResponseEntity<String> findemail(@PathVariable String tel) {
 		String email = userService.findEamil(tel);
 		if(email != null) {
@@ -143,7 +143,7 @@ public class UserController {
 		}
 	}
 	
-	@PostMapping(value = "/users/findPw") // 비밀번호 찾기
+	@PostMapping(value = "/register/findPw") // 비밀번호 찾기
 	public void sendmail(@RequestBody FindEmailDto findEmailDto) {
 		String Pw = userService.findPw(findEmailDto);
 		if(Pw != null) {
