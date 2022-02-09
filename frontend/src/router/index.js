@@ -16,6 +16,7 @@ import Withdrawal from '@/components/Settings/Withdrawal'
 import FeedDetail from '@/components/FeedDetail'
 import PwFind from '@/components/Settings/PwFind'
 import ProfileUpdate from '@/components/Settings/ProfileUpdate'
+import SearchResult from '@/components/Search/SearchResult'
 
 import store from '../store/index.js'
 
@@ -144,6 +145,15 @@ const routes = [
     path: '/feed/detail',
     name: 'FeedDetail',
     component: FeedDetail,
+    meta: {
+      loginRequired: true,
+      testRequired: true
+    },
+  },
+  {
+    path: '/search/',
+    name: 'SearchResult',
+    component: SearchResult,
     meta: {
       loginRequired: true,
       testRequired: true

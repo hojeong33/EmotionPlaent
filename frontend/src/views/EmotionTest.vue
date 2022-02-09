@@ -16,7 +16,7 @@
         </p>
         <selected-keyword v-for="(keyword, idx) in selected" :key="idx"
         :keyword="keyword" @delete_keyword="deleteKeyword" />
-        <span id="refresh" @click="refresh_keywords" />
+        <!-- <span id="refresh" @click="refresh_keywords" /> -->
       </article>
     </section>
     <section id="test_keywords_container">
@@ -35,6 +35,7 @@
     <section id="buttons">
       <button @click="nextTest" id="submit_test_btn">다 골랐어요</button>
       <button @click="go_to_back" id="return_to_btn">아직 안할래요</button>
+      <button @click="test" id="return_to_btn">테스트</button>
     </section>
   </div>
 </template>
@@ -61,6 +62,73 @@
       SelectedKeyword
     },
     methods: {
+      test: function(){
+      this.$store.state.recommendReload = 0
+      let headers = {
+      'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+      'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+			axios.get('http://13.125.47.126:8080/test', {
+        headers: headers,
+        })
+        .then((res) => {
+          this.keywords = res.data
+          let temp = [...res.data]
+          if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
+            session.setItem('at-jwt-access-token', "");
+            session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+            console.log("Access Token을 교체합니다!!!")
+          }
+          return temp
+        })
+        .then(res => {
+          console.log('test 22222!!')
+          const temp = []
+          let n = Math.random() * 7
+          if (n < 2){
+            n = 2
+          }
+          while (n > 0){
+            const i = Math.floor(Math.random() * res.length)
+            temp.push(res.splice(i, 1)[0])
+            n --
+          }
+          return temp
+        })
+        .then(res => {
+          console.log('test 33333!!')
+          axios({
+            method: 'post',
+            url: 'http://13.125.47.126:8080/detailtest',
+            data: res,
+            headers: {
+              'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+              'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+            },
+          })
+          .then(res => {
+            console.log('test 44444!!')
+            const temp = res.data
+            let flag = false
+            temp.forEach(ele => {
+              if (this.keywords.includes(ele)){
+                flag = true
+                return
+              }
+            })
+            return flag
+          })
+          .then(res => {
+            console.log('test 55555!!')
+            if (res){
+              console.log('bug find!!!!')
+            }
+            else {
+              console.log('bug not found!!!')
+            }
+          })
+        })
+      },
       check: function(keyword){
         const idx = this.selected.indexOf(keyword)
         const nums = this.selected.length
@@ -149,24 +217,18 @@
         }
       },
       go_to_back: function(){
-        // if문에서 이전 감정 데이터가 존재하지 않으면 {
-        //   this.$router.push({ name: 'Main' })
-
-        // } else {
-        //   this.$router.go(-1)
-        // }
-        this.$router.push({ name: 'Main' })
+        this.$router.go(-1)
       },
-      refresh_keywords: function(){
-        while (this.selected.length > 0){
-          const keyword = this.selected.pop()
-          this.$refs[keyword.no][0].isChecked = false
-        }
-      }
+      // refresh_keywords: function(){
+      //   while (this.selected.length > 0){
+      //     const keyword = this.selected.pop()
+      //     this.$refs[keyword.no][0].isChecked = false
+      //   }
+      // }
     },
     computed: {
       page_of_keywords: function(){
-        return Math.round(this.keywords.length / 12)
+        return Math.ceil(this.keywords.length / 12)
       }
     },
     created: function(){
@@ -194,7 +256,7 @@
           }).then(() => {
             console.log('getQSSList End!!');
           });
-      }
+      },
   }
 </script>
 
@@ -281,13 +343,13 @@
   }
 
   @keyframes gliter {
-    from { color: rgb(85, 85, 255); }
-    to { color: rgb(147, 147, 255); }
+    from { opacity: 100%; }
+    to { opacity: 50%;; }
   }
 
   #test_2_helper {
     color: rgb(85, 85, 255);
-    animation: glitter 1s ease-in-out 0s infinite alternate;
+    animation: gliter 0.75s ease-in-out 0s infinite alternate;
   }
 
   #refresh {
