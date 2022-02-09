@@ -98,7 +98,7 @@
           if (this.selected.length >= 2){
             axios({
               method: 'post',
-              url: 'http://localhost:8080/detailtest',
+              url: 'http://13.125.47.126:8080/detailtest',
               data: this.selected,
               headers: headers,
             }).then((res) => {
@@ -110,13 +110,7 @@
             this.testNum = 2
             this.page = 1
             console.log(this.page_of_keywords)
-            console.log(res);
-            console.log('response header', res.headers);
-            if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
-              session.setItem('at-jwt-access-token', "");
-              session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-              console.log("Access Token을 교체합니다!!!")
-              }
+            this.$store.dispatch('accessTokenRefresh', res)
             })
             .catch(() => alert('잘못된 요청입니다'))
           }
@@ -138,8 +132,10 @@
               method: 'put',
               url: 'http://13.125.47.126:8080/users',
               data: body,
+              headers: headers,
             }).then(res => {
               console.log(res)
+              this.$store.dispatch('accessTokenRefresh', res)
               this.$router.push('Main')
             }).catch(err => {
               console.log(err)
@@ -175,18 +171,13 @@
       'at-jwt-access-token': session.getItem('at-jwt-access-token'),
       'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
-			axios.get('http://localhost:8080/test', {
+			axios.get('http://13.125.47.126:8080/test', {
           headers: headers,
         }).then((res) => {
           this.keywords = res.data
           this.keywords = this.keywords.sort(() => Math.random() - 0.5)
           console.log(res);
-          console.log('response header', res.headers);
-          if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
-            session.setItem('at-jwt-access-token', "");
-            session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-            console.log("Access Token을 교체합니다!!!")
-          }
+          this.$store.dispatch('accessTokenRefresh', res)
           }).catch((error) => {
             alert('잘못된 요청입니다.')
             this.$router.push({ name: 'main' })
