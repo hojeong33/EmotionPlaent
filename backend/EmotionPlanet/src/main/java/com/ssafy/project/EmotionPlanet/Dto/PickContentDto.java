@@ -9,13 +9,13 @@ public class PickContentDto {
     private String descr;
     private String year;
     private String genre;
-    private String type;
+    private int type;
     private String author;
 
     public PickContentDto() {
     }
 
-    public PickContentDto(int no, int pickNo, String title, String imgLink, String descr, String year, String genre, String type, String author) {
+    public PickContentDto(int no, int pickNo, String title, String imgLink, String descr, String year, String genre, int type, String author) {
         this.no = no;
         this.pickNo = pickNo;
         this.title = title;
@@ -75,11 +75,11 @@ public class PickContentDto {
         this.genre = genre;
     }
 
-    public String getType() {
+    public int getType() {
         return type;
     }
 
-    public void setType(String type) {
+    public void setType(int type) {
         this.type = type;
     }
 

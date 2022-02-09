@@ -41,6 +41,11 @@
         <p>Kakao로 로그인</p>
         </button>
     </article>
+<<<<<<< HEAD
+=======
+    <div id="my-signin2"></div>
+    <button @click="signout">signout</button>
+>>>>>>> origin/feature/be/feed
   </div>
 </template>
 

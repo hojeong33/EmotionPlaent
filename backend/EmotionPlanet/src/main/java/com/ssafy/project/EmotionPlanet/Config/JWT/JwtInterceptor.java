@@ -37,6 +37,11 @@ public class JwtInterceptor implements HandlerInterceptor {
             return true;
         }
 
+        if("http://localhost:8080/login".equals(request.getRequestURI())){
+            System.out.println("로그인");
+            return true;
+        }
+
         if(atJwtRefreshToken == null) {
             if(atJwtToken != null && atJwtToken.length() > 0) {
                 if(jwtService.validate(atJwtToken)) return true;
