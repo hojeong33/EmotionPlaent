@@ -23,15 +23,6 @@ Vue.use(VueRouter)
 
 const routes = [
   {
-    path: '/',
-    name: 'Login',
-    component: Login,
-    meta: {
-      loginRequired: false,
-      testRequired: false
-    }
-  },
-  {
     path: '/login',
     name: 'Login',
     component: Login,
@@ -174,6 +165,12 @@ const userUpdate = new Promise(() => {
 })
 
 router.beforeEach((to, from, next) => {
+  //지정되지 않은 라우트로 이동할 경우 메인으로 redirect
+  if (!to.matched.length){
+    console.log('do not matched!!')
+    next({ name:'Main' })
+  }
+
   const body = document.querySelector('body')
 
   if (to.name == 'Signup' || to.name == 'Login' || to.name == 'EmotionTest'){
@@ -190,7 +187,7 @@ router.beforeEach((to, from, next) => {
   else if (to.matched[0].path == '/setting'){store.commit('navActivate', 4)}
   else {store.commit('navActivate', -1)}
 
-  console.log(token)
+
   //로그인이 필요한 서비스의 경우 로그인 페이지로 redirect
   if (to.meta.loginRequired && !token){
     next({ name:'Login' })
@@ -205,8 +202,10 @@ router.beforeEach((to, from, next) => {
     console.log(store.state.userInfo.mood)
     next({ name:'EmotionTest' })
   }
-
-  // if (to.meta.testRequired && )
+  //로그인 된 사용자가 로그인 or 회원가입 페이지로 가려고 할 경우
+  if (!to.meta.loginRequired && store.state.userInfo){
+    next({ name:'Main' })
+  }
 })
 // router.push의 중복 에러 해결방법
 const originalPush = VueRouter.prototype.push;

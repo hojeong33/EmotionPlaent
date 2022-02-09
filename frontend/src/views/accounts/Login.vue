@@ -31,7 +31,7 @@
       </div>
       <button id="login_btn">로그인</button>
     </form>
-    <button id="google" class="social_login">
+    <button id="google" class="social_login" @click="handleClickSignIn">
       <img id="google" src="../../assets/images/etc/Google__G__Logo.png">
       <p>Google로 로그인</p>
     </button>
@@ -41,7 +41,11 @@
         <p>Kakao로 로그인</p>
         </button>
     </article>
-    <div id="g-signin2"></div>
+    <!-- <div id="g_id_onload"
+      data-client_id="836392631111-1o8o4qhl1ctgnooodk59ctv5im6djme1.apps.googleusercontent.com"
+      data-callback="handleToken"
+      data-auto-prompt="false" />
+    <div class="g_id_signin" data-type="standard" /> -->
     <button @click="signout">signout</button>
   </div>
 </template>
@@ -63,129 +67,141 @@ export default {
       googleUser: null,
     }
   },
-  mounted() {
-    window.gapi.signin2.render('g-signin2', {
-      scope: 'profile email',
-      width: 240,
-      height: 50,
-      longtitle: true,
-      theme: 'dark',
-      onsuccess: this.onSuccess,
-      onfailure: this.onFailure,
+  methods: {
+    //OAUTH
+    async handleClickSignIn() {
+    try {
+      const googleUser = await this.$gAuth.signIn();
+      if (!googleUser) {
+        return null;
+      }
+      console.log("googleUser", googleUser);
+      console.log("getId", googleUser.getId());
+      console.log("getBasicProfile", googleUser.getBasicProfile());
+      console.log("getAuthResponse", googleUser.getAuthResponse());
+      console.log(
+        "getAuthResponse",
+        this.$gAuth.GoogleAuth.currentUser.get().getAuthResponse()
+      );
+      this.isSignIn = this.$gAuth.isAuthorized;
+      this.onSuccess(googleUser)
+    } catch (error) {
+      //on fail do something
+      this.onFailure(error)
+    }
+  },
+  onSuccess(googleUser) {
+    // eslint-disable-next-line
+    console.log(googleUser);
+    this.googleUser = googleUser;
+    this.tokenVerify()
+  },
+  onFailure(error) {
+    // eslint-disable-next-line
+    console.log(error);
+  },
+
+  signout() {
+    const authInst = window.gapi.auth2.getAuthInstance();
+    authInst.signOut().then(() => {
+      // eslint-disable-next-line
+      console.log('User Signed Out!!!');
+    })
+  },
+
+  login: function() {
+    axios({
+      method: 'post',
+      url:'http://13.125.47.126:8080/login',
+      data: this.credentials
+    })
+    .then((res)=>{
+      alert("로그인 성공")
+      console.log(res.headers);
+      // storage 설정
+      session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+      session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
+      const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
+      this.$store.commit('userUpdate', decodeAccessToken.userInfo)
+      this.sendToken();
+      this.$router.push({ name:'EmotionTest' })
+    })
+    .catch(err=> {
+      console.log('나는 에러야!', err)
+      alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
+    })
+    this.credentials.email = "";
+    this.credentials.pw ="";
+  },
+
+  tokenVerify() {
+    const url = 'http://13.125.47.126:8080/login/auth';
+    const params = new URLSearchParams();
+    console.log('나는 params!', params)
+    params.append('idToken', this.googleUser.wc.id_token);
+    // params['idToken'] =  this.googleUser.wc.id_token;
+    console.log('넘길 데이터!', params)
+    axios.post(url, params).then((res) => {
+      alert("로그인 성공")
+      console.log('Loged in!', res.headers);
+      // storage 설정
+      session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+      session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
+
+      const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
+      console.log('decodeAccessToken data', decodeAccessToken);
+      this.$store.commit('userUpdate', decodeAccessToken.userInfo)
+      console.log(this.$store.state.userInfo.email)
+      this.sendToken();
+      if (this.$store.state.userInfo.tel === null) {
+        this.$router.push({ name:'MoreInfo' })
+      }
+      else{
+        this.$router.push({ name:'EmotionTese' })
+      }
+    }).catch((error) => {
+      console.log(error);
+    }).finally(() => {
+      console.log('tokenVerify End!!');
     });
   },
 
-  methods: {
-    //OAUTH
-    onSuccess(googleUser) {
-      // eslint-disable-next-line
-      console.log(googleUser);
-      this.googleUser = googleUser;
-      this.tokenVerify()
-    },
-    onFailure(error) {
-      // eslint-disable-next-line
-      console.log(error);
-    },
-
-    signout() {
-      const authInst = window.gapi.auth2.getAuthInstance();
-      authInst.signOut().then(() => {
-        // eslint-disable-next-line
-        console.log('User Signed Out!!!');
-      })
-    },
-
-    login: function() {
-      axios({
-        method: 'post',
-        url:'http://13.125.47.126:8080/login',
-        data: this.credentials
-      })
-      .then((res)=>{
-        alert("로그인 성공")
-        console.log(res.headers);
-        // storage 설정
-        session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-        session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
-        const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
-        this.$store.commit('userUpdate', decodeAccessToken.userInfo)
-        this.sendToken();
-        this.$router.push('EmotionTest')
-      })
-      .catch(err=> {
-        console.log('나는 에러야!', err)
-        alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
-      })
-      this.credentials.email = "";
-      this.credentials.pw ="";
-    },
-
-    tokenVerify() {
-      const url = 'http://13.125.47.126:8080/login/auth';
-      const params = new URLSearchParams();
-      params.append('idToken', this.googleUser.wc.id_token);
-      console.log(params)
-      axios.post(url, params).then((res) => {
-        alert("로그인 성공")
-        console.log(res.headers);
-        // storage 설정
-        session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-        session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
-
-        const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
-        console.log('decodeAccessToken data', decodeAccessToken);
-        this.$store.commit('userUpdate', decodeAccessToken.userInfo)
-        console.log(this.$store.state.userInfo.email)
-        this.sendToken();
-        if (this.$store.state.userInfo.tel === null) {
-          this.$router.push('MoreInfo')
-        }
-        else{
-          this.$router.push('EmotionTest')
-        }
-      }).catch((error) => {
-        console.log(error);
-      }).then(() => {
-        console.log('tokenVerify End!!');
-      });
-    },
-
-    sendToken() {
-      const decodeAccessToken = jwt.decode(session.getItem('at-jwt-access-token'));
-      let headers = null;
-      if(decodeAccessToken.exp < Date.now()/1000 + 60){
-        console.log('만료됨!!');
-        headers = {
-          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        }
-        console.log('headers : ', headers);
-      }else{
-        console.log('만료되지않음!!');
-        headers = {
-          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        }
-        console.log('headers : ', headers);
+  sendToken() {
+    console.log('나는 sendToken!')
+    const decodeAccessToken = jwt.decode(session.getItem('at-jwt-access-token'));
+    let headers = null;
+    if(decodeAccessToken.exp < Date.now()/1000 + 60){
+      console.log('만료됨!!');
+      headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       }
-    },
+      console.log('headers : ', headers);
+    }else{
+      console.log('만료되지않음!!');
+      headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      }
+      console.log('headers : ', headers);
+    }
+  },
 
-    trans() {
-      let headers = {
-          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        };
-      axios.get('http://13.125.47.126:8080/qss/list', {
-        headers: headers,
+  trans() {
+    let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+    axios.get('http://13.125.47.126:8080/qss/list', {
+      headers: headers,
       }).then((res) => {
-        console.log(res);
-        console.log('response header', res.headers);
-        if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
-          session.setItem('at-jwt-access-token', "");
-          session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-          console.log("Access Token을 교체합니다!!!")
-        }
+      console.log(res);
+      console.log('response header', res.headers);
+      if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
+        session.setItem('at-jwt-access-token', "");
+        session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+        console.log("Access Token을 교체합니다!!!")
+      }
 
       }).catch((error) => {
         console.log(error);
@@ -193,7 +209,6 @@ export default {
         console.log('getQSSList End!!');
       });
     },
-    
   },
 }
 </script>
