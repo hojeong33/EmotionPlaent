@@ -41,12 +41,6 @@
         <p>Kakao로 로그인</p>
         </button>
     </article>
-    <!-- <div id="g_id_onload"
-      data-client_id="836392631111-1o8o4qhl1ctgnooodk59ctv5im6djme1.apps.googleusercontent.com"
-      data-callback="handleToken"
-      data-auto-prompt="false" />
-    <div class="g_id_signin" data-type="standard" /> -->
-    <button @click="signout">signout</button>
   </div>
 </template>
 
@@ -69,7 +63,7 @@ export default {
   },
   methods: {
     //OAUTH
-    async handleClickSignIn() {
+  async handleClickSignIn() {
     try {
       const googleUser = await this.$gAuth.signIn();
       if (!googleUser) {
@@ -101,14 +95,6 @@ export default {
     console.log(error);
   },
 
-  signout() {
-    const authInst = window.gapi.auth2.getAuthInstance();
-    authInst.signOut().then(() => {
-      // eslint-disable-next-line
-      console.log('User Signed Out!!!');
-    })
-  },
-
   login: function() {
     axios({
       method: 'post',
@@ -124,8 +110,8 @@ export default {
       const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
       this.$store.commit('userUpdate', decodeAccessToken.userInfo)
       this.sendToken();
-      this.$router.push({ name:'EmotionTest' })
     })
+    .then(() => window.location.reload())
     .catch(err=> {
       console.log('나는 에러야!', err)
       alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
@@ -141,7 +127,8 @@ export default {
     params.append('idToken', this.googleUser.wc.id_token);
     // params['idToken'] =  this.googleUser.wc.id_token;
     console.log('넘길 데이터!', params)
-    axios.post(url, params).then((res) => {
+    axios.post(url, params)
+    .then((res) => {
       alert("로그인 성공")
       console.log('Loged in!', res.headers);
       // storage 설정
@@ -151,17 +138,21 @@ export default {
       const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
       console.log('decodeAccessToken data', decodeAccessToken);
       this.$store.commit('userUpdate', decodeAccessToken.userInfo)
+    })
+    .then(() => {
       console.log(this.$store.state.userInfo.email)
       this.sendToken();
       if (this.$store.state.userInfo.tel === null) {
-        this.$router.push({ name:'MoreInfo' })
+        window.location.reload()
       }
       else{
-        this.$router.push({ name:'EmotionTese' })
+        window.location.reload()
       }
-    }).catch((error) => {
+    })
+    .catch((error) => {
       console.log(error);
-    }).finally(() => {
+    })
+    .finally(() => {
       console.log('tokenVerify End!!');
     });
   },

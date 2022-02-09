@@ -85,7 +85,7 @@ export default {
         session.clear();
       })
       .then(() => {
-        this.$router.push({ name:'Login' })
+        window.location.reload()
       })
       .catch(() => alert('fail'))
     },

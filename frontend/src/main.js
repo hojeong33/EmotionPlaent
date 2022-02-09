@@ -14,7 +14,7 @@ new Vue({
 import GAuth from 'vue-google-oauth2'
 
 const gauthOption = {
-  clientId: '836392631111-1o8o4qhl1ctgnooodk59ctv5im6djme1.apps.googleusercontent.com',
+  clientId: '172274534251-7a2a6sthcuviratis75u7gu7utbkdp8d.apps.googleusercontent.com',
   scope: 'profile email',
   prompt: 'select_account'
 }

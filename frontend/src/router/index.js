@@ -160,11 +160,15 @@ const router = new VueRouter({
 const token = window.sessionStorage.getItem('at-jwt-access-token');
 const jwt = require('jsonwebtoken');
 const decodeAccessToken = jwt.decode(token)
+
+//유저 정보 업데이트
 const userUpdate = new Promise(() => {
+  console.log('user data updated!')
   store.commit('userUpdate', decodeAccessToken.userInfo)
 })
 
 router.beforeEach((to, from, next) => {
+  console.log(to)
   //지정되지 않은 라우트로 이동할 경우 메인으로 redirect
   if (!to.matched.length){
     console.log('do not matched!!')
@@ -183,10 +187,9 @@ router.beforeEach((to, from, next) => {
   }
   // 네비게이션 바 Active와 매칭
   if (to.name == 'Main'){store.commit('navActivate', 1)}
-  else if (to.name == 'Mypage'){store.commit('navActivate', 2)}
+  else if (to.matched[0].path == '/mypage'){store.commit('navActivate', 2)}
   else if (to.matched[0].path == '/setting'){store.commit('navActivate', 4)}
   else {store.commit('navActivate', -1)}
-
 
   //로그인이 필요한 서비스의 경우 로그인 페이지로 redirect
   if (to.meta.loginRequired && !token){
@@ -194,8 +197,7 @@ router.beforeEach((to, from, next) => {
   }
   //페이지 새로고침 등 발생했을 때 유저정보 store 갱신
   if (to.meta.loginRequired && token && !store.state.userInfo){
-    userUpdate
-    .then(() => next())
+    userUpdate.then(() => next())
   }
   //감정 테스트가 필요한 경우 테스트페이지로 redirect
   if (to.meta.testRequired && !store.state.userInfo.mood){
