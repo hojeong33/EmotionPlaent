@@ -300,7 +300,7 @@ export default new Vuex.Store({
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
 
-			axios.get('http://13.125.47.126:8080/recommend/music/' + this.state.userInfo.mood, {
+			axios.get('http://localhost:8080/recommend/music/' + this.state.userInfo.mood, {
           headers: headers,
         }).then((res) => {
           this.state.recommendMusic = res.data
@@ -311,7 +311,6 @@ export default new Vuex.Store({
             session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
             console.log("Access Token을 교체합니다!!!")
           }
-        
         }).catch((error) => {
           console.log(error);
         }).then(() => {
@@ -323,7 +322,6 @@ export default new Vuex.Store({
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
-
 			axios.get('http://13.125.47.126:8080/recommend/movie/' + this.state.userInfo.mood, {
           headers: headers,
         }).then((res) => {
@@ -347,7 +345,6 @@ export default new Vuex.Store({
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
-
 			axios.get('http://13.125.47.126:8080/recommend/activity/', {
           headers: headers,
         }).then((res) => {

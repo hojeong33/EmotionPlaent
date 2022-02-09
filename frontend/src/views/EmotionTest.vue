@@ -115,7 +115,7 @@
             if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
               session.setItem('at-jwt-access-token', "");
               session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-              console.log("Access Token을 교체합니다!!!")
+              console.log("Access Token을 교체합니다!!! 이모션 테스트 2")
               }
             })
             .catch(() => alert('잘못된 요청입니다'))
@@ -138,7 +138,7 @@
               method: 'put',
               url: 'http://13.125.47.126:8080/users',
               data: body,
-            }).then(res => {
+            }).then(res => { 
               console.log(res)
               this.$router.push('Main')
             }).catch(err => {
@@ -185,7 +185,7 @@
           if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
             session.setItem('at-jwt-access-token', "");
             session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-            console.log("Access Token을 교체합니다!!!")
+            console.log("Access Token을 교체합니다!!!이모션 테스트 1")
           }
           }).catch((error) => {
             alert('잘못된 요청입니다.')

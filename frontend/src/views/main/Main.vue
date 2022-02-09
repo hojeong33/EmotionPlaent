@@ -78,7 +78,7 @@ export default {
 			console.log(session.userInfo)
 			this.$store.state.recommendReload = 1
 		}
-		this.$store.dispatch('connect');
+		// this.$store.dispatch('connect');
 	},
 	methods: {
 		follow(){

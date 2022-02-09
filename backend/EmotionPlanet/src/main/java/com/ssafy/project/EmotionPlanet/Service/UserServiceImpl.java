@@ -66,12 +66,12 @@ public class UserServiceImpl implements UserService {
 			userDto.setNickname(changeuserDto.getNickname());
 			userDto.setTel(changeuserDto.getTel());
 			userDto.setBirth(changeuserDto.getBirth());
-		} else if (changeuserDto.getPw() != null) { // 비밀번호, 소개글, 공개 여부 변경
+		} else if (changeuserDto.getPw() != null && !changeuserDto.getPw().equals("")) { // 비밀번호, 소개글, 공개 여부 변경
 			userDto.setNickname(changeuserDto.getNickname());
 			userDto.setPw(changeuserDto.getPw());
 			userDto.setIntro(changeuserDto.getIntro());
 			userDto.setPublish(changeuserDto.getPublish());
-		} else { // 닉네임, 소개글, 공개여부 변경
+		} else if( changeuserDto.getPw() != null && changeuserDto.getPw().equals("") ) { // 닉네임, 소개글, 공개여부 변경
 			userDto.setNickname(changeuserDto.getNickname());
 			userDto.setIntro(changeuserDto.getIntro());
 			userDto.setPublish(changeuserDto.getPublish());
