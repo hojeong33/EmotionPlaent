@@ -31,15 +31,15 @@ const routes = [
       testRequired: false
     }
   },
-  {
-    path: '/login',
-    name: 'Login',
-    component: Login,
-    meta: {
-      loginRequired: false,
-      testRequired: false
-    }
-  },
+  // {
+  //   path: '/login',
+  //   name: 'Login',
+  //   component: Login,
+  //   meta: {
+  //     loginRequired: false,
+  //     testRequired: false
+  //   }
+  // },
   {
     path: '/signup',
     name: 'Signup',

@@ -164,11 +164,13 @@
             // }
           })
           .catch(res => {
-            alert(res.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
+            this.$store.commit('signupFailModalActivate1', res.response.data.message )
+            //alert(res.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
           })
         }
         else {
-          alert('비밀번호를 확인해주세요.')
+          this.$store.commit('signupFailModalActivate2')
+          // alert('비밀번호를 확인해주세요.')
         }
         this.credentials.email ="";
         this.credentials.nickname="";

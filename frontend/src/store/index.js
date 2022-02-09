@@ -32,12 +32,23 @@ export default new Vuex.Store({
     ],
     navActive: [false, false, false, false, false],
     user: null,
+    // 모달 데이터
     commentSettingModalActive: false,
     logoutModalActive: false,
     userFeedSettingModalActive: false,
     profileImgChangeModalActive: false,
     loginConfirmModalActive: false,
     signupConfirmModalActive: false,
+    emotionTestTooMuchPickModalActive: false,
+    firstEmotionTestConfirmModalActive: false,
+    emotionTestErrorActive: false,
+    emotionTestPickMoreModalActive: false,
+    emotionTestResultModalActive: false,
+    ReturnToLoginModalActive: false,
+    loginFailModalActive: false,
+    signupFailModalActive1: false,
+    signupFailModalActive2: false,
+    serverErrorMessage: null,
   },
   mutations: {
     navActivate: function({ navActive }, payload){
@@ -99,6 +110,43 @@ export default new Vuex.Store({
     signupConfirmModalActivate:function (state) {
       state.signupConfirmModalActive = !state.signupConfirmModalActive
       console.log(state.signupConfirmModalActive)
+    },
+    emotionTestTooMuchPickModalActivate: function (state) {
+      state.emotionTestTooMuchPickModalActive = !state.emotionTestTooMuchPickModalActive
+      console.log(state.emotionTestTooMuchPickModalActive)
+    },
+    firstEmotionTestConfirmModalActivate: function (state) {
+      state.firstEmotionTestConfirmModalActive = !state.firstEmotionTestConfirmModalActive
+      console.log(state.firstEmotionTestConfirmModalActive)
+    },
+    emotionTestErrorModalActivate: function (state) {
+      state.emotionTestErrorActive = !state.emotionTestErrorActive
+      console.log(state.emotionTestErrorActive)
+    },
+    emotionTestPickMoreModalActivate: function (state) {
+      state.emotionTestPickMoreModalActive = !state.emotionTestPickMoreModalActive
+      console.log(state.emotionTestPickMoreModalActive)
+    },
+    emotionTestResultModalActivate: function (state) {
+      state.emotionTestResultModalActive = !state.emotionTestResultModalActive
+      console.log(state.emotionTestResultModalActive)
+    },
+    ReturnToLoginModalActivate: function (state) {
+      state.ReturnToLoginModalActive = !state.ReturnToLoginModalActive
+      console.log(state.ReturnToLoginModalActive)
+    },
+    loginFailModalActivate: function (state) {
+      state.loginFailModalActive = !state.loginFailModalActive
+      console.log(state.loginFailModalActive)
+    },
+    signupFailModalActivate1: function (state, errormessage) {
+      state.signupFailModalActive1 = !state.signupFailModalActive1
+      state.serverErrorMessage = errormessage
+      console.log(state.signupFailModalActive1)
+    },
+    signupFailModalActivate2: function (state) {
+      state.signupFailModalActive2 = !state.signupFailModalActive2
+      console.log(state.signupFailModalActive2)
     },
   },
   actions: {

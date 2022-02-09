@@ -1,9 +1,9 @@
 <template>
-	<div id="login_confirm_modal">
+	<div id="emotiontest_pick_more">
     <div id="modal">
-			<h4>여행을 시작하겠습니다</h4>
+			<h4>조금만 더 골라주세요🤣</h4>
 			<hr>
-			<p @click="goEmotionTest">확인</p>
+			<p @click="goBack">확인</p>
     </div>
 	</div>
 </template>
@@ -11,28 +11,27 @@
 <script>
 export default {
 	methods: {
-		goEmotionTest: function () {
-			console.log('여기옴')
-			console.log(this.$store.state.userInfo)
-			this.$store.commit('loginConfirmModalActivate')
-			this.$router.push({name: 'EmotionTest'})
+		goBack: function () {
+			// console.log('여기옴')
+			// console.log(this.$store.state.userInfo)
+			this.$store.commit('emotionTestPickMoreModalActivate')
 		}
 	}
 }
 </script>
 
 <style scoped>
-#login_confirm_modal {
+#emotiontest_pick_more {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 100%;
-	height: 100%;
+	width: 100vw;
+	height: 100vh;
 	background-color: rgb(0, 0, 0, 0.5);
 	position: fixed;
 	top: 0;
 	left: 0;
-	z-index: 999;
+	z-index: 9999;
 }
 #modal {
 	display: flex;
@@ -54,6 +53,5 @@ hr {
 h4 {
 	margin: auto;
 	text-align: center;
-	font-weight: bold;
 }
 </style>

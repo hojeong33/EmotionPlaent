@@ -71,7 +71,8 @@
         else {
           if ((this.testNum == 1 && nums > 5) ||
           (this.testNum == 2 && nums > 3)){
-            alert('너무 많이 골랐어요..!')
+            // alert('너무 많이 골랐어요..!')
+            this.$store.commit('emotionTestTooMuchPickModalActivate')
             this.$refs[keyword.no][0].isChecked = false
           }
           else {
@@ -106,7 +107,8 @@
             this.keywords = res.data
             this.keywords = this.keywords.sort(() => Math.random() - 0.5)
             this.selected = []
-            alert('한 번만 더 선택해볼까요?')
+            // alert('한 번만 더 선택해볼까요?')
+            this.$store.commit('firstEmotionTestConfirmModalActivate')
             this.testNum = 2
             this.page = 1
             console.log(this.page_of_keywords)
@@ -118,10 +120,14 @@
               console.log("Access Token을 교체합니다!!!")
               }
             })
-            .catch(() => alert('잘못된 요청입니다'))
+            .catch(() => 
+              this.$store.commit('emotionTestErrorModalActivate')
+              // alert('잘못된 요청입니다')
+            )
           }
           else {
-            alert('조금만 더 골라주세요🤣')
+            this.$store.commit('emotionTestPickMoreModalActivate')
+            // alert('조금만 더 골라주세요🤣')
           }
         }
         else {
@@ -131,7 +137,8 @@
               data: this.selected,
               headers: headers,
             }).then(res => {
-            alert(`당신은 ${ res.data.name }행성 입니다!`)
+            // alert(`당신은 ${ res.data.name }행성 입니다!`)
+            console.log(`${res.data.name}`)
             this.$store.commit('userUpdate', res.data.no)
             const body = { no: this.$store.state.userInfo.no, mood: res.data.no }
             axios({
@@ -140,12 +147,18 @@
               data: body,
             }).then(res => {
               console.log(res)
-              this.$router.push('Main')
+              this.$store.commit('emotionTestResultModalActivate')
+              // this.$router.push('Main')
+              this.$route.go(0)
             }).catch(err => {
               console.log(err)
             })
           })
-          .catch(() => alert('잘못된 요청입니다.'))
+          .catch(() => 
+          //같은 페이지에서 if문으로 나눠져 있으니까 같은 컴포넌트로 연결해도 되겠지??
+          this.$store.commit('emotionTestErrorModalActivate')
+          // alert('잘못된 요청입니다.')
+          )
         }
       },
       go_to_back: function(){
@@ -188,9 +201,10 @@
             console.log("Access Token을 교체합니다!!!")
           }
           }).catch((error) => {
-            alert('잘못된 요청입니다.')
-            this.$router.push({ name: 'main' })
             console.log(error);
+            // alert('잘못된 요청입니다.')
+            // this.$router.go(0)
+            this.$store.commit('ReturnToLoginModalActivate')
           }).then(() => {
             console.log('getQSSList End!!');
           });

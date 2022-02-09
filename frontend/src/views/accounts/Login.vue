@@ -135,7 +135,8 @@ export default {
       })
       .catch(err=> {
         console.log('나는 에러야!', err)
-        alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
+        this.$store.commit('loginFailModalActivate')
+        // alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
       })
       this.credentials.email = "";
       this.credentials.pw ="";
@@ -147,7 +148,7 @@ export default {
       params.append('idToken', this.googleUser.wc.id_token);
       console.log(params)
       axios.post(url, params).then((res) => {
-        alert("로그인 성공")
+        // alert("로그인 성공")
         console.log(res.headers);
         // storage 설정
         session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
@@ -162,10 +163,12 @@ export default {
           this.$router.push('MoreInfo')
         }
         else{
-          this.$router.push('EmotionTest')
+          this.$store.commit('loginConfirmModalActivate')
+          // this.$router.push('EmotionTest')
         }
       }).catch((error) => {
         console.log(error);
+        this.$store.commit('loginFailModalActivate')
       }).then(() => {
         console.log('tokenVerify End!!');
       });
