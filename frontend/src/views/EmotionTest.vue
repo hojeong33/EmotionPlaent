@@ -65,6 +65,9 @@
         const idx = this.selected.indexOf(keyword)
         const nums = this.selected.length
 
+        console.log(keyword.name)
+        console.log(this.selected)
+
         if (idx != -1){
           this.selected.splice(idx, 1)
         }
@@ -166,7 +169,7 @@
     },
     computed: {
       page_of_keywords: function(){
-        return Math.round(this.keywords.length / 12)
+        return Math.ceil(this.keywords.length / 12)
       }
     },
     created: function(){
