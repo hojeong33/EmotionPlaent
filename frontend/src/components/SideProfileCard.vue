@@ -1,16 +1,17 @@
 <template>
   <div class="card_container" v-show="isActive">
     <div class="card_header">
-      <img id="profile_image" src="https://www.thesprucepets.com/thmb/meRd41is751DsQQjofaiKV_ZUBg=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cat-talk-eyes-553942-hero-df606397b6ff47b19f3ab98589c3e2ce.jpg" alt="">
+      <img id="profile_image" :src="this.$store.state.userInfo.profileImg" alt="">
+      <span id="opacity"></span>
       <div class="overlay_content">
-        <h2>{{ userInfo.username }}</h2>
+        <h2>{{ this.$store.state.userInfo.nickname }}</h2>
         <button id="update" @click="$router.push({name: 'Setting'})">프로필 수정</button>
       </div>
     </div>
     <div class="card_body">
-      <p>게시글 {{ userInfo.posts }}</p>
-      <p>팔로우 {{ userInfo.followings }} </p>
-      <p>팔로워 {{ userInfo.followers }} </p>
+      <p>이야기 {{ this.$store.state.userFollowInfo.userFollow.length }}개</p>
+      <p>팔로우 {{ this.$store.state.userFollowInfo.userFollow.length }}명</p>
+      <p>팔로워 {{ this.$store.state.userFollowInfo.userFollowing.length }}명</p>
     </div>
     <div id="card_footer">
       <div id="where">
@@ -94,6 +95,10 @@ export default {
     justify-content: center;
     align-items: flex-end;
     height: 25vh;
+    background-image: url('../assets/images/emotions/cover_s.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
   }
 
   .overlay_content {
@@ -145,6 +150,7 @@ export default {
   }
 
   #update {
+    z-index: 10;
     background-color: gray;
     color: white;
     font-size: 0.8rem;
@@ -194,8 +200,17 @@ export default {
 
   #profile_image {
     position: relative;
-    width: 43vh;
-    height: 28vh;
-    border-radius: 10px;
+    align-self: center;
+    z-index: 10;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+  } 
+  #opacity {
+    width: 100%;
+    height: 100%;
+    background-color: rgb(0, 0, 0, 0.2);
+    position: absolute;
+    left: 0;
   }
 </style>

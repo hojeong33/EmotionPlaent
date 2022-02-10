@@ -3,9 +3,12 @@
 		<div id="modal">
 			<h3>프로필 사진 바꾸기</h3>
 			<hr>
-			<p>사진 업로드</p>
+			<p @click="imgUpload" id="upload">사진 업로드</p>
+			<input type="file" v-if="uploading" 
+			ref="profileImg" @change="inputImg()">
 			<p style="color: red;">현재 사진 삭제</p>
 			<hr>
+			<p v-if="uploading" @click="uploadImg()">확인</p>
 			<p @click="cancel">취소</p>
 		</div>
 	</div>
@@ -13,15 +16,32 @@
 
 <script>
 export default {
+	data() {
+		return {
+			uploading: false,
+			img: '',
+		}
+	},
 	methods: {
 		cancel: function () {
 			this.$store.commit('profileImgChangeModalActivate')
+		},
+		imgUpload() {
+			this.uploading = true
+		}, 
+		inputImg() {
+			this.img = this.$ref.profileImg.files
+			console.log(this.img)
 		}
 	}
 }
 </script>
 
 <style scoped>
+#upload {
+	cursor: pointer;
+}
+
 #profile_img_change_modal {
 	display: flex;
 	justify-content: center;
@@ -39,8 +59,8 @@ export default {
 	flex-direction: column;
 	background-color: white;
 	border-radius: 20px;
-	width: 12vw;
-	height: 20vh;
+	width: 20vw;
+	height: 50vh;
 	text-align: center;
 }
 hr {
