@@ -102,19 +102,18 @@ export default {
       // storage 설정
       session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
       session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
-      const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
-      this.$store.commit('userUpdate', decodeAccessToken.userInfo)
+
+      this.$store.dispatch('allTokenRefresh', res)
+      
       this.sendToken();
       // this.$router.push('EmotionTest')
       // this.$router.push({ name: 'Main' })
-    })
-    .then((res) => {
       console.log(res)
       this.$store.commit('loginConfirmModalActivate')
     })
     .catch(err=> {
       console.log('나는 에러야!', err)
-      this.$store.commit('loginFailModalActivate', err.response.data.message)
+      this.$store.dispatch('loginFailModalActivate', err.response.data.message)
       // alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
     })
     this.credentials.email = "";

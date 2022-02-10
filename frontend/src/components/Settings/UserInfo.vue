@@ -33,10 +33,6 @@
         <h3>생년월일</h3>
         <span>
           <p>{{ this.$store.state.userInfo.birth }}</p>
-          <span>
-            <input type="checkbox" id="show_birth" v-model="birthShow">
-            <label for="show_birth">비공개</label>
-          </span>
         </span>
       </div>
       <div id="us_show">

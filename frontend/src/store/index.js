@@ -92,16 +92,19 @@ export default new Vuex.Store({
     },
 
     userUpdate(state, payload){
+      const userdata = JSON.parse(session.getItem('userInfo')) 
       if (!session.getItem('userInfo')){
         session.setItem('userInfo', JSON.stringify(payload)) //토큰값으로 들어오면 
       }
-
-      const userdata = JSON.parse(session.getItem('userInfo')) 
-      if(typeof(payload) == 'number'){ // 감테하고 넘길때
-        userdata.mood = payload
+      
+      else if(typeof(payload) == 'number'){ // 감테하고 넘길때
+        userdata.userInfo.mood = payload
         session.setItem('userInfo', JSON.stringify(userdata))
       } 
-
+      
+      else if (session.getItem('userInfo')){
+        session.setItem('userInfo', JSON.stringify(payload)) 
+      }
       state.userInfo = userdata
       return userdata
     },
@@ -403,8 +406,9 @@ export default new Vuex.Store({
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
-
-			axios.get('http://13.125.47.126:8080/recommend/music/' + this.state.userInfo.mood, {
+      
+			setTimeout(() => {
+        axios.get('http://13.125.47.126:8080/recommend/music/' + this.state.userInfo.mood, {
           headers: headers,
         }).then((res) => {
           this.state.recommendMusic = res.data
@@ -415,13 +419,14 @@ export default new Vuex.Store({
         }).then(() => {
           console.log('getQSSList End!!');
         });
-      },
+      }, 1000);
+    },
     recommendMovie() {
       let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
-
+      setTimeout(() => {
 			axios.get('http://13.125.47.126:8080/recommend/movie/' + this.state.userInfo.mood, {
           headers: headers,
         }).then((res) => {
@@ -433,13 +438,14 @@ export default new Vuex.Store({
         }).then(() => {
           console.log('getQSSList End!!');
         });
-      },
+      }, 2000);
+    },
     recommendActivity() {
       let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
-
+      setTimeout(() => {
 			axios.get('http://13.125.47.126:8080/recommend/activity/', {
           headers: headers,
         }).then((res) => {
@@ -451,7 +457,8 @@ export default new Vuex.Store({
       }).then(() => {
         console.log('getQSSList End!!');
       });
-    },
+    }, 3000);
+  },
 
     accessTokenRefresh({commit}, res) {
       console.log("accesstoken : " + res.headers)
@@ -486,7 +493,7 @@ export default new Vuex.Store({
     // },
 
     //유저정보 수정부분
-    updateuser(state ,el) {
+    async updateuser(state ,el) {
       const body = {
         no: this.state.userInfo.no,
         nickname: this.state.userInfo.nickname,
@@ -498,7 +505,7 @@ export default new Vuex.Store({
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
         };
-      axios({
+      await axios({
         method: "put",
         url: "http://13.125.47.126:8080/users/update",
         data: body,
@@ -510,7 +517,7 @@ export default new Vuex.Store({
           console.log(res);
           this.dispatch('allTokenRefreshOnUserInfo', res)
           // console.log(this.state.userInfo)
-          // location.reload()
+          location.reload()
         })
         .catch((err) => {
           console.log("업데이트 실패")
