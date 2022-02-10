@@ -112,7 +112,7 @@ export default new Vuex.Store({
       console.log(state.signupConfirmModalActive)
     },
   },
-  actions: {
+  actions: { 
     // 여기는 알림 시작 --------------------------------------------------------
     follow() { //팔로우 알림 보내는 부분
       console.log("팔로우 알림");

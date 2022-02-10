@@ -45,6 +45,7 @@
   import axios from 'axios'
   // import index from '@/store/index.js'
   const session = window.sessionStorage;
+  // const jwt = require('jsonwebtoken');
 
   export default {
     data: function(){
@@ -64,6 +65,9 @@
       check: function(keyword){
         const idx = this.selected.indexOf(keyword)
         const nums = this.selected.length
+
+        console.log(keyword.name)
+        console.log(this.selected)
 
         if (idx != -1){
           this.selected.splice(idx, 1)
@@ -126,6 +130,7 @@
               headers: headers,
             }).then(res => {
             alert(`당신은 ${ res.data.name }행성 입니다!`)
+            console.log(this.$store.state.userInfo)
             this.$store.commit('userUpdate', res.data.no)
             const body = { no: this.$store.state.userInfo.no, mood: res.data.no }
             axios({
@@ -162,7 +167,7 @@
     },
     computed: {
       page_of_keywords: function(){
-        return Math.round(this.keywords.length / 12)
+        return Math.ceil(this.keywords.length / 12)
       }
     },
     created: function(){

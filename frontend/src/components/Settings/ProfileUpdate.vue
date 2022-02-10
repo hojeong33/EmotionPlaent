@@ -145,6 +145,7 @@ export default {
     profileImgChangeModal: function () {
       this.$store.commit("profileImgChangeModalActivate");
     },
+   
   },
 };
 </script>
