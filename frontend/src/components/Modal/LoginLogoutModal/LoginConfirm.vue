@@ -11,11 +11,23 @@
 <script>
 export default {
 	methods: {
+		// goToTest: function () {
+		// 	this.$router.push({name: 'EmotionTest'})
+		// },
+		// userUpdate: function () {
+		// 	// const user = this.$store.commit('loginConfirmModalActivate')
+		// 	this.$store.commit('loginConfirmModalActivate')
+		// 	// console.log(user)
+		// 	return this.goToTest()
+		// },
+		// goEmotionTest: function () {
+		// 	console.log('여기옴')
+		// 	// console.log(this.$store.state.userInfo)
+		// 	this.userUpdate()
 		goEmotionTest: function () {
-			console.log('여기옴')
-			console.log(this.$store.state.userInfo)
 			this.$store.commit('loginConfirmModalActivate')
-			this.$router.push({name: 'EmotionTest'})
+			console.log(this.$route.name)
+			this.$router.push ({name: 'EmotionTest'})
 		}
 	}
 }

@@ -94,6 +94,7 @@ export default new Vuex.Store({
         session.setItem('userInfo', JSON.stringify(userdata))
       }
       state.userInfo = userdata
+      return userdata
     },
     tokenTest(){
       console.log("test")
@@ -121,6 +122,7 @@ export default new Vuex.Store({
     loginConfirmModalActivate:function (state) {
       state.loginConfirmModalActive = !state.loginConfirmModalActive
       console.log(state.loginConfirmModalActive)
+      // return state.loginConfirmModalActive
     },
     signupConfirmModalActivate:function (state) {
       state.signupConfirmModalActive = !state.signupConfirmModalActive
