@@ -157,7 +157,7 @@ const router = new VueRouter({
   routes
 })
 
-const token = window.sessionStorage.getItem('at-jwt-access-token');
+let token = window.sessionStorage.getItem('at-jwt-access-token');
 const jwt = require('jsonwebtoken');
 const decodeAccessToken = jwt.decode(token)
 
@@ -171,6 +171,8 @@ const userUpdate = new Promise(() => {
 
 router.beforeEach((to, from, next) => {
   console.log(to)
+  token = window.sessionStorage.getItem('at-jwt-access-token');
+  console.log(token)
   //지정되지 않은 라우트로 이동할 경우 메인으로 redirect
   if (!to.matched.length){
     console.log('do not matched!!')
@@ -195,6 +197,7 @@ router.beforeEach((to, from, next) => {
 
   //로그인이 필요한 서비스의 경우 로그인 페이지로 redirect
   if (to.meta.loginRequired && !token){
+    console.log('로그인')
     next({ name:'Login' })
   }
   //페이지 새로고침 등 발생했을 때 유저정보 store 갱신
@@ -208,9 +211,11 @@ router.beforeEach((to, from, next) => {
   }
   //로그인 된 사용자가 로그인 or 회원가입 페이지로 가려고 할 경우
   if (!to.meta.loginRequired && store.state.userInfo){
+    console.log('메인')
     next({ name:'Main' })
   }
 })
+
 // router.push의 중복 에러 해결방법
 const originalPush = VueRouter.prototype.push;
 VueRouter.prototype.push = function push(location) {
