@@ -45,6 +45,7 @@
   import axios from 'axios'
   // import index from '@/store/index.js'
   const session = window.sessionStorage;
+  // const jwt = require('jsonwebtoken');
 
   export default {
     data: function(){
@@ -64,6 +65,9 @@
       check: function(keyword){
         const idx = this.selected.indexOf(keyword)
         const nums = this.selected.length
+
+        console.log(keyword.name)
+        console.log(this.selected)
 
         if (idx != -1){
           this.selected.splice(idx, 1)
@@ -131,31 +135,39 @@
               data: this.selected,
               headers: headers,
             }).then(res => {
+            this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+            
             // alert(`당신은 ${ res.data.name }행성 입니다!`)
+            console.log("여기는 결과 네임")
             console.log(`${res.data.name}`)
             this.$store.commit('userUpdate', res.data.no)
-            const body = { no: this.$store.state.userInfo.no, mood: res.data.no }
+            
+            const userdata = JSON.parse(session.getItem('userInfo')) 
+            console.log(userdata) // 무드번호만 나옴......
+
+            console.log("여기는 에러 직전")
+            const body = { no: userdata.no, mood: res.data.no }
             axios({
               method: 'put',
-              url: 'http://13.125.47.126:8080/users',
+              url: 'http://13.125.47.126:8080/users/update',
               data: body,
               headers: headers,
             }).then(res => {
+              console.log("여기는 데이터 수정하는 부분")
               console.log(res)
-              this.$store.dispatch('accessTokenRefresh', res)
+              this.$store.dispatch('allTokenRefreshOnUserInfo', res)
               this.$store.commit('emotionTestResultModalActivate')
-              // this.$router.push('Main')
-              // this.$route.go(0)
              
             }).catch(err => {
               console.log(err)
             })
           })
-          .catch(() => 
-          //같은 페이지에서 if문으로 나눠져 있으니까 같은 컴포넌트로 연결해도 되겠지??
-          this.$store.commit('emotionTestErrorModalActivate')
-          // alert('잘못된 요청입니다.')
-          )
+          .catch((err) => {
+            //같은 페이지에서 if문으로 나눠져 있으니까 같은 컴포넌트로 연결해도 되겠지??
+            console.log(err)
+            this.$store.commit('emotionTestErrorModalActivate')
+            // alert('잘못된 요청입니다.')
+          })
         }
       },
       go_to_back: function(){
@@ -176,10 +188,11 @@
     },
     computed: {
       page_of_keywords: function(){
-        return Math.round(this.keywords.length / 12)
+        return Math.ceil(this.keywords.length / 12)
       }
     },
     created: function(){
+      console.log(this.$store.state.userInfo)
       this.$store.state.recommendReload = 0
       let headers = {
       'at-jwt-access-token': session.getItem('at-jwt-access-token'),

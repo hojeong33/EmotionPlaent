@@ -102,19 +102,18 @@ export default {
       // storage 설정
       session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
       session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
-      const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
-      this.$store.commit('userUpdate', decodeAccessToken.userInfo)
+
+      this.$store.dispatch('allTokenRefresh', res)
+      
       this.sendToken();
       // this.$router.push('EmotionTest')
       // this.$router.push({ name: 'Main' })
-    })
-    .then((res) => {
       console.log(res)
       this.$store.commit('loginConfirmModalActivate')
     })
     .catch(err=> {
       console.log('나는 에러야!', err)
-      this.$store.commit('loginFailModalActivate', err.response.data.message)
+      this.$store.dispatch('loginFailModalActivate', err.response.data.message)
       // alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
     })
     this.credentials.email = "";
@@ -178,9 +177,16 @@ export default {
     let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-    axios.get('http://13.125.47.126:8080/qss/list', {
-      headers: headers, // 넣는거 까먹지 마세요
+    };
+    let data = {
+      name: '',
+      type: ''
+    };
+    axios({
+        method: 'get',
+        url: 'http://13.125.47.126:8080/qss/list',
+        data: data, // post 나 put에 데이터 넣어 줄때
+        headers: headers,  // 넣는거 까먹지 마세요
       }).then((res) => {
 
       this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
@@ -192,6 +198,8 @@ export default {
         console.log('getQSSList End!!');
       });
     },
+
+    
   },
 }
 </script>
