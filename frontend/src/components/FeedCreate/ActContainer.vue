@@ -2,44 +2,60 @@
   <section id="act_container">
     <article id="category_container">
       <span v-for="(category, idx) in act_categories" :key="category" 
-      class="categories" @click="check(category)" 
-      :class="[chosen_category == category ? 'checked':'',
+      class="categories" @click="checkCategory(category)" 
+      :class="[selectedCategory == category ? 'checked':'',
       {'top':idx==0}, {'bottom':idx==5}]">
         {{ category }}
       </span>
     </article>
-    <article id="tag_container" v-for="category in act_categories" :key="category" v-show="chosen_category == category">
-      <act-tag v-for="tag in act_details[category]" :key="tag" :tag="tag" />
+    <article id="tag_container" v-for="category in act_categories" :key="category" v-show="selectedCategory == category">
+      <act-tag v-for="(tag, idx) in act_details[category]" :key="category+'-'+idx" :tag="tag" @checked="checkTag"  />
     </article>
   </section>
 </template>
 
 <script>
 import ActTag from '@/components/FeedCreate/ActTag'
-
+// 카테고리는 달라도 태그 단어가 같으면 누르는게 유지되는 버그가 있음. 카테고리에 다 다른 태그를 넣는 방법도 있지만 코드를 고치는 방법도 있음
 export default {
   data: function(){
     return {
-      chosen_category: '운동',
+      selectedCategory: '운동',
       act_categories: ['운동', '문화활동', '여가활동', '정리/휴식', '감정표현', '선물'],
       act_details: {
-        '운동': ['했어요', '갔어요','뛰었어요', '움직였어요', 'ooo', 'ooo', 'ooo'], 
+        '운동': ['했어요', '갔어요','뛰었어요', '움직였어요'], 
         '문화활동': ['봤어요', '했어요', '들었어요', '갔어요'],
         '여가활동': ['갔어요', '먹었어요', '마셨어요', '놀았어요'],
         '정리/휴식': ['했어요', '잤어요', '쉬었어요', '치웠어요'],
         '감정표현': ['울었어요', '싸웠어요', '소리 질렀어요', '웃었어요'],
         '선물': ['줬어요', '받았어요', '샀어요', '했어요']
       },
+      selectedTag: null,
     }
   },
   components: {
     ActTag
   },
   methods: {
-    check: function(category){
-      this.chosen_category = category
+    checkCategory: function(category){
+      this.selectedCategory = category
+    },
+    checkTag(payload){
+      if (this.selectedTag){
+        this.$children.forEach(ele => {
+          if (ele.isChecked && ele._props.tag != payload){
+            ele.isChecked = false
+          }
+        })
+      }
+      this.selectedTag = payload
+      let ActTag = {name: `${this.selectedTag}`, type: 0}
+      this.$store.commit('feedTag', ActTag)
     }
-  }
+  },
+  computed: {
+
+  },
 }
 </script>
 
@@ -74,6 +90,7 @@ export default {
     margin: 0;
     padding: 0.25rem;
     text-align: start;
+    cursor: pointer;
   }
 
   .checked {
