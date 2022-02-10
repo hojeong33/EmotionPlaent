@@ -4,16 +4,15 @@
       <img src="../../assets/images/icons/return.png" alt="" id="back" @click="out">
       <h1 id="title">글 쓰기</h1>
     </article>
-    <article id="img-box">
-      <div v-if="!images.length">
-        <!-- 이미지 미리보기 만들어야 함 -->
+    <article id="img-box" v-if="!images.length">
+      <div>
         <img src="../../assets/images/icons/image.png" alt="" id="default-img">
         <p id="img-text">이미지를 올려주세요</p>
       </div>
-      <div v-else>
-        <div v-for="(image, index) in images" :key="index">
-          <img :src="image.imgPreview" alt="">
-        </div>
+    </article>
+    <article id="img-box2" class="slider" v-else>
+      <div class="slides" v-for="(image, index) in images" :key="index">
+        <div :id="index"><img id="uploadedImg" :src="image.imgPreview" alt=""></div>
       </div>
     </article>
     <footer>
@@ -33,7 +32,7 @@ export default {
   data () {
     return {
       images: [],
-      imgPreviews: [],
+      // imgPreviews: [],
       uploadImageIndex: 0,
       feedDto: {
         descr: null,
@@ -48,7 +47,11 @@ export default {
       this.$emit('out')
     },
     nextPage(){
-      this.$emit('next-page')
+      if (this.images.length === 0) {
+        alert('이미지를 선택해주세요')
+      } else {
+        this.$emit('next-page')
+      }
     },
     imgUpload () {
       // this.$store.commit('feedImg', img)
@@ -67,7 +70,7 @@ export default {
         num = i;
       }
       this.uploadImageIndex = num + 1;
-      // console.log(this.images)
+
       if (this.images.length > 3) {
         alert('사진이 너무 많습니다')
         this.images = []
@@ -203,4 +206,105 @@ export default {
     overflow: hidden;
     border: 0;
 }
+#img-box2{
+  display: flex;
+  width: 90%;
+  height: 75%;
+  background-color: lightgray;
+  border-radius: 20px;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem 0.5rem 0.5rem;
+}
+/* 이미지 캐로셀 */
+  /*.slider {
+    width: 600px;
+    text-align: center;
+    border-radius: 10px;
+    overflow: hidden;
+  }
+  
+  .slides {
+    display: flex;
+    overflow-x: auto;
+    /* overflow: hidden; */
+  /*  scroll-snap-type: x mandatory;
+    scroll-behavior: smooth;
+    -webkit-overflow-scrolling: touch;
+  }
+  .slides::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  .slides::-webkit-scrollbar-thumb {
+    background: black;
+    border-radius: 10px;
+  }
+  .slides::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  .slides > div {
+    scroll-snap-align: start;
+    flex-shrink: 0;
+    width: 600px;
+    height: 300px;
+    margin-right: 50px;
+    border-radius: 10px;
+    overflow: hidden;
+    background: #eee;
+    transform-origin: center center;
+    transform: scale(1);
+    transition: transform 0.5s;
+    position: relative;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 100px;
+  }
+  
+  .author-info {
+    background: rgba(0, 0, 0, 0.75);
+    color: white;
+    padding: 0.75rem;
+    text-align: center;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    margin: 0;
+  }
+  .author-info a {
+    color: white;
+  }
+  img {
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
+  
+  .slider > button {
+    display: inline-flex;
+    width: 1.5rem;
+    height: 1.5rem;
+    background: #eee;
+    text-decoration: none;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    margin: 0 0 0.5rem 0;
+    position: relative;
+  }
+  .slider > button:active {
+    top: 1px;
+  }
+  .slider > :focus {
+    background: #000;
+  }
+   */
+
 </style>

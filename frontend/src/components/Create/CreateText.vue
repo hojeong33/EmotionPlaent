@@ -8,9 +8,22 @@
       <h3>이제 자유태그와 글을 작성할 수 있습니다!</h3>
       <h3>여러분의 하루를 공유해주세요</h3> 
     </article>
-    {{feedData.tags[0].name}} {{feedData.tags[1].name}}
-    <input type="text" id="tag-input" v-model="freeTag">
-    <textarea id="text-input" v-model="feedText" />
+    <div id="pickTags">
+      <div id="moodTag">
+        <img id="planet_img" :src="require('@/assets/images/emotions/' + planetImg)" alt="">
+        <p style="margin:auto 0.2rem; color: #5E39B3; font-weight: bold;">{{feedData.tags[0].name}}</p>
+      </div>
+      <div id="actTag">
+        <p style="margin:auto 0.2rem; color: #5E39B3; font-weight: bold;">{{feedData.tags[1].name}}</p>
+      </div>
+      <div id="freeTag" v-for="(tag, idx) in feedData.tags.slice(2)" :key="idx"> 
+          <p id="pickTag" style="margin:auto 0.2rem; color: blue; font-weight: bold;">
+            # {{tag.name}}
+          </p>         
+      </div>
+    </div>
+    <input type="text" id="tag-input" @keyup.enter="keyPress">
+    <textarea id="text-input" v-model="feedData.descr" />
     <footer>
       <span id="secret">
         <input type="checkbox" id="secret-check" v-model="isChecked">
@@ -43,6 +56,7 @@ export default {
         tags: [],
       },
       Feedimages: [],
+      planetImg: null,
     }
   },
   methods: {
@@ -51,6 +65,14 @@ export default {
     },
     beforePage(){
       this.$emit('before-page')
+    },
+    keyPress (event) {
+      console.log(event.target.value)
+      this.freeTag = event.target.value 
+      this.feedData.tags.push({name: `${this.freeTag}`, type: 0})
+      console.log(this.feedData)
+      event.target.value = null
+      
     },
     feedWrite () {
       console.log(this.feedData)
@@ -83,12 +105,16 @@ export default {
   },
   computed: 
     mapState([
-      'feedCreateData',
+      'feedCreateData', 'planetStyles'
     ]),
   created: function () {
     this.Feedimages = this.feedCreateData[1].image
     this.feedData.author = this.feedCreateData[0].author
     this.feedData.tags = this.feedCreateData[0].tags
+
+    let mood = this.$store.state.userInfo.mood
+    let planetstyle = this.planetStyles.find(el => el.id === mood) || {}
+		this.planetImg = planetstyle.img
     console.log(this.feedData)
   }, 
 }
@@ -206,4 +232,36 @@ export default {
     background-color: #777777;
     border: 3px #777777 solid;
   }
+  #pickTags {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: left;
+    width: 80%
+
+  }
+#planet_img {
+	width: 2rem;
+	height: 2rem;
+  margin: 0.2rem;
+}
+#moodTag {
+  display: flex;
+  flex-direction: row;
+  border: 1.5px #5E39B3 solid;
+  border-radius: 20px;
+  margin-right: 0.3rem;
+}
+#actTag {
+  display: flex;
+  flex-direction: row;
+  border: 1.5px #5E39B3 solid;
+  border-radius: 20px;
+  margin-right: 0.3rem;
+}
+#freeTag {
+  display: flex;
+  flex-direction: row;
+  margin-right: 0.3rem;
+}
 </style>

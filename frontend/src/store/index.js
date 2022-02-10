@@ -120,7 +120,7 @@ export default new Vuex.Store({
     feedTag: function(state, feedtag) {
       state.feedCreateData[0].tags[1] = feedtag
       // state.feedCreateData[0].tags.push({name: `${feedtag}`, type: 0})
-      console.log(state.feedCreateData[0].tags)
+      // console.log(state.feedCreateData[0].tags)
     },
     
     // 모달부분입니다
