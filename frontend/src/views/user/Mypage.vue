@@ -23,15 +23,11 @@
     <article id="list-container">
       <router-view/>
     </article>
-       <button id="test" @click="updateuser">테스트</button>
   </section>  
 </template>
 
 <script>
 import SideProfileCard from '@/components/SideProfileCard.vue'
-import axios from 'axios'
-
-const session = window.sessionStorage;
 
 export default {
   name: 'Mypage',
@@ -50,38 +46,6 @@ export default {
     }
   },
   methods: {
-    //유저정보 수정부분
-    updateuser() {
-      const body = {
-        no: this.$store.state.userInfo.no,
-        nickname: this.$store.state.userInfo.nickname,
-        intro: 'geqeqg',
-        pw: null, 
-        publish: 1,
-      };
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        };
-      axios({
-        method: "put",
-        url: "http://localhost:8080/users/update",
-        data: body,
-        headers: headers,
-      })
-        .then((res) => {
-          console.log(body)
-          console.log("업데이트 성공")
-          this.$store.dispatch('allTokenRefreshOnUserInfo', res)
-          console.log(res);
-          console.log(this.state.userInfo)
-          // location.reload()
-        })
-        .catch((err) => {
-          console.log("업데이트 실패")
-          console.log(err);
-        });
-    },
     changeTab(tap){
       this.myPageTab = tap
       this.$router.push({ path: `/mypage/${tap}` })
