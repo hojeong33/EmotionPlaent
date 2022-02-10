@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <navigation />
-    <create v-if="feedActive" />
+    <create v-if="navActive[0]" />
     <router-view/>
     <logout-modal v-if="logoutModalActive" />
     <user-feed-setting v-if="userFeedSettingModalActive" />
@@ -37,12 +37,9 @@ export default {
   },
   computed:
     mapState([
-      'feedActive', 'modalActive', 'profileImgChangeModalActive', 'commentSettingModalActive', 'logoutModalActive', 'userFeedSettingModalActive', 'loginConfirmModalActive', 
+      'navActive', 'modalActive', 'profileImgChangeModalActive', 'commentSettingModalActive', 'logoutModalActive', 'userFeedSettingModalActive', 'loginConfirmModalActive', 
       'signupConfirmModalActive',
     ]),
-    feedActive(){
-      return this.$store.state.navActive[0]
-    },
 }
 
 </script>

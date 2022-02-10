@@ -1,14 +1,13 @@
 <template>
-  <div id="carousel">
-    <div id="carousel-frame">
-      <transition-group id="carousel-rail" :name="page > beforePage ? 'slide':'slide-reverse'">
-        <img class="carousel-items" v-for="idx in temp" 
-        :src="data[idx].img" :alt="'item no.' + idx" :key="idx" 
-        v-show="page <= idx">
-      </transition-group>
+  <div :id="`${name}-carousel`">
+    <div class="carousel-frame">
+      <div :id="`${name}-rail`" class="carousel-rail">
+        <img :class="['carousel-items', `${name}-items`]" v-for="idx in nums" 
+        :src="items[idx-1].img" :alt="'item no.' + idx" :key="idx">
+      </div>
     </div>
-    <button @click="move(true)" id="btn-left" />
-    <button @click="move(false)" id="btn-right" />
+    <button @click="paginate(-1)" :id="`${name}-btn-left`" class="left" />
+    <button @click="paginate(1)" :id="`${name}-btn-right`" class="right" />
   </div>
 </template>
 
@@ -22,52 +21,51 @@ export default {
     }
   },
   props: {
-    data: Array,
+    items: Array,
+    name: {
+      default: 'default',
+      type: String
+    },
     w: Number,
     h: Number,
     n: Number
   },
   methods: {
-    move(payload){
+    paginate(payload){
       this.beforePage = this.page
-      if (payload){
-        this.page += 1
-      }
-      else {
-        this.page -= 1
-      }
-      if (this.page < 0){
-        this.page = 0
-      }
-      else if (this.page > this.len){
-        this.page = this.len
-      }
+      this.page += payload
     }
   },
   computed: {
-    len(){
-      return this.data.length
-    },
-    start(){
-      const temp = []
-      for (let i=this.page; i<this.page + this.nums; i++){
-        if (i >= this.len){
-          i = i - this.len
-        }
-        temp.push(i)
+
+  },
+  watch: {
+    page(){
+      if (this.beforePage > this.page){
+        const temp = this.items.shift()
+        this.items.push(temp)
       }
-      return temp
+      else {
+        const temp = this.items.pop()
+        this.items.unshift(temp)
+      }
     }
   },
   mounted(){
-    const carousel = document.getElementById('carousel')
-    const item = document.getElementsByClassName('carousel-items')
-    const btnLeft = document.getElementById('btn-left')
-    const btnRight = document.getElementById('btn-right')
+    const carousel = document.getElementById(`${this.name}-carousel`)
+    const carouselRail = document.getElementById(`${this.name}-rail`)
+    const item = document.getElementsByClassName(`${this.name}-items`)
+    const btnLeft = document.getElementById(`${this.name}-btn-left`)
+    const btnRight = document.getElementById(`${this.name}-btn-right`)
     let width = 800
     let height = 200
     let btnSize = 50
     let nums = 4
+    console.log(carouselRail.style)
+    carousel.style.cssText = 'box-sizing: content-box; position: relative; max-width: 100%'
+    carousel.style.width = '800px'; carousel.style.height = '200px';
+
+
     if (this.w){
       width = this.w
       carousel.style.cssText += `width:${width};`
@@ -80,6 +78,14 @@ export default {
     if (this.n){
       nums = this.n
     }
+
+    let temp = ''
+    for (let i=0; i < nums; i++){
+      temp += '1fr '
+    }
+    carouselRail.style.gridTemplateColumns = temp
+
+
     this.nums = nums
     for (let i=0;i<item.length;i++){
       item[i].style.width = `${width/nums}px`
@@ -103,67 +109,37 @@ export default {
     position: absolute;
   }
 
-  #carousel {
-    width: 800px;
-    height: 200px;
-    box-sizing: content-box;
-    position: relative;
-    /* overflow: hidden; */
-    border: 2px #cccccc solid;
-  }
-
-  #carousel-frame {
+  .carousel-frame {
     width: 100%;
     height: 100%;
     position: relative;
     overflow: hidden;
   }
 
-  #carousel-rail {
-    min-width: 100%;
+  .carousel-rail {
+    width: 100%;
     height: 100%;
-    display: flex;
-    justify-content: flex-start;
-    align-items: stretch;
-    flex-wrap: nowrap;
-    position: absolute;
+    display: grid;
+    justify-content: center;
+    justify-items: stretch;
+    align-items: center;
+    gap: 1rem;
   }
 
   .carousel-items {
-    border: 1px #cccccc solid;
+    transition: all 0.5s ease;
+    display: inline-block;
+    width: 100%;
+    border-radius: 20px;
+    aspect-ratio: 1/1;
+    cursor: pointer;
   }
 
-  @keyframes slide-in {
-    from { right: -100% }
-    to { right: 0 }
-  }
-
-  @keyframes slide-out {
-    from { right: 0 }
-    to { right: 100% }
-  }
-
-  .slide-enter-active {
-    animation: slide-in 1s ease-in-out;
-  }
-
-  .slide-leave-active {
-    animation: slide-out 1s ease-in-out;
-  }
-
-  .slide-reverse-enter-active {
-    animation: slide-out 1s ease-in-out reverse;
-  }
-
-  .slide-reverse-leave-active {
-    animation: slide-in 1s ease-in-out reverse;
-  }
-
-  #btn-left {
+  .left {
     background-image: url('../assets/images/icons/left.png');
   }
 
-  #btn-right {
+  .right {
     background-image: url('../assets/images/icons/right.png');
   }
 </style>

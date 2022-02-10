@@ -11,7 +11,6 @@ import SockJS from "sockjs-client";
 
 export default new Vuex.Store({
   state: {
-    feedActive: false,
     //검색부분
     words: null,
     tagSearch: [],
@@ -79,6 +78,8 @@ export default new Vuex.Store({
         session.setItem('userInfo', JSON.stringify(userdata))
       }
       state.userInfo = userdata
+
+      return userdata
     },
     tokenTest(){
       console.log("test")
@@ -374,6 +375,10 @@ export default new Vuex.Store({
       const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
       console.log('decodeAccessToken data', decodeAccessToken);
       commit('userUpdate', decodeAccessToken.userInfo)
+
+      return new Promise((resolve) => {
+        resolve(true)
+      })
     },
     // userInfo: function(state, payload){
     //   console.log(payload)

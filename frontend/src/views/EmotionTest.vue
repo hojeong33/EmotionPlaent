@@ -35,7 +35,6 @@
     <section id="buttons">
       <button @click="nextTest" id="submit_test_btn">다 골랐어요</button>
       <button @click="go_to_back" id="return_to_btn">아직 안할래요</button>
-      <button @click="test" id="return_to_btn">테스트</button>
     </section>
   </div>
 </template>
@@ -62,72 +61,13 @@
       SelectedKeyword
     },
     methods: {
-      test: function(){
-      this.$store.state.recommendReload = 0
-      let headers = {
-      'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-      'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-			axios.get('http://13.125.47.126:8080/test', {
-        headers: headers,
-        })
-        .then((res) => {
-          this.keywords = res.data
-          let temp = [...res.data]
-          if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
-            session.setItem('at-jwt-access-token', "");
-            session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-            console.log("Access Token을 교체합니다!!!")
-          }
-          return temp
-        })
-        .then(res => {
-          console.log('test 22222!!')
-          const temp = []
-          let n = Math.random() * 7
-          if (n < 2){
-            n = 2
-          }
-          while (n > 0){
-            const i = Math.floor(Math.random() * res.length)
-            temp.push(res.splice(i, 1)[0])
-            n --
-          }
-          return temp
-        })
-        .then(res => {
-          console.log('test 33333!!')
-          axios({
-            method: 'post',
-            url: 'http://13.125.47.126:8080/detailtest',
-            data: res,
-            headers: {
-              'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-              'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-            },
-          })
-          .then(res => {
-            console.log('test 44444!!')
-            const temp = res.data
-            let flag = false
-            temp.forEach(ele => {
-              if (this.keywords.includes(ele)){
-                flag = true
-                return
-              }
-            })
-            return flag
-          })
-          .then(res => {
-            console.log('test 55555!!')
-            if (res){
-              console.log('bug find!!!!')
-            }
-            else {
-              console.log('bug not found!!!')
-            }
-          })
-        })
+      goToMain(){
+        this.$router.push({ name:'Main' })
+      },
+      async userUpdate(res){
+        const user = await this.$store.dispatch('accessTokenRefresh', res)
+        console.log(user)
+        this.goToMain()
       },
       check: function(keyword){
         const idx = this.selected.indexOf(keyword)
@@ -157,7 +97,7 @@
           this.$refs[keyword.no][0].isChecked = false
         }
       },
-      nextTest: function(){
+      nextTest: async function(){
         let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
@@ -203,8 +143,7 @@
               headers: headers,
             }).then(res => {
               console.log(res)
-              this.$store.dispatch('accessTokenRefresh', res)
-              this.$router.push('Main')
+              this.userUpdate(res)
             }).catch(err => {
               console.log(err)
             })
@@ -215,12 +154,6 @@
       go_to_back: function(){
         this.$router.go(-1)
       },
-      // refresh_keywords: function(){
-      //   while (this.selected.length > 0){
-      //     const keyword = this.selected.pop()
-      //     this.$refs[keyword.no][0].isChecked = false
-      //   }
-      // }
     },
     computed: {
       page_of_keywords: function(){

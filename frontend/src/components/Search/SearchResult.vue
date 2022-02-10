@@ -4,21 +4,26 @@
       <p @click="searchTab = 'feed'" :class="{ 'active':searchTab == 'feed' }">피드</p>
       <p @click="searchTab = 'recommend'" :class="{ 'active':searchTab == 'recommend' }">정보</p>
     </div>
-    <search-result-rcd />
+    <search-result-rcd v-if="searchTab=='recommend'" />
+    <feed-list v-if="searchTab=='feed'" :posts="posts" />
   </div>
 </template>
 
 <script>
 import SearchResultRcd from '@/components/Search/SearchResultRcd'
+import FeedList from '@/components/MainPage/FeedTab/FeedList'
+import posts from '../../assets/data/posts.js'
 
 export default {
   data(){
     return {
+      posts,
       searchTab: 'feed'
     }
   },
   components: {
-    SearchResultRcd
+    SearchResultRcd,
+    FeedList
   }
 }
 </script>
@@ -36,6 +41,7 @@ export default {
     flex-direction: column;
     align-items: center;
     width: 50%;
+    min-width: 700px;
     min-height: 100vh;
     border: 2px #cccccc solid;
     margin: 0 auto;
