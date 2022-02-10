@@ -115,4 +115,6 @@ public class UserSecretDto {
     public void setPublish(int publish) {
         this.publish = publish;
     }
+
+
 }

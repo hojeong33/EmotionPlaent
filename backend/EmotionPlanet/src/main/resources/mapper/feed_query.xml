@@ -37,8 +37,6 @@
     <update id="update" parameterType="com.ssafy.project.EmotionPlanet.Dto.FeedDto">
         update feed
             set descr = #{descr}
-            author = #{author}
-            date = #{date}
         where no = #{no}
     </update>
     

@@ -40,8 +40,8 @@ public class FeedController {
 
     @PostMapping(value ="/feeds") // 글 작성
     public ResponseEntity<Integer> write(
-            @RequestPart FeedDto feedDto,
-            @RequestPart List<MultipartFile> multipartFile) {
+            @RequestPart(value="userInfo", required = false) FeedDto feedDto,
+            @RequestPart(value="file", required = true) List<MultipartFile> multipartFile) {
 
         List<Integer> imgNo = new ArrayList<>();
         if(multipartFile.size() != 0){
@@ -146,8 +146,23 @@ public class FeedController {
     }
 
     @PutMapping(value ="/feeds") // 글 수정
-    public ResponseEntity<Integer> update(@RequestBody FeedDto feedDto) {
+    public ResponseEntity<Integer> update(
+            @RequestPart(value="userInfo", required = false) FeedDto feedDto,
+            @RequestPart(value="file", required = true) List<MultipartFile> multipartFile) {
+
+        List<Integer> imgNo = new ArrayList<>();
+        if(multipartFile.size() != 0){
+            imgNo = s3Service.uploadFile(multipartFile);
+        }
+
+        List<ImgDto> imgs = new ArrayList<>();
+        for (int no : imgNo) {
+            imgs.add(imgService.select(no));
+        }
+
+        feedDto.setImgs(imgs);
         int result = feedService.update(feedDto);
+
         if(result == SUCCESS) {
             return new ResponseEntity<Integer>(result, HttpStatus.OK);
         }else {

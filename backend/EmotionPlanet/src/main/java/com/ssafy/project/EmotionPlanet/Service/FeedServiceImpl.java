@@ -28,6 +28,9 @@ public class FeedServiceImpl implements FeedService{
     UserDao userDao;
 
     @Autowired
+    S3Dao s3Dao;
+
+    @Autowired
     TagService tagService;
 
     @Autowired
@@ -133,6 +136,26 @@ public class FeedServiceImpl implements FeedService{
 
     @Override
     public int update(FeedDto feedDto) {
+
+        List<ImgDto> dbImg = imgDao.list(feedDto.getNo());
+        List<TagDto> dbTag = tagDao.list(feedDto.getNo());
+
+        for (ImgDto img : dbImg) {
+            s3Dao.deleteFile(img.getImgName());
+        }
+
+        for(TagDto tagDto : dbTag){
+            tagDao.deleteRelation(tagDto.getNo(), feedDto.getNo());
+        }
+
+        for (ImgDto img : feedDto.getImgs()) {
+            imgDao.relation(img.getNo(), feedDto.getNo());
+        }
+
+        for (TagDto tag : feedDto.getTags()) {
+            tag.setFeedNo(feedDto.getNo());
+            tagService.create(tag);
+        }
 
         return feedDao.update(feedDto);
     }

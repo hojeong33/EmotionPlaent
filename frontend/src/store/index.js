@@ -366,6 +366,14 @@ export default new Vuex.Store({
       commit('tokenTest')
     },
 
+    allTokenRefreshOnUserInfo({commit},res){
+      console.log("allTokenRefreshOnUserInfo : " + res.headers)
+      session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+      const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
+      console.log('decodeAccessToken data', decodeAccessToken);
+      commit('userUpdate', decodeAccessToken.userInfo)
+    },
+
     allTokenRefresh({commit},res){
       console.log("alltoken : " + res.headers)
       session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);

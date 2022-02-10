@@ -32,4 +32,7 @@
         replace into feed_tag(feedNo, tagNo) values (#{feedNo}, #{tagNo})
     </insert>
 
+    <delete id="deleteRelation" parameterType="map">
+        delete from feed_tag where feedNo = #{feedNo} and tagNo = #{tagNo}
+    </delete>
 </mapper>

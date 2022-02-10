@@ -1,5 +1,6 @@
 package com.ssafy.project.EmotionPlanet.Controller;
 
+import com.ssafy.project.EmotionPlanet.Dto.FeedDto;
 import com.ssafy.project.EmotionPlanet.Service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -22,7 +23,7 @@ public class S3Controller {
     private static final int SUCCESS = 1;
 
     @PostMapping("/file")
-    public ResponseEntity<List<Integer>> uploadFile( @RequestPart List<MultipartFile> multipartFile) {
+    public ResponseEntity<List<Integer>> uploadFile( @RequestPart(value = "file", required = true) List<MultipartFile> multipartFile) {
         List<Integer> result = s3Service.uploadFile(multipartFile);
         
         if(result.size() != 0) return new ResponseEntity<List<Integer>>(result, HttpStatus.OK);
@@ -30,8 +31,8 @@ public class S3Controller {
     }
 
     @PostMapping(value = "/users/img") //회원 프로필 변경
-    public ResponseEntity<String> uploadFileReturnURL(@RequestPart String no, 
-    		@RequestPart MultipartFile multipartFile) {
+    public ResponseEntity<String> uploadFileReturnURL(@RequestPart(value = "userNo", required = false) String no,
+    		@RequestPart(value = "file", required = true) MultipartFile multipartFile) {
     	int userno = Integer.parseInt(no);
     	String result  = s3Service.uploadFileReturnURL(userno,multipartFile);
 
