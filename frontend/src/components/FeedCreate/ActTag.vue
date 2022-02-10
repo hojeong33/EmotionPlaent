@@ -17,6 +17,7 @@ export default {
   methods: {
     checked: function(){
       this.isChecked = !this.isChecked
+      this.$emit('checked', this.tag)
     }
   }
 }

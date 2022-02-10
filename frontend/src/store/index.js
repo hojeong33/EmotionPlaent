@@ -11,7 +11,7 @@ import SockJS from "sockjs-client";
 
 export default new Vuex.Store({
   state: {
-    feedActive: false,
+    // feedActive: false,
     //검색부분
     words: null,
     tagSearch: [],
@@ -40,6 +40,11 @@ export default new Vuex.Store({
     ],
     navActive: [false, false, false, false, false],
     user: null,
+    // 피드작성
+    feedCreateData: [
+      {descr: null, author:null, tags: []},
+      {image: []},
+    ],
     
     // 모달 데이터
     commentSettingModalActive: false,
@@ -115,6 +120,22 @@ export default new Vuex.Store({
     feedOut({ navActive }){
       Vue.set(navActive, 0, false)
     },
+    // 피드작성 부분
+    feedUserData: function (state, feedDto) {
+      state.feedCreateData[0].author = feedDto.author
+      state.feedCreateData[0].tags[0] = feedDto.tags[0]
+      console.log(state.feedCreateData[0])
+    },
+    feedImg: function (state, imgs) {
+      state.feedCreateData[1].image =imgs
+      console.log(state.feedCreateData)
+    },
+    feedTag: function(state, feedtag) {
+      state.feedCreateData[0].tags[1] = feedtag
+      // state.feedCreateData[0].tags.push({name: `${feedtag}`, type: 0})
+      console.log(state.feedCreateData[0].tags)
+    },
+    
     // 모달부분입니다
     commentSettingModalActivate: function (state) {
       state.commentSettingModalActive = !state.commentSettingModalActive
