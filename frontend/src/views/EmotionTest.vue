@@ -135,13 +135,13 @@
               data: this.selected,
               headers: headers,
             }).then(res => {
-            alert(`당신은 ${ res.data.name }행성 입니다!`)
+            // alert(`당신은 ${ res.data.name }행성 입니다!`)
             console.log(this.$store.state.userInfo)
             this.$store.commit('userUpdate', res.data.no)
             const body = { no: this.$store.state.userInfo.no, mood: res.data.no }
             axios({
               method: 'put',
-              url: 'http://13.125.47.126:8080/users',
+              url: 'http://13.125.47.126:8080/users/update',
               data: body,
               headers: headers,
             }).then(res => {

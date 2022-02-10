@@ -70,7 +70,7 @@ public class UserServiceImpl implements UserService {
 			userDto.setPw(changeuserDto.getPw());
 			userDto.setIntro(changeuserDto.getIntro());
 			userDto.setPublish(changeuserDto.getPublish());
-		} else if( changeuserDto.getPw() != null && changeuserDto.getPw().equals("") ) { // 닉네임, 소개글, 공개여부 변경
+		} else if( changeuserDto.getPw() == null) { // 닉네임, 소개글, 공개여부 변경
 			userDto.setNickname(changeuserDto.getNickname());
 			userDto.setIntro(changeuserDto.getIntro());
 			userDto.setPublish(changeuserDto.getPublish());
