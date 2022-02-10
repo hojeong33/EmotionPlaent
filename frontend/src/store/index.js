@@ -11,7 +11,7 @@ import SockJS from "sockjs-client";
 
 export default new Vuex.Store({
   state: {
-    feedActive: false,
+    // feedActive: false,
     //검색부분
     words: null,
     tagSearch: [],
@@ -24,6 +24,12 @@ export default new Vuex.Store({
     recommendActivity: [],
     recommendReload: 0,
     userInfo: null,
+    userFollowInfo : {
+      //나를 팔로우 하는 사람(팔로워)
+      userFollow :[],
+      // 내가 팔로우 하는 사람(팔로잉)
+      userFollowing : [],
+    },
     planetStyles: [
       { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
       { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
@@ -34,6 +40,11 @@ export default new Vuex.Store({
     ],
     navActive: [false, false, false, false, false],
     user: null,
+    // 피드작성
+    feedCreateData: [
+      {descr: null, author:null, tags: []},
+      {image: []},
+    ],
     
     // 모달 데이터
     commentSettingModalActive: false,
@@ -84,25 +95,47 @@ export default new Vuex.Store({
       console.log(state)
       state.words = searchWords
     },
+
     userUpdate(state, payload){
+      const userdata = JSON.parse(session.getItem('userInfo')) 
       if (!session.getItem('userInfo')){
-        session.setItem('userInfo', JSON.stringify(payload))
+        session.setItem('userInfo', JSON.stringify(payload)) //토큰값으로 들어오면 
       }
-      const userdata = JSON.parse(session.getItem('userInfo'))
-      if(typeof(payload) == 'number'){
-        userdata.mood = payload
+      
+      else if(typeof(payload) == 'number'){ // 감테하고 넘길때
+        userdata.userInfo.mood = payload
         session.setItem('userInfo', JSON.stringify(userdata))
+      } 
+      
+      else if (session.getItem('userInfo')){
+        session.setItem('userInfo', JSON.stringify(payload)) 
       }
       state.userInfo = userdata
-      console.log(userdata)
       return userdata
     },
+
     tokenTest(){
       console.log("test")
     },
     feedOut({ navActive }){
       Vue.set(navActive, 0, false)
     },
+    // 피드작성 부분
+    feedUserData: function (state, feedDto) {
+      state.feedCreateData[0].author = feedDto.author
+      state.feedCreateData[0].tags[0] = feedDto.tags[0]
+      console.log(state.feedCreateData[0])
+    },
+    feedImg: function (state, imgs) {
+      state.feedCreateData[1].image =imgs
+      console.log(state.feedCreateData)
+    },
+    feedTag: function(state, feedtag) {
+      state.feedCreateData[0].tags[1] = feedtag
+      // state.feedCreateData[0].tags.push({name: `${feedtag}`, type: 0})
+      console.log(state.feedCreateData[0].tags)
+    },
+    
     // 모달부분입니다
     commentSettingModalActivate: function (state) {
       state.commentSettingModalActive = !state.commentSettingModalActive
@@ -176,62 +209,8 @@ export default new Vuex.Store({
       console.log(state.moreInfoConfirmModalActive)
     },
   },
-  actions: { 
-    //팔로우 삭제
-    deletefollow(state, el) {
-      console.log(el)
-      let headers = {
-          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-      let data = {
-        sender : this.state.userInfo.no,
-        receiver : el,
-      };
-      axios({
-          method: 'delete',
-          url: 'http://13.125.47.126:8080/follows',
-          data: data, // post 나 put에 데이터 넣어 줄때
-          headers: headers,  // 넣는거 까먹지 마세요
-        }).then((res) => {
-        console.log("언팔로우 성공")
-        this.dispatch('accessTokenRefresh', res) // store에서
-        }).catch((error) => {
-          console.log("언팔로우 실패")
-          console.log(error);
-        }).then(() => {
-          console.log('getQSSList End!!');
-        });
-      },
-
-    //팔로우 신청
-    sendfollow(state, el) {
-      console.log(el)
-      let headers = {
-          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-      let data = {
-        sender : this.state.userInfo.no,
-        receiver : el,
-      };
-      axios({
-          method: 'post',
-          url: 'http://13.125.47.126:8080/follows',
-          data: data, // post 나 put에 데이터 넣어 줄때
-          headers: headers,  // 넣는거 까먹지 마세요
-        }).then((res) => {
-        console.log("팔로우 성공")
-        this.dispatch('accessTokenRefresh', res) // store에서
-        }).catch((error) => {
-          console.log("팔로우 실패")
-          console.log(error);
-        }).then(() => {
-          console.log('getQSSList End!!');
-        });
-      },
-
-    // 유저 페이지
+  actions: {
+    // 여기는 팔로우 부분 입니다.
     userfollowdate(state, el) {
       let headers = {
           'at-jwt-access-token': session.getItem('at-jwt-access-token'),
@@ -242,6 +221,10 @@ export default new Vuex.Store({
         }).then((res) => {
           console.log("데이터 갱신 성공")
           console.log(res.data)
+          this.state.userFollowInfo.userFollow = res.data.follower
+          this.state.userFollowInfo.userFollowing = res.data.following
+          console.log(this.state.userFollowInfo.userFollow.length)
+          console.log(this.state.userFollowInfo.userFollowing.length)
         this.dispatch('accessTokenRefresh', res) // store에서
         }).catch((error) => {
           console.log("데이터 갱신 실패")
@@ -444,8 +427,9 @@ export default new Vuex.Store({
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
-
-			axios.get('http://13.125.47.126:8080/recommend/music/' + this.state.userInfo.mood, {
+      
+			setTimeout(() => {
+        axios.get('http://13.125.47.126:8080/recommend/music/' + this.state.userInfo.mood, {
           headers: headers,
         }).then((res) => {
           this.state.recommendMusic = res.data
@@ -456,12 +440,14 @@ export default new Vuex.Store({
         }).then(() => {
           console.log('getQSSList End!!');
         });
-      },
+      }, 1000);
+    },
     recommendMovie() {
       let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
+      setTimeout(() => {
 			axios.get('http://13.125.47.126:8080/recommend/movie/' + this.state.userInfo.mood, {
           headers: headers,
         }).then((res) => {
@@ -473,12 +459,14 @@ export default new Vuex.Store({
         }).then(() => {
           console.log('getQSSList End!!');
         });
-      },
+      }, 2000);
+    },
     recommendActivity() {
       let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
+      setTimeout(() => {
 			axios.get('http://13.125.47.126:8080/recommend/activity/', {
           headers: headers,
         }).then((res) => {
@@ -490,7 +478,8 @@ export default new Vuex.Store({
       }).then(() => {
         console.log('getQSSList End!!');
       });
-    },
+    }, 3000);
+  },
 
     accessTokenRefresh({commit}, res) {
       console.log("accesstoken : " + res.headers)
@@ -502,6 +491,14 @@ export default new Vuex.Store({
       commit('tokenTest')
     },
 
+    allTokenRefreshOnUserInfo({commit},res){ // 유저 정보 갱신할때 사용
+      console.log("allTokenRefreshOnUserInfo : " + res.headers)
+      session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+      const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
+      console.log('decodeAccessToken data', decodeAccessToken);
+      commit('userUpdate', decodeAccessToken.userInfo)
+    },
+
     allTokenRefresh({commit},res){
       console.log("alltoken : " + res.headers)
       session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
@@ -509,12 +506,71 @@ export default new Vuex.Store({
 
       const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
       console.log('decodeAccessToken data', decodeAccessToken);
-      commit('userUpdate', decodeAccessToken.userInfo)
+      commit('userUpdate', decodeAccessToken)
     },
     // userInfo: function(state, payload){
     //   console.log(payload)
     //   state.user = payload
     // },
+
+    //유저정보 수정부분
+    async updateuser(state ,el) {
+      const body = {
+        no: this.state.userInfo.no,
+        nickname: this.state.userInfo.nickname,
+        intro: this.state.userInfo.intro,
+        pw: el, //null 해야지 데이터 안넘어감
+        publish: this.state.userInfo.publish,
+      };
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+      await axios({
+        method: "put",
+        url: "http://13.125.47.126:8080/users/update",
+        data: body,
+        headers: headers,
+      })
+        .then((res) => {
+          console.log(body)
+          console.log("업데이트 성공")
+          console.log(res);
+          this.dispatch('allTokenRefreshOnUserInfo', res)
+          // console.log(this.state.userInfo)
+          location.reload()
+        })
+        .catch((err) => {
+          console.log("업데이트 실패")
+          console.log(err);
+        });
+    },
+
+    updateimg(state , el) {
+      // const attachFiles = document.querySelector("#inputFileUploadInsert"); // 파일 인풋에 id값 지정하기
+      // const body = {
+      //   no: 2,
+      //   file : el,
+      // };
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        "Content-Type": "multipart/form-data",
+        };
+      axios({
+        method: "post",
+        url: "http://localhost:8080/s3/users/img",
+        data: el,
+        headers: headers,
+      })
+        .then((res) => {
+          console.log(res);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    },
+
   },
   modules: {
     

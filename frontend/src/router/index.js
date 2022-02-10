@@ -171,6 +171,7 @@ const userUpdate = new Promise(() => {
 
 router.beforeEach((to, from, next) => {
   console.log(to)
+  // 라우터 이동 시 토큰이 필요함
   token = window.sessionStorage.getItem('at-jwt-access-token');
   console.log(token)
   //지정되지 않은 라우트로 이동할 경우 메인으로 redirect
