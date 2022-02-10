@@ -135,12 +135,12 @@
             const body = { no: this.$store.state.userInfo.no, mood: res.data.no }
             axios({
               method: 'put',
-              url: 'http://13.125.47.126:8080/users',
+              url: 'http://13.125.47.126:8080/users/update',
               data: body,
               headers: headers,
             }).then(res => {
               console.log(res)
-              this.$store.dispatch('accessTokenRefresh', res)
+              this.$store.dispatch('allTokenRefreshOnUserInfo', res)
               this.$router.push('Main')
             }).catch(err => {
               console.log(err)
@@ -171,6 +171,7 @@
       }
     },
     created: function(){
+      console.log(this.$store.state.userInfo)
       this.$store.state.recommendReload = 0
       let headers = {
       'at-jwt-access-token': session.getItem('at-jwt-access-token'),

@@ -2,22 +2,22 @@
   <section id="mypage-container">
     <side-profile-card :user-info="userInfo" />
     <article id="profile-container">
-      <img id="profile-img"  src="https://www.thesprucepets.com/thmb/meRd41is751DsQQjofaiKV_ZUBg=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cat-talk-eyes-553942-hero-df606397b6ff47b19f3ab98589c3e2ce.jpg">
+      <img id="profile-img"  :src="this.$store.state.userInfo.profileImg">
       <div id="profile-card">
         <div id="name-card">
-          <h1>{{ userInfo.username }}</h1>
+          <h1>{{ this.$store.state.userInfo.nickname }}</h1>
           <button @click="$router.push({name: 'Setting'})">프로필 수정</button>
         </div>
         <div id="info-card">
-          <h3>게시글 {{ userInfo.posts }}</h3>
-          <h3>팔로우 {{ userInfo.followings }}</h3>
-          <h3>팔로워 {{ userInfo.followers }}</h3>
+          <h3>이야기 {{ userInfo.posts }}</h3>
+          <h3>팔로우 {{ this.$store.state.userFollowInfo.userFollow.length }}</h3>
+          <h3>팔로잉 {{ this.$store.state.userFollowInfo.userFollowing.length }}</h3>
         </div>
       </div>
     </article>
     <article id="tab">
       <span id="dot1" :class="myPageTab == 'feed' ? 'slide-out':'slide-in'" />
-      <p @click="changeTab('feed')" :class="myPageTab == 'feed' ? 'activate': ''">게시글</p>
+      <p @click="changeTab('feed')" :class="myPageTab == 'feed' ? 'activate': ''">이야기</p>
       <p @click="changeTab('pick')" :class="myPageTab == 'pick' ? 'activate': ''">찜 목록</p>
     </article>
     <article id="list-container">
@@ -38,8 +38,6 @@ export default {
       username: '최강상후',
       mood: 3,
       posts: 0,
-      followings: 0,
-      followers: 20100,
       },
       myPageTab: 'feed',
       filter: 0

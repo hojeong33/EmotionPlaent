@@ -6,7 +6,7 @@
     <section id="pu_body">
 			<article id="profile_head">
 				<img id="profile_img" :src="this.$store.state.userInfo.profileImg" alt="">
-        <p id="user_id">{{ this.$store.state.userInfo.nickname }}</p>
+        <p id="user_id">{{ this.credentials.beforeNick }}</p>
         <div id="profile_img_change">
           <button id="profile_img_change_button" @click="profileImgChangeModal">사진 변경</button>
         </div>
@@ -16,7 +16,7 @@
         <label for="username">닉네임</label>
         <input 
         id="nickname"
-        v-model="credentials.beforeNick"
+        v-model="$store.state.userInfo.nickname"
         @input="checkNickname">
 			</article>
 			<br>
@@ -24,8 +24,8 @@
 				<p id="introduce">소개</p>
         <textarea  
         id="short_comment"
-        v-model="this.$store.state.userInfo.intro"
-        readonly></textarea>
+        v-model="$store.state.userInfo.intro"
+        ></textarea>
 			</article>
 			
 			<br>
@@ -35,7 +35,7 @@
           <label for="next_pw">변경할 비밀번호</label>
           <article id="pwchange">
             <input style="margin-top:auto;margin-bottom:auto;" 
-            type="checkbox" @click="activatePw"
+            type="checkbox"
             >
             <h5 style="margin-top:auto;margin-bottom:auto;">비밀번호 변경하기</h5>
           </article>
@@ -44,7 +44,8 @@
         id="next_pw_input"
         v-model="credentials.nextPw"
         @input="pwCheck"
-        placeholder="비밀번호는 8자 이상, 20자 이하입니다.">
+        placeholder="비밀번호는 8자 이상, 20자 이하입니다."
+        >
         <span v-if="credentials.nextPw">
           <p v-if="!isValid.validateNextPw" class="warn">
             사용할 수 없는 비밀번호에요.
@@ -60,7 +61,8 @@
         <input type="password" id="pw_conf_input"
         v-model="credentials.pwConf"
         @input="pwConfCheck"
-        placeholder="비밀번호를 다시 입력해주세요.">
+        placeholder="비밀번호를 다시 입력해주세요."
+        >
         <span v-if="credentials.pwConf">
           <p v-if="!isValid.validatePwConf" class="warn">
             비밀번호가 맞지 않아요.
@@ -84,26 +86,28 @@
         v-model="credentials.pin"
         placeholder="등록하신 PIN 번호를 입력해주세요.">
       </article> -->
-      <a @click="pwFind">비밀번호를 잊었나요?</a>
+      <a @click="pwFind">비밀번호를 잊었나요?</a> 
       <br>
       <article id="pu_form_radio">
         <label for="">계정 공개 여부</label>
         <div id="check_radio">
           <div id="on">
-            <input type="radio" id="show_all" style="width:20px;height:20px;border:1px;"
-            :checked="this.publish == 1 ? 'checked': false" readonly>
+            <input type="radio" id="show_all" style="width:20px;height:20px;border:1px;" name="group"
+            @change="$store.state.userInfo.publish = 1"
+            :checked="$store.state.userInfo.publish == 1 ? 'checked': false">
             <h5>모두에게 공개</h5>
           </div>
           <div id="off">
-            <input type="radio" id="show_followers" style="width:20px;height:20px;border:1px;"
-            :checked="this.publish == 2 ? 'checked': false" readonly>
+            <input type="radio" id="show_followers" style="width:20px;height:20px;border:1px;" name="group"
+            @change="$store.state.userInfo.publish = 2"
+            :checked="$store.state.userInfo.publish == 2 ? 'checked': false">
             <h5>팔로워에게 공개</h5>
           </div>
         </div>
         <br>
       </article>
       <article id="pu_buttons">
-        <button id="pu_button">변경하기</button>
+        <button id="pu_button" @click="user_change">변경하기</button>
         <button id="pu_button" @click="go_to_back">뒤로가기</button>
       </article>
     </section>
@@ -122,13 +126,13 @@ export default {
         beforePw: null,
         nextPw: null,
         pwConf: null,
-        pwChange: false,
       },
       isValid: {
         validateNextPw: false,
         validatePwConf: false,
       },
-      help: false
+      help: false, 
+      pwActivate: false,
     }
   },
   methods: {
@@ -158,22 +162,18 @@ export default {
       this.$store.commit('profileImgChangeModalActivate')
 		},
     checkNickname: function(el){
-      this.credentials.beforeNick = el.target.value
+      this.$store.state.userInfo.nickname = el.target.value
       if (this.credentials.beforeNick !== this.$store.state.userInfo.nickname) {
-        if (this.credentials.beforeNick.length >= 2 && this.credentials.beforeNick.length <= 10) {
-          // this.credentials.beforeNick = el.target.value // 한글 입력 이슈 해결하기 위해 사용. 한박자 느린거?
+        if (this.$store.state.userInfo.nickname.length >= 2 && this.$store.state.userInfo.nickname.length <= 10) {
+          // this.$store.state.userInfo.nickname = el.target.value // 한글 입력 이슈 해결하기 위해 사용. 한박자 느린거?
           axios({
             method: 'get',
-            url: 'http://13.125.47.126:8080/users/checkByNickname/' + this.credentials.beforeNick,
+            url: 'http://13.125.47.126:8080/register/checkByNickname/' + this.$store.state.userInfo.nickname,
             })
             .then(() => { //중복 닉네임 없는 경우
-              // this.isValid.validateNicknamecheck = true
-              console.log(this.$store.state.userInfo)
               console.log('중복없다~')
             })
-            .catch((el) => { //중복 닉네임 있는 경우
-              // this.isValid.validateNicknamecheck = false
-              console.log(el.response)
+            .catch(() => { //중복 닉네임 있는 경우
               console.log('중복있어')
           })
         }
@@ -215,7 +215,7 @@ export default {
     telCheck: function(){
       axios({
         method: 'get',
-        url: 'http://13.125.47.126:8080/users/checkByTel/' + this.credentials.tel
+        url: 'http://13.125.47.126:8080/register/checkByTel/' + this.credentials.tel
       })
       .then(res => {
         console.log(res)
@@ -227,24 +227,29 @@ export default {
         }
       })
     },
-    activatePw() {
-      this.pwChange = !this.pwChange
-      console.log(this.pwChange)
-      const tmp1 = document.getElementById('next_pw_input')
-      const tmp2 = document.getElementById('pw_conf_input')
-      if (this.pwChange === false) {
-        tmp1.setAttribute("disabled", true)
-        tmp1.setAttribute('style', 'cursor:not-allowed')
-        tmp2.setAttribute("disabled", true)
-        tmp2.setAttribute('style', 'cursor:not-allowed')
+    user_change() {
+      //비번 둘다 값있고 같은지 체크해야됨
+      console.log(this.credentials.pwConf)
+      if (this.credentials.pwConf !== null) {
+        this.$store.dispatch('updateuser', this.credentials.pwConf)
       }
       else {
-        tmp1.setAttribute("disabled", false)
-        tmp2.setAttribute("disabled", false)
+        this.$store.dispatch('updateuser', null)
+      }
+    },
+    pw_change() {
+      if (this.pwActivate === false) {
+        this.pwActivate = true
+        console.log(this.pwActivate)
+      }
+      else {
+        this.pwActivate = false
+        console.log(this.pwActivate)
       }
     },
   },
   created() {
+    console.log(this.$store.state.userInfo)
     this.credentials.beforeNick = this.$store.state.userInfo.nickname
   }
 }

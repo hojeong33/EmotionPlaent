@@ -3,17 +3,16 @@
     <h1>계정 정보</h1>
     <article id="us_header">
       <div id="us_header_img">
+        <img :src="this.$store.state.userInfo.profileImg" alt="" id="profileImg">
         <span id="opacity"></span>
       </div>
       <div id="us_header_info">
         <span>
           <h2>{{ this.$store.state.userInfo.nickname }}</h2>
-          <button>로그아웃</button>
         </span>
-        <span>
-          <h4>가입일 1234.56.78</h4>
+        <span id="change_btn">
           <!-- <button>프로필사진 변경</button> -->
-          <button @click="go_to_profilupdate">프로필 변경</button>
+          <button @click="go_to_profilupdate">시민권 변경</button>
         </span>
       </div>
     </article>
@@ -66,6 +65,7 @@
 
 <script>
 // import LogoutModal from '@/components/Modal/LogoutModal.vue'
+const session = window.sessionStorage
 
 export default {
   data: function(){
@@ -91,6 +91,21 @@ export default {
     logoutModal:function(){
       this.$store.commit('logoutModalActivate')
 		},
+    signOut() {
+      const authInst = window.gapi.auth2.getAuthInstance();
+      console.log('signout called', authInst)
+      authInst.signOut()
+      .then(() => {
+        // eslint-disable-next-line
+        console.log('User Signed Out!!!');
+        authInst.disconnect();
+        session.clear();
+      })
+      .then(() => {
+        window.location.reload()
+      })
+      .catch(() => alert('fail'))
+    },
     // onPublish() {
     //   this.showAll
     // }
@@ -180,15 +195,18 @@ export default {
   #opacity {
     width: 100%;
     height: 100%;
-    background-color: rgb(0, 0, 0, 0.5);
+    background-color: rgb(0, 0, 0, 0.2);
     position: absolute;
     left: 0;
   }
 
   #us_header_img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width: 100%;
     height: 100%;
-    background-image: url('../../assets/images/KakaoTalk_20220112_170830193.jpg');
+    background-image: url('../../assets/images/emotions/cover.png');
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
@@ -196,28 +214,27 @@ export default {
   }
 
   #us_header_info {
-    z-index: 1;
     display: flex;
-    flex-direction: column;
-    justify-content: flex-end;
+    /* flex-direction: column; */
+    justify-content: space-between;
+    align-items: flex-end;
     width: 100%;
     color: white;
+    z-index: 12;
     padding: 1rem 1.5rem;
   }
 
   #us_header_info > *:first-child {
+    z-index:10;
     display: flex;
     align-items: center;
-  }
-
-  #us_header_info > *:first-child > button {
-    background-color: rgb(240, 90, 90);
   }
 
   #us_header_info *:last-child {
+    z-index: 10;
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    /* justify-content: space-between; */
+    /* align-items: center; */
   }
 
   #us_body {
@@ -250,6 +267,17 @@ export default {
   #withdrawal {
     background-color: rgb(240, 90, 90);
     align-self: center;
-    margin-top: rem;
   }
+
+  #change_btn {
+    display: flex;
+    justify-self: right;
+  }
+
+  #profileImg {
+    z-index: 10;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+  } 
 </style>

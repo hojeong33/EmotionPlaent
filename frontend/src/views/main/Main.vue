@@ -78,6 +78,7 @@ export default {
 			console.log(session.userInfo)
 			this.$store.state.recommendReload = 1
 		}
+		this.$store.dispatch('userfollowdate',this.$store.state.userInfo.no)
 	},
 	methods: {
 		follow(){

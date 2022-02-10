@@ -4,10 +4,11 @@
 			<h3>프로필 사진 바꾸기</h3>
 			<hr>
 			<p @click="imgUpload" id="upload">사진 업로드</p>
-			<input type="file" v-if="uploading">
+			<input type="file" v-if="uploading" 
+			ref="profileImg" @change="inputImg()">
 			<p style="color: red;">현재 사진 삭제</p>
 			<hr>
-			<p v-if="uploading">확인</p>
+			<p v-if="uploading" @click="uploadImg()">확인</p>
 			<p @click="cancel">취소</p>
 		</div>
 	</div>
@@ -18,6 +19,7 @@ export default {
 	data() {
 		return {
 			uploading: false,
+			img: '',
 		}
 	},
 	methods: {
@@ -26,6 +28,10 @@ export default {
 		},
 		imgUpload() {
 			this.uploading = true
+		}, 
+		inputImg() {
+			this.img = this.$ref.profileImg.files
+			console.log(this.img)
 		}
 	}
 }

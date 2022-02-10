@@ -175,9 +175,16 @@ export default {
     let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-    axios.get('http://13.125.47.126:8080/qss/list', {
-      headers: headers, // 넣는거 까먹지 마세요
+    };
+    let data = {
+      name: '',
+      type: ''
+    };
+    axios({
+        method: 'get',
+        url: 'http://13.125.47.126:8080/qss/list',
+        data: data, // post 나 put에 데이터 넣어 줄때
+        headers: headers,  // 넣는거 까먹지 마세요
       }).then((res) => {
 
       this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
@@ -189,6 +196,8 @@ export default {
         console.log('getQSSList End!!');
       });
     },
+
+    
   },
 }
 </script>
