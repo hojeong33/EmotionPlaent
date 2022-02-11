@@ -3,6 +3,9 @@ package com.ssafy.project.EmotionPlanet.Controller;
 import javax.servlet.http.HttpSession;
 import javax.websocket.Session;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.ssafy.project.EmotionPlanet.Config.JWT.JwtService;
 import com.ssafy.project.EmotionPlanet.Config.OAuth.PrincipalOauth2UserService;
 import com.ssafy.project.EmotionPlanet.Dto.ErrorDto;
@@ -11,14 +14,20 @@ import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserSecretDto;
 import com.ssafy.project.EmotionPlanet.Service.LoginService;
 import com.ssafy.project.EmotionPlanet.Service.UserService;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 
@@ -116,6 +125,30 @@ public class LoginController {
         }
 
         return ResponseEntity.ok().headers(res).body(user);
+    }
+
+    
+    /////////////////////////카카오
+    // 카카오 연동정보 조회
+    @RequestMapping(value = "/login/oauth_kakao")
+    public String oauthKakao(
+            @RequestParam(value = "code", required = false) String code
+            , Model model) throws Exception {
+
+        System.out.println("#########" + code);
+        String access_Token = principalOauth2UserService.getAccessToken(code);
+        System.out.println("###access_Token#### : " + access_Token);
+
+
+        HashMap<String, Object> userInfo = principalOauth2UserService.getUserInfo(access_Token);
+        System.out.println("###access_Token#### : " + access_Token);
+        System.out.println("###userInfo#### : " + userInfo.get("email"));
+        System.out.println("###nickname#### : " + userInfo.get("nickname"));
+
+        JSONObject kakaoInfo =  new JSONObject(userInfo);
+        model.addAttribute("kakaoInfo", kakaoInfo);
+
+        return "/home"; //본인 원하는 경로 설정
     }
 
     @GetMapping(value = "/qss/list")

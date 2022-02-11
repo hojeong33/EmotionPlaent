@@ -26,19 +26,37 @@
 		CONCAT(#{name},'%');
 	</select>
 
-	<select id="recommendSelect" parameterType="String"
-		resultType="com.ssafy.project.EmotionPlanet.Dto.PickDto">
-		select p.no, p.userNo, u.nickname, p.name, p.date, p.tagNo, (select count(*) from picklike where picklike.pickNo = p.no) as 'count'
-		from pick p, tag t, user u
-		where u.no = p.userNo and p.tagNo = t.no and p.date between date_add(now(),interval -1 MONTH) and now() and p.tagNo = (select no from tag where name = #{name})
-		order by count desc;
+	<select id="feedSelect" parameterType="String"
+			resultType="com.ssafy.project.EmotionPlanet.Dto.FeedDto">
+		select f.no f.descr f.author f.date
+		from feed f, feed_tag ft
+		where f.no = ft.feedNo and ft.tagNo in (
+												 	select t.no
+													from tag t
+													where t.name = #{name}
+							          			)
 	</select>
-	
-	<select id="pickcontentSelect" parameterType="int"
-		resultType="com.ssafy.project.EmotionPlanet.Dto.PickContentDto">
-		select *
-		from pickcontent
-		where pickNo = #{no};
+
+	<select id="pickSelect" parameterType="String"
+			resultType="com.ssafy.project.EmotionPlanet.Dto.PickDto">
+		select no userNo name type
+		from pick
+		where name like CONCAT(#{name},'%');
 	</select>
 	
 </mapper>
+
+<!--<select id="recommendSelect" parameterType="String"-->
+<!--		resultType="com.ssafy.project.EmotionPlanet.Dto.PickDto">-->
+<!--select p.no, p.userNo, u.nickname, p.name, p.date, p.tagNo, (select count(*) from picklike where picklike.pickNo = p.no) as 'count'-->
+<!--from pick p, tag t, user u-->
+<!--where u.no = p.userNo and p.tagNo = t.no and p.date between date_add(now(),interval -1 MONTH) and now() and p.tagNo = (select no from tag where name = #{name})-->
+<!--order by count desc;-->
+<!--</select>-->
+
+<!--<select id="pickcontentSelect" parameterType="int"-->
+<!--		resultType="com.ssafy.project.EmotionPlanet.Dto.PickContentDto">-->
+<!--select *-->
+<!--from pickcontent-->
+<!--where pickNo = #{no};-->
+<!--</select>-->

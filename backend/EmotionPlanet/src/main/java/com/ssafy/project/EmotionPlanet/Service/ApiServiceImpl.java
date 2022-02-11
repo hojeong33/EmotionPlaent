@@ -27,7 +27,7 @@ public class ApiServiceImpl implements ApiService {
 
 	private final RestTemplate restTemplate = new RestTemplate();
 
-	private String[][] musicemotion = new String[][] { 
+	private String[][] musicemotion = new String[][] {
 			{ "happy", "sad" }, // 행복 너무행복해서 슬프려한다?
 			{ "sad", "happy" }, // 우울
 			{ "k-pop", "k-pop" }, // 중립
@@ -37,14 +37,14 @@ public class ApiServiceImpl implements ApiService {
 			{ "k-pop", "k-pop" } // 우주선
 	};
 	// https://api.themoviedb.org/3/genre/movie/list?api_key=a571ca19d9fd38ff2298025d4a8475f5
-	private String[][] movieemotion = new String[][] { 
+	private String[][] movieemotion = new String[][] {
 			{ "35", "18" }, // 행복 Comedy Drama
 			{ "18", "35" }, // 우울 Drama Comedy
 			{ "", "" }, // 중립은 그냥 둘다 추천? => 최신 개봉한거 위주
 			{ "27", "10751" }, // 공포 Horror, Family
 			{ "9648", "10402" }, // 깜짝 Mystery, Music
 			{ "10752", "16" }, // 분노 War Animation
-			{ "", "" } // 우주선
+			{ "", "" }, // 우주선
 	};
 
 	@Override
@@ -89,7 +89,7 @@ public class ApiServiceImpl implements ApiService {
 	public List<MovieDto> Movie(int mood, int type) {
 		List<MovieDto> list = null;
 		if(mood == 3) {
-			list = apiDao.MovieSelectnomal(movieemotion[mood-1][type]); // 여기가 중립 
+			list = apiDao.MovieSelectnomal(movieemotion[mood-1][type]); // 여기가 중립
  		}else {
 			list = apiDao.MovieSelect(movieemotion[mood-1][type]);
 		}

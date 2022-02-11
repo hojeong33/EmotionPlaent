@@ -62,7 +62,7 @@ public class UserServiceImpl implements UserService {
 		if (changeuserDto.getMood() != 0) { // 감정 정보 변경
 			System.out.println("===================1번====================== " + changeuserDto.getNo());
 			userDto.setMood(changeuserDto.getMood());
-		} else if(changeuserDto.getMood() == 0) {
+		} else if(changeuserDto.getMood() == 0){
 			System.out.println("===================1.5번====================== " + changeuserDto.getNo());
 			userDto.setMood(changeuserDto.getMood());
 		} else if (changeuserDto.getTel() != null) {  // 구글 로그인 회원 기본 정보 갱신
