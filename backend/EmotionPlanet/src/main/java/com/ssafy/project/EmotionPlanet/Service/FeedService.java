@@ -18,4 +18,5 @@ public interface FeedService {
     public List<UserRequestDto> likeList(int feedNo);
     public int like(int userNo, int feedNo);
     public int unlike(int userNo, int feedNo);
+    public int connect(String targetNo, List<Integer> result);
 }

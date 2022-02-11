@@ -143,7 +143,10 @@
             this.$store.commit('userUpdate', res.data.no)
             
             const userdata = JSON.parse(session.getItem('userInfo')) 
+            console.log('userdate===')
             console.log(userdata) // 무드번호만 나옴......
+            console.log(userdata.no)
+
 
             console.log("여기는 에러 직전")
             const body = { no: userdata.no, mood: res.data.no }
@@ -159,6 +162,7 @@
               this.$store.commit('emotionTestResultModalActivate')
              
             }).catch(err => {
+              console.log('user/update')
               console.log(err)
             })
           })
@@ -171,12 +175,26 @@
         }
       },
       go_to_back: function(){
-        // if문에서 이전 감정 데이터가 존재하지 않으면 {
-        //   this.$router.push({ name: 'Main' })
-
-        // } else {
-        //   this.$router.go(-1)
-        // }
+        this.$store.commit('userUpdate', 0)
+        let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+        const userdata = JSON.parse(session.getItem('userInfo')) 
+        const body = { no: userdata.no, mood: 0 }
+        axios({
+          method: 'put',
+          url: 'http://13.125.47.126:8080/users/update',
+          data: body,
+          headers: headers,
+        }).then(res => {
+          console.log("여기는 데이터 수정하는 부분")
+          console.log(res)
+          this.$store.dispatch('allTokenRefreshOnUserInfo', res)
+          // this.$store.commit('emotionTestResultModalActivate')
+        }).catch(err => {
+          console.log(err)
+        })
         this.$router.push({ name: 'Main' })
       },
       refresh_keywords: function(){

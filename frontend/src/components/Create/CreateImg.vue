@@ -40,7 +40,7 @@ export default {
         author: null,
         tags: [],
       },
-      
+      rawImage: [],
     }
   },
   methods: {
@@ -53,6 +53,7 @@ export default {
     imgUpload () {
       // this.$store.commit('feedImg', img)
       this.images = []
+      this.rawImage = this.$refs.feedImg.files;
       
       let num = -1;
       for (let i =0; i < this.$refs.feedImg.files.length; i++) {
@@ -73,6 +74,7 @@ export default {
         this.images = []
       } else {
         this.$store.commit('feedImg', this.images)
+        this.$store.commit('rawImg', this.rawImage)
         // console.log('성공')
       }
     },

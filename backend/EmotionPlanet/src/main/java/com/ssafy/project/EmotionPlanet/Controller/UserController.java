@@ -101,18 +101,23 @@ public class UserController {
 		}
 	}
 	
-	@PutMapping(value ="/users") //회원 수정
+	@PutMapping(value ="/users/update") //회원 수정
 	public ResponseEntity<?> update(@RequestBody UserDto changeuserDto) {
+		HttpHeaders res = new HttpHeaders();
+
 		if(changeuserDto.getPw() != null) {
 			String rawPassword = changeuserDto.getPw();
 			String enPassword = bCryptPasswordEncoder.encode(rawPassword);
 			changeuserDto.setPw(enPassword);
 		} 
-		UserDto userDto = userService.userSelect(changeuserDto.getNo()); //입력받은 유저 번호로 기존 유저 정보 가져옴	
+		UserDto userDto = userService.userSelect(changeuserDto.getNo()); //입력받은 유저 번호로 기존 유저 정보 가져옴
+
 		if(userService.userUpdate(userDto, changeuserDto) == SUCCESS) { // 기존정보와 입력받은 정보를 비교해서 새로 갱신
-			System.out.println("회원 수정 성공");
-			System.out.println(changeuserDto);
-			return new ResponseEntity<Integer>(SUCCESS, HttpStatus.OK);
+			String accessToken = jwtService.createAccess(userDto.getEmail());
+			System.out.println("==============업데이트 엑세스 토큰 ==========" + "\n" + accessToken);
+			res.add("at-jwt-access-token", accessToken);
+			userDto.setPw(null);
+			return ResponseEntity.ok().headers(res).body(userDto);
 		}else {
 			System.out.println("회원 수정 실패");
 			throw new ResponseStatusException(HttpStatus.FORBIDDEN, "수정할 내용을 확인해 주세요.");

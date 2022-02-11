@@ -23,6 +23,8 @@ export default new Vuex.Store({
     recommendMovie: [],
     recommendActivity: [],
     recommendReload: 0,
+
+    // 내정보
     userInfo: null,
     userFollowInfo : {
       //나를 팔로우 하는 사람(팔로워)
@@ -30,7 +32,20 @@ export default new Vuex.Store({
       // 내가 팔로우 하는 사람(팔로잉)
       userFollowing : [],
     },
+
+    // 다른유저 정보
+    searchUserNo: null, //검색할 유저 번호 저장
+    searchUserInfo: null, // 검색한 유저 정보 저장
+    searchUserFollowInfo : {
+      followcheck : null, // 0이면 언팔 1이면 팔로우중
+      waiting : null, // 1이면 대기중
+      //나를 팔로우 하는 사람(팔로워)
+      userFollow :[],
+      // 내가 팔로우 하는 사람(팔로잉)
+      userFollowing : [],
+    },
     planetStyles: [
+      { id: 0, name: '떠돌이행성', img: "spaceship.png", color: '#FCBB74' },
       { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
       { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
       { id: 3, name: '중립행성', img: "neutral.png", color: '#ABBECA' },
@@ -45,6 +60,8 @@ export default new Vuex.Store({
       {descr: null, author:null, tags: []},
       {image: []},
     ],
+    //이미지
+    rawImg: [],
     
     // 모달 데이터
     commentSettingModalActive: false,
@@ -97,9 +114,15 @@ export default new Vuex.Store({
     },
 
     userUpdate(state, payload){
+      console.log("userUpdate 접근 =====")
       const userdata = JSON.parse(session.getItem('userInfo')) 
       if (!session.getItem('userInfo')){
         session.setItem('userInfo', JSON.stringify(payload)) //토큰값으로 들어오면 
+      }
+
+      else if (payload === 0) { // 아직 안할래요 눌렀을 때
+        userdata.mood = payload
+        session.setItem('userInfo', JSON.stringify(userdata))
       }
       
       else if(typeof(payload) == 'number'){ // 감테하고 넘길때
@@ -110,6 +133,7 @@ export default new Vuex.Store({
       else if (session.getItem('userInfo')){
         session.setItem('userInfo', JSON.stringify(payload)) 
       }
+      console.log('userUpdate 완료 ======' + session.getItem('userInfo'))
       state.userInfo = userdata
       return userdata
     },
@@ -127,6 +151,10 @@ export default new Vuex.Store({
       console.log(state.feedCreateData[0])
     },
     feedImg: function (state, imgs) {
+      state.rawImg =imgs
+      console.log(state.feedCreateData)
+    },
+    rawImg: function (state, imgs) {
       state.feedCreateData[1].image =imgs
       console.log(state.feedCreateData)
     },
@@ -210,24 +238,112 @@ export default new Vuex.Store({
     },
   },
   actions: {
-    // 여기는 팔로우 부분 입니다.
+
+    //팔로우 삭제
+    deletefollow() {
+      let headers = {
+          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+      let data = {
+        sender : this.state.userInfo.no,
+        receiver : this.state.searchUserNo,
+      };
+      axios({
+          method: 'delete',
+          url: 'http://13.125.47.126:8080/follows',
+          data: data, // post 나 put에 데이터 넣어 줄때
+          headers: headers,  // 넣는거 까먹지 마세요
+        }).then((res) => {
+        console.log("언팔로우 성공")
+        this.state.searchUserFollowInfo.followcheck = 0
+        this.dispatch('accessTokenRefresh', res) // store에서
+        }).catch((error) => {
+          console.log("언팔로우 실패")
+          console.log(error);
+        }).then(() => {
+          console.log('getQSSList End!!');
+        });
+      },
+
+    //팔로우 신청
+    sendfollow() {
+      let headers = {
+          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+      let data = {
+        sender : this.state.userInfo.no,
+        receiver : this.state.searchUserNo,
+      };
+      axios({
+          method: 'post',
+          url: 'http://13.125.47.126:8080/follows',
+          data: data, // post 나 put에 데이터 넣어 줄때
+          headers: headers,  // 넣는거 까먹지 마세요
+        }).then((res) => {
+        console.log("팔로우 성공")
+        this.state.searchUserFollowInfo.followcheck = 1
+        this.dispatch('accessTokenRefresh', res) // store에서
+        }).catch((error) => {
+          console.log("팔로우 실패")
+          console.log(error);
+        }).then(() => {
+          console.log('getQSSList End!!');
+        });
+      },
+
+    // 여기는 회원 번호로 회원의 정보를 가져오는 부분입니다.
+    userSelect() {
+      let headers = {
+          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+        axios({
+          method: 'get',
+          url: 'http://13.125.47.126:8080/users/'+ this.state.searchUserNo,
+          headers: headers,  // 넣는거 까먹지 마세요
+        }).then((res) => {
+         
+          console.log("유저 정보 갱신 성공")
+          console.log(res.data)
+          this.state.searchUserInfo = res.data
+          this.dispatch('accessTokenRefresh', res) // store에서
+        }).catch((error) => {
+          console.log(error);
+        }).then(() => {
+          console.log('getQSSList End!!');
+        });
+      },
+
+    // 마이페이지 or 유저 페이지 정보 가져온느 부분 입니다.
     userfollowdate(state, el) {
       let headers = {
           'at-jwt-access-token': session.getItem('at-jwt-access-token'),
           'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
         };
-      axios.get('http://13.125.47.126:8080/follows/'+this.state.userInfo.no+"/"+el, {
-        headers: headers, 
+        axios({
+          method: 'get',
+          url: 'http://13.125.47.126:8080/follows/'+this.state.userInfo.no+"/"+el,
+          headers: headers,  // 넣는거 까먹지 마세요
         }).then((res) => {
-          console.log("데이터 갱신 성공")
-          console.log(res.data)
-          this.state.userFollowInfo.userFollow = res.data.follower
-          this.state.userFollowInfo.userFollowing = res.data.following
-          console.log(this.state.userFollowInfo.userFollow.length)
-          console.log(this.state.userFollowInfo.userFollowing.length)
-        this.dispatch('accessTokenRefresh', res) // store에서
+          if(this.state.userInfo.no === el){
+            console.log("나의 갱신 성공")
+            console.log(res.data)
+            this.state.userFollowInfo.userFollow = res.data.follower
+            this.state.userFollowInfo.userFollowing = res.data.following
+            console.log(this.state.userFollowInfo.userFollow.length)
+            console.log(this.state.userFollowInfo.userFollowing.length)
+          }else{
+            console.log("유저 갱신 성공")
+            console.log(res.data)
+            this.state.searchUserFollowInfo.userFollow = res.data.follower
+            this.state.searchUserFollowInfo.userFollowing = res.data.following
+            this.state.searchUserFollowInfo.followcheck = res.data.followResult
+            this.state.searchUserFollowInfo.waiting = res.data.waition
+          }
+          this.dispatch('accessTokenRefresh', res) // store에서
         }).catch((error) => {
-          console.log("데이터 갱신 실패")
           console.log(error);
         }).then(() => {
           console.log('getQSSList End!!');

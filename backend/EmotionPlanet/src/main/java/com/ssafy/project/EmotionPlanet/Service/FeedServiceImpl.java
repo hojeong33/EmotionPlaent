@@ -28,6 +28,9 @@ public class FeedServiceImpl implements FeedService{
     UserDao userDao;
 
     @Autowired
+    S3Dao s3Dao;
+
+    @Autowired
     TagService tagService;
 
     @Autowired
@@ -118,21 +121,38 @@ public class FeedServiceImpl implements FeedService{
         System.out.println("피드번호 : " + feedDto.getNo());
         if(feedDto.getNo() != 0){
 
-            for (ImgDto img : feedDto.getImgs()) {
-                imgDao.relation(img.getNo(), feedDto.getNo());
-            }
-
             for (TagDto tag : feedDto.getTags()) {
                 tag.setFeedNo(feedDto.getNo());
                 tagService.create(tag);
             }
 
-            return result;
+            return feedDto.getNo();
         } else return result;
     }
 
     @Override
     public int update(FeedDto feedDto) {
+
+        List<ImgDto> dbImg = imgDao.list(feedDto.getNo());
+        List<TagDto> dbTag = tagDao.list(feedDto.getNo());
+
+        for (ImgDto img : dbImg) {
+            System.out.println("파일명 : " + img.getImgName());
+            s3Dao.deleteByNo(img.getNo());
+        }
+
+        for(TagDto tagDto : dbTag){
+            tagDao.deleteRelation(tagDto.getNo(), feedDto.getNo());
+        }
+
+        for (ImgDto img : feedDto.getImgs()) {
+            imgDao.relation(img.getNo(), feedDto.getNo());
+        }
+
+        for (TagDto tag : feedDto.getTags()) {
+            tag.setFeedNo(feedDto.getNo());
+            tagService.create(tag);
+        }
 
         return feedDao.update(feedDto);
     }
@@ -176,5 +196,16 @@ public class FeedServiceImpl implements FeedService{
     @Override
     public int unlike(int userNo, int feedNo) {
         return feedDao.unlike(userNo, feedNo);
+    }
+
+    @Override
+    public int connect(String targetNo, List<Integer> imgNoList) {
+
+        int result = 0;
+        for (Integer imgNo : imgNoList) {
+            result = feedDao.connect(targetNo, imgNo);
+        }
+
+        return result;
     }
 }

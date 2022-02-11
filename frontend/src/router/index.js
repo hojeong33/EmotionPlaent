@@ -5,6 +5,7 @@ import Signup from '@/views/accounts/Signup'
 import EmotionTest from '@/views/EmotionTest'
 
 import Mypage from '@/views/user/Mypage.vue'
+import Userpage from '@/views/user/Userpage.vue'
 import List from '@/components/user/List'
 import PickItem from '@/components/user/PickItem'
 
@@ -66,6 +67,36 @@ const routes = [
         meta: {
           loginRequired: true,
           testRequired: true
+        },
+      }
+    ]
+  },
+  {
+    path: '/userpage',
+    name: 'Userpage',
+    redirect: '/userpage/feed',
+    component: Userpage,
+    meta: {
+      loginRequired: true,
+      testRequired: false
+    },
+    children: [
+      {
+        path: ':tap',
+        component: List,
+        props: true,
+        meta: {
+          loginRequired: true,
+          testRequired: false
+        },
+      },
+      {
+        path: 'item/:id/:tag/:index',
+        component: PickItem,
+        props: true,
+        meta: {
+          loginRequired: true,
+          testRequired: false
         },
       }
     ]
@@ -206,10 +237,10 @@ router.beforeEach((to, from, next) => {
     userUpdate.then(() => next())
   }
   //감정 테스트가 필요한 경우 테스트페이지로 redirect
-  if (to.meta.testRequired && !store.state.userInfo.mood){
-    console.log(store.state.userInfo.mood)
-    next({ name:'EmotionTest' })
-  }
+  // if (to.meta.testRequired && !store.state.userInfo.mood){
+  //   console.log(store.state.userInfo.mood)
+  //   next({ name:'EmotionTest' })
+  // }
   //로그인 된 사용자가 로그인 or 회원가입 페이지로 가려고 할 경우
   if (!to.meta.loginRequired && store.state.userInfo){
     console.log('메인')
