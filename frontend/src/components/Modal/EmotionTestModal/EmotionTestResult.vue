@@ -39,6 +39,8 @@ export default {
 	},
 	created: function () {
 		let mood = this.$store.state.userInfo.mood
+		console.log('모달창와서')
+		console.log(mood)
 		let planetstyle = this.planetStyles.find(el => el.id === mood) || {}
 		this.planetImg = planetstyle.img
 		this.planetName = planetstyle.name
