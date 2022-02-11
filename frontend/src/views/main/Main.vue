@@ -71,7 +71,8 @@ export default {
   },
   created() {
     console.log("유저인포");
-    console.log(session.userInfo);
+    console.log(this.$store.state.userInfo);
+    console.log(session.userInfo)
     if (this.$store.state.recommendReload === 0) {
 
         this.$store.dispatch("recommendMusic");

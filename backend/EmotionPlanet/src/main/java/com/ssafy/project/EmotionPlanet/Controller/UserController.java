@@ -103,6 +103,9 @@ public class UserController {
 	
 	@PutMapping(value ="/users/update") //회원 수정
 	public ResponseEntity<?> update(@RequestBody UserDto changeuserDto) {
+		System.out.println("여기를 못오나?");
+		System.out.println(changeuserDto.getNo());
+		System.out.println(changeuserDto.getMood());
 		HttpHeaders res = new HttpHeaders();
 
 		if(changeuserDto.getPw() != null) {
@@ -111,7 +114,7 @@ public class UserController {
 			changeuserDto.setPw(enPassword);
 		} 
 		UserDto userDto = userService.userSelect(changeuserDto.getNo()); //입력받은 유저 번호로 기존 유저 정보 가져옴
-
+		System.out.println(userDto);
 		if(userService.userUpdate(userDto, changeuserDto) == SUCCESS) { // 기존정보와 입력받은 정보를 비교해서 새로 갱신
 			String accessToken = jwtService.createAccess(userDto.getEmail());
 			System.out.println("==============업데이트 엑세스 토큰 ==========" + "\n" + accessToken);

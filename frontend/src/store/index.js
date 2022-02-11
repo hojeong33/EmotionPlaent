@@ -16,6 +16,7 @@ export default new Vuex.Store({
     words: null,
     tagSearch: [],
     userSearch: [],
+    pickSearch: [],
     //메인 추천탭 부분
     userEmotion: null,
     recommendType: 1,
@@ -45,13 +46,13 @@ export default new Vuex.Store({
       userFollowing : [],
     },
     planetStyles: [
-      { id: 0, name: '떠돌이행성', img: "spaceship.png", color: '#FCBB74' },
       { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
       { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
-      { id: 3, name: '중립행성', img: "neutral.png", color: '#ABBECA' },
+      { id: 3, name: '심심행성', img: "neutral.png", color: '#ABBECA' },
       { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
       { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
       { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
+      { id: 7, name: '떠돌이행성', img: "spaceship.png", color: '#FCBB74' },
     ],
     navActive: [false, false, false, false, false],
     user: null,
@@ -115,26 +116,24 @@ export default new Vuex.Store({
 
     userUpdate(state, payload){
       console.log("userUpdate 접근 =====")
+      console.log(payload)
       const userdata = JSON.parse(session.getItem('userInfo')) 
       if (!session.getItem('userInfo')){
-        session.setItem('userInfo', JSON.stringify(payload)) //토큰값으로 들어오면 
-      }
-
-      else if (payload === 0) { // 아직 안할래요 눌렀을 때
-        userdata.mood = payload
-        session.setItem('userInfo', JSON.stringify(userdata))
+        session.setItem('userInfo', JSON.stringify(payload.userInfo)) //토큰값으로 들어오면 
       }
       
-      else if(typeof(payload) == 'number'){ // 감테하고 넘길때
-        userdata.userInfo.mood = payload
-        session.setItem('userInfo', JSON.stringify(userdata.userInfo))
-      } 
+      // else if(typeof(payload) == 'number'){ // 감테하고 넘길때
+      //   userdata.mood = payload
+      //   session.setItem('userInfo', JSON.stringify(userdata))
+      // } 
       
       else if (session.getItem('userInfo')){
-        session.setItem('userInfo', JSON.stringify(payload)) 
+        session.setItem('userInfo', JSON.stringify(payload.userInfo)) 
       }
+
+
       console.log('userUpdate 완료 ======' + session.getItem('userInfo'))
-      state.userInfo = userdata
+      state.userInfo = JSON.parse(session.getItem('userInfo')) 
       return userdata
     },
 
@@ -608,11 +607,11 @@ export default new Vuex.Store({
     },
 
     allTokenRefreshOnUserInfo({commit},res){ // 유저 정보 갱신할때 사용
-      console.log("allTokenRefreshOnUserInfo : " + res.headers)
+      console.log("allTokenRefreshOnUserInfo : " + res.headers['at-jwt-access-token'])
       session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
       const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
       console.log('decodeAccessToken data', decodeAccessToken);
-      commit('userUpdate', decodeAccessToken.userInfo)
+      commit('userUpdate', decodeAccessToken)
     },
 
     allTokenRefresh({commit},res){
@@ -630,7 +629,7 @@ export default new Vuex.Store({
     // },
 
     //유저정보 수정부분
-    async updateuser(state ,el) {
+    updateuser(state ,el) {
       const body = {
         no: this.state.userInfo.no,
         nickname: this.state.userInfo.nickname,
@@ -642,7 +641,7 @@ export default new Vuex.Store({
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
         };
-      await axios({
+      axios({
         method: "put",
         url: "http://13.125.47.126:8080/users/update",
         data: body,

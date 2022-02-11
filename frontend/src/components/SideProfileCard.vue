@@ -40,10 +40,11 @@ export default {
       planetStyles: [
         { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
         { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
-        { id: 3, name: '중립행성', img: "neutral.png", color: '#ABBECA' },
+        { id: 3, name: '심심행성', img: "neutral.png", color: '#ABBECA' },
         { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
         { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
         { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
+        { id: 7, name: '떠돌이행성', img: "spaceship.png", color: '#FCBB74' },
       ],
       isActive: false
     }

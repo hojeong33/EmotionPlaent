@@ -70,7 +70,7 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    padding-left: 1rem;
+    padding-left: 0.5rem;
     padding-right: 2rem;
   }
 
