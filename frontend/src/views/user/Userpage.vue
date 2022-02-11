@@ -2,23 +2,26 @@
   <section id="mypage-container">
     <side-profile-card :user-info="userInfo" />
     <article id="profile-container">
-      <img id="profile-img"  :src="this.$store.state.userInfo.profileImg">
+      <img id="profile-img"  :src="$store.state.searchUserInfo.profileImg">
       <div id="profile-card">
         <div id="name-card">
-          <h1>{{ this.$store.state.userInfo.nickname }}</h1>
-          <button @click="$router.push({name: 'Setting'})">프로필 수정</button>
+          <h1>{{ this.$store.state.searchUserInfo.nickname }}</h1>
+          <button v-if="$store.state.searchUserFollowInfo.followcheck == 0" id="follow"
+          @click="follow">팔로우 하기</button>
+          <button v-if="$store.state.searchUserFollowInfo.followcheck == 1" id="unfollow"
+          @click="unfollow">언팔로우</button>
         </div>
         <div id="info-card">
-          <h3>이야기 {{ userInfo.posts }}</h3>
-          <h3>팔로우 {{ this.$store.state.userFollowInfo.userFollow.length }}</h3>
-          <h3>팔로잉 {{ this.$store.state.userFollowInfo.userFollowing.length }}</h3>
+          <h3>이야기 0개</h3>
+          <h3>팔로우 {{ this.$store.state.searchUserFollowInfo.userFollow.length }}</h3>
+          <h3>팔로잉 {{ this.$store.state.searchUserFollowInfo.userFollowing.length }}</h3>
         </div>
       </div>
     </article>
     <article id="tab">
-      <span id="dot1" :class="myPageTab == 'feed' ? 'slide-out':'slide-in'" />
-      <p @click="changeTab('feed')" :class="myPageTab == 'feed' ? 'activate': ''">이야기</p>
-      <p @click="changeTab('pick')" :class="myPageTab == 'pick' ? 'activate': ''">찜 목록</p>
+      <span id="dot1" :class="userPageTab == 'feed' ? 'slide-out':'slide-in'" />
+      <p @click="changeTab('feed')" :class="userPageTab == 'feed' ? 'activate': ''">이야기</p>
+      <p @click="changeTab('pick')" :class="userPageTab == 'pick' ? 'activate': ''">찜 목록</p>
     </article>
     <article id="list-container">
       <router-view/>
@@ -30,7 +33,7 @@
 import SideProfileCard from '@/components/SideProfileCard.vue'
 
 export default {
-  name: 'Mypage',
+  name: 'Userpage',
   components: {SideProfileCard},
   data() {
     return {
@@ -39,22 +42,30 @@ export default {
       mood: 3,
       posts: 0,
       },
-      myPageTab: 'feed',
+      userPageTab: 'feed',
       filter: 0
     }
   },
   methods: {
     changeTab(tap){
-      this.myPageTab = tap
-      this.$router.push({ path: `/mypage/${tap}` })
-    }
+      this.userPageTab = tap
+      this.$router.push({ path: `/userpage/${tap}` })
+    },
+    follow() {
+      this.$store.dispatch('sendfollow')
+    },
+    unfollow() {
+      this.$store.dispatch('deletefollow')
+    },
   },
   created(){
     window.addEventListener('load', () => {
       if (this.$route.params.tap != 'feed'){
-        this.myPageTab = 'pick'
+        this.userPageTab = 'pick'
       }
     })
+
+    console.log(this.$store.state.searchUserFollowInfo.followcheck)
   }
 }
 </script>
@@ -96,7 +107,31 @@ export default {
     color: white;
     font-size: 1rem;
     font-weight: bold;
+    border-radius: 20px;
+    padding: 0.41rem 0.45rem;
+    margin-bottom: 0.7rem;
+    cursor: pointer;
+    line-height: 1rem;
+  }
+  
+  #follow {
+    background-color: #5E39B3;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
     border: 1px #5E39B3 solid;
+    border-radius: 20px;
+    padding: 0.41rem 0.45rem;
+    margin-bottom: 0.7rem;
+    cursor: pointer;
+    line-height: 1rem;
+  }
+
+  #unfollow {
+    background-color: slategray;
+    color: white;
+    font-size: 1rem;
+    font-weight: bold;
     border-radius: 20px;
     padding: 0.41rem 0.45rem;
     margin-bottom: 0.7rem;

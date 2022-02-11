@@ -37,14 +37,17 @@
     <update id="update" parameterType="com.ssafy.project.EmotionPlanet.Dto.FeedDto">
         update feed
             set descr = #{descr}
-            author = #{author}
-            date = #{date}
         where no = #{no}
     </update>
     
     <delete id="delete" parameterType="int">
         delete from feed where no = #{no}
     </delete>
+
+    <insert id="connect" parameterType="map">
+        insert into feed_img(feedNo, imgNo)
+        values (  #{feedNo}, #{imgNo} )
+    </insert>
 
     <insert id="like" parameterType="map">
         insert into feed_like(feedNo, userNo)
