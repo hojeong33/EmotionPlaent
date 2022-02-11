@@ -2,11 +2,11 @@
   <div id="feed">
     <div id="header">
       <section id="profile_image">
-        <img :src="post.userImage" />
+        <img :src="feed.userImage" />
       </section>
       <div id="profile_content">
-        <section id="username">{{post.username}}</section>
-        <section>{{post.date}}</section>
+        <section id="username">{{feed.username}}</section>
+        <section>{{feed.date}}</section>
       </div>
       <!-- <div id="setting">
         <i class="fas fa-ellipsis-v"></i>
@@ -16,22 +16,22 @@
       </div>
     </div>
     <div id="post_image">
-      <img :src="post.postImage" alt="">
-      <p class="overlay_content" >{{post.username}}님은 {{post.planet}} <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p>
+      <img :src="feed.postImage" alt="">
+      <p class="overlay_content" >{{feed.username}}님은 {{feed.planet}} <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p>
     </div>
     <div id="like">
       <div id="heart">
-        <i class="far fa-heart fa-lg" :class="{'fas': this.post.hasBeenLiked}" @click="like"></i>
+        <i class="far fa-heart fa-lg" :class="{'fas': this.feed.hasBeenLiked}" @click="like"></i>
       </div>
-      <p class="likes" >{{post.likes}} likes</p>
+      <p class="likes" >{{feed.likes}} likes</p>
     </div>
     <div id="content">
       <div id="tag">
-        <p id="my_tag" v-for="tag in post.tag" :key="tag">#{{tag}}</p>
+        <p id="my_tag" v-for="tag in feed.tag" :key="tag">#{{tag}}</p>
       </div> 
-        <p id="caption">{{post.caption}}</p>
+        <p id="caption">{{feed.caption}}</p>
     </div>
-    <comment-list :comments="post.comments"></comment-list>
+    <comment-list :comments="feed.comments"></comment-list>
   </div>
 </template>
 
@@ -42,7 +42,7 @@ export default {
   components: { CommentList, },
   name: "Feed",
   props: {
-    post: Object,
+    feed: Object,
     comments:Array
   },
   data(){
@@ -59,15 +59,15 @@ export default {
   },
    computed: {
     tmp: function () {
-      const name = this.post.planet
+      const name = this.feed.planet
       const style = this.planetStyles.find(el => el.name === name) || {}
       return style
     }
   },
   methods: {
     like() {
-      this.post.hasBeenLiked ? this.post.likes-- : this.post.likes++;
-      this.post.hasBeenLiked = !this.post.hasBeenLiked;
+      this.feed.hasBeenLiked ? this.feed.likes-- : this.feed.likes++;
+      this.feed.hasBeenLiked = !this.feed.hasBeenLiked;
     },
     onUserFeedSetting:function(){
       this.$store.commit('userFeedSettingModalActivate')

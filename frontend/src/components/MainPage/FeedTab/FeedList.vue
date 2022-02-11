@@ -6,14 +6,14 @@
       <button @click="showOption = 'card'" :class="showOption == 'card' ? 'c-active':'c' " />
     </div>
     <div v-if="showOption == 'grid'" id="grid-container">
-      <feed-small v-for="post in posts"
-        :post="post"
-        :key="posts.indexOf(post)" />
+      <feed-small v-for="feed in feeds"
+        :post="feed"
+        :key="feeds.indexOf(feed)" />
     </div>
     <div v-if="showOption == 'card'" id="card-container">
-      <feed v-for="post in posts"
-        :post="post"
-        :key="posts.indexOf(post)" />
+      <feed v-for="feed in feeds"
+        :feed="feed"
+        :key="feeds.indexOf(feed)" />
     </div>
   </div>
 </template>
@@ -30,7 +30,7 @@ export default {
     }
   },
   props: {
-    posts: Array,
+    feeds: Array,
   },
   components: {
     Feed,

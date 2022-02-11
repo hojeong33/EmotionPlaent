@@ -2,27 +2,27 @@
   <div id="search-result-container">
     <div id="search-taps">
       <p @click="searchTab = 'feed'" :class="{ 'active':searchTab == 'feed' }">피드</p>
-      <p @click="searchTab = 'recommend'" :class="{ 'active':searchTab == 'recommend' }">정보</p>
+      <p @click="searchTab = 'pick'" :class="{ 'active':searchTab == 'pick' }">찜 목록</p>
     </div>
-    <search-result-rcd v-if="searchTab=='recommend'" />
-    <feed-list v-if="searchTab=='feed'" :posts="posts" />
+    <pick-list v-if="searchTab=='pick'" />
+    <feed-list v-if="searchTab=='feed'" :feeds="feeds" />
   </div>
 </template>
 
 <script>
-import SearchResultRcd from '@/components/Search/SearchResultRcd'
+import PickList from '@/components/user/PickList'
 import FeedList from '@/components/MainPage/FeedTab/FeedList'
-import posts from '../../assets/data/posts.js'
+import feeds from '../../assets/data/posts.js'
 
 export default {
   data(){
     return {
-      posts,
+      feeds,
       searchTab: 'feed'
     }
   },
   components: {
-    SearchResultRcd,
+    PickList,
     FeedList
   }
 }

@@ -3,7 +3,8 @@
 		<filter-tab :user-mood="userMood" @filtering="filtering" />
 
 		<div id="feed-container" v-if="tap == 'feed'"> 
-			<feed-item v-for="(feed, idx) in filteredFeeds" :key="idx" :feed="feed" />
+			<!-- <feed-item v-for="(feed, idx) in filteredFeeds" :key="idx" :feed="feed" /> -->
+			<feed-list :feeds="filteredFeeds"/>
 		</div>
 
 		<div id="pick-container" v-if="tap == 'pick'">
@@ -29,7 +30,8 @@
 
 <script>
 import FilterTab from '@/components/user/FilterTab'
-import FeedItem from '@/components/user/FeedItem'
+// import FeedItem from '@/components/user/FeedItem'
+import FeedList from '@/components/MainPage/FeedTab/FeedList'
 import PickList from '@/components/user/PickList'
 import feedData from '@/assets/data/userFeed'
 import pickData from '../../assets/data/pickData'
@@ -59,7 +61,7 @@ export default {
 	},
 	components: {
 		FilterTab,
-		FeedItem,
+		FeedList,
 		PickList
 	},
 	methods: {
@@ -121,12 +123,12 @@ export default {
 	}
 
 	#feed-container {
-		width: 80%;
-		display: grid;
+		width: 100%;
+		/* display: grid;
 		grid-template-columns: 1fr 1fr 1fr 1fr;
 		grid-auto-flow: row;
 		justify-content: center;
-		gap: 1rem;
+		gap: 1rem; */
 	}
 
 	#pick-container {

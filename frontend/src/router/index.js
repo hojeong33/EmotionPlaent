@@ -211,7 +211,7 @@ function backgroundSet(payload){
     body.removeAttribute('class')
   }
   return new Promise((resolve) => {
-    console.log('background update!!', payload)
+    console.log('background update!!')
     resolve()
   })
 }
@@ -228,19 +228,17 @@ router.beforeEach((to, from, next) => {
   console.log(to)
   // 라우터 이동 시 토큰이 필요함
   token = window.sessionStorage.getItem('at-jwt-access-token');
-  console.log(token)
   //지정되지 않은 라우트로 이동할 경우 메인으로 redirect
   if (!to.matched.length){
     console.log('do not matched!!')
     next({ name:'Main' })
   }
 
-  if (to.name == 'Signup' || to.name == 'Login' || to.name == 'EmotionTest'){
+  if (!to.meta.loginRequired || !to.meta.testRequired){
     backgroundSet(true).then(() => next())
   }
   else {
     console.log('why did you call me?')
-    console.log(to)
     backgroundSet(false).then(() => next())
   }
 

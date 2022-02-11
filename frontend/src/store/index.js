@@ -11,10 +11,7 @@ import SockJS from "sockjs-client";
 
 export default new Vuex.Store({
   state: {
-<<<<<<< HEAD
-=======
     // feedActive: false,
->>>>>>> e9889591381e70e1656f14a3a9dffb200679e884
     //검색부분
     words: null,
     tagSearch: [],

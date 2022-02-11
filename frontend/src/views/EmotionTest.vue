@@ -166,13 +166,9 @@
             }).then(res => {
               console.log("여기는 데이터 수정하는 부분")
               console.log(res)
-<<<<<<< HEAD
-              this.userUpdate(res)
-=======
               this.$store.dispatch('allTokenRefreshOnUserInfo', res)
               this.$store.commit('emotionTestResultModalActivate')
              
->>>>>>> e9889591381e70e1656f14a3a9dffb200679e884
             }).catch(err => {
               console.log('user/update')
               console.log(err)
@@ -187,9 +183,6 @@
         }
       },
       go_to_back: function(){
-<<<<<<< HEAD
-        this.$router.go(-1)
-=======
         this.$store.commit('userUpdate', 0)
         let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
@@ -210,8 +203,7 @@
         }).catch(err => {
           console.log(err)
         })
-        this.$router.push({ name: 'Main' })
->>>>>>> e9889591381e70e1656f14a3a9dffb200679e884
+        this.$router.go(-1)
       },
     },
     computed: {
