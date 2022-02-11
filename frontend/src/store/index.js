@@ -104,7 +104,7 @@ export default new Vuex.Store({
       
       else if(typeof(payload) == 'number'){ // 감테하고 넘길때
         userdata.userInfo.mood = payload
-        session.setItem('userInfo', JSON.stringify(userdata))
+        session.setItem('userInfo', JSON.stringify(userdata.userInfo))
       } 
       
       else if (session.getItem('userInfo')){
