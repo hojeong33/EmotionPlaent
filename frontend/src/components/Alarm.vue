@@ -69,6 +69,8 @@ export default {
     cancel() {
       this.$emit('cancelAlarm')
       this.$store.state.alarm = []
+      this.$store.dispatch('readAlarm', this.$store.state.userInfo.no)
+     
     },
     follow(el) {
       console.log(el)

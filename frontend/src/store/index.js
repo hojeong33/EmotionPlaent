@@ -238,6 +238,28 @@ export default new Vuex.Store({
   },
   actions: {
 
+      //알림 읽기 + 7일 이후 읽은 알림 삭제
+      readAlarm(state, el){
+          let headers = {
+            'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+            'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+          };
+          axios({
+            method: 'get',
+            url: 'http://13.125.47.126:8080/alarm/read/'+ el,
+            headers: headers,  // 넣는거 까먹지 마세요
+          }).then((res) => {
+           
+            console.log("알림 읽기 성공")
+            console.log(res.data)
+            this.state.searchUserInfo = res.data
+            this.dispatch('accessTokenRefresh', res) // store에서
+          }).catch((error) => {
+            console.log('알림 읽기 실패');
+            console.log(error)
+          })
+        },
+
      // 여기는 알림 시작 --------------------------------------------------------
      follow(state, el) { //팔로우 알림 보내는 부분
       console.log("팔로우 알림");
@@ -332,7 +354,7 @@ export default new Vuex.Store({
             console.log("알림 타입 " + obj.type)
             console.log("알림 내용 " + obj.message)
             // alert(obj.message)
-            this.state.alarm.push(obj);
+            this.state.alarm.unshift(obj);
             console.log("---------------------------------")
             this.state.alarmcheck++; // 이거 실시간 알람오는거 증가시켜서 알림보여주기 알림보면 0으로 초기화?
             console.log(this.state.alarmcheck)
@@ -342,6 +364,23 @@ export default new Vuex.Store({
           // 소켓 연결 실패
           console.log("소켓 연결 실패", error);
           this.connected = false;
+          this.state.socketcount++
+          if(this.state.socketcount > 10){
+            const authInst = window.gapi.auth2.getAuthInstance();
+            console.log('signout called', authInst)
+            authInst.signOut()
+            .then(() => {
+              // eslint-disable-next-line
+              console.log('User Signed Out!!!');
+              authInst.disconnect();
+              session.clear();
+            })
+            .then(() => {
+              window.location.reload()
+            })
+            .catch(() => alert('fail'))
+            alert("서버 문제 발생")
+          }
           this.dispatch('connect'); // 소켓 재연결 시도
         }
       );
