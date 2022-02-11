@@ -82,7 +82,8 @@ export default {
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
       const formData = new FormData();
-      this.Feedimages.forEach((file) => formData.append("file", file));
+      this.Feedimages.forEach((file) => formData.append("files", file.image));
+      
       formData.append(
         "userInfo",
         new Blob([JSON.stringify(this.feedData)], { type: "application/json" })
