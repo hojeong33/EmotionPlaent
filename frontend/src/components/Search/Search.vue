@@ -2,9 +2,9 @@
   <div id="search_body">
     <section id="search_header">
       <div id="tabs">
-        <p @click="toggleTag" :class="onTag ? 'active': 'inactive'">이야기</p>
-        <p @click="toggleUser" :class="onUser ? 'active': 'inactive'">여행자</p>
-        <p @click="togglePick" :class="onPick ? 'active': 'inactive'">보물상자</p>
+        <p @mousedown="toggleTag" :class="onTag ? 'active': 'inactive'">이야기</p>
+        <p @mousedown="toggleUser" :class="onUser ? 'active': 'inactive'">여행자</p>
+        <p @mousedown="togglePick" :class="onPick ? 'active': 'inactive'">보물상자</p>
       </div>
     </section>
     <section id="search_content">
@@ -66,7 +66,7 @@ export default {
   }
 
   #search_header {
-    z-index: 10;
+    z-index: 22;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -76,9 +76,9 @@ export default {
     height: 10%;
     min-height: 55px;
     border-radius: 10px 10px 0 0;
-    border-top: 0.2rem solid gainsboro;
-    border-left: 0.2rem solid gainsboro;
-    border-right: 0.2rem solid gainsboro;
+    border-top: 0.15rem solid gainsboro;
+    border-left: 0.15rem solid gainsboro;
+    border-right: 0.15rem solid gainsboro;
   }
   
   #search_content {
@@ -89,7 +89,7 @@ export default {
     min-width: 300px;
     height: 80%;
     min-height: 300px;
-    border: 0.2rem solid gainsboro;
+    border: 0.15rem solid gainsboro;
   }
   
   #search_footer {
@@ -100,9 +100,9 @@ export default {
     min-width: 300px;
     height: 10%;
     min-height: 60px;
-    border-bottom: 0.2rem solid gainsboro;
-    border-left: 0.2rem solid gainsboro;
-    border-right: 0.2rem solid gainsboro;
+    border-bottom: 0.15rem solid gainsboro;
+    border-left: 0.15rem solid gainsboro;
+    border-right: 0.15rem solid gainsboro;
     border-radius: 0 0 10px 10px;
   }
 
@@ -142,6 +142,7 @@ export default {
   }
 
   #tabs {
+    z-index: inherit;
     width: 100%;
     display: flex;
     justify-content: space-evenly;

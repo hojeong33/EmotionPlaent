@@ -37,6 +37,11 @@ export default {
 </script>
 
 <style scoped>
+  h3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin: 0;
+  }
   #container {
     width: 100%;
     background-color: white;
@@ -54,7 +59,7 @@ export default {
 
   #result {
     display: flex;
-    width: 90%;
+    width: 85%;
     align-items: center;
     padding-left: 1rem;
     margin: 1rem 1rem;
@@ -94,12 +99,12 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding-top: 8vh;
+    padding-top: 11.5vh;
   }
 
   #nothing {
-    width: 6vh;
-    height: 6vh;
+    width: 4vh;
+    height: 4vh;
     margin-bottom: 2vh;
   }
 </style>

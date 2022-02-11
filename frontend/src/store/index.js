@@ -238,128 +238,17 @@ export default new Vuex.Store({
   },
   actions: {
 
-    //팔로우 삭제
-    deletefollow() {
-      let headers = {
-          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-      let data = {
-        sender : this.state.userInfo.no,
-        receiver : this.state.searchUserNo,
-      };
-      axios({
-          method: 'delete',
-          url: 'http://13.125.47.126:8080/follows',
-          data: data, // post 나 put에 데이터 넣어 줄때
-          headers: headers,  // 넣는거 까먹지 마세요
-        }).then((res) => {
-        console.log("언팔로우 성공")
-        this.state.searchUserFollowInfo.followcheck = 0
-        this.dispatch('accessTokenRefresh', res) // store에서
-        }).catch((error) => {
-          console.log("언팔로우 실패")
-          console.log(error);
-        }).then(() => {
-          console.log('getQSSList End!!');
-        });
-      },
-
-    //팔로우 신청
-    sendfollow() {
-      let headers = {
-          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-      let data = {
-        sender : this.state.userInfo.no,
-        receiver : this.state.searchUserNo,
-      };
-      axios({
-          method: 'post',
-          url: 'http://13.125.47.126:8080/follows',
-          data: data, // post 나 put에 데이터 넣어 줄때
-          headers: headers,  // 넣는거 까먹지 마세요
-        }).then((res) => {
-        console.log("팔로우 성공")
-        this.state.searchUserFollowInfo.followcheck = 1
-        this.dispatch('accessTokenRefresh', res) // store에서
-        }).catch((error) => {
-          console.log("팔로우 실패")
-          console.log(error);
-        }).then(() => {
-          console.log('getQSSList End!!');
-        });
-      },
-
-    // 여기는 회원 번호로 회원의 정보를 가져오는 부분입니다.
-    userSelect() {
-      let headers = {
-          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        };
-        axios({
-          method: 'get',
-          url: 'http://13.125.47.126:8080/users/'+ this.state.searchUserNo,
-          headers: headers,  // 넣는거 까먹지 마세요
-        }).then((res) => {
-         
-          console.log("유저 정보 갱신 성공")
-          console.log(res.data)
-          this.state.searchUserInfo = res.data
-          this.dispatch('accessTokenRefresh', res) // store에서
-        }).catch((error) => {
-          console.log(error);
-        }).then(() => {
-          console.log('getQSSList End!!');
-        });
-      },
-
-    // 마이페이지 or 유저 페이지 정보 가져온느 부분 입니다.
-    userfollowdate(state, el) {
-      let headers = {
-          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        };
-        axios({
-          method: 'get',
-          url: 'http://13.125.47.126:8080/follows/'+this.state.userInfo.no+"/"+el,
-          headers: headers,  // 넣는거 까먹지 마세요
-        }).then((res) => {
-          if(this.state.userInfo.no === el){
-            console.log("나의 갱신 성공")
-            console.log(res.data)
-            this.state.userFollowInfo.userFollow = res.data.follower
-            this.state.userFollowInfo.userFollowing = res.data.following
-            console.log(this.state.userFollowInfo.userFollow.length)
-            console.log(this.state.userFollowInfo.userFollowing.length)
-          }else{
-            console.log("유저 갱신 성공")
-            console.log(res.data)
-            this.state.searchUserFollowInfo.userFollow = res.data.follower
-            this.state.searchUserFollowInfo.userFollowing = res.data.following
-            this.state.searchUserFollowInfo.followcheck = res.data.followResult
-            this.state.searchUserFollowInfo.waiting = res.data.waition
-          }
-          this.dispatch('accessTokenRefresh', res) // store에서
-        }).catch((error) => {
-          console.log(error);
-        }).then(() => {
-          console.log('getQSSList End!!');
-        });
-      },
-
-    // 여기는 알림 시작 --------------------------------------------------------
-    follow() { //팔로우 알림 보내는 부분
+     // 여기는 알림 시작 --------------------------------------------------------
+     follow(state, el) { //팔로우 알림 보내는 부분
       console.log("팔로우 알림");
       if (this.stompClient && this.stompClient.connected) {
         const msg = {
           sender: this.state.userInfo.no,
-          receiver: this.state.lookuser,
+          receiver: el,
           type: 1, 
         };
         this.stompClient.send(
-          "/alarm/send/" + this.state.lookuser,
+          "/alarm/send/" + el,
           JSON.stringify(msg),
           {}
         );
@@ -442,7 +331,8 @@ export default new Vuex.Store({
             console.log("알림 날짜 " + obj.date)
             console.log("알림 타입 " + obj.type)
             console.log("알림 내용 " + obj.message)
-            alert(obj.message)
+            // alert(obj.message)
+            this.state.alarm.push(obj);
             console.log("---------------------------------")
             this.state.alarmcheck++; // 이거 실시간 알람오는거 증가시켜서 알림보여주기 알림보면 0으로 초기화?
             console.log(this.state.alarmcheck)
@@ -467,6 +357,7 @@ export default new Vuex.Store({
         this.dispatch('accessTokenRefresh', res)
         console.log('알림 가져오기 성공')
         console.log(res.data)
+        this.state.alarm = res.data
       })
       .catch(err=> {
         console.log('알림 가져오기 실패')
@@ -490,6 +381,119 @@ export default new Vuex.Store({
       })
     },
     // 여기는 알림 끝 -----------------------------------------------------
+
+
+
+    //팔로우 삭제
+    deletefollow(state, el) {
+      let headers = {
+          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+      let data = {
+        sender : this.state.userInfo.no,
+        receiver : el,
+      };
+      axios({
+          method: 'delete',
+          url: 'http://13.125.47.126:8080/follows',
+          data: data, // post 나 put에 데이터 넣어 줄때
+          headers: headers,  // 넣는거 까먹지 마세요
+        }).then((res) => {
+        console.log("언팔로우 성공")
+        this.state.searchUserFollowInfo.followcheck = 0
+        this.dispatch('accessTokenRefresh', res) // store에서
+        }).catch((error) => {
+          console.log("언팔로우 실패")
+          console.log(error);
+        }).then(() => {
+          console.log('getQSSList End!!');
+        });
+      },
+
+    //팔로우 신청
+    sendfollow(state, el) {
+      let headers = {
+          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+      let data = {
+        sender : this.state.userInfo.no,
+        receiver : el,
+      };
+      axios({
+          method: 'post',
+          url: 'http://13.125.47.126:8080/follows',
+          data: data, // post 나 put에 데이터 넣어 줄때
+          headers: headers,  // 넣는거 까먹지 마세요
+        }).then((res) => {
+        console.log("팔로우 성공")
+        this.state.searchUserFollowInfo.followcheck = 1
+        this.dispatch('accessTokenRefresh', res) // store에서
+        this.dispatch('follow',el)
+        }).catch((error) => {
+          console.log("팔로우 실패")
+          console.log(error);
+        }).then(() => {
+          console.log('getQSSList End!!');
+        });
+      },
+
+    // 여기는 회원 번호로 회원의 정보를 가져오는 부분입니다.
+    userSelect(state, el) {
+      let headers = {
+          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+        axios({
+          method: 'get',
+          url: 'http://13.125.47.126:8080/users/'+ el,
+          headers: headers,  // 넣는거 까먹지 마세요
+        }).then((res) => {
+          console.log("유저 정보 갱신 성공")
+          console.log(res.data)
+          this.state.searchUserInfo = res.data
+          this.dispatch('accessTokenRefresh', res) // store에서
+        }).catch((error) => {
+          console.log(error);
+        }).then(() => {
+          console.log('getQSSList End!!');
+        });
+      },
+
+    // 마이페이지 or 유저 페이지 정보 가져온느 부분 입니다.
+    userfollowdate(state, el) {
+      let headers = {
+          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+        axios({
+          method: 'get',
+          url: 'http://13.125.47.126:8080/follows/'+this.state.userInfo.no+"/"+el,
+          headers: headers,  // 넣는거 까먹지 마세요
+        }).then((res) => {
+          if(this.state.userInfo.no === el){
+            console.log("나의 갱신 성공")
+            console.log(res.data)
+            this.state.userFollowInfo.userFollow = res.data.follower
+            this.state.userFollowInfo.userFollowing = res.data.following
+            console.log(this.state.userFollowInfo.userFollow.length)
+            console.log(this.state.userFollowInfo.userFollowing.length)
+          }else{
+            console.log("유저 갱신 성공")
+            console.log(res.data)
+            this.state.searchUserFollowInfo.userFollow = res.data.follower
+            this.state.searchUserFollowInfo.userFollowing = res.data.following
+            this.state.searchUserFollowInfo.followcheck = res.data.followResult
+            this.state.searchUserFollowInfo.waiting = res.data.waition
+          }
+          this.dispatch('accessTokenRefresh', res) // store에서
+        }).catch((error) => {
+          console.log(error);
+        }).then(() => {
+          console.log('getQSSList End!!');
+        });
+      },
 
 
     //여기 검색부분입니다
