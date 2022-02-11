@@ -11,4 +11,6 @@ public interface AlarmDao {
 	public int insertAlram(AlarmDto alarmDto);
 	public List<AlarmDto> selectAlram(int no);
 	public int deleteAlram(int no);
+	public int deleteAlramWeek(int receiver);
+	public int updatereadAlram(int receiver);
 }
