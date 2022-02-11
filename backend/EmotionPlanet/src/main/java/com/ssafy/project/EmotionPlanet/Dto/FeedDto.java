@@ -1,5 +1,7 @@
 package com.ssafy.project.EmotionPlanet.Dto;
 
+import org.springframework.web.multipart.MultipartFile;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -14,11 +16,20 @@ public class FeedDto {
     private List<CommentDto> comments;
     private List<LikeDto> likes;
     private List<ImgDto> imgs;
+    private List<MultipartFile> multipartFile;
 
     private UserRequestDto authorDetail;
     private boolean like = false;
     private boolean owner = false;
 
+
+    public List<MultipartFile> getMultipartFile() {
+        return multipartFile;
+    }
+
+    public void setMultipartFile(List<MultipartFile> multipartFile) {
+        this.multipartFile = multipartFile;
+    }
 
     public int getNo() {
         return no;

@@ -172,7 +172,7 @@ export default {
       console.log('headers : ', headers);
     }
   },
-
+  
   trans() {
     let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),

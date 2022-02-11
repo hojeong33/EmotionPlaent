@@ -103,7 +103,7 @@
           if (this.selected.length >= 2){
             axios({
               method: 'post',
-              url: 'http://13.125.47.126:8080/detailtest',
+              url: 'http://localhost:8080/detailtest',
               data: this.selected,
               headers: headers,
             }).then((res) => {
@@ -131,7 +131,7 @@
         else {
           axios({
               method: 'post',
-              url: 'http://13.125.47.126:8080/resulttest',
+              url: 'http://localhost:8080/resulttest',
               data: this.selected,
               headers: headers,
             }).then(res => {
@@ -143,13 +143,16 @@
             this.$store.commit('userUpdate', res.data.no)
             
             const userdata = JSON.parse(session.getItem('userInfo')) 
+            console.log('userdate===')
             console.log(userdata) // 무드번호만 나옴......
+            console.log(userdata.no)
+
 
             console.log("여기는 에러 직전")
             const body = { no: userdata.no, mood: res.data.no }
             axios({
               method: 'put',
-              url: 'http://13.125.47.126:8080/users/update',
+              url: 'http://localhost:8080/users/update',
               data: body,
               headers: headers,
             }).then(res => {
@@ -159,6 +162,7 @@
               this.$store.commit('emotionTestResultModalActivate')
              
             }).catch(err => {
+              console.log('user/update')
               console.log(err)
             })
           })
@@ -212,7 +216,7 @@
       'at-jwt-access-token': session.getItem('at-jwt-access-token'),
       'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
-			axios.get('http://13.125.47.126:8080/test', {
+			axios.get('http://localhost:8080/test', {
           headers: headers,
         }).then((res) => {
           this.keywords = res.data
