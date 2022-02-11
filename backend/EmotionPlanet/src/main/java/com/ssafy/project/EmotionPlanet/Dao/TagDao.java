@@ -20,4 +20,8 @@ public interface TagDao {
     public int relation(
             @Param("tagNo") int tagNo,
             @Param("feedNo") int feedNo);
+
+    public int deleteRelation(
+            @Param("tagNo") int tagNo,
+            @Param("feedNo") int feedNo);
 }

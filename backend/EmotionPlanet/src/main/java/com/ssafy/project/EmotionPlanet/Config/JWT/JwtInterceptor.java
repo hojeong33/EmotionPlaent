@@ -1,6 +1,7 @@
 package com.ssafy.project.EmotionPlanet.Config.JWT;
 
 import com.google.gson.Gson;
+import com.ssafy.project.EmotionPlanet.Dto.TokenDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserRequestDto;
 import com.ssafy.project.EmotionPlanet.Service.UserService;
@@ -30,12 +31,16 @@ public class JwtInterceptor implements HandlerInterceptor {
         String atJwtRefreshToken = request.getHeader("at-jwt-refresh-token");
  
         System.out.println("at-jwt-access-token : " + atJwtToken);
+        System.out.println("at-jwt-refresh-token : " + atJwtRefreshToken);
         System.out.println("request method : " + request.getMethod());
 
         if ("OPTIONS".equals(request.getMethod())) {
             System.out.println("request method is OPTIONS!!");
             return true;
         }
+
+//        if("http://localhost:8080/users".equals(request.getRequestURI()) && "PUT".equals(request.getMethod())){
+//        }
 
         if(atJwtRefreshToken == null) {
             if(atJwtToken != null && atJwtToken.length() > 0) {
@@ -48,23 +53,24 @@ public class JwtInterceptor implements HandlerInterceptor {
             System.out.println("check : pass" );
             if(jwtService.validate(atJwtRefreshToken)) {
                 String accessTokenDecode = jwtService.decode(atJwtToken);
+                System.out.println("accessDto : " + accessTokenDecode);
                 Gson gson = new Gson();
                 UserRequestDto jwtPayload = gson.fromJson(accessTokenDecode, UserRequestDto.class);
 
                 String refreshTokenInDBMS = userService.selectRefreshToken(jwtPayload.getUserInfo().getEmail());
 
                 if(refreshTokenInDBMS.equals(atJwtRefreshToken)) {
-                    // 3. recreate access token
-                    // ???
                     System.out.println("일치합니다!!!");
-                    String accessJws = jwtService.createJws(30, jwtPayload.getUserInfo());
+                   // String accessJws = jwtService.createJws(30, jwtPayload.getUserInfo());
+                    String accessJws = jwtService.createAccess(jwtPayload.getUserInfo().getEmail());
                     response.addHeader("at-jwt-access-token", accessJws);
+
                 }else {
-                    throw new IllegalArgumentException("Refresh Token Error!!!");
+                    throw new IllegalArgumentException("Refresh Token Error!!! ND");
                 }
                 return true;
             }else {
-                throw new IllegalArgumentException("Refresh Token Error!!!");
+                throw new IllegalArgumentException("Refresh Token Error!!! NN");
             }
         }
 

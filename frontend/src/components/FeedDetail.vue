@@ -1,10 +1,20 @@
 <template>
 	<div id="feed_detail">
-		<img id="feedImg" :src="`${postImage}`" alt="">
+		<div id="img_box">
+			<img id="feedImg" :src="`${postImage}`" alt="">
+			<p class="overlay_content" >조은누리님은 행복행성 <img id="planet_img" :src="require('@/assets/images/emotions/happy.png')" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p>
+		</div>
 		<div id="feed_text">
 			<div id="text_head">
 				<img id="profile_image" :src="`${userImage}`" alt="">
-				<p id="username">{{ username }}</p>
+				<div id="profile_info">
+					<p id="username">{{ username }}</p>
+					<p id="upload_date">date</p>
+				</div>
+				<div id="setting">
+					<i @click="onUserFeedSetting" class="fas fa-ellipsis-v"></i>
+					<user-feed-setting v-if="isUserFeedSettingOpened" @cancel="isUserFeedSettingOpened=false"></user-feed-setting>
+				</div>
 				<!-- 만약 다른 유저의 피드 디테일이라면 팔로우 버튼이 나타나게 -->
 			</div>
 			<hr>
@@ -22,6 +32,11 @@
 						<img id="profile_image" :src="`${comment.userImage}`" alt="">
 						<p id="username">{{comment.username}}</p>
 						<p id="user_comment">{{comment.comment}}</p>
+						<div id="comment_setting">
+							<i @click="onCommentSetting" class="fas fa-ellipsis-v"></i>
+							<!-- 댓글 하나하나에 유저데이터가 들어가서 해당 유저의 댓글이 지워져야 함-->							
+							<!-- <comment-setting v-if="isCommentSettingOpened" @cancel="isCommentSettingOpened=false"></comment-setting> -->
+						</div>
 					</div>
 				</div>
 			</div>
@@ -37,15 +52,16 @@
 				<p id="like_count">{{ likes }} likes</p>
 			</div>
 			<hr>
-			<div id="comment_create">
-				<input type="text" placeholder="댓글달기...">
-				<!-- <button @click="createComment">작성</button> -->
-			</div>
+			<div id="comment_write">
+        <input id="comment-input" @keyup.enter="createComment" v-model.trim="commentContent" placeholder="댓글을 입력해 주세요."> 
+        <img id="submit" @click="createComment" src="@/assets/images/icons/write.png" alt="" style="width:1.4rem;height:1.4rem;">
+      </div>
 		</div>
 	</div>
 </template>
 
 <script>
+
 
 export default {
 	data: function () {
@@ -75,16 +91,47 @@ export default {
 			planet:"행복행성",
 			// commentContent: null
 			liked: false,
+			commentContent:null,
+			isCommentSettingOpened:false,
+			isUserFeedSettingOpened: false,
 		}
 	},
 	methods: {
-		// createComment: function (input) {
-		// 	let commentContent = 
-		// 	}
-		// }
 		like: function () {
 			this.liked = !this.liked
 			console.log(this.liked)
+		},
+		createComment:function(){
+      const commentItem={
+        comment:this.commentContent,
+        username:'default',
+        userImage:'https://cdn.indiepost.co.kr/uploads/images/2018/12/11/VDbIX3-600x338.png'
+      }
+      if(commentItem.comment){
+        this.comments.push(commentItem)
+        this.commentContent=null
+
+      }
+      else{
+        // alert('내용을 채워주세요')
+		this.$store.commit('commentNeedContentModalActivate')
+      }
+		},
+		onCommentSetting:function(){
+			this.$store.commit('commentSettingModalActivate')
+			// if(this.isCommentSettingOpened){
+			// 	this.isCommentSettingOpened=false
+			// }else{
+			// 	this.isCommentSettingOpened=true
+			// }
+		},
+		onUserFeedSetting:function(){
+			this.$store.commit('userFeedSettingModalActivate')
+			// if(this.isUserFeedSettingOpened){
+			// 	this.isUserFeedSettingOpened=false
+			// }else{
+			// 	this.isUserFeedSettingOpened=true
+			// }
 		}
 	}
 }
@@ -100,15 +147,18 @@ export default {
 	margin-left: auto;
 	margin-right: auto;
 	margin-top:5vh;
-	border: 2px purple;
+	border: 3px solid rgb(94, 57, 179);
 	border-style: solid;
 	border-radius: 10px;
 }
 #feedImg{
-	width: 79.8vh;
-	height: 79.8vh;
-	border: 0.5px;
-	border-style: solid;
+	position: relative;
+	width: 79.55vh;
+	height: 79.55vh;
+	border-right: 1.5px solid;
+	border-left: none;
+	border-top: none;
+	border-bottom: none;
 	border-radius: 10px;
 }
 #feed_text {
@@ -121,20 +171,32 @@ export default {
 	flex-direction: row;
 	justify-content: left;
 	align-items: center;
-	height: 5vh;
-	margin-left: 0.4rem;
+	height: 8vh;
+	margin-left: 1rem;
 }
 #profile_image {
-	width: 3vh;
-	height: 3vh;
-	border-radius: 20px;
-	margin-right:0.4rem;
+	width: 5vh;
+	height: 5vh;
+	border-radius: 5vh;
+	margin-right: 0.5rem;
+}
+#profile_info {
+	padding-top:auto;
+	padding-bottom: auto;
 }
 #username {
 	font-weight: bold;
-	margin-top: auto;
-	margin-bottom: auto;
-	margin-right: 0.4rem;
+	margin: 0rem;
+	font-size: 1.2rem;
+}
+#upload_date {
+	text-align: left;
+	font-size: 1rem;
+	margin: 0rem;
+}
+#setting {
+	margin-left:auto;
+	margin-right: 1rem;
 }
 #text_body {
 	height: 65vh;
@@ -145,6 +207,7 @@ export default {
 }
 #caption {
 	font-size: 1rem;
+	text-align: left;
 }
 #tags {
 	display: flex;
@@ -167,6 +230,7 @@ export default {
 #user_comment {
 	margin-top:auto;
 	margin-bottom: auto;
+	margin-left: 0.5rem;
 }
 #likes{
 	display:flex;
@@ -211,5 +275,28 @@ hr{
 	margin-top: auto;
 	margin-bottom:auto;
 }
-
+.overlay_content {
+	position: absolute;
+	background-color: white;
+	border-radius: 10px;
+	top: 88.5vh;
+	margin-left: 0.3rem;
+}
+#comment_write{
+  border:0.2rem solid gainsboro;
+  border-radius: 10px;
+	margin: 0.5rem;
+}
+#comment-input{
+  width: 80%;
+  margin-bottom: 1rem;
+  margin-left:3px;
+  border-style:none;
+  margin-bottom: 0;
+  outline: none;
+}
+#comment_setting {
+	margin-left: auto;
+	margin-right: 1rem;
+}
 </style>

@@ -9,9 +9,19 @@
         </selectKey>
     </insert>
 
-    <delete id="delete" parameterType="String">
-        delete from img where fileName = #{fileName}
+    <delete id="delete" parameterType="string">
+        delete from img where imgName = #{imgName}
     </delete>
+
+    <delete id="deleteByNo" parameterType="int">
+        delete from img where no = #{no}
+    </delete>
+
+    <select id="select" parameterType="string">
+        select no
+        from img
+        where imgName = #{imgName}
+    </select>
     
     <update id="updateimg">
 		update user

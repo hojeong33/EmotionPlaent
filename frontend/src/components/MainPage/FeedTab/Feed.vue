@@ -8,8 +8,11 @@
         <section id="username">{{post.username}}</section>
         <section>{{post.date}}</section>
       </div>
-      <div id="setting">
+      <!-- <div id="setting">
         <i class="fas fa-ellipsis-v"></i>
+      </div> -->
+      <div id="setting">
+        <i @click="onUserFeedSetting" class="fas fa-ellipsis-v"></i>
       </div>
     </div>
     <div id="post_image">
@@ -34,8 +37,9 @@
 
 <script>
 import CommentList from './CommentList.vue';
+
 export default {
-  components: { CommentList },
+  components: { CommentList, },
   name: "Feed",
   props: {
     post: Object,
@@ -50,7 +54,7 @@ export default {
         { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
         { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
         { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
-      ]
+      ],
     }
   },
    computed: {
@@ -64,7 +68,10 @@ export default {
     like() {
       this.post.hasBeenLiked ? this.post.likes-- : this.post.likes++;
       this.post.hasBeenLiked = !this.post.hasBeenLiked;
-    }
+    },
+    onUserFeedSetting:function(){
+      this.$store.commit('userFeedSettingModalActivate')
+		}
   }
 };
 </script>
@@ -144,7 +151,6 @@ export default {
   .overlay_content {
     position: absolute;
     padding: 0rem 1rem;
-    margin-right:16rem;
     background-color: white;
     border-radius: 10px;
   }

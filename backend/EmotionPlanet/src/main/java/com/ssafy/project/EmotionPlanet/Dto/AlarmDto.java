@@ -8,8 +8,10 @@ public class AlarmDto {
 	private int receiver;
 	private int feedno;
 	private int commentno;
+	private int pickno;
 	private String date;
 	private int type;
+	private String message;
 	public int getNo() {
 		return no;
 	}
@@ -52,6 +54,12 @@ public class AlarmDto {
 	public void setCommentno(int commentno) {
 		this.commentno = commentno;
 	}
+	public int getPickno() {
+		return pickno;
+	}
+	public void setPickno(int pickno) {
+		this.pickno = pickno;
+	}
 	public String getDate() {
 		return date;
 	}
@@ -64,9 +72,15 @@ public class AlarmDto {
 	public void setType(int type) {
 		this.type = type;
 	}
+	public String getMessage() {
+		return message;
+	}
+	public void setMessage(String message) {
+		this.message = message;
+	}
 	public AlarmDto() {}
 	public AlarmDto(int no, int sender, String senderNickname, String senderImg, int receiver, int feedno,
-			int commentno, String date, int type) {
+			int commentno, int pickno, String date, int type, String message) {
 		super();
 		this.no = no;
 		this.sender = sender;
@@ -75,13 +89,16 @@ public class AlarmDto {
 		this.receiver = receiver;
 		this.feedno = feedno;
 		this.commentno = commentno;
+		this.pickno = pickno;
 		this.date = date;
 		this.type = type;
+		this.message = message;
 	}
 	@Override
 	public String toString() {
 		return "AlarmDto [no=" + no + ", sender=" + sender + ", senderNickname=" + senderNickname + ", senderImg="
-				+ senderImg + ", receiver=" + receiver + ", feedno=" + feedno + ", commentno=" + commentno + ", date="
-				+ date + ", type=" + type + "]";
+				+ senderImg + ", receiver=" + receiver + ", feedno=" + feedno + ", commentno=" + commentno + ", pickno="
+				+ pickno + ", date=" + date + ", type=" + type + ", message=" + message + "]";
 	}
+	
 }

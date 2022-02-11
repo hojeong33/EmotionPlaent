@@ -16,6 +16,11 @@ public interface PickContentDao {
     public PickContentDto selectOnMovie(int no);
     public PickContentDto selectOnActivity(int no);
 
-    public int delete(int no);
+    public int createOnMusic(PickContentDto pickContentDto);
+    public int createOnMovie(PickContentDto pickContentDto);
+    public int createOnActivity(PickContentDto pickContentDto);
 
+    public int deleteOnMusic(int no);
+    public int deleteOnMovie(int no);
+    public int deleteOnActivity(int no);
 }

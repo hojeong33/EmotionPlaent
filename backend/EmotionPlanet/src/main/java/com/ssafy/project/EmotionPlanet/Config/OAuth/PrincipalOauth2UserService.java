@@ -39,8 +39,7 @@ public class PrincipalOauth2UserService {
     private final NetHttpTransport transport = new NetHttpTransport();
     private final JsonFactory jsonFactory = new GsonFactory();
 
-
-    private final String clientId = "172274534251-rpo5d1a1i23k75l87vrcjiid99413h9a.apps.googleusercontent.com";
+    private final String clientId = "172274534251-7a2a6sthcuviratis75u7gu7utbkdp8d.apps.googleusercontent.com";
 
     public UserDto tokenVerify(String idToken) {
 
@@ -74,7 +73,6 @@ public class PrincipalOauth2UserService {
             boolean emailVerified = Boolean.valueOf(payload.getEmailVerified());
             String name = (String) payload.get("sub");
             String pictureUrl = (String) payload.get("picture");
-            String locale = (String) payload.get("locale");
             String pw = bCryptPasswordEncoder.encode("security");
 
             user.setEmail(email);

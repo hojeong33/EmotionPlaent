@@ -8,27 +8,39 @@ public class UserSecretDto {
     private String birth;
     private String profileImg;
     private String tel;
+    private String intro;
+    private int publish;
     private int mood;
 
-    
-    
-    @Override
-	public String toString() {
-		return "UserSecretDto [no=" + no + ", email=" + email + ", nickname=" + nickname + ", birth=" + birth
-				+ ", profileImg=" + profileImg + ", tel=" + tel + ", mood=" + mood + "]";
-	}
 
-	public UserSecretDto() {
+    @Override
+    public String toString() {
+        return "UserSecretDto{" +
+                "no=" + no +
+                ", email='" + email + '\'' +
+                ", nickname='" + nickname + '\'' +
+                ", birth='" + birth + '\'' +
+                ", profileImg='" + profileImg + '\'' +
+                ", tel='" + tel + '\'' +
+                ", intro='" + intro + '\'' +
+                ", publish='" + publish + '\'' +
+                ", mood=" + mood +
+                '}';
+    }
+
+    public UserSecretDto() {
 
     }
 
-    public UserSecretDto(int no, String email, String nickname, String birth, String profileImg, String tel, int mood) {
+    public UserSecretDto(int no, String email, String nickname, String birth, String profileImg, String tel, String intro, int publish, int mood) {
         this.no = no;
         this.email = email;
         this.nickname = nickname;
         this.birth = birth;
         this.profileImg = profileImg;
         this.tel = tel;
+        this.intro = intro;
+        this.publish = publish;
         this.mood = mood;
     }
 
@@ -87,5 +99,22 @@ public class UserSecretDto {
     public void setMood(int mood) {
         this.mood = mood;
     }
+
+    public String getIntro() {
+        return intro;
+    }
+
+    public void setIntro(String intro) {
+        this.intro = intro;
+    }
+
+    public int getPublish() {
+        return publish;
+    }
+
+    public void setPublish(int publish) {
+        this.publish = publish;
+    }
+
 
 }

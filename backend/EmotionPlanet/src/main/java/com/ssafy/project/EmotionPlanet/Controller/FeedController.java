@@ -5,22 +5,17 @@ import com.ssafy.project.EmotionPlanet.Dto.*;
 import com.ssafy.project.EmotionPlanet.Service.FeedService;
 import com.ssafy.project.EmotionPlanet.Service.ImgService;
 import com.ssafy.project.EmotionPlanet.Service.S3Service;
-import com.ssafy.project.EmotionPlanet.Service.TagService;
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
 
 @CrossOrigin(
         origins = "http://localhost:5500",
@@ -46,24 +41,12 @@ public class FeedController {
     private static final int SUCCESS = 1;
 
     @PostMapping(value ="/feeds") // 글 작성
-    public ResponseEntity<Integer> write(
-            @RequestPart FeedDto feedDto,
-            @RequestPart List<MultipartFile> multipartFile) {
+    public ResponseEntity<Integer> write(@RequestBody FeedDto feedDto) {
 
-        List<Integer> imgNo = new ArrayList<>();
-        if(multipartFile.size() != 0){
-            imgNo = s3Service.uploadFile(multipartFile);
-        }
-
-        List<ImgDto> imgs = new ArrayList<>();
-        for (int no : imgNo) {
-            imgs.add(imgService.select(no));
-        }
-
-        feedDto.setImgs(imgs);
-
+        System.out.println("===========피드 작성====================");
+        System.out.println(feedDto.toString());
         int result = feedService.write(feedDto);
-        if(result == SUCCESS) {
+        if(result != 0) {
             return new ResponseEntity<Integer>(result, HttpStatus.OK);
         }else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "글 양식이 올바르지 않습니다.");
@@ -153,8 +136,23 @@ public class FeedController {
     }
 
     @PutMapping(value ="/feeds") // 글 수정
-    public ResponseEntity<Integer> update(@RequestBody FeedDto feedDto) {
+    public ResponseEntity<Integer> update(
+            @RequestPart(value="userInfo") FeedDto feedDto,
+            @RequestPart(value="multipartFile", required = false) List<MultipartFile> multipartFile) {
+
+        List<Integer> imgNo = new ArrayList<>();
+        if(multipartFile != null){
+            imgNo = s3Service.uploadFile(multipartFile);
+        }
+
+        List<ImgDto> imgs = new ArrayList<>();
+        for (int no : imgNo) {
+            imgs.add(imgService.select(no));
+        }
+
+        feedDto.setImgs(imgs);
         int result = feedService.update(feedDto);
+
         if(result == SUCCESS) {
             return new ResponseEntity<Integer>(result, HttpStatus.OK);
         }else {
@@ -174,9 +172,9 @@ public class FeedController {
     }
 
     @PostMapping(value ="/feeds/like") // 좋아요
-    public ResponseEntity<Integer> like(@RequestBody FeedLikeDto feedLikeDto) {
-        int feedNo = feedLikeDto.getFeedNo();
-        int userNo = feedLikeDto.getUserNo();
+    public ResponseEntity<Integer> like(@RequestBody LikeDto likeDto) {
+        int feedNo = likeDto.getTargetNo();
+        int userNo = likeDto.getUserNo();
 
         int result = feedService.like(userNo, feedNo);
         if(result == SUCCESS) {
@@ -187,9 +185,9 @@ public class FeedController {
     }
 
     @DeleteMapping(value ="/feeds/like") // 좋아요 취소
-    public ResponseEntity<Integer> unlike(@RequestBody FeedLikeDto feedLikeDto) {
-        int feedNo = feedLikeDto.getFeedNo();
-        int userNo = feedLikeDto.getUserNo();
+    public ResponseEntity<Integer> unlike(@RequestBody LikeDto likeDto) {
+        int feedNo = likeDto.getTargetNo();
+        int userNo = likeDto.getUserNo();
 
         int result = feedService.unlike(userNo, feedNo);
         if(result == SUCCESS) {
