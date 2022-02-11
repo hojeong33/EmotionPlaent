@@ -52,10 +52,10 @@ export default {
       this.$router.push({ path: `/userpage/${tap}` })
     },
     follow() {
-      this.$store.dispatch('sendfollow')
+      this.$store.dispatch('sendfollow', this.$store.state.searchUserNo)
     },
     unfollow() {
-      this.$store.dispatch('deletefollow')
+      this.$store.dispatch('deletefollow', this.$store.state.searchUserNo)
     },
   },
   created(){

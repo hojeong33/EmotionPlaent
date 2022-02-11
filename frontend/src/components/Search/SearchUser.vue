@@ -15,7 +15,7 @@
     </div>
     <div v-else id="no_result">
       <img id="nothing" src="@/assets/images/etc/alien.png" alt="">
-      <p>찾는 여행자가 없어요...</p>
+      <h3>찾는 여행자가 없어요...</h3>
     </div>  
   </div>
 </template>
@@ -28,7 +28,7 @@ export default {
       console.log(el)
       this.$store.state.searchUserNo = el
       this.$store.dispatch('userfollowdate', el)
-      this.$store.dispatch('userSelect')
+      this.$store.dispatch('userSelect', el)
       this.$router.push('Userpage')
     }
   },
@@ -39,6 +39,12 @@ export default {
 </script>
 
 <style scoped>
+  h3 {
+    font-size: 1.25rem;
+    font-weight: bold;
+    margin: 0;
+  }
+
   #container {
     width: 100%;
     background-color: white;
@@ -56,7 +62,7 @@ export default {
 
   #result {
     display: flex;
-    width: 90%;
+    width: 85%;
     align-items: center;
     padding-left: 1rem;
     margin: 1rem 1rem;
@@ -96,12 +102,12 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding-top: 8vh;
+    padding-top: 11.5vh;
   }
 
   #nothing {
-    width: 6vh;
-    height: 6vh;
+    width: 4vh;
+    height: 4vh;
     margin-bottom: 2vh;
   }
 </style>

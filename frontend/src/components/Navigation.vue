@@ -27,13 +27,13 @@
             :src="require(`@/assets/images/icons/${alarm}`)">
             <span id="alarm_box" v-if="this.alarmCount >= 1">
               <span id="count_box">
-                <!-- <p v-if="this.alarmCount <= 9" id="alarm_count">{{ alarmCount }}</p> -->
-                <p id="alarm_count">{{ alarmCount }}</p>
-                <!-- <p v-if="this.alarmCount >= 10" id="nine">9</p> -->
-                <!-- <p v-if="this.alarmCount >= 10" id="plus">+</p> -->
+                <p v-if="this.alarmCount <= 9" id="alarm_count">{{ alarmCount }}</p>
+                <!-- <p id="alarm_count">{{ alarmCount }}</p> -->
+                <p v-if="this.alarmCount >= 10" id="nine">9</p>
+                <p v-if="this.alarmCount >= 10" id="plus">+</p>
               </span>
             </span>
-            <alarm v-if="alarming" id="alarm_drop" v-on:cancel="alarmClick"></alarm>
+            <alarm v-if="alarming" id="alarm_drop" v-on:cancelAlarm="alarmClose" @blur="alarmClose"></alarm>
           </div>
           <img @click="navClick" id="setting"
            :src="require(`@/assets/images/icons/${setting}`)">
@@ -105,7 +105,11 @@ export default {
     },
     alarmClick() {
       this.$store.commit('navActivate', 3)
-      this.alarming = !this.alarming
+      this.alarming = true
+    },
+    alarmClose() {
+      this.$store.commit('navActivate', 3)
+      this.alarming = false
     },
   },
   computed: {
@@ -248,13 +252,14 @@ export default {
 }
 
 #alarm_drop {
-  z-index: 10;
+  z-index: 20;
   width: 15%;
-  min-width: 150px;
-  height: 15%;
+  min-width: 300px;
+  height: 30%;
+  min-height: 340px;
   position: absolute;
   background-color: white;
-  margin-top: 3.5rem;
+  margin: 0.7rem -7.8rem;
 }
 
 #nine{
@@ -298,7 +303,7 @@ img{
 }
 
 #dropdown {
-  z-index: 10;
+  z-index: 20;
   width: 25%;
   min-width: 150px;
   height: 15%;
