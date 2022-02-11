@@ -66,7 +66,7 @@ export default {
 
       axios({
           method: 'post',
-          url: 'http://localhost:8080/feeds',
+          url: 'http://13.125.47.126:8080/feeds',
           data: this.feedData, // post 나 put에 데이터 넣어 줄때
           headers: headers,  // 넣는거 까먹지 마세요
         }).then((res) => {
@@ -75,7 +75,7 @@ export default {
 
           axios({
             method: 'post',
-            url: 'http://localhost:8080/s3/file/' + res.data,
+            url: 'http://13.125.47.126:8080/s3/file/' + res.data,
             data: formData, // post 나 put에 데이터 넣어 줄때
             headers: headers,  // 넣는거 까먹지 마세요
           }).then((res) => {
@@ -109,7 +109,7 @@ export default {
 
       axios({
         method: 'put',
-        url: 'http://localhost:8080/feeds',
+        url: 'http://13.125.47.126:8080/feeds',
         data: formData2, // post 나 put에 데이터 넣어 줄때
         headers: headers,  // 넣는거 까먹지 마세요
       }).then((res) => {
