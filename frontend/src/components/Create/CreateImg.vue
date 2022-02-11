@@ -5,15 +5,22 @@
       <h1 id="title">글 쓰기</h1>
     </article>
     <article id="img-box">
-      <div v-if="!images.length">
-        <!-- 이미지 미리보기 만들어야 함 -->
+      <div id="default-box" v-if="!images.length">
         <img src="../../assets/images/icons/image.png" alt="" id="default-img">
         <p id="img-text">이미지를 올려주세요</p>
       </div>
-      <div v-else>
-        <div v-for="(image, index) in images" :key="index">
-          <img :src="image.imgPreview" alt="">
+      <div id="uploaded-box" v-else>
+        <transition-group id="carousel" :name="page > beforePage ? 'slide':'slide-reverse'">
+          <img v-for="(image, index) in images" :key="index"
+          class="uploadedImg" :src="image.imgPreview" alt=""
+          v-show="index+1 == page">
+        </transition-group>
+        <div id="pages">
+          <span v-for="idx in images.length" :key="idx" 
+          :class="['page-num', {'here':idx==page}]" @click="paginationByDot(idx)" />
         </div>
+        <span id="left" class="carousel-btn" @click="pagination(false)"/>
+        <span id="right" class="carousel-btn" @click="pagination(true)"/>
       </div>
     </article>
     <footer>
@@ -32,8 +39,9 @@ import {mapState} from 'vuex'
 export default {
   data () {
     return {
+      page: 1,
+      beforePage: 1,
       images: [],
-      imgPreviews: [],
       uploadImageIndex: 0,
       feedDto: {
         descr: null,
@@ -48,7 +56,11 @@ export default {
       this.$emit('out')
     },
     nextPage(){
-      this.$emit('next-page')
+      if (this.images.length === 0) {
+        alert('이미지를 선택해주세요')
+      } else {
+        this.$emit('next-page')
+      }
     },
     imgUpload () {
       // this.$store.commit('feedImg', img)
@@ -68,7 +80,7 @@ export default {
         num = i;
       }
       this.uploadImageIndex = num + 1;
-      // console.log(this.images)
+
       if (this.images.length > 3) {
         alert('사진이 너무 많습니다')
         this.images = []
@@ -78,12 +90,36 @@ export default {
         // console.log('성공')
       }
     },
+    pagination(payload){
+      this.beforePage = this.page
+      if (this.page < this.images.length && payload){
+        this.page ++
+      }
+      else if (this.page > 1 && !payload){
+        this.page --
+      }
+    },
+    paginationByDot(target){
+      let d
+      if (target > this.page){
+        d = true
+      }
+      else {
+        d = false
+      }
+      for (let i=0;i<Math.abs(target-this.page);i++){
+        setTimeout(() => {
+          console.log(this.page, target, d)
+          this.pagination(d)
+        }, 1000 * i);
+      }
+    }
   },
   computed: 
     mapState([
       'userInfo', 'planetStyles',
-    ]),
-
+    ]
+  ),
   created: function () {
     this.feedDto.author = this.userInfo.no
     console.log(this.feedDto)
@@ -133,7 +169,7 @@ export default {
   #img-container {
     display:flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     width: 100%;
     height: 100%;
@@ -159,19 +195,41 @@ export default {
   #img-box {
     display: flex;
     flex-direction: column;
-    width: 90%;
-    height: 75%;
+    width: 85%;
+    height: 65%;
     background-color: lightgray;
     border-radius: 20px;
     margin: auto;
     justify-content: center;
     align-items: center;
-    margin: 1rem 0.5rem 0.5rem;
+    margin: 2rem;
   }
 
   #default-img {
     width: 3rem;
     height: 3rem;
+  }
+
+  #uploaded-box {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  #carousel {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+  }
+
+  .uploadedImg {
+    width: 100%;
+    aspect-ratio: 1/1;
+    position: absolute;
   }
 
   #img-text{
@@ -182,8 +240,9 @@ export default {
     display:flex;
     justify-content: space-between;
     width: 90%;
-    margin-bottom: 0.5rem;
+    margin: 0.5rem;
   }
+
   .imgUpload label {
     background-color: #5E39B3;
     color: white;
@@ -197,12 +256,81 @@ export default {
     line-height: 2rem;
   }
 
-.imgUpload input[type="file"] {
+  .imgUpload input[type="file"] {
     position: absolute;
     width: 0;
     height: 0;
     padding: 0;
     overflow: hidden;
     border: 0;
-}
+  }
+
+  .carousel-btn {
+    background-size: cover;
+    border: none;
+    border-radius: 50%;
+    opacity: 0.75;
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    top: 45%;
+    cursor: pointer;
+  }
+
+  #left {
+    background-image: url('../../assets/images/icons/left.png');
+    left: -2%;
+  }
+
+  #right {
+    background-image: url('../../assets/images/icons/right.png');
+    right: -2%;
+  }
+
+  @keyframes slide-in {
+    from { right: -100% }
+    to { right: 0 }
+  }
+
+  @keyframes slide-out {
+    from { right: 0 }
+    to { right: 100% }
+  }
+
+  .slide-enter-active {
+    animation: slide-in 1s ease;
+  }
+
+  .slide-leave-active {
+    animation: slide-out 1s ease;
+  }
+
+  .slide-reverse-enter-active {
+    animation: slide-out 1s ease reverse;
+  }
+
+  .slide-reverse-leave-active {
+    animation: slide-in 1s ease reverse;
+  }
+
+  #pages {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem;
+  }
+
+  .page-num {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #cccccc;
+    margin: 0.75rem;
+    cursor: pointer;
+  }
+
+  .here {
+    background-color: #777777;
+  }
 </style>
