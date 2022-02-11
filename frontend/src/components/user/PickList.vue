@@ -1,9 +1,9 @@
 <template>
-  <article class="picks" @click="go_to_detail" @mouseover="isHover = true" @mouseout="isHover = false">
+  <article class="picks" @click="go_to_detail" @mouseover="isHover = true">
     <img :class="{planet, 'movie-planet':pick.no == 2}" :src="require(`@/assets/images/emotions/${planet}`)" alt="">
-    <img :class="{'movie-picks':pick.no == 2}" :src="thumbNail" alt="thumbnail">
+    <img :class="['thumbnail', {'movie-thumb':pick.no == 2}]" :src="thumbNail" alt="thumbnail">
     <h3>{{ title }}</h3>
-    <span v-show="isHover" class="picks-info">
+    <span v-show="isHover" @mouseleave="isHover = false" class="picks-info">
       <p>Go to Detail</p>
     </span>
   </article>
@@ -49,9 +49,9 @@ export default {
 
 <style scoped>
   h3 {
-    font-size: 1.25rem;
+    font-size: 1.125rem;
     font-weight: bold;
-    margin: 0.5rem;
+    margin: 0.5rem 0;
     word-break: keep-all;
   }
 
@@ -71,12 +71,16 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: center;
-    border: 1px #cccccc solid;
+    border: none;
     cursor: pointer;
     position: relative;
   }
 
-  .movie-picks {
+  .thumbnail {
+    border: 1px #cccccc solid;
+  }
+
+  .movie-thumb {
     aspect-ratio: 2/3;
   }
 

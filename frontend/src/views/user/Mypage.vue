@@ -44,17 +44,20 @@ export default {
     }
   },
   methods: {
-    changeTab(tap){
-      this.myPageTab = tap
-      this.$router.push({ path: `/mypage/${tap}` })
+    changeTab(tab){
+      this.myPageTab = tab
+      this.$router.push({ path: `/mypage/${tab}` })
     }
   },
-  created(){
-    window.addEventListener('load', () => {
-      if (this.$route.params.tap != 'feed'){
-        this.myPageTab = 'pick'
-      }
-    })
+  computed:{
+    to(){
+      return this.$router.app._route.path
+    }
+  },
+  mounted(){
+    if (this.to.includes('item')){
+      this.myPageTab = 'pick'
+    }
   }
 }
 </script>

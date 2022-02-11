@@ -2,27 +2,27 @@
   <article id="list-container">
 		<filter-tab :user-mood="userMood" @filtering="filtering" />
 
-		<div id="feed-container" v-if="tab == 'feed'"> 
+		<div id="feed-container" v-if="tap == 'feed'"> 
 			<!-- <feed-item v-for="(feed, idx) in filteredFeeds" :key="idx" :feed="feed" /> -->
-			<feed-list :feeds="filteredFeeds"/>
+			<search-feed-list :feeds="filteredFeeds"/>
 		</div>
 
-		<div id="pick-container" v-if="tab == 'pick'">
+		<div id="pick-container" v-if="tap == 'pick'">
 			<div id="pick-tab">
 				<h3 @click="pickTap = 1" :class="pickTap == 1 ? 'active': ''">음악</h3>
 				<h3 @click="pickTap = 2" :class="pickTap == 2 ? 'active': ''">영화</h3>
 				<h3 @click="pickTap = 3" :class="pickTap == 3 ? 'active': ''">활동</h3>
 			</div>
 			<div id="picks"> 
-				<pick-list v-for="(pick, idx) in filteredPicks" :key="idx" :pick="pick" />
+				<search-pick-item v-for="(pick, idx) in filteredPicks" :key="idx" :pick="pick" />
 			</div>
 		</div>
 
 		<div id="no-result" 
-		v-if="(tab == 'feed' && !filteredFeeds.length)||(tab == 'pick' && !filteredPicks.length)">
+		v-if="(tap == 'feed' && !filteredFeeds.length)||(tap == 'pick' && !filteredPicks.length)">
 			<img id="nothing" src="@/assets/images/etc/alien.png" alt="no result">
-			<p v-if="tab == 'feed' && !filteredFeeds.length">게시글이 없어요...</p>
-			<p v-if="tab == 'pick' && !filteredPicks.length">찜목록이 없어요...</p>
+			<p v-if="tap == 'feed' && !filteredFeeds.length">게시글이 없어요...</p>
+			<p v-if="tap == 'pick' && !filteredPicks.length">찜목록이 없어요...</p>
 		</div>
 		
 	</article>
@@ -31,8 +31,8 @@
 <script>
 import FilterTab from '@/components/user/FilterTab'
 // import FeedItem from '@/components/user/FeedItem'
-import FeedList from '@/components/MainPage/FeedTab/FeedList'
-import PickList from '@/components/user/PickList'
+import SearchFeedList from '@/components/Search/SearchFeedList'
+import SearchPickItem from '@/components/Search/SearchPickitem'
 import feedData from '@/assets/data/userFeed'
 import pickData from '../../assets/data/pickData'
 
@@ -57,12 +57,12 @@ export default {
 	},
 	props: {
 		userMood: Number,
-		tab: String
+		tap: String
 	},
 	components: {
 		FilterTab,
-		FeedList,
-		PickList
+		SearchFeedList,
+		SearchPickitem
 	},
 	methods: {
 		filtering(payload){
