@@ -16,6 +16,7 @@ export default new Vuex.Store({
     words: null,
     tagSearch: [],
     userSearch: [],
+    pickSearch: [],
     //메인 추천탭 부분
     userEmotion: null,
     recommendType: 1,

@@ -1,29 +1,34 @@
 <template>
   <div id="container">
-    <div id="results" v-if="this.$store.state.tagSearch.length !== 0">
-      <div v-for="result in this.$store.state.tagSearch"
+    <div id="results" v-if="this.pickSearch.length !== 0">
+      <div v-for="result in this.pickSearch"
         :key="result.no"
         id="result">
-        <img src="../../assets/images/icons/hashtag.png" alt="" id="hashtag">
+        <img src="../../assets/images/icons/treasure-chest.png" alt="" id="treasure">
         <div id="search">
-          <span id="title">#{{ result.name }}</span>
-          <span id="content">이야기: {{ result.count }}개</span>
+          <span id="title">#{{ result.mood }}</span>
+          <span id="content">보물상자: {{ result.count }}개</span>
         </div>
         <img src="../../assets/images/icons/search_dark.png" alt="" id="go">
       </div>
     </div>
     <div v-else id="no_result">
       <img id="nothing" src="@/assets/images/etc/alien.png" alt="">
-      <p>찾는 이야기가 없어요...</p>
+      <p>찾는 보물상자가 없어요...</p>
     </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'SearchTag',
-  methods: {
-    
+  name: 'SearchPick',
+  data() {
+    return {
+      pickSearch: [
+        { no: 1, mood: '우울', count: 3 },
+        { no: 2, mood: '행복', count: 3 },
+      ]
+    }
   },
   created() {
     console.log(this.$store.state.words)
@@ -72,10 +77,10 @@ export default {
     font-weight: bold;
   }
 
-  #hashtag {
+  #treasure {
     width: 4vh;
     height: 4vh;
-    border-radius: 30%;
+    border-radius: 40%;
   }
   
   #go {
