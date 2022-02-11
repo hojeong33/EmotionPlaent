@@ -35,4 +35,8 @@ public interface FeedDao {
     public List<UserRequestDto> likeListUnFollow(
             @Param("userNo") int userNo,
             @Param("feedNo")int feedNo);
+
+    public int connect(
+            @Param("feedNo")String targetNo,
+            @Param("imgNo")Integer imgNo);
 }

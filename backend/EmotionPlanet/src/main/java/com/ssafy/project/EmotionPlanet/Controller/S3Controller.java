@@ -1,12 +1,18 @@
 package com.ssafy.project.EmotionPlanet.Controller;
 
+import com.ssafy.project.EmotionPlanet.Dto.FeedDto;
+import com.ssafy.project.EmotionPlanet.Dto.ImgDto;
+import com.ssafy.project.EmotionPlanet.Service.FeedService;
 import com.ssafy.project.EmotionPlanet.Service.S3Service;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+
+import javax.jws.soap.SOAPBinding;
 import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:5500", allowCredentials = "true", allowedHeaders = "*", methods = {
@@ -19,19 +25,27 @@ public class S3Controller {
 
     private final S3Service s3Service;
 
+    private final FeedService feedService;
+
     private static final int SUCCESS = 1;
 
-    @PostMapping("/file")
-    public ResponseEntity<List<Integer>> uploadFile( @RequestPart List<MultipartFile> multipartFile) {
-        List<Integer> result = s3Service.uploadFile(multipartFile);
-        
+    @PostMapping(value = "/file/{targetNo}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<List<Integer>> uploadFile(
+            @PathVariable("targetNo") String targetNo,
+            @RequestParam(value = "files", required = false) List<MultipartFile> files) {
+
+        System.out.println("이미지 : " + files.size());
+        List<Integer> result = s3Service.uploadFile(files);
+
+        feedService.connect(targetNo, result);
+
         if(result.size() != 0) return new ResponseEntity<List<Integer>>(result, HttpStatus.OK);
         else throw new ResponseStatusException(HttpStatus.NOT_FOUND, "업로드 실패.");
     }
 
-    @PostMapping(value = "/users/img") //회원 프로필 변경
-    public ResponseEntity<String> uploadFileReturnURL(@RequestPart String no, 
-    		@RequestPart MultipartFile multipartFile) {
+    @PostMapping(value = "/users/img/{no}") //회원 프로필 변경
+    public ResponseEntity<String> uploadFileReturnURL(@PathVariable String no,
+    		@RequestParam MultipartFile multipartFile) {
     	int userno = Integer.parseInt(no);
     	String result  = s3Service.uploadFileReturnURL(userno,multipartFile);
 

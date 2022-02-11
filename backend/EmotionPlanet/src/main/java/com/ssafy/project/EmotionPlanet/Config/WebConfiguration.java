@@ -26,6 +26,7 @@ public class WebConfiguration implements WebMvcConfigurer {
         System.out.println("####### Register Interceptor: JwtInterceptor!!!");
         registry.addInterceptor(jwtInterceptor)
                 .addPathPatterns("/**")
+                .excludePathPatterns("/users/update/**")
                 .excludePathPatterns("/login/**")
                 .excludePathPatterns("/alarm/**")
                 .excludePathPatterns("/register/**");

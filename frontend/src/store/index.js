@@ -45,6 +45,8 @@ export default new Vuex.Store({
       {descr: null, author:null, tags: []},
       {image: []},
     ],
+    //이미지
+    rawImg: [],
     
     // 모달 데이터
     commentSettingModalActive: false,
@@ -97,6 +99,7 @@ export default new Vuex.Store({
     },
 
     userUpdate(state, payload){
+      console.log("userUpdate 접근 =====")
       const userdata = JSON.parse(session.getItem('userInfo')) 
       if (!session.getItem('userInfo')){
         session.setItem('userInfo', JSON.stringify(payload)) //토큰값으로 들어오면 
@@ -104,12 +107,13 @@ export default new Vuex.Store({
       
       else if(typeof(payload) == 'number'){ // 감테하고 넘길때
         userdata.userInfo.mood = payload
-        session.setItem('userInfo', JSON.stringify(userdata))
+        session.setItem('userInfo', JSON.stringify(userdata.userInfo))
       } 
       
       else if (session.getItem('userInfo')){
         session.setItem('userInfo', JSON.stringify(payload)) 
       }
+      console.log('userUpdate 완료 ======' + session.getItem('userInfo'))
       state.userInfo = userdata
       return userdata
     },
@@ -127,6 +131,10 @@ export default new Vuex.Store({
       console.log(state.feedCreateData[0])
     },
     feedImg: function (state, imgs) {
+      state.rawImg =imgs
+      console.log(state.feedCreateData)
+    },
+    rawImg: function (state, imgs) {
       state.feedCreateData[1].image =imgs
       console.log(state.feedCreateData)
     },
