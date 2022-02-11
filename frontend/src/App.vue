@@ -5,6 +5,7 @@
     <router-view/>
     <logout-modal v-if="logoutModalActive" />
     <user-feed-setting v-if="userFeedSettingModalActive" />
+    <user-feed-setting2 v-if="userFeedSettingModalActive2" />
     <comment-setting v-if="commentSettingModalActive" />
     <profile-img-change v-if="profileImgChangeModalActive" />
     <login-confirm v-if="loginConfirmModalActive" />
@@ -21,15 +22,18 @@
     <comment-need-content v-if="commentNeedContentModalActive" />
     <more-info-confirm v-if="moreInfoConfirmModalActive" />
     <more-info-error v-if="signupFailModalActive1" />
+    <update v-if="feedUpdateActive" />
   </div>
 </template>
 
 <script>
 import Create from '@/views/Create'
+import Update from '@/views/Update'
 import Navigation from '@/components/Navigation'
 // 모달창
 //// 세팅
 import UserFeedSetting from '@/components/Modal/SettingModal/UserFeedSetting.vue'
+import UserFeedSetting2 from '@/components/Modal/SettingModal/UserFeedSetting2.vue'
 import CommentSetting from '@/components/Modal/SettingModal/CommentSetting.vue'
 //// 로그인과 로그아웃
 import LoginConfirm from '@/components/Modal/LoginLogoutModal/LoginConfirm.vue'
@@ -59,12 +63,14 @@ import { mapState } from 'vuex'
 export default {
   components: {
     Create,
+    Update,
     Navigation,
+    //모달창
     LogoutModal,
     UserFeedSetting,
+    UserFeedSetting2,
     CommentSetting,
     ProfileImgChange,
-    //모달창
     LoginConfirm,
     SignupConfirm,
     EmotionTestTooMuchPick,
@@ -83,10 +89,10 @@ export default {
   },
   computed:
     mapState([
-      'navActive', 'modalActive', 'profileImgChangeModalActive', 'commentSettingModalActive', 'logoutModalActive', 'userFeedSettingModalActive', 'loginConfirmModalActive', 
+      'navActive', 'modalActive', 'profileImgChangeModalActive', 'commentSettingModalActive', 'logoutModalActive', 'userFeedSettingModalActive', 'userFeedSettingModalActive2', 'loginConfirmModalActive', 
       'signupConfirmModalActive', 'emotionTestTooMuchPickModalActive', 'firstEmotionTestConfirmModalActive', 'emotionTestErrorActive', 'emotionTestPickMoreModalActive', 
       'emotionTestResultModalActive', 'loginFailModalActive', 'signupFailModalActive1', 'signupFailModalActive2', 'ReturnToLoginModalActive', 'commentNeedContentModalActive',
-      'moreInfoConfirmModalActive', 
+      'moreInfoConfirmModalActive', 'feedUpdateActive',
     ]),
     // feedActive(){
     //   console.log(this.$store.state.navActive[0])

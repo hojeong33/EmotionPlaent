@@ -67,6 +67,7 @@ export default new Vuex.Store({
     commentSettingModalActive: false,
     logoutModalActive: false,
     userFeedSettingModalActive: false,
+    userFeedSettingModalActive2: false,
     profileImgChangeModalActive: false,
     loginConfirmModalActive: false,
     signupConfirmModalActive: false,
@@ -81,8 +82,10 @@ export default new Vuex.Store({
     signupFailModalActive2: false,
     commentNeedContentModalActive:false,
     moreInfoConfirmModalActive: false,
-    serverErrorMessage: null,
-    loginErrorMessage: null,
+    feedUpdateActive: false,
+    // 모달의 에러 메시지
+    serverErrorMessage: '',
+    loginErrorMessage: '',
 
     // 알림 부분
     alarm: [], 
@@ -173,6 +176,10 @@ export default new Vuex.Store({
       state.userFeedSettingModalActive = !state.userFeedSettingModalActive
       console.log(state.userFeedSettingModalActive)
     },
+    userFeedSettingModalActivate2: function (state) {
+      state.userFeedSettingModalActive2 = !state.userFeedSettingModalActive2
+      console.log(state.userFeedSettingModalActive2)
+    },
     logoutModalActivate: function (state) {
       state.logoutModalActive = !state.logoutModalActive
       console.log(state.logoutModalActive)
@@ -236,6 +243,10 @@ export default new Vuex.Store({
       state.moreInfoConfirmModalActive = !state.moreInfoConfirmModalActive
       console.log(state.moreInfoConfirmModalActive)
     },
+    feedUpdateActivate: function (state) {
+      state.feedUpdateActive = !state.feedUpdateActive
+      console.log(state.feedUpdateActive)
+    }
   },
   actions: {
 

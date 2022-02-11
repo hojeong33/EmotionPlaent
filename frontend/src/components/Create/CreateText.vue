@@ -8,7 +8,7 @@
       <h3>이제 자유태그와 글을 작성할 수 있습니다!</h3>
       <h3>여러분의 하루를 공유해주세요</h3> 
     </article>
-    <div id="pickTags">
+    <div v-if="feedData.tags.length" id="pickTags">
       <div id="moodTag">
         <img id="planet_img" :src="require('@/assets/images/emotions/' + planetImg)" alt="">
         <p style="margin:auto 0.2rem; color: #5E39B3; font-weight: bold;">{{feedData.tags[0].name}}</p>
@@ -22,7 +22,10 @@
           </p>         
       </div>
     </div>
-    <input type="text" id="tag-input" @keyup.enter="keyPress">
+    <div id="freeTag_write">
+      <input type="text" id="tag_input" @keyup.enter="keyPress">
+      <img id="write" @click="freeTagCreate" src="@/assets/images/icons/write.png" alt="" style="width:1.4rem;height:1.4rem; cursor: pointer;">
+    </div>
     <textarea id="text-input" v-model="feedData.descr" />
     <footer>
       <span id="secret">
@@ -31,7 +34,7 @@
       </span>
       <span>
         <button id="btn-before" @click="beforePage">이전</button>
-                <button id="btn-before" @click="feedUpdate">수정테스트</button>
+        <button id="btn-before" @click="feedUpdate">수정테스트</button>
         <button id="btn-next" @click="feedWrite">작성</button>
       </span>
     </footer>
@@ -50,12 +53,11 @@ export default {
     return {
       isChecked: false,
       freeTag: null,
-      feedText: null,
+      // feedText: null,
       feedData: {
-        descr: '대충 글 수정',
+        descr: '',
         author: null,
         tags: [],
-        no: 143
       },
       Feedimages: [],
       planetImg: null,
@@ -74,7 +76,13 @@ export default {
       this.feedData.tags.push({name: `${this.freeTag}`, type: 0})
       console.log(this.feedData)
       event.target.value = null
-      
+    },
+    freeTagCreate () {
+      let free_tag_value = document.getElementById('tag_input').value
+      this.freeTag = free_tag_value
+      this.feedData.tags.push({name: `${this.freeTag}`, type: 0})
+      console.log(this.feedData.tags)
+      document.getElementById('tag_input').value = null
     },
     feedWrite () {
       console.log(this.feedData)
@@ -100,6 +108,7 @@ export default {
             console.log("피드 작성 : " + res.data)
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
 
+
           axios({
             method: 'post',
             url: 'http://13.125.47.126:8080/s3/file/' + res.data,
@@ -108,6 +117,12 @@ export default {
           }).then((res) => {
             console.log(res.data)
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+            this.feedData.tags = []
+            this.feedData.descr = ''
+            this.Feedimages = []
+            this.$store.commit('navActivate', 0)
+            // console.log('이것은' , this.feedData.tags)
+            this.$router.push('/Main')
           }).catch((error) => {
             console.log(error);
           });
@@ -156,7 +171,7 @@ export default {
   created: function () {
     this.Feedimages = this.rawImg
     this.feedData.author = this.feedCreateData[0].author
-    this.feedData.tags = this.feedCreateData[0].tags
+    this.feedData.tags = [...this.feedCreateData[0].tags]
 
     let mood = this.$store.state.userInfo.mood
     let planetstyle = this.planetStyles.find(el => el.id === mood) || {}
@@ -243,13 +258,10 @@ export default {
     margin: 2rem 1rem 1rem;
   }
 
-  #tag-input {
-    width: 80%;
-    height: 5%;
-    border: 1px #cccccc solid;
-    border-radius: 10px;
-    margin: 1rem;
-    padding: 1rem;
+  #tag_input {
+    width: 90%;
+    border-style:none;
+    outline: none;
   }
 
   #text-input{
@@ -309,5 +321,13 @@ export default {
   display: flex;
   flex-direction: row;
   margin-right: 0.3rem;
+}
+#freeTag_write{
+  width:80%;
+  border:0.2rem solid gainsboro;
+  border-radius: 10px;
+  margin-top: 1rem;
+  margin-bottom:1rem;
+  height: 6%
 }
 </style>

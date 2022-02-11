@@ -4,15 +4,23 @@
       <img src="../../assets/images/icons/return.png" alt="" id="back" @click="out">
       <h1 id="title">글 쓰기</h1>
     </article>
-    <article id="img-box" v-if="!images.length">
-      <div>
+    <article id="img-box">
+      <div id="default-box" v-if="!images.length">
         <img src="../../assets/images/icons/image.png" alt="" id="default-img">
         <p id="img-text">이미지를 올려주세요</p>
       </div>
-    </article>
-    <article id="img-box2" class="slider" v-else>
-      <div class="slides" v-for="(image, index) in images" :key="index">
-        <div :id="index"><img id="uploadedImg" :src="image.imgPreview" alt=""></div>
+      <div id="uploaded-box" v-else>
+        <transition-group id="carousel" :name="page > beforePage ? 'slide':'slide-reverse'">
+          <img v-for="(image, index) in images" :key="index"
+          class="uploadedImg" :src="image.imgLink" alt=""
+          v-show="index+1 == page">
+        </transition-group>
+        <div id="pages">
+          <span v-for="idx in images.length" :key="idx" 
+          :class="['page-num', {'here':idx==page}]" @click="paginationByDot(idx)" />
+        </div>
+        <span id="left" class="carousel-btn" @click="pagination(false)"/>
+        <span id="right" class="carousel-btn" @click="pagination(true)"/>
       </div>
     </article>
     <footer>
@@ -31,8 +39,9 @@ import {mapState} from 'vuex'
 export default {
   data () {
     return {
+      page: 1,
+      beforePage: 1,
       images: [],
-      // imgPreviews: [],
       uploadImageIndex: 0,
       feedDto: {
         descr: null,
@@ -64,7 +73,7 @@ export default {
           ...this.images,
           {
             image: this.$refs.feedImg.files[i],
-            imgPreview: URL.createObjectURL(this.$refs.feedImg.files[i]),
+            imgLink: URL.createObjectURL(this.$refs.feedImg.files[i]),
             number: i
           }
         ];
@@ -81,12 +90,36 @@ export default {
         // console.log('성공')
       }
     },
+    pagination(payload){
+      this.beforePage = this.page
+      if (this.page < this.images.length && payload){
+        this.page ++
+      }
+      else if (this.page > 1 && !payload){
+        this.page --
+      }
+    },
+    paginationByDot(target){
+      let d
+      if (target > this.page){
+        d = true
+      }
+      else {
+        d = false
+      }
+      for (let i=0;i<Math.abs(target-this.page);i++){
+        setTimeout(() => {
+          console.log(this.page, target, d)
+          this.pagination(d)
+        }, 1000 * i);
+      }
+    }
   },
   computed: 
     mapState([
       'userInfo', 'planetStyles',
-    ]),
-
+    ]
+  ),
   created: function () {
     this.feedDto.author = this.userInfo.no
     console.log(this.feedDto)
@@ -136,7 +169,7 @@ export default {
   #img-container {
     display:flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: center;
     width: 100%;
     height: 100%;
@@ -162,19 +195,41 @@ export default {
   #img-box {
     display: flex;
     flex-direction: column;
-    width: 90%;
-    height: 75%;
+    width: 85%;
+    height: 65%;
     background-color: lightgray;
     border-radius: 20px;
     margin: auto;
     justify-content: center;
     align-items: center;
-    margin: 1rem 0.5rem 0.5rem;
+    margin: 2rem;
   }
 
   #default-img {
     width: 3rem;
     height: 3rem;
+  }
+
+  #uploaded-box {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+
+  #carousel {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+  }
+
+  .uploadedImg {
+    width: 100%;
+    aspect-ratio: 1/1;
+    position: absolute;
   }
 
   #img-text{
@@ -185,8 +240,9 @@ export default {
     display:flex;
     justify-content: space-between;
     width: 90%;
-    margin-bottom: 0.5rem;
+    margin: 0.5rem;
   }
+
   .imgUpload label {
     background-color: #5E39B3;
     color: white;
@@ -200,113 +256,81 @@ export default {
     line-height: 2rem;
   }
 
-.imgUpload input[type="file"] {
+  .imgUpload input[type="file"] {
     position: absolute;
     width: 0;
     height: 0;
     padding: 0;
     overflow: hidden;
     border: 0;
-}
-#img-box2{
-  display: flex;
-  width: 90%;
-  height: 75%;
-  background-color: lightgray;
-  border-radius: 20px;
-  margin: auto;
-  justify-content: center;
-  align-items: center;
-  margin: 1rem 0.5rem 0.5rem;
-}
-/* 이미지 캐로셀 */
-  /*.slider {
-    width: 600px;
-    text-align: center;
-    border-radius: 10px;
-    overflow: hidden;
   }
-  
-  .slides {
-    display: flex;
-    overflow-x: auto;
-    /* overflow: hidden; */
-  /*  scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    -webkit-overflow-scrolling: touch;
-  }
-  .slides::-webkit-scrollbar {
-    width: 10px;
-    height: 10px;
-  }
-  .slides::-webkit-scrollbar-thumb {
-    background: black;
-    border-radius: 10px;
-  }
-  .slides::-webkit-scrollbar-track {
-    background: transparent;
-  }
-  .slides > div {
-    scroll-snap-align: start;
-    flex-shrink: 0;
-    width: 600px;
-    height: 300px;
-    margin-right: 50px;
-    border-radius: 10px;
-    overflow: hidden;
-    background: #eee;
-    transform-origin: center center;
-    transform: scale(1);
-    transition: transform 0.5s;
-    position: relative;
-    
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 100px;
-  }
-  
-  .author-info {
-    background: rgba(0, 0, 0, 0.75);
-    color: white;
-    padding: 0.75rem;
-    text-align: center;
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    margin: 0;
-  }
-  .author-info a {
-    color: white;
-  }
-  img {
-    object-fit: cover;
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
-  
-  .slider > button {
-    display: inline-flex;
-    width: 1.5rem;
-    height: 1.5rem;
-    background: #eee;
-    text-decoration: none;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    margin: 0 0 0.5rem 0;
-    position: relative;
-  }
-  .slider > button:active {
-    top: 1px;
-  }
-  .slider > :focus {
-    background: #000;
-  }
-   */
 
+  .carousel-btn {
+    background-size: cover;
+    border: none;
+    border-radius: 50%;
+    opacity: 0.75;
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    top: 45%;
+    cursor: pointer;
+  }
+
+  #left {
+    background-image: url('../../assets/images/icons/left.png');
+    left: -2%;
+  }
+
+  #right {
+    background-image: url('../../assets/images/icons/right.png');
+    right: -2%;
+  }
+
+  @keyframes slide-in {
+    from { right: -100% }
+    to { right: 0 }
+  }
+
+  @keyframes slide-out {
+    from { right: 0 }
+    to { right: 100% }
+  }
+
+  .slide-enter-active {
+    animation: slide-in 1s ease;
+  }
+
+  .slide-leave-active {
+    animation: slide-out 1s ease;
+  }
+
+  .slide-reverse-enter-active {
+    animation: slide-out 1s ease reverse;
+  }
+
+  .slide-reverse-leave-active {
+    animation: slide-in 1s ease reverse;
+  }
+
+  #pages {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem;
+  }
+
+  .page-num {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #cccccc;
+    margin: 0.75rem;
+    cursor: pointer;
+  }
+
+  .here {
+    background-color: #777777;
+  }
 </style>
