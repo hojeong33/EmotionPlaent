@@ -52,6 +52,19 @@ public class AlarmController {
         }
     }
     
+    @GetMapping(value = "/alarm/read/{receiver}")
+    public ResponseEntity<Integer> readAlram(@PathVariable String receiver) { 
+        int Receiver = Integer.parseInt(receiver);
+        int result = alarmService.readanddeleteAlram(Receiver);
+        if(result == SUCCESS) {
+        	System.out.println("알림 읽기 성공");
+        	return new ResponseEntity<Integer>(SUCCESS, HttpStatus.OK);
+        }else {
+        	System.out.println("알림 읽기 실패");
+        	throw new ResponseStatusException(HttpStatus.FORBIDDEN, "다시 시도해주세요");
+        }
+    }
+    
     @DeleteMapping(value = "/alarm/{no}")
     public ResponseEntity<Integer> deleteAlram(@PathVariable String no) { 
     	System.out.println("gdg");

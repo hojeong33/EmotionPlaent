@@ -67,6 +67,14 @@ public class AlarmServiceImpl implements AlarmService {
 			return SUCCESS;
 		return FAIL;
 	}
+
+	@Override
+	public int readanddeleteAlram(int receiver) {
+		int result = alarmDao.updatereadAlram(receiver) + alarmDao.deleteAlramWeek(receiver);
+		if(result >= SUCCESS)
+			return SUCCESS;
+		return FAIL;
+	}
 	
 	
 
