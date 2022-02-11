@@ -7,9 +7,10 @@
         <img src="../../assets/images/icons/user.png" alt="" id="user">
         <div id="search">
           <span id="title">@{{ result.nickname }}</span>
-          <span id="content">{{ result.email }}</span>
+          <!-- <span id="content">{{ result.email }}</span> -->
         </div>
-        <img src="../../assets/images/icons/search_dark.png" alt="" id="go">
+        <img src="../../assets/images/icons/search_dark.png" 
+        @click="getInfo(result.no)" alt="" id="go">
       </div>
     </div>
     <div v-else id="no_result">
@@ -23,7 +24,13 @@
 export default {
   name: 'SearchUser',
   methods: {
-    
+    getInfo(el) {
+      console.log(el)
+      this.$store.state.searchUserNo = el
+      this.$store.dispatch('userfollowdate', el)
+      this.$store.dispatch('userSelect')
+      this.$router.push('Userpage')
+    }
   },
   created() {
     console.log(this.$store.state.words)

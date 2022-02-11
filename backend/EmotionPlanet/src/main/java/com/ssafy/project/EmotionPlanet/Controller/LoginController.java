@@ -69,7 +69,7 @@ public class LoginController {
         UserSecretDto userDto = new UserSecretDto();
         if(user != null) userDto = new UserSecretDto(user.getNo(), user.getEmail(),
                 user.getNickname(), user.getBirth(), user.getProfileImg(), user.getTel(), user.getIntro() ,
-                userDto.getPublish(), userDto.getMood());
+                user.getPublish(), user.getMood());
 
         HttpHeaders res = new HttpHeaders();
         if (user != null) {
@@ -104,7 +104,7 @@ public class LoginController {
             user = userService.userSelectByEmail(user.getEmail());
             userDto = new UserSecretDto(user.getNo(), user.getEmail(),
                     user.getNickname(), user.getBirth(), user.getProfileImg(),
-                    user.getTel(), user.getIntro() , userDto.getPublish(), userDto.getMood());
+                    user.getTel(), user.getIntro() , user.getPublish(), user.getMood());
 
             TokenDto atJWT = jwtService.create(userDto);
             System.out.println("로그인 컨트롤 atJWT");

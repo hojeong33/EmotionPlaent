@@ -4,9 +4,6 @@
       <h1>어서오세요!</h1>
       <h1>오늘은 어떤 이야기를</h1>
       <h1>들려주실건가요? 😉</h1>
-      <!-- <div>
-        <img src="../../assets/images/sun.png" id="sun">
-      </div> -->
     </div>
     <form @submit.prevent="login" id="login_body">
       <article id="email_form">
@@ -94,7 +91,6 @@ export default {
     // eslint-disable-next-line
     console.log(error);
   },
-
   login: function() {
     axios({
       method: 'post',
@@ -102,16 +98,23 @@ export default {
       data: this.credentials
     })
     .then((res)=>{
-      alert("로그인 성공")
       console.log(res.headers);
       // storage 설정
-      this.$store.dispatch('allTokenRefresh',res)
+      session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+      session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
+
+      this.$store.dispatch('allTokenRefresh', res)
+      
       this.sendToken();
+      // this.$router.push('EmotionTest')
+      // this.$router.push({ name: 'Main' })
+      console.log(res)
+      this.$store.commit('loginConfirmModalActivate')
     })
-    .then(() => window.location.reload())
     .catch(err=> {
       console.log('나는 에러야!', err)
-      alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
+      this.$store.dispatch('loginFailModalActivate', err.response.data.message)
+      // alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
     })
     this.credentials.email = "";
     this.credentials.pw ="";
@@ -120,35 +123,34 @@ export default {
   tokenVerify() {
     const url = 'http://13.125.47.126:8080/login/auth';
     const params = new URLSearchParams();
-    console.log('나는 params!', params)
     params.append('idToken', this.googleUser.wc.id_token);
-    // params['idToken'] =  this.googleUser.wc.id_token;
-    console.log('넘길 데이터!', params)
-    axios.post(url, params)
-    .then((res) => {
-      alert("로그인 성공")
-      console.log('Loged in!', res.headers);
+    console.log(params)
+    axios.post(url, params).then((res) => {
+      // alert("로그인 성공")
+      console.log(res.headers);
       // storage 설정
-      this.$store.dispatch('allTokenRefresh', res)
-    })
-    .then(() => {
+      session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+      session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
+
+      const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
+      console.log('decodeAccessToken data', decodeAccessToken);
+      this.$store.commit('userUpdate', decodeAccessToken.userInfo)
       console.log(this.$store.state.userInfo.email)
       this.sendToken();
       if (this.$store.state.userInfo.tel === null) {
-        window.location.reload()
+        this.$router.push('MoreInfo')
       }
       else{
-        window.location.reload()
+        this.$store.commit('loginConfirmModalActivate')
+        // this.$router.push('EmotionTest')
       }
-    })
-    .catch((error) => {
+    }).catch((error) => {
       console.log(error);
-    })
-    .finally(() => {
+      this.$store.commit('loginFailModalActivate')
+    }).then(() => {
       console.log('tokenVerify End!!');
     });
   },
-
 
   sendToken() {
     console.log('나는 sendToken!')
@@ -170,14 +172,21 @@ export default {
       console.log('headers : ', headers);
     }
   },
-
+  
   trans() {
     let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-    axios.get('http://13.125.47.126:8080/qss/list', {
-      headers: headers, // 넣는거 까먹지 마세요
+    };
+    let data = {
+      name: '',
+      type: ''
+    };
+    axios({
+        method: 'get',
+        url: 'http://13.125.47.126:8080/qss/list',
+        data: data, // post 나 put에 데이터 넣어 줄때
+        headers: headers,  // 넣는거 까먹지 마세요
       }).then((res) => {
 
       this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
@@ -189,6 +198,8 @@ export default {
         console.log('getQSSList End!!');
       });
     },
+
+    
   },
 }
 </script>

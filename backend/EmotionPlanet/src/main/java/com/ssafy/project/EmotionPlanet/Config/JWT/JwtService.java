@@ -54,11 +54,16 @@ public class JwtService {
 
     public String createAccess(String email) {
         UserDto user = userDao.userSelectByEmail(email);
+
         UserSecretDto userDto = new UserSecretDto(user.getNo(), user.getEmail(),
                 user.getNickname(), user.getBirth(), user.getProfileImg(), user.getTel(), user.getIntro() ,
                 user.getPublish(), user.getMood());
         System.out.println("==== create Access === " + "\n" + userDto.toString());
         return createJws(accessExpMin, userDto);
+    }
+
+    public String createRefresh() {
+        return createJws(refreshExpMin, null);
     }
 
     public TokenDto create(UserSecretDto userInfo) {

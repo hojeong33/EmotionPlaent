@@ -48,7 +48,8 @@ export default {
 
       }
       else{
-        alert('내용을 채워주세요')
+        // alert('내용을 채워주세요')
+        this.$store.commit('commentNeedContentModalActivate')
       }
     },
     commentMore:function(){

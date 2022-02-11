@@ -12,14 +12,14 @@
         id="before_pw"
         v-model="credentials.beforePw"
         placeholder="사용중인 비밀번호를 입력해주세요.">
-        <!-- <span v-if="credentials.beforePw">
-          <p v-if="!isValid.validatePw" class="warn">
-            사용할 수 없는 비밀번호에요.
+        <span v-if="credentials.beforePw">
+          <p v-if="credentials.beforePw === this.$store.state.userInfo.pw" class="collect">
+            현재 비밀번호와 일치합니다.
           </p>
-          <p v-if="isValid.validatePw" class="collect">
-            사용할 수 있는 비밀번호입니다.
+          <p v-if="credentials.beforePw !== this.$store.state.userInfo.pw" class="warn">
+            비밀번호가 맞지 않아요.
           </p>
-        </span> -->
+        </span>
       </article>
       <article id="next_pw_form">
         <label for="next_pw">변경할 비밀번호</label>
@@ -68,7 +68,7 @@
       </article>
       <a @click="pwFind">비밀번호를 잊었나요?</a>
       <article id="pc_buttons">
-        <button>변경하기</button>
+        <button @click="changePw">변경하기</button>
         <button @click="go_to_back">뒤로가기</button>
       </article>
     </section>
@@ -113,6 +113,12 @@ export default {
     },
     go_to_back: function(){
       this.$router.go(-1)
+    },
+    changePw() {
+      // 처음 입력한 값이랑 유저 비밀번호랑 같고, 변경할 비밀번호 입력값이랑 변경 비밀번호 확인값이랑 같으면
+      if (this.credentials.beforePw === this.$store.state.userInfo.pw && this.credentials.nextPw === this.credentials.pwConf) {
+        this.$store.dispatch('changePw', this.credentials.nextPw)
+      }
     },
   }
 }

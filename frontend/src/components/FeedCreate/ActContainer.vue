@@ -16,7 +16,7 @@
 
 <script>
 import ActTag from '@/components/FeedCreate/ActTag'
-
+// 카테고리는 달라도 태그 단어가 같으면 누르는게 유지되는 버그가 있음. 카테고리에 다 다른 태그를 넣는 방법도 있지만 코드를 고치는 방법도 있음
 export default {
   data: function(){
     return {
@@ -49,6 +49,8 @@ export default {
         })
       }
       this.selectedTag = payload
+      let ActTag = {name: `${this.selectedTag}`, type: 0}
+      this.$store.commit('feedTag', ActTag)
     }
   },
   computed: {

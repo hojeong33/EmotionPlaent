@@ -11,5 +11,7 @@ import java.util.List;
 public interface S3Dao {
     public int flushFile(S3Dto s3Dto);
     public int updateimg(@Param(value = "no") int no,@Param(value = "imgLink") String imgLink);
-    public void deleteFile(String fileName);
+    public void deleteFile(String imgName);
+    public void deleteByNo(int imgName);
+    public void select(String imgName);
 }

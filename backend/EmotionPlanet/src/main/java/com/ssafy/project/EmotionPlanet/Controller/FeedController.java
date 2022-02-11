@@ -7,7 +7,9 @@ import com.ssafy.project.EmotionPlanet.Service.ImgService;
 import com.ssafy.project.EmotionPlanet.Service.S3Service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.parameters.P;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
@@ -39,24 +41,12 @@ public class FeedController {
     private static final int SUCCESS = 1;
 
     @PostMapping(value ="/feeds") // 글 작성
-    public ResponseEntity<Integer> write(
-            @RequestPart FeedDto feedDto,
-            @RequestPart List<MultipartFile> multipartFile) {
+    public ResponseEntity<Integer> write(@RequestBody FeedDto feedDto) {
 
-        List<Integer> imgNo = new ArrayList<>();
-        if(multipartFile.size() != 0){
-            imgNo = s3Service.uploadFile(multipartFile);
-        }
-
-        List<ImgDto> imgs = new ArrayList<>();
-        for (int no : imgNo) {
-            imgs.add(imgService.select(no));
-        }
-
-        feedDto.setImgs(imgs);
-
+        System.out.println("===========피드 작성====================");
+        System.out.println(feedDto.toString());
         int result = feedService.write(feedDto);
-        if(result == SUCCESS) {
+        if(result != 0) {
             return new ResponseEntity<Integer>(result, HttpStatus.OK);
         }else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "글 양식이 올바르지 않습니다.");
@@ -146,8 +136,23 @@ public class FeedController {
     }
 
     @PutMapping(value ="/feeds") // 글 수정
-    public ResponseEntity<Integer> update(@RequestBody FeedDto feedDto) {
+    public ResponseEntity<Integer> update(
+            @RequestPart(value="userInfo") FeedDto feedDto,
+            @RequestPart(value="multipartFile", required = false) List<MultipartFile> multipartFile) {
+
+        List<Integer> imgNo = new ArrayList<>();
+        if(multipartFile != null){
+            imgNo = s3Service.uploadFile(multipartFile);
+        }
+
+        List<ImgDto> imgs = new ArrayList<>();
+        for (int no : imgNo) {
+            imgs.add(imgService.select(no));
+        }
+
+        feedDto.setImgs(imgs);
         int result = feedService.update(feedDto);
+
         if(result == SUCCESS) {
             return new ResponseEntity<Integer>(result, HttpStatus.OK);
         }else {

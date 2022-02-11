@@ -1,6 +1,7 @@
 package com.ssafy.project.EmotionPlanet.Config.JWT;
 
 import com.google.gson.Gson;
+import com.ssafy.project.EmotionPlanet.Dto.TokenDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserRequestDto;
 import com.ssafy.project.EmotionPlanet.Service.UserService;
@@ -38,9 +39,7 @@ public class JwtInterceptor implements HandlerInterceptor {
             return true;
         }
 
-//        if("http://localhost:8080/login".equals(request.getRequestURI())){
-//            System.out.println("로그인");
-//            return true;
+//        if("http://localhost:8080/users".equals(request.getRequestURI()) && "PUT".equals(request.getMethod())){
 //        }
 
         if(atJwtRefreshToken == null) {
@@ -61,12 +60,11 @@ public class JwtInterceptor implements HandlerInterceptor {
                 String refreshTokenInDBMS = userService.selectRefreshToken(jwtPayload.getUserInfo().getEmail());
 
                 if(refreshTokenInDBMS.equals(atJwtRefreshToken)) {
-                    // 3. recreate access token
-                    // ???
                     System.out.println("일치합니다!!!");
                    // String accessJws = jwtService.createJws(30, jwtPayload.getUserInfo());
                     String accessJws = jwtService.createAccess(jwtPayload.getUserInfo().getEmail());
                     response.addHeader("at-jwt-access-token", accessJws);
+
                 }else {
                     throw new IllegalArgumentException("Refresh Token Error!!! ND");
                 }
