@@ -18,12 +18,15 @@
       </div>
     </div>
     <div class="tab">
-      <p @click="Refresh" :class="onRefresh ? 'active' : 'inactive'">
-        &nbsp;&nbsp;&nbsp; 떠나기
-      </p>
-      <p @click="Feel" :class="onFeel ? 'active' : 'inactive'">탐험하기</p>
+      <div id="tab_names">
+        <p @click="Refresh" :class="onRefresh ? 'active' : 'inactive'" style="margin-right:1rem; margin-left:2rem;">떠나기</p>
+        <p @click="Feel" :class="onFeel ? 'active' : 'inactive'" style="margin-left:1rem;">탐험하기</p>
+      </div>
+      <div id="refresh">
+        <p>좀 더 놀기</p>
+        <img src="@/assets/images/icons/refresh.png" @click="reload" id="refresh_btn">
+      </div>
     </div>
-    <button @click="reload">좀 더 놀기</button>
     <music-list></music-list>
     <movie-list></movie-list>
     <active-list></active-list>
@@ -108,12 +111,34 @@ p {
 }
 .tab {
   display: flex;
-  justify-content: center;
+  flex-direction: column;
   font-size: 1.2rem;
+  font-weight: bold;
+  color: #777777;
+}
+
+#tab_names {
+  display: flex;
+  justify-content: center;
+  margin-top: 2rem;
+  font-size: 1.5rem;
   font-weight: bold;
   color: #777777;
 }
 .active {
   color: rgb(94, 57, 179);
+}
+
+#refresh {
+  display: flex;
+  width: 90%;
+  justify-content: right;
+  align-items: center;
+  margin: 0.5rem 3rem;
+}
+#refresh_btn {
+  width: 3rem;
+  height: 3rem;
+  cursor: pointer;
 }
 </style>

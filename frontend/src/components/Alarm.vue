@@ -1,14 +1,11 @@
 <template>
-  <div id="search_body">
-    <section id="search_header">
-      <div id="tabs">
-        <p @click="toggleTag" :class="onTag ? 'active': 'inactive'">태그</p>
-        <p @click="toggleUser" :class="onUser ? 'active': 'inactive'">계정</p>
+  <div id="alarm_body">
+    <section id="alarm_header">
+      <div id="title">
+        <p>알림</p>
       </div>
     </section>
     <section id="search_content">
-      <search-tag v-if="onTag"></search-tag>
-      <search-user v-if="onUser"></search-user>
     </section>
     <section id="search_footer">
       <button @click="cancel">X</button>
@@ -17,36 +14,25 @@
 </template>
 
 <script>
-import SearchTag from './SearchTag.vue'
-import SearchUser from './SearchUser.vue'
 
 export default {
   name: 'Search',
-  components: { SearchTag, SearchUser },
+  
   data() {
     return {
-      onTag: true,
-      onUser: false,
+      
     }
   },
   methods: {
     cancel() {
-      this.$emit('cancelAlarm')
-    },
-    toggleTag: function () {
-      this.onTag = true
-      this.onUser = false
-    },
-    toggleUser: function () {
-      this.onUser = true
-      this.onTag = false
+      this.$emit('cancel')
     },
   }
 }
 </script>
 
 <style scoped>
-  #search_body {
+  #alarm_body {
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -54,7 +40,7 @@ export default {
     background-color: white;
   }
 
-  #search_header {
+  #alarm_header {
     z-index: 10;
     display: flex;
     justify-content: center;
@@ -128,10 +114,10 @@ export default {
     line-height: 2rem;
   }
 
-  #tabs {
+  #title {
     width: 100%;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
   }
 
 </style>

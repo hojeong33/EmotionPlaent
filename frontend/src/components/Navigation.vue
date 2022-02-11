@@ -22,8 +22,19 @@
           :src="require(`@/assets/images/icons/${home}`)">
           <img @click="navClick" id="my_page"
           :src="require(`@/assets/images/icons/${myPage}`)">
-          <img @click="navClick" id="alarm"
-          :src="require(`@/assets/images/icons/${alarm}`)">
+          <div id="alarm_menu">
+            <img @click="alarmClick" id="alarm"
+            :src="require(`@/assets/images/icons/${alarm}`)">
+            <span id="alarm_box" v-if="this.alarmCount >= 1">
+              <span id="count_box">
+                <!-- <p v-if="this.alarmCount <= 9" id="alarm_count">{{ alarmCount }}</p> -->
+                <p id="alarm_count">{{ alarmCount }}</p>
+                <!-- <p v-if="this.alarmCount >= 10" id="nine">9</p> -->
+                <!-- <p v-if="this.alarmCount >= 10" id="plus">+</p> -->
+              </span>
+            </span>
+            <alarm v-if="alarming" id="alarm_drop" v-on:cancel="alarmClick"></alarm>
+          </div>
           <img @click="navClick" id="setting"
            :src="require(`@/assets/images/icons/${setting}`)">
            <button @click="signout">logout</button>
@@ -36,6 +47,7 @@
 // import {mapState} from 'vuex'
 // 똑같은 페이지 눌렀을 때 새로고침이 안 됨 - 수정 필요
 import Search from '@/components/Search/Search'
+import Alarm from '@/components/Alarm'
 
 const session = window.sessionStorage
 
@@ -46,16 +58,18 @@ export default {
       //검색입니둥
       searching: false,
       searchWords: null,
+      //알람입니둥
+      alarming: false,
     }
   },
-  components: { Search },
+  components: { Search, Alarm },
   methods: {
     navClick(event){
       console.log(this.$router)
       if (event.target.id == 'write'){this.$store.commit('navActivate', 0)}
       else if (event.target.id == 'home' || event.target.id =='logo_img'){this.$router.push({ name:'Main' })}
       else if (event.target.id == 'my_page'){this.$router.push({ name:'Mypage' })}
-      else if (event.target.id == 'alarm'){this.$store.commit('navActivate', 3)}
+      // else if (event.target.id == 'alarm'){this.$store.commit('navActivate', 3)}
       else {this.$router.push({ name:'Setting' })}
     },
     //검색 부분입니둥
@@ -89,6 +103,10 @@ export default {
       })
       .catch(() => alert('fail'))
     },
+    alarmClick() {
+      this.$store.commit('navActivate', 3)
+      this.alarming = !this.alarming
+    },
   },
   computed: {
     feed(){
@@ -113,6 +131,9 @@ export default {
     },
     navActive(){
       return this.$store.state.navActive
+    },
+    alarmCount() {
+      return this.$store.state.alarm.length
     }
   }
 }
@@ -190,11 +211,62 @@ export default {
   height: 25px;
   margin: 10px;
 }
+#alarm_menu{
+  /* width: 25px;
+  height: 25px;
+  margin: 10px; */
+  position: relative;
+}
 #alarm{
   width: 25px;
   height: 25px;
   margin: 10px;
   position: relative;
+}
+#alarm_box{
+  display: flex;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: red;
+  top: 0;
+  left: 1.4rem;
+  position: absolute;
+}
+#count_box{
+  display: flex;
+  align-items: center;
+  left: 0.28rem;
+  bottom: -1.2rem;
+  position: absolute;
+}
+
+#alarm_count{
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+}
+
+#alarm_drop {
+  z-index: 10;
+  width: 15%;
+  min-width: 150px;
+  height: 15%;
+  position: absolute;
+  background-color: white;
+  margin-top: 3.5rem;
+}
+
+#nine{
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+}
+
+#plus {
+  font-size: 1rem;
+  font-weight: bold;
+  color: white
 }
 /* .note-num {
   position: absolute;
