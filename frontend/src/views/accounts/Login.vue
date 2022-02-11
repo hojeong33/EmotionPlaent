@@ -33,7 +33,7 @@
       <p>Google로 로그인</p>
     </button>
     <article>
-      <button id="kakao" class="social_login">
+      <button id="kakao" class="social_login" @click="handleClickKaKaoSignin">
         <img id="kakao" src="../../assets/images/etc/kakao.png">
         <p>Kakao로 로그인</p>
         </button>
@@ -56,6 +56,7 @@ export default {
         pw: null,
       },
       googleUser: null,
+      kakaoOauthUrl: null,
     }
   },
   methods: {
@@ -171,6 +172,30 @@ export default {
       }
       console.log('headers : ', headers);
     }
+  },
+
+  handleClickKaKaoSignin() {
+    const params = {
+        redirectUri: "http://localhost:5500/login",
+    };
+    window.Kakao.Auth.authorize(params);
+    const authorization_code = this.$route.query.code
+    this.kakaoValidate(authorization_code)
+  },
+
+  kakaoValidate(code) {
+    axios({
+        method: 'post',
+        url: 'http://13.125.47.126:8080/login/auth',
+        data: code
+      }).then((res) => {
+        console.log('카카오 데이터 받아오기 : ' + res.data)
+        this.kakaoOauthUrl = res.data
+      }).catch((error) => {
+        console.log(error);
+      }).then(() => {
+        console.log('getQSSList End!!');
+      });
   },
   
   trans() {

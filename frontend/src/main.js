@@ -19,3 +19,5 @@ const gauthOption = {
   prompt: 'select_account'
 }
 Vue.use(GAuth, gauthOption)
+
+window.Kakao.init('11f4db68bab4c22515d9a90f8abc6d2e');
