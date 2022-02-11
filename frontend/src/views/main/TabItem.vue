@@ -21,9 +21,10 @@ export default {
 
 <style scoped>
  div{
-   margin: 1rem;
+  margin: 1rem 1.2rem;
   font-size: 2rem; 
  }
+ 
 .tab {
   border-radius: 2px 2px 0 0;
   background: #fff;

@@ -37,7 +37,8 @@
           </div>
           <img @click="navClick" id="setting"
            :src="require(`@/assets/images/icons/${setting}`)">
-           <button @click="signout">logout</button>
+           <img src="@/assets/images/icons/power.png" @click="signout" 
+           id="logout" style="cursor:pointer;">
         </div>
       </div>
     </nav>
@@ -222,6 +223,11 @@ export default {
   width: 25px;
   height: 25px;
   margin: 10px;
+}
+#logout{
+  width: 33px;
+  height: 33px;
+  margin: 5px;
 }
 #alarm_menu{
   /* width: 25px;

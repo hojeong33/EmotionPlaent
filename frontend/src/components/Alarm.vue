@@ -6,10 +6,12 @@
       </div>
     </section>
     <section id="alarm_content">
+      <!-- alarm.alarmcheck = 0 이면 안 읽은 알람, 1이면 읽은 알람 -->
       <div id="results" v-if="this.$store.state.alarm.length !== 0">
-        <div v-for="result in this.$store.state.alarm"
-        :key="result.no"
+        <div v-for="(result, index) in this.$store.state.alarm.slice(0, 21)"
+        :key="index"
         id="result">
+        {{ index }}
           <!-- 팔로우 -->
           <div id="type_follow" v-if="result.type == 1" @click="follow(result.sender)">
             <img :src="result.senderImg" alt="" id="user">
@@ -90,6 +92,7 @@ export default {
     justify-content: center;
     align-items: center;
     background-color: white;
+    overflow-y: scroll;
   }
 
   #alarm_header {
@@ -109,7 +112,6 @@ export default {
   }
   
   #alarm_content {
-    overflow: auto;
     display: flex;
     justify-content: center;
     background-color: white !important;

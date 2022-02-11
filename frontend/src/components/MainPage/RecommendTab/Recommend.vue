@@ -105,6 +105,7 @@ p {
   background-color: rgb(216, 216, 216, 0.2);
   padding: 2rem;
   justify-content: center;
+  border-bottom: 0.15rem solid gainsboro;
 }
 #header {
   text-align: left;
@@ -135,7 +136,7 @@ p {
   width: 90%;
   justify-content: right;
   align-items: center;
-  margin: 0.5rem 3rem;
+  margin: 1rem 1rem 3rem 4rem;
 }
 #refresh_btn {
   width: 3rem;
