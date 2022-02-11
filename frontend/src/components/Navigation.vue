@@ -106,6 +106,7 @@ export default {
     alarmClick() {
       this.$store.commit('navActivate', 3)
       this.alarming = true
+      this.$store.dispatch('alarmselect')
     },
     alarmClose() {
       this.$store.commit('navActivate', 3)
@@ -137,7 +138,14 @@ export default {
       return this.$store.state.navActive
     },
     alarmCount() {
-      return this.$store.state.alarm.length
+      let count = 0
+      this.$store.state.alarm.forEach(el => {
+        if(el.readcheck == 0){
+          count++
+        }
+      });
+      console.log(count)
+      return count
     }
   }
 }
