@@ -44,6 +44,11 @@
         delete from feed where no = #{no}
     </delete>
 
+    <insert id="connect" parameterType="map">
+        insert into feed_img(feedNo, imgNo)
+        values (  #{feedNo}, #{imgNo} )
+    </insert>
+
     <insert id="like" parameterType="map">
         insert into feed_like(feedNo, userNo)
         values (  #{feedNo}, #{userNo} )
