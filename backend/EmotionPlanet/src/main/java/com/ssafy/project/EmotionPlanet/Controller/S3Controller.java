@@ -46,6 +46,7 @@ public class S3Controller {
     @PostMapping(value = "/users/img/{no}") //회원 프로필 변경
     public ResponseEntity<String> uploadFileReturnURL(@PathVariable String no,
     		@RequestParam MultipartFile multipartFile) {
+    	System.out.println("들어옴");
     	int userno = Integer.parseInt(no);
     	String result  = s3Service.uploadFileReturnURL(userno,multipartFile);
 

@@ -23,6 +23,7 @@
       </article>
       <div id="link">
         <a href="#">이메일 찾기</a>
+        <!-- <router-link :to="{ name: 'EmailFind' }">이메일 찾기</router-link> -->
         <a href="#">비밀번호 찾기</a>
         <router-link :to="{ name: 'Signup' }" class="gosignup">회원가입</router-link>
       </div>
@@ -114,7 +115,7 @@ export default {
     })
     .catch(err=> {
       console.log('나는 에러야!', err)
-      this.$store.dispatch('loginFailModalActivate', err.response.data.message)
+      this.$store.commit('loginFailModalActivate', err.response.data.message)
       // alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
     })
     this.credentials.email = "";

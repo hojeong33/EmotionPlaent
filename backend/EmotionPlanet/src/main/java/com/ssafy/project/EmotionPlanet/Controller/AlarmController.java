@@ -46,8 +46,10 @@ public class AlarmController {
         int userNo = Integer.parseInt(no);
         List<AlarmDto> list = alarmService.selectAlram(userNo);
         if(list != null) {
+        	System.out.println("알림 성공");
         	return new ResponseEntity<List<AlarmDto>>(list, HttpStatus.OK);
         }else {
+        	System.out.println("알림 실패");
         	throw new ResponseStatusException(HttpStatus.FORBIDDEN, "다시 시도해주세요");
         }
     }

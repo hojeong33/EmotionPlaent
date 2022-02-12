@@ -16,6 +16,7 @@ import PwChange from '@/components/Settings/PwChange'
 import Withdrawal from '@/components/Settings/Withdrawal'
 import FeedDetail from '@/components/FeedDetail'
 import PwFind from '@/components/Settings/PwFind'
+
 import ProfileUpdate from '@/components/Settings/ProfileUpdate'
 
 import store from '../store/index.js'
