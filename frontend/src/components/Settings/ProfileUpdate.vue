@@ -13,15 +13,23 @@
 			</article>
 			<br>
 			<article id="pu_form">
-        <label for="username">닉네임</label>
+        <label for="username" style="margin-left:1rem;">닉네임</label>
         <input 
         id="nickname"
         v-model="$store.state.userInfo.nickname"
-        @input="checkNickname">
+        @input= "checkNickname">
+        <span v-if="credentials.beforeNick !== $store.state.userInfo.nickname">
+          <p v-if="!isValid.validateNicknamecheck" class="warn">
+            사용중인 닉네임이에요.
+          </p>
+          <p v-if="isValid.validateNicknamecheck" class="collect">
+           사용가능한 닉네임입니다.
+          </p>
+        </span>
 			</article>
 			<br>
 			<article id="pu_form">
-				<p id="introduce">소개</p>
+				<p id="introduce" style="margin-left:1rem;">소개</p>
         <textarea  
         id="short_comment"
         v-model="$store.state.userInfo.intro"
@@ -32,19 +40,20 @@
 
       <article id="pu_form">
         <div id="pwactive">
-          <label for="next_pw">변경할 비밀번호</label>
+          <label for="next_pw" style="margin-bottom:0.5rem; margin-left:1rem;">변경할 비밀번호</label>
           <article id="pwchange">
-            <input style="margin-top:auto;margin-bottom:auto;" 
-            type="checkbox"
+            <input style="margin-top:auto;margin-bottom:0.9rem" 
+            type="checkbox" @click="pw_change"
             >
-            <h5 style="margin-top:auto;margin-bottom:auto;">비밀번호 변경하기</h5>
+            <h5 style="margin-top:auto;margin-bottom:0.5rem;margin-left:0.3rem;">비밀번호 변경하기</h5>
           </article>
         </div>
         <input type="password" 
-        id="next_pw_input"
+        :id="pwActivate == true ? 'change' : 'still'"
+        :disabled="pwActivate == false"
         v-model="credentials.nextPw"
         @input="pwCheck"
-        placeholder="비밀번호는 8자 이상, 20자 이하입니다."
+        placeholder="비밀번호는 8자 이상, 20자 이하입니다." style="margin-top:0.2rem;"
         >
         <span v-if="credentials.nextPw">
           <p v-if="!isValid.validateNextPw" class="warn">
@@ -57,11 +66,13 @@
       </article>
 			<br>
       <article id="pu_form">
-        <label for="pw_conf">비밀번호 확인</label>
-        <input type="password" id="pw_conf_input"
+        <label for="pw_conf" style="margin-left:1rem;">비밀번호 확인</label>
+        <input type="password"
+        :id="pwActivate == true ? 'change' : 'still'"
+        :disabled="pwActivate == false"
         v-model="credentials.pwConf"
         @input="pwConfCheck"
-        placeholder="비밀번호를 다시 입력해주세요."
+        placeholder="비밀번호를 다시 입력해주세요." style="margin-top:0.2rem;"
         >
         <span v-if="credentials.pwConf">
           <p v-if="!isValid.validatePwConf" class="warn">
@@ -86,10 +97,10 @@
         v-model="credentials.pin"
         placeholder="등록하신 PIN 번호를 입력해주세요.">
       </article> -->
-      <a @click="pwFind">비밀번호를 잊었나요?</a> 
+      <a @click="pwFind" style="margin-top:0.3rem;">비밀번호를 잊었나요?</a> 
       <br>
       <article id="pu_form_radio">
-        <label for="">계정 공개 여부</label>
+        <label for="" style="margin-left:1rem;">계정 공개 여부</label>
         <div id="check_radio">
           <div id="on">
             <input type="radio" id="show_all" style="width:20px;height:20px;border:1px;" name="group"
@@ -128,6 +139,7 @@ export default {
         pwConf: null,
       },
       isValid: {
+        validateNicknamecheck : false, // 중복 닉네임 여부
         validateNextPw: false,
         validatePwConf: false,
       },
@@ -171,9 +183,11 @@ export default {
             url: 'http://13.125.47.126:8080/register/checkByNickname/' + this.$store.state.userInfo.nickname,
             })
             .then(() => { //중복 닉네임 없는 경우
+              this.isValid.validateNicknamecheck = true
               console.log('중복없다~')
             })
             .catch(() => { //중복 닉네임 있는 경우
+              this.isValid.validateNicknamecheck = false
               console.log('중복있어')
           })
         }
@@ -244,6 +258,8 @@ export default {
       }
       else {
         this.pwActivate = false
+        this.credentials.nextPw = null
+        this.credentials.pwConf = null
         console.log(this.pwActivate)
       }
     },
@@ -315,21 +331,21 @@ export default {
 		margin-left: 1rem;
   }
 
-  #pw_conf_input {
-    border: 2px #5E39B3 solid;
+  #still {
+    border: 2px gainsboro solid;
     border-radius: 30px;
     width: 95%;
     min-width: 300px;
     height: 5vh;
     min-height: 40px;
     padding: 0.75rem;
-    font-size: 3.5rem;
+    font-size: 1.2rem;
     letter-spacing: -1px;
-    font-weight: bold;
 		margin-left: 1rem;
+    cursor: not-allowed;
   }
   
-  #next_pw_input {
+  #change {
     border: 2px #5E39B3 solid;
     border-radius: 30px;
     width: 95%;
@@ -337,9 +353,8 @@ export default {
     height: 5vh;
     min-height: 40px;
     padding: 0.75rem;
-    font-size: 3.5rem;
+    font-size: 1.2rem;
     letter-spacing: -1px;
-    font-weight: bold;
 		margin-left: 1rem;
   }
 
@@ -361,13 +376,13 @@ export default {
     color: white;
     text-shadow: 0 1px 2px rgb(0, 0, 0, 0.5);
   }
-  #pw_conf_input:focus {
+  #change:focus {
     outline: none;
     background-color: #afa0d6;
     color: white;
     text-shadow: 0 1px 2px rgb(0, 0, 0, 0.5);
   }
-  #next_pw_input:focus {
+  #still:focus {
     outline: none;
     background-color: #afa0d6;
     color: white;
@@ -407,25 +422,25 @@ export default {
     color: transparent;
   }
 
-  #pw_conf_input::placeholder {
+  #still::placeholder {
     font-size: 1.1rem !important;
     font-weight: initial;
     text-shadow: none;
     position: absolute;
     top: 18%;
   }
-  #pw_conf_input:focus::placeholder {
+  #still:focus::placeholder {
     color: transparent;
   }
 
-  #next_pw_input::placeholder {
+  #change::placeholder {
     font-size: 1.1rem !important;
     font-weight: initial;
     text-shadow: none;
     position: absolute;
     top: 18%;
   }
-  #next_pw_input:focus::placeholder {
+  #change:focus::placeholder {
     color: transparent;
   }
 	
@@ -516,8 +531,9 @@ export default {
 
   #check_radio {
     display: flex;
-    justify-content: space-evenly;
-    width: 95%;
+    justify-content: left;
+    align-items: flex-start;
+    width: 100%;
     min-width: 300px;
     height: 5vh;
     min-height: 40px;
@@ -525,7 +541,8 @@ export default {
     font-size: 3.5rem;
     letter-spacing: -1px;
     font-weight: bold;
-		margin-left: 1rem;
+    margin-top: 1rem;
+    margin-left: 1rem;
   }
 
   #on {
@@ -601,8 +618,10 @@ export default {
 
   #pu_buttons {
     display: flex;
+    width: 80%;
     flex-direction: row !important;
     justify-content: center;
+    /* margin: auto; */
     margin: 1rem 4rem 1rem;
   }
   #pu_button {
