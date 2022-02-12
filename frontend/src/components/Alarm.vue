@@ -9,15 +9,13 @@
       <!-- alarm.alarmcheck = 0 이면 안 읽은 알람, 1이면 읽은 알람 -->
       <div id="results" v-if="this.$store.state.alarm.length !== 0">
         <div v-for="(result, index) in this.$store.state.alarm.slice(0, 21)"
-        :key="index"
-        id="result">
-        {{ index }}
+        :key="index" :id="result.readcheck == 0 ? 'unchecked' : 'checked'">
           <!-- 팔로우 -->
           <div id="type_follow" v-if="result.type == 1" @click="follow(result.sender)">
             <img :src="result.senderImg" alt="" id="user">
             <div id="search">
-              <span id="title">{{ result.senderNickname }}님이 회원님을</span>
-              <span id="title">팔로우하기 시작했습니다.</span>
+              <span id="content">{{ result.senderNickname }}님이 회원님을</span>
+              <span id="content">팔로우하기 시작했습니다.</span>
             </div>
           </div>
           <!-- 댓글 -->
@@ -92,7 +90,7 @@ export default {
     justify-content: center;
     align-items: center;
     background-color: white;
-    overflow-y: scroll;
+    /* overflow-y: scroll; */
   }
 
   #alarm_header {
@@ -115,11 +113,13 @@ export default {
     display: flex;
     justify-content: center;
     background-color: white !important;
+    /* margin-top: 1030px; */
     width: 100%;
     min-width: 300px;
     height: 80%;
     min-height: 300px;
     border: 0.15rem solid gainsboro;
+    /* overflow-y: scroll; */
   }
   
   #alarm_footer {
@@ -143,22 +143,35 @@ export default {
 
   #results {
     width: 100%;
+    /* height: inherit; */
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: flex-start;
     align-items: left;
     background-color: white;
-    overflow: auto;
+    overflow-y: scroll;
   }
 
-  #result {
+  #checked {
     display: flex;
     flex-direction: column;
-    width: 85%;
+    width: 88%;
     justify-content: center;
     align-items: center;
-    margin: 1rem 1rem;
+    margin: 0.6rem 1rem;
     background-color:rgb(220, 220, 220, 0.2);
+    border-radius: 10px;
+    cursor: pointer;
+  }
+
+  #unchecked {
+    display: flex;
+    flex-direction: column;
+    width: 88%;
+    justify-content: center;
+    align-items: center;
+    margin: 0.6rem 1rem;
+    background-color:rgb(94, 57, 179, 0.1);
     border-radius: 10px;
     cursor: pointer;
   }
@@ -230,16 +243,18 @@ export default {
   }
 
   #user {
-    width: 4vh;
-    height: 4vh;
+    width: 3.5vh;
+    height: 3.5vh;
     border-radius: 50%;
+    margin-left: 0.3rem;
   }
 
   #search {
-    margin-left: 0.7rem;
+    margin-left: 0.5rem;
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: flex-start;
   }
 
 </style>
