@@ -72,18 +72,21 @@ export default {
   created() {
     console.log("유저인포");
     console.log(this.$store.state.userInfo);
-    console.log(session.userInfo)
+    
+    console.log("세션 유저 인포")
+    console.log(session.getItem('userInfo'))
     if (this.$store.state.recommendReload === 0) {
 
         this.$store.dispatch("recommendMusic");
 				this.$store.dispatch("recommendMovie");
 				this.$store.dispatch("recommendActivity");
-
-      this.$store.state.recommendReload = 1;
-    }
-    this.$store.dispatch("userfollowdate", this.$store.state.userInfo.no);
+        
+        this.$store.dispatch("userfollowdate", this.$store.state.userInfo.no);
     this.$store.dispatch("alarmselect")
     this.$store.dispatch("connect")
+      this.$store.state.recommendReload = 1;
+    }
+    
   },
   methods: {
 

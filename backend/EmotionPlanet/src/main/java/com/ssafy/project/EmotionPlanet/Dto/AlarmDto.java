@@ -11,7 +11,6 @@ public class AlarmDto {
 	private int pickno;
 	private String date;
 	private int type;
-	private String message;
 	private int readcheck;
 	public int getNo() {
 		return no;
@@ -73,12 +72,6 @@ public class AlarmDto {
 	public void setType(int type) {
 		this.type = type;
 	}
-	public String getMessage() {
-		return message;
-	}
-	public void setMessage(String message) {
-		this.message = message;
-	}
 	public int getReadcheck() {
 		return readcheck;
 	}
@@ -87,7 +80,7 @@ public class AlarmDto {
 	}
 	public AlarmDto() {}
 	public AlarmDto(int no, int sender, String senderNickname, String senderImg, int receiver, int feedno,
-			int commentno, int pickno, String date, int type, String message, int readcheck) {
+			int commentno, int pickno, String date, int type, int readcheck) {
 		super();
 		this.no = no;
 		this.sender = sender;
@@ -99,14 +92,12 @@ public class AlarmDto {
 		this.pickno = pickno;
 		this.date = date;
 		this.type = type;
-		this.message = message;
 		this.readcheck = readcheck;
 	}
 	@Override
 	public String toString() {
 		return "AlarmDto [no=" + no + ", sender=" + sender + ", senderNickname=" + senderNickname + ", senderImg="
 				+ senderImg + ", receiver=" + receiver + ", feedno=" + feedno + ", commentno=" + commentno + ", pickno="
-				+ pickno + ", date=" + date + ", type=" + type + ", message=" + message + ", readcheck=" + readcheck
-				+ "]";
+				+ pickno + ", date=" + date + ", type=" + type + ", readcheck=" + readcheck + "]";
 	}
 }

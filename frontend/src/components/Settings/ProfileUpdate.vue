@@ -236,6 +236,7 @@ export default {
       else {
         this.$store.dispatch('updateuser', null)
       }
+      this.$router.push("/Main")
     },
     pw_change() {
       if (this.pwActivate === false) {
