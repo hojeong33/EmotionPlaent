@@ -3,6 +3,7 @@ package com.ssafy.project.EmotionPlanet.Service;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -26,27 +27,14 @@ public class AlarmServiceImpl implements AlarmService {
 	
 	@Override
 	public AlarmDto insertAlram(AlarmDto alarmDto) {
-		UserDto sender = userDao.userSelect(alarmDto.getSender());
 		Date date = new Date();
-		SimpleDateFormat format1 = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
-		SimpleDateFormat format2 = new SimpleDateFormat ( "yyyy-MM-dd");
-		String nickname = sender.getNickname();
-		String profileImg = sender.getProfileImg();
-		String time = format1.format(date);
-		String time2 = format2.format(date);		
-		alarmDto.setSenderImg(profileImg);
-		alarmDto.setSenderNickname(nickname);
-		alarmDto.setDate(time);
-		if(alarmDto.getType() == 1) { // 팔로우
-			alarmDto.setMessage(nickname + "님이 회원님을 팔로우 했습니다." + time2);
-		}else if(alarmDto.getType() == 2) { // 댓글
-			alarmDto.setMessage(nickname + "님이 댓글을 남겼습니다." + time2);
-		}else if(alarmDto.getType() == 3) { // 피드 좋아요
-			alarmDto.setMessage(nickname + "님이 좋아요를 했습니다." + time2);
-		}else if(alarmDto.getType() == 4) { // 픽 좋아요
-			alarmDto.setMessage(nickname + "님이 좋아요를 했습니다." + time2);			
-		}
+		TimeZone timeZone;
+		timeZone = TimeZone.getTimeZone("Asia/Seoul");
+		SimpleDateFormat format = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss");
+		format.setTimeZone(timeZone);
+		alarmDto.setDate(format.format(date));
 		int result = alarmDao.insertAlram(alarmDto);
+
 		if(result == SUCCESS)
 			return alarmDto;
 		return null;

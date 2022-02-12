@@ -548,15 +548,14 @@ export default new Vuex.Store({
       }).then(res => {
         this.dispatch('accessTokenRefresh', res)
         this.state.tagSearch = res.data
-        console.log('then')
-        console.log(res.data)
+        console.log('태그 있음')
       })
-      .catch(err=> {
-        console.log('catch')
+      .catch(()=> {
+        console.log('태그 없음')
         this.state.tagSearch = []
-        console.log(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
       })
     },
+
     searchUser() {
       let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
@@ -570,13 +569,11 @@ export default new Vuex.Store({
       .then((res)=>{
         this.dispatch('accessTokenRefresh', res)
         this.state.userSearch = res.data
-        console.log('then')
-        console.log(res.data)
+        console.log('유저 있음')
       })
-      .catch(err=> {
-        console.log('catch')
+      .catch(()=> {
+        console.log('유저 없음')
         this.state.userSearch = []
-        console.log(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
       })
     },
     //검색 끝 추천탭 시작입니다
