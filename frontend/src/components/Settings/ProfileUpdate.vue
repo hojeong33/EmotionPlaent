@@ -97,7 +97,6 @@
         v-model="credentials.pin"
         placeholder="등록하신 PIN 번호를 입력해주세요.">
       </article> -->
-      <a @click="pwFind" style="margin-top:0.3rem;">비밀번호를 잊었나요?</a> 
       <br>
       <article id="pu_form_radio">
         <label for="" style="margin-left:1rem;">계정 공개 여부</label>
@@ -163,9 +162,6 @@ export default {
       else {
         this.isValid.validatePwConf = false
       }
-    },
-    pwFind(){
-      this.$router.push('/setting/password-find')
     },
     go_to_back: function(){
       this.$router.go(-1)

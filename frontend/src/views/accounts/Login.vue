@@ -22,9 +22,8 @@
         placeholder="비밀번호를 입력해주세요">
       </article>
       <div id="link">
-        <a href="#">이메일 찾기</a>
-        <!-- <router-link :to="{ name: 'EmailFind' }">이메일 찾기</router-link> -->
-        <a href="#">비밀번호 찾기</a>
+        <router-link :to="{ name: 'EmailFind' }">이메일 찾기</router-link>
+        <router-link :to="{ name: 'Password-find' }">비밀번호 찾기</router-link>
         <router-link :to="{ name: 'Signup' }" class="gosignup">회원가입</router-link>
       </div>
       <button id="login_btn">로그인</button>

@@ -87,8 +87,6 @@ export default new Vuex.Store({
 
     // 알림 부분
     alarm: [], 
-    lookuser : 2,
-    alarmcheck : 0, // 이걸로 알람온거 체크할수 있을거 같은데...
     socketcount : 0, // 소켓 연결 일정시간 이상 안되면 재로그인 시키기
   },
   mutations: {
@@ -240,20 +238,13 @@ export default new Vuex.Store({
 
       //알림 읽기 + 7일 이후 읽은 알림 삭제
       readAlarm(state, el){
-          let headers = {
-            'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-            'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-          };
           axios({
             method: 'get',
             url: 'http://13.125.47.126:8080/alarm/read/'+ el,
-            headers: headers,  // 넣는거 까먹지 마세요
           }).then((res) => {
-           
             console.log("알림 읽기 성공")
             console.log(res.data)
-            this.state.searchUserInfo = res.data
-            this.dispatch('accessTokenRefresh', res) // store에서
+            this.state.alarm = []
           }).catch((error) => {
             console.log('알림 읽기 실패');
             console.log(error)
@@ -277,52 +268,59 @@ export default new Vuex.Store({
       }
     },
 
-    comment() { // 댓글달면 누가 댓글달았는지 알려주는 부분
+    // let el = {
+    //   receiver: 00,
+    //   feedno: 00,
+    //   pickno: 00,
+    //   commentno: 00,
+    // }
+
+    comment(state, el) { // 댓글달면 누가 댓글달았는지 알려주는 부분
       console.log("댓글 알림");
       if (this.stompClient && this.stompClient.connected) {
         const msg = {
           sender: this.state.userInfo.no,
-          receiver: this.state.lookuser,
-          feedno: 1, // 여기 나중에 수정해야함
-          commentno: 2,
+          receiver: el.receiver,
+          feedno: el.feedno, // 여기 나중에 수정해야함
+          commentno: el.commentno,
           type: 2, 
         };
         this.stompClient.send(
-          "/alarm/send/" + this.state.lookuser,
+          "/alarm/send/" + el.receiver,
           JSON.stringify(msg),
           {}
         );
       }
     },
 
-    feedlike() { //피드 좋아요누르면 누가 좋아요 눌렀는지 알려주는 부분
+    feedlike(state, el) { //피드 좋아요누르면 누가 좋아요 눌렀는지 알려주는 부분
       console.log("좋아요 알림");
       if (this.stompClient && this.stompClient.connected) {
         const msg = {
           sender: this.state.userInfo.no,
-          receiver: this.state.lookuser,
-          feedno: 1, // 여기 나중에 수정해야함
+          receiver: el.receiver,
+          feedno: el.feedno, // 여기 나중에 수정해야함
           type: 3, 
         };
         this.stompClient.send(
-          "/alarm/send/" + this.state.lookuser,
+          "/alarm/send/" + el.receiver,
           JSON.stringify(msg),
           {}
         );
       }
     },
 
-    picklike() { //피드 좋아요누르면 누가 좋아요 눌렀는지 알려주는 부분
+    picklike(state, el) { //찜목록 좋아요누르면 누가 좋아요 눌렀는지 알려주는 부분
       console.log("좋아요 알림");
       if (this.stompClient && this.stompClient.connected) {
         const msg = {
           sender: this.state.userInfo.no,
-          receiver: this.state.lookuser,
-          pickno: 1, // 여기 나중에 수정해야함
+          receiver: el.receiver,
+          pickno: el.pickno, // 여기 나중에 수정해야함
           type: 4, 
         };
         this.stompClient.send(
-          "/alarm/send/" + this.state.lookuser,
+          "/alarm/send/" + el.receiver,
           JSON.stringify(msg),
           {}
         );
@@ -352,12 +350,9 @@ export default new Vuex.Store({
             console.log("댓글 번호 " + obj.commentno)
             console.log("알림 날짜 " + obj.date)
             console.log("알림 타입 " + obj.type)
-            console.log("알림 내용 " + obj.message)
             // alert(obj.message)
             this.state.alarm.unshift(obj);
             console.log("---------------------------------")
-            this.state.alarmcheck++; // 이거 실시간 알람오는거 증가시켜서 알림보여주기 알림보면 0으로 초기화?
-            console.log(this.state.alarmcheck)
           });
         },
         (error) => {
@@ -393,9 +388,7 @@ export default new Vuex.Store({
         url:'http://13.125.47.126:8080/alarm/' + this.state.userInfo.no,
       })
       .then((res)=>{
-        this.dispatch('accessTokenRefresh', res)
         console.log('알림 가져오기 성공')
-        console.log(res.data)
         this.state.alarm = res.data
       })
       .catch(err=> {
@@ -410,7 +403,6 @@ export default new Vuex.Store({
         url:'http://13.125.47.126:8080/alarm/' + el, // 여기 알림번호 넘겨줘야한다.
       })
       .then((res)=>{
-        this.dispatch('accessTokenRefresh', res)
         console.log('알림 삭제 성공')
         console.log(res.data)
       })
