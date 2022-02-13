@@ -120,7 +120,7 @@ export default {
     login: function () {
       axios({
         method: 'post',
-        url:'http://localhost:8080/login',
+        url:'http://13.125.47.126:8080/login',
         data: this.credentials
       })
       .then((res)=>{
@@ -142,7 +142,7 @@ export default {
     },
 
     tokenVerify() {
-      const url = 'http://localhost:8080/login/auth';
+      const url = 'http://13.125.47.126:8080/login/auth';
       const params = new URLSearchParams();
       params.append('idToken', this.googleUser.wc.id_token);
       console.log(params)
@@ -189,7 +189,7 @@ export default {
           'at-jwt-access-token': session.getItem('at-jwt-access-token'),
           'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
         };
-      axios.get('http://localhost:8080/qss/list', {
+      axios.get('http://13.125.47.126:8080/qss/list', {
         headers: headers,
       }).then((res) => {
         console.log(res);

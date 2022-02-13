@@ -30,13 +30,14 @@
       </div> 
         <p id="caption" style="font-size:1.4rem"><span style="font-weight:bold; margin-right:5px;">{{post.author}}</span>{{post.descr}}</p>
     </div>
-    <comment-list :feedNo="post.no"></comment-list>
+    <comment-list :comments="comments" :commentsList="commentsList" :feedNo="post.no"></comment-list>
   </div>
 </template>
 
 <script>
 import CommentList from './CommentList.vue';
-import {mapActions} from 'vuex';
+import axios from 'axios';
+const session = window.sessionStorage;
 
 export default {
   components: { CommentList },
@@ -47,6 +48,8 @@ export default {
   data(){
     return{
       // date:this.post.date.toLocaleDateString(),
+      comments:[],
+      commentsList:[],
       posts:[],
       planetStyles: [
         { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
@@ -66,20 +69,39 @@ export default {
     }
   },
   methods: {
-    ...mapActions([
-      'getComments'
-    ]),
-
     like() {
       this.post.hasBeenLiked ? this.post.likes-- : this.post.likes++;
       this.post.hasBeenLiked = !this.post.hasBeenLiked;
     },
     
   },
-  mounted(){
-    this.getComments(this.post.no)
-    console.log('피드')
-    console.log(this.$store.state.comments)
+  created(){
+    let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+      axios({
+        method:'get',
+        url:`http://13.125.47.126:8080/comments/${this.post.no}`,
+        headers:headers,
+      })
+    .then((res) => {
+    console.log(res);
+    console.log('response header', res.headers);
+    if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
+      session.setItem('at-jwt-access-token', "");
+      session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+      console.log("Access Token을 교체합니다!!!")
+      }
+      console.log(res.data)
+      this.comments=res.data
+      this.commentsList=res.data.slice(0,2)
+    }).catch((error) => {
+      console.log(error);
+    }).then(() => {
+      console.log('댓글 가져오기 클리어');
+
+    });
   }
   
 };
