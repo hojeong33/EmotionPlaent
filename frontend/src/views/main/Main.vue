@@ -9,6 +9,7 @@
     <button @click="alarmselect">알림 가져오기</button>
     <button @click="socketconnect">소켓 재연결</button> 
     <button @click="test">테스트</button>--> 
+    <button @click="test1">테스트</button>
     <div class="container justify-content-center">
       <div class="example">
         <div class="tabs">
@@ -42,7 +43,7 @@ import Recommend from "../../components/MainPage/RecommendTab/Recommend.vue";
 import FeedList from "../../components/MainPage/FeedTab/FeedList.vue";
 import posts from "../../assets/data/posts.js";
 import SideProfileCard from "@/components/SideProfileCard.vue";
-
+import axios from 'axios';
 const session = window.sessionStorage;
 
 export default {
@@ -88,6 +89,24 @@ export default {
     console.log(session.getItem('userInfo'))
   },
   methods: {
+    test1(){
+      let headers = {
+          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+        axios({
+          method: 'get',
+          url: 'http://localhost:8080/searchs/byTag/feed/'+this.$store.state.userInfo.no+'/서면',
+          headers: headers,  // 넣는거 까먹지 마세요
+        }).then((res) => {
+          console.log("태그 피드 검색 성공")
+          console.log(res.data)
+          this.$store.dispatch('accessTokenRefresh', res) 
+        }).catch((error) => {
+          console.log("태그 피드 검색 실패")
+          console.log(error);
+        })
+    },
     test(){
       let el = {
         receiver: 3,

@@ -293,7 +293,6 @@ export default new Vuex.Store({
     
   },
   actions: {
-
       //알림 읽기 + 7일 이후 읽은 알림 삭제
       readAlarm(state, el){
           axios({
