@@ -53,7 +53,7 @@ public class CommentController {
 //        }
     }
 
-    @GetMapping(value ="/comments/returnNo{no}") // 댓글 목록
+    @GetMapping(value ="/comments/returnNo/{no}") // 댓글 목록
     public ResponseEntity<?> myListReturnNo(@PathVariable String no) {
         int userNo = Integer.parseInt(no);
         List<Integer> comments = commentService.listOnNo(userNo);

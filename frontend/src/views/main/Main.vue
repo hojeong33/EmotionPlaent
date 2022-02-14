@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div id="mainpage-container">
     <side-profile-card :user-info="userInfo"> </side-profile-card>
     <!-- <button @click="follow">팔로우 신청</button>
     <button @click="comment">댓글 알림</button>
@@ -122,6 +122,10 @@ export default {
 </script>
 
 <style scoped>
+#mainpage-container {
+  
+}
+
 .container {
   width: 50vw;
   min-width: 700px;

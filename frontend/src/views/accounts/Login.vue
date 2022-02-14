@@ -38,6 +38,7 @@
         <p>Kakao로 로그인</p>
         </button>
     </article>
+    <button id="kakao" class="social_logout" @click="logout">로그아웃</button>
   </div>
 </template>
 
@@ -99,7 +100,7 @@ export default {
       data: this.credentials
     })
     .then((res)=>{
-      console.log(res.headers);
+      console.log('response!!', res.headers);
       // storage 설정
       session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
       session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
@@ -176,17 +177,16 @@ export default {
 
   handleClickKaKaoSignin() {
     const params = {
-        redirectUri: "http://localhost:5500/login",
+        redirectUri: "http://localhost:5500/login/KaKaoLogin",
     };
     window.Kakao.Auth.authorize(params);
-    const authorization_code = this.$route.query.code
-    this.kakaoValidate(authorization_code)
   },
 
   kakaoValidate(code) {
+    console.log("카카오로그인 시작")
     axios({
         method: 'post',
-        url: 'http://13.125.47.126:8080/login/auth',
+        url: 'http://localhost:8080/login/oauth_kakao',
         data: code
       }).then((res) => {
         console.log('카카오 데이터 받아오기 : ' + res.data)
@@ -196,6 +196,12 @@ export default {
       }).then(() => {
         console.log('getQSSList End!!');
       });
+  },
+
+  logout() {
+		window.Kakao.Auth.logout(function(response) {
+			alert(response + 'logout');
+		}); 
   },
   
   trans() {
@@ -308,11 +314,15 @@ export default {
     flex-direction: column;
     align-items: center;
     background-color: white;
-    width: 45vh;
+    /* width: 50%; */
+    align-self: center;
     min-width: 450px;
+    height: 100%;
     border-radius: 20px;
-    margin: 2rem auto;
     padding: 2rem;
+    border: 2px #5E39B3 solid ;
+    /* border-left: 2px #5E39B3 solid;
+    border-right: 2px #cccccc solid; */
   }
 
   #login_header{
@@ -350,7 +360,7 @@ export default {
     width: 75%;
     display: flex;
     justify-content: space-evenly;
-    margin-bottom: 1.25rem;
+    margin: 1.25rem;
   }
 
   #login_btn{

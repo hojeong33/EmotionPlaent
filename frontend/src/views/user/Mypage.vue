@@ -132,6 +132,7 @@ export default {
     margin: auto;
     border-left: 1px solid #cccccc;
     border-right: 1px solid #cccccc;
+    background-color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
