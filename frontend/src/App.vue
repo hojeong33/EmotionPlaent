@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <navigation />
+    <navigation v-if="showingNav" />
     <create v-if="navActive[0]" />
     <router-view/>
     <logout-modal v-if="logoutModalActive" />
@@ -83,7 +83,7 @@ export default {
   },
   computed:
     mapState([
-      'navActive', 'modalActive', 'profileImgChangeModalActive', 'commentSettingModalActive', 'logoutModalActive', 'userFeedSettingModalActive', 'loginConfirmModalActive', 
+      'navActive', 'showingNav', 'modalActive', 'profileImgChangeModalActive', 'commentSettingModalActive', 'logoutModalActive', 'userFeedSettingModalActive', 'loginConfirmModalActive', 
       'signupConfirmModalActive', 'emotionTestTooMuchPickModalActive', 'firstEmotionTestConfirmModalActive', 'emotionTestErrorActive', 'emotionTestPickMoreModalActive', 
       'emotionTestResultModalActive', 'loginFailModalActive', 'signupFailModalActive1', 'signupFailModalActive2', 'ReturnToLoginModalActive', 'commentNeedContentModalActive',
       'moreInfoConfirmModalActive', 
@@ -94,12 +94,11 @@ export default {
 
 
 <style scoped>
-  #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    position: relative;
-  }
+#app {
+font-family: '비트로 프라이드 TTF', sans-serif !important;
+}
+@font-face {
+  font-family:'비트로 프라이드 TTF';
+  src: url('assets/font/비트로 프라이드 TTF.ttf') format('truetype');
+}
 </style>

@@ -31,7 +31,8 @@ const routes = [
     component: Login,
     meta: {
       loginRequired: false,
-      testRequired: false
+      testRequired: false,
+      showingNav: false,
     }
   },
   {
@@ -40,7 +41,8 @@ const routes = [
     component: Signup,
     meta: {
       loginRequired: false,
-      testRequired: false
+      testRequired: false,
+      showingNav: false,
     }
   },
   {
@@ -50,7 +52,8 @@ const routes = [
     component: Mypage,
     meta: {
       loginRequired: true,
-      testRequired: true
+      testRequired: true, 
+      showingNav: true,
     },
     children: [
       {
@@ -59,7 +62,8 @@ const routes = [
         props: true,
         meta: {
           loginRequired: true,
-          testRequired: true
+          testRequired: true,
+          showingNav: true,
         },
       },
       {
@@ -68,7 +72,8 @@ const routes = [
         props: true,
         meta: {
           loginRequired: true,
-          testRequired: true
+          testRequired: true,
+          showingNav: true,
         },
       }
     ]
@@ -80,7 +85,8 @@ const routes = [
     component: Userpage,
     meta: {
       loginRequired: true,
-      testRequired: false
+      testRequired:  true,
+      showingNav: true,
     },
     children: [
       {
@@ -89,7 +95,8 @@ const routes = [
         props: true,
         meta: {
           loginRequired: true,
-          testRequired: false
+          testRequired: true,
+          showingNav: true,
         },
       },
       {
@@ -98,7 +105,8 @@ const routes = [
         props: true,
         meta: {
           loginRequired: true,
-          testRequired: false
+          testRequired: true,
+          showingNav: true,
         },
       }
     ]
@@ -109,7 +117,8 @@ const routes = [
     component:Main,
     meta: {
       loginRequired: true,
-      testRequired: true
+      testRequired: true,
+      showingNav: true,
     },
   },
   {
@@ -118,7 +127,8 @@ const routes = [
     component: EmotionTest,
     meta: {
       loginRequired: true,
-      testRequired: false
+      testRequired: false,
+      showingNav: false,
     },
   },
   {
@@ -128,7 +138,8 @@ const routes = [
     component: Setting,
     meta: {
       loginRequired: true,
-      testRequired: true
+      testRequired: true,
+      showingNav: true,
     },
     children: [
       {
@@ -136,7 +147,8 @@ const routes = [
         component: UserInfo,
         meta: {
           loginRequired: true,
-          testRequired: true
+          testRequired: true,
+          showingNav: true,
         },
       },
       {
@@ -144,7 +156,8 @@ const routes = [
         component: PwChange,
         meta: {
           loginRequired: true,
-          testRequired: true
+          testRequired: true,
+          showingNav: true,
         },
       },
       {
@@ -152,7 +165,8 @@ const routes = [
         component: Withdrawal,
         meta: {
           loginRequired: true,
-          testRequired: true
+          testRequired: true,
+          showingNav: true,
         },
       },
       {
@@ -161,7 +175,8 @@ const routes = [
         component: PwFind,
         meta: {
           loginRequired: false,
-          testRequired: false
+          testRequired: false,
+          showingNav: false,
         },
       },
       {
@@ -170,7 +185,8 @@ const routes = [
         component: EmailFind,
         meta: {
           loginRequired: false,
-          testRequired: false
+          testRequired: false,
+          showingNav: false,
         },
       },
       {
@@ -178,7 +194,8 @@ const routes = [
         component: ProfileUpdate,
         meta: {
           loginRequired: true,
-          testRequired: true
+          testRequired: true,
+          showingNav: true,
         },
       }
     ],  
@@ -189,7 +206,8 @@ const routes = [
     component: FeedDetail,
     meta: {
       loginRequired: true,
-      testRequired: true
+      testRequired: true,
+      showingNav: true,
     },
   },
   {
@@ -198,7 +216,8 @@ const routes = [
     component: SearchResult,
     meta: {
       loginRequired: true,
-      testRequired: true
+      testRequired: true,
+      showingNav: true,
     },
   }
 ]
@@ -245,6 +264,9 @@ router.beforeEach((to, from, next) => {
     console.log('do not matched!!')
     next({ name:'Main' })
   }
+
+  store.commit('navActivate2', to.meta.showingNav)
+ 
 
   if (!to.meta.loginRequired || !to.meta.testRequired){
     backgroundSet(true).then(() => next())

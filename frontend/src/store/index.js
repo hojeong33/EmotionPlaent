@@ -55,6 +55,7 @@ export default new Vuex.Store({
       { id: 7, name: '떠돌이행성', img: "spaceship.png", color: '#FCBB74' },
     ],
     navActive: [false, false, false, false, false],
+    showingNav: true,
     user: null,
     // 피드작성
     feedCreateData: [
@@ -105,6 +106,9 @@ export default new Vuex.Store({
         navActive[idx] = false
       })
       Vue.set(navActive, payload, true)
+    },
+    navActivate2: function(state, payload) {
+        state.showingNav = payload
     },
     //검색부분
     updateSearch: function(state, searchWords){
@@ -653,7 +657,7 @@ export default new Vuex.Store({
 
       const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
       console.log('decodeAccessToken data', decodeAccessToken);
-      commit('userUpdate', decodeAccessToken.userInfo)
+      commit('userUpdate', decodeAccessToken)
 
       return new Promise((resolve) => {
         resolve(true)

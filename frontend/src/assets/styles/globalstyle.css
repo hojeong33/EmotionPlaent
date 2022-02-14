@@ -7,9 +7,3 @@
 body {
   background-color: #ffffff;
 }
-
-body.astro {
-  min-height: 100vh;
-  background-image: url("../images/etc/background.png");
-  background-size: cover;
-}
