@@ -3,7 +3,6 @@
 		<filter-tab :user-mood="userMood" @filtering="filtering" />
 
 		<div id="feed-container" v-if="tab == 'feed'"> 
-			<!-- <feed-item v-for="(feed, idx) in filteredFeeds" :key="idx" :feed="feed" /> -->
 			<feed-list :feeds="filteredFeeds"/>
 		</div>
 
@@ -56,7 +55,6 @@ export default {
 		}
 	},
 	props: {
-		userMood: Number,
 		tab: String
 	},
 	components: {
@@ -94,7 +92,13 @@ export default {
       })
       return temp
     },
+		userMood(){
+			return this.$store.state.userInfo.mood
+		}
 	},
+	created(){
+		console.log(this.$route)
+	}
 }
 </script>
 

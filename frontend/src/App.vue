@@ -94,11 +94,19 @@ export default {
 
 
 <style scoped>
-#app {
-font-family: '비트로 프라이드 TTF', sans-serif !important;
-}
-@font-face {
-  font-family:'비트로 프라이드 TTF';
-  src: url('assets/font/비트로 프라이드 TTF.ttf') format('truetype');
-}
+  #app {
+    min-width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    background-color: rgba(235, 235, 235, 0.5);
+    font-family: '비트로 프라이드 TTF', sans-serif !important;
+    }
+    @font-face {
+      font-family:'비트로 프라이드 TTF';
+      src: url('assets/font/비트로 프라이드 TTF.ttf') format('truetype');
+  }
 </style>

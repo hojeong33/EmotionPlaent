@@ -308,11 +308,15 @@ export default {
     flex-direction: column;
     align-items: center;
     background-color: white;
-    width: 45vh;
+    /* width: 50%; */
+    align-self: center;
     min-width: 450px;
+    height: 100%;
     border-radius: 20px;
-    margin: 2rem auto;
     padding: 2rem;
+    border: 2px #5E39B3 solid ;
+    /* border-left: 2px #5E39B3 solid;
+    border-right: 2px #cccccc solid; */
   }
 
   #login_header{
@@ -350,7 +354,7 @@ export default {
     width: 75%;
     display: flex;
     justify-content: space-evenly;
-    margin-bottom: 1.25rem;
+    margin: 1.25rem;
   }
 
   #login_btn{

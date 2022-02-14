@@ -63,10 +63,12 @@ export default {
 		width: 5%;
 		height: inherit;
 		aspect-ratio: 1/1;
+		margin: 0 1rem;
 	}
 
 	select { 
-		padding: 0.2rem 2rem 0;
+		/* padding: 0.2rem 2rem 0 0; */
+		padding-right: 2rem;
 		border: none;
 		border-radius:0; /* 아이폰 사파리 보더 없애기 */ 
 		-webkit-appearance:none; /* 화살표 없애기 for chrome*/ 
