@@ -30,7 +30,7 @@ export default {
         console.log("카카오로그인 시작")
         axios({
             method: 'post',
-            url: 'http://localhost:8080/login/oauth_kakao',
+            url: 'http://13.125.47.126:8080/login/oauth_kakao',
             data: code
         }).then((res) => {
             console.log('카카오 데이터 받아오기 : ' + res.data.email)
@@ -44,7 +44,7 @@ export default {
             this.sendToken();
 
             if (this.$store.state.userInfo.tel === null) {
-                this.$router.push('MoreInfo')
+                this.$router.push('/moreInfo')
             }
             else{
                 //this.$store.commit('loginConfirmModalActivate')
