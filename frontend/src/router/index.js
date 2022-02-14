@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '@/views/accounts/Login'
+import MoreInfo from '@/views/accounts/MoreInfo'
 import Signup from '@/views/accounts/Signup'
 import KaKaoLogin from '@/views/accounts/KaKaoLogin'
 import EmotionTest from '@/views/EmotionTest'
@@ -35,6 +36,16 @@ const routes = [
     component: Login,
     meta: {
       loginRequired: false,
+      testRequired: false,
+      showingNav: false,
+    }
+  },
+  {
+    path: '/moreInfo',
+    name: 'MoreInfo',
+    component: MoreInfo,
+    meta: {
+      loginRequired: true,
       testRequired: false,
       showingNav: false,
     }
@@ -295,7 +306,7 @@ router.beforeEach((to, from, next) => {
     userUpdate.then(() => next())
   }
   // 감정 테스트가 필요한 경우 테스트페이지로 redirect
-  if (to.meta.testRequired && !store.state.userInfo.mood ){
+  if (to.meta.testRequired && store.state.userInfo != null &&!store.state.userInfo.mood ){
     console.log(store.state.userInfo.mood)
     next({ name:'EmotionTest' })
   }

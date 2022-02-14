@@ -60,9 +60,10 @@ export default {
         method: 'get',
         url: 'http://13.125.47.126:8080/register/findEmail/' + this.tel,
       }).then((res) => {
-       alert(res.data)
+       alert("찾은 이메일은 " +res.data+ " 입니다.")
        this.$router.push("/login")
       }).catch((error) => {
+        alert("일치하는 정보가 없습니다.")
         console.log(error);
       })
     }else{
