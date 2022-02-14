@@ -74,7 +74,7 @@ export default {
 		-webkit-appearance:none; /* 화살표 없애기 for chrome*/ 
 		-moz-appearance:none; /* 화살표 없애기 for firefox*/ 
 		appearance:none; /* 화살표 없애기 공통*/ 
-		background: url('../../assets/images/etc/rocket.png') no-repeat 97% 50%/2.2vh auto;
+		background: url('../../../assets/images/etc/rocket.png') no-repeat 97% 50%/2.2vh auto;
 		font-size: 1.5rem;
 		font-weight: bold;
 		text-align: center;

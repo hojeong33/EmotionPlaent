@@ -13,10 +13,13 @@ export default new Vuex.Store({
   state: {
     // feedActive: false,
     //검색부분
-    words: null,
+    words: null, //검색창
     tagSearch: [],
     userSearch: [],
     pickSearch: [],
+    tagSearchResult: [], //검색 결과
+    userSearchResult: [],
+    pickSearchResult: [],
     //메인 추천탭 부분
     userEmotion: null,
     recommendType: 1,
@@ -33,6 +36,8 @@ export default new Vuex.Store({
       // 내가 팔로우 하는 사람(팔로잉)
       userFollowing : [],
     },
+    userFeedInfo: [], //내 피드 정보
+    userPickInfo: [], //내 찜목록 정보
 
     // 다른유저 정보
     searchUserNo: null, //검색할 유저 번호 저장
@@ -45,6 +50,9 @@ export default new Vuex.Store({
       // 내가 팔로우 하는 사람(팔로잉)
       userFollowing : [],
     },
+    searchUserFeedInfo: [], //내 피드 정보
+    searchUserPickInfo: [], //내 찜목록 정보
+
     planetStyles: [
       { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
       { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
@@ -583,9 +591,34 @@ export default new Vuex.Store({
           console.log('getQSSList End!!');
         });
       },
-
+    // 마이페이지랑 유저페이지 피드&찜목록 정보 가져오는 부분  
+    searchUserFeed(state, el) {
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+      axios({
+        method: 'get',
+        url: 'http://13.125.47.126:8080/feeds/my/' + el,
+        headers: headers,  // 넣는거 까먹지 마세요
+      }).then((res) => {
+        if (el === this.state.userInfo.no) {
+          this.state.userFeedInfo = res.data
+        }
+        else {
+          this.state.searchUserFeedInfo = res.data
+        }
+        console.log("피드 가져오기 성공")
+        console.log(res.data)
+        this.dispatch('accessTokenRefresh', res)
+      }).catch((error) => {
+        console.log("피드 가져오기 실패")
+        console.log(error);
+      })
+    },
 
     //여기 검색부분입니다
+    // 글자가 포함된 태그리스트와 태그별 피드 개수를 가져옴
     searchTag() {
       let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
@@ -603,6 +636,26 @@ export default new Vuex.Store({
       .catch(()=> {
         console.log('태그 없음')
         this.state.tagSearch = []
+      })
+    },
+    // 클릭하는 태그의 피드 정보 전체를 가져옴
+    searchTagSearch(state, el) {
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+      axios({
+        method: 'get',
+        url: 'http://13.125.47.126:8080/searchs/byTag/feed/'+this.state.userInfo.no + '/' + el,
+        headers: headers,  // 넣는거 까먹지 마세요
+      }).then((res) => {
+        console.log("태그 피드 검색 성공")
+        console.log(res.data)
+        this.state.tagSearchResult = res.data
+        this.dispatch('accessTokenRefresh', res)
+      }).catch((error) => {
+        console.log("태그 피드 검색 실패")
+        console.log(error);
       })
     },
 
