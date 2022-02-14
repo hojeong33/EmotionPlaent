@@ -38,6 +38,7 @@
         <p>Kakao로 로그인</p>
         </button>
     </article>
+    <button id="kakao" class="social_logout" @click="logout">로그아웃</button>
   </div>
 </template>
 
@@ -147,7 +148,7 @@ export default {
       }
     }).catch((error) => {
       console.log(error);
-      this.$store.commit('loginFailModalActivate')
+      // this.$store.commit('loginFailModalActivate')
     }).then(() => {
       console.log('tokenVerify End!!');
     });
@@ -176,17 +177,16 @@ export default {
 
   handleClickKaKaoSignin() {
     const params = {
-        redirectUri: "http://localhost:5500/login",
+        redirectUri: "http://localhost:5500/login/KaKaoLogin",
     };
     window.Kakao.Auth.authorize(params);
-    const authorization_code = this.$route.query.code
-    this.kakaoValidate(authorization_code)
   },
 
   kakaoValidate(code) {
+    console.log("카카오로그인 시작")
     axios({
         method: 'post',
-        url: 'http://13.125.47.126:8080/login/auth',
+        url: 'http://localhost:8080/login/oauth_kakao',
         data: code
       }).then((res) => {
         console.log('카카오 데이터 받아오기 : ' + res.data)
@@ -196,6 +196,12 @@ export default {
       }).then(() => {
         console.log('getQSSList End!!');
       });
+  },
+
+  logout() {
+		window.Kakao.Auth.logout(function(response) {
+			alert(response + 'logout');
+		}); 
   },
   
   trans() {

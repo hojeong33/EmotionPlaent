@@ -8,7 +8,7 @@ import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 
 public interface SearchService {
 	public List<TagDto> tagSelect(String name);
-	public List<FeedDto> tagListSelect(String name);
+	public List<FeedDto> tagfeedSelect(String name, int userNo);
 	public List<UserDto> userSelect(String name);
 //	public List<PickDto> recommendSelect(String name);
 }

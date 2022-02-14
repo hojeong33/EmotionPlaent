@@ -1,7 +1,7 @@
 <template>
-	<div id="emotiontest_error">
+	<div id="pick_your_images_modal">
     <div id="modal">
-			<h4> 잘못된 요청입니다</h4>
+			<h4>이미지를 골라주세요</h4>
 			<hr>
 			<p @click="goBack">확인</p>
     </div>
@@ -14,24 +14,24 @@ export default {
 		goBack: function () {
 			// console.log('여기옴')
 			// console.log(this.$store.state.userInfo)
-			this.$store.commit('emotionTestErrorModalActivate')
+			this.$store.commit('pickYourImageModalActivate')
 		}
 	}
 }
 </script>
 
 <style scoped>
-#emotiontest_error {
+#pick_your_images_modal {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 100vw;
-	height: 100vh;
+	width: 100%;
+	height: 100%;
 	background-color: rgb(0, 0, 0, 0.5);
 	position: fixed;
 	top: 0;
 	left: 0;
-	z-index: 9999;
+	z-index: 999;
 }
 #modal {
 	display: flex;
@@ -53,5 +53,6 @@ hr {
 h4 {
 	margin: auto;
 	text-align: center;
+	font-weight: bold;
 }
 </style>

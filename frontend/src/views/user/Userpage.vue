@@ -13,8 +13,8 @@
         </div>
         <div id="info-card">
           <h3>이야기 0개</h3>
-          <h3>팔로우 {{ this.$store.state.searchUserFollowInfo.userFollow.length }}</h3>
-          <h3>팔로잉 {{ this.$store.state.searchUserFollowInfo.userFollowing.length }}</h3>
+          <h3 @click="showFollowerList">팔로우 {{ this.$store.state.searchUserFollowInfo.userFollow.length }}</h3>
+          <h3 @click="showFollowingList">팔로잉 {{ this.$store.state.searchUserFollowInfo.userFollowing.length }}</h3>
         </div>
       </div>
     </article>
@@ -57,6 +57,12 @@ export default {
     unfollow() {
       this.$store.dispatch('deletefollow', this.$store.state.searchUserNo)
     },
+    showFollowerList: function () {
+      this.$store.commit('userpagefollowerListActivate')
+    },
+    showFollowingList: function () {
+      this.$store.commit('userpagefollowingListActivate')
+    }
   },
   mounted(){
 

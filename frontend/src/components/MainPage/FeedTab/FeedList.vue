@@ -1,40 +1,59 @@
 <template>
   <div id="feed-list">
-    <div id="show-btns">
-      <h3>보기</h3>
-      <button @click="showOption = 'grid'" :class="showOption == 'grid' ? 'g-active':'g' " />
-      <button @click="showOption = 'card'" :class="showOption == 'card' ? 'c-active':'c' " />
-    </div>
-    <div v-if="showOption == 'grid'" id="grid-container">
-      <feed-small v-for="feed in feeds"
-        :post="feed"
-        :key="feeds.indexOf(feed)" />
-    </div>
-    <div v-if="showOption == 'card'" id="card-container">
-      <feed v-for="feed in feeds"
-        :feed="feed"
-        :key="feeds.indexOf(feed)" />
+    <div>
+      <feed v-for="post in posts"
+        :post="post"
+        :key="posts.indexOf(post)">
+        </feed>
     </div>
   </div>
 </template>
 
 <script>
 import Feed from "./Feed.vue";
-import FeedSmall from "./FeedSmall.vue";
+import axios from 'axios';
+const session = window.sessionStorage;
 
 export default {
   name: "FeedList",
+  props: {
+    // posts: Array,
+  },
   data(){
-    return {
-      showOption: 'grid'
+    return{
+      posts:[],
     }
   },
-  props: {
-    feeds: Array,
+  components: {Feed,
   },
-  components: {
-    Feed,
-    FeedSmall
+  created(){
+    const userdata = JSON.parse(session.getItem('userInfo')) 
+    let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+      axios({
+        method:'get',
+        url:`http://13.125.47.126:8080/feeds/my/returnNo/${userdata.no}`,
+        headers:headers,
+       })
+      .then((res) => {
+      console.log('여기보세여영 피드피드')
+      console.log(res.data);
+      console.log('response header', res.headers);
+      if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
+        session.setItem('at-jwt-access-token', "");
+        session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+        console.log("Access Token을 교체합니다!!!")
+      }
+      // console.log(res.data)
+      this.posts=res.data
+      console.log(this.posts)
+    }).catch((error) => {
+      console.log(error);
+    }).then(() => {
+      console.log('피드 가져오기 클리어');
+    });
   }
 };
 </script>

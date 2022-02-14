@@ -12,7 +12,7 @@
       <div id="uploaded-box" v-else>
         <transition-group id="carousel" :name="page > beforePage ? 'slide':'slide-reverse'">
           <img v-for="(image, index) in images" :key="index"
-          class="uploadedImg" :src="image.imgPreview" alt=""
+          class="uploadedImg" :src="image.imgLink" alt=""
           v-show="index+1 == page">
         </transition-group>
         <div id="pages">
@@ -57,7 +57,8 @@ export default {
     },
     nextPage(){
       if (this.images.length === 0) {
-        alert('이미지를 선택해주세요')
+        // alert('이미지를 선택해주세요')
+        this.$store.commit('pickYourImageModalActivate')
       } else {
         this.$emit('next-page')
       }
@@ -73,7 +74,7 @@ export default {
           ...this.images,
           {
             image: this.$refs.feedImg.files[i],
-            imgPreview: URL.createObjectURL(this.$refs.feedImg.files[i]),
+            imgLink: URL.createObjectURL(this.$refs.feedImg.files[i]),
             number: i
           }
         ];
@@ -82,8 +83,9 @@ export default {
       this.uploadImageIndex = num + 1;
 
       if (this.images.length > 3) {
-        alert('사진이 너무 많습니다')
+        // alert('사진이 너무 많습니다')
         this.images = []
+        this.$store.commit('tooMuchImagesModalActivate')
       } else {
         this.$store.commit('feedImg', this.images)
         this.$store.commit('rawImg', this.rawImage)

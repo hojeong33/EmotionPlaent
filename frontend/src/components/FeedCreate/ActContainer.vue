@@ -9,7 +9,7 @@
       </span>
     </article>
     <article id="tag_container" v-for="category in act_categories" :key="category" v-show="selectedCategory == category">
-      <act-tag v-for="(tag, idx) in act_details[category]" :key="category+'-'+idx" :tag="tag" @checked="checkTag"  />
+      <act-tag v-for="(tag, idx) in act_details[category]" :key="category+'-'+idx" :tag="tag" @checked="checkTag" @selected="select"  />
     </article>
   </section>
 </template>
@@ -31,6 +31,7 @@ export default {
         '선물': ['줬어요', '받았어요', '샀어요', '했어요']
       },
       selectedTag: null,
+      acttag: {},
     }
   },
   components: {
@@ -42,6 +43,7 @@ export default {
     },
     checkTag(payload){
       if (this.selectedTag){
+        console.log(payload)
         this.$children.forEach(ele => {
           if (ele.isChecked && ele._props.tag != payload){
             ele.isChecked = false
@@ -49,8 +51,13 @@ export default {
         })
       }
       this.selectedTag = payload
-      let ActTag = {name: `${this.selectedTag}`, type: 0}
-      this.$store.commit('feedTag', ActTag)
+      this.acttag = {name: `${this.selectedTag}`, type: 0}
+      this.$store.commit('feedTag', this.acttag)
+      this.$emit('check-category',this.selectedTag)
+    },
+    select(payload) {
+      console.log(payload)
+      this.$emit('selected', payload)
     }
   },
   computed: {

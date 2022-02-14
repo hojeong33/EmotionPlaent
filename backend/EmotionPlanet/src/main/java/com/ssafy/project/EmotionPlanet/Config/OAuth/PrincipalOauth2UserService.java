@@ -5,22 +5,19 @@ import com.google.api.client.googleapis.auth.oauth2.GoogleIdTokenVerifier;
 import com.google.api.client.http.javanet.NetHttpTransport;
 import com.google.api.client.json.JsonFactory;
 import com.google.api.client.json.gson.GsonFactory;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import com.ssafy.project.EmotionPlanet.Dao.UserDao;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
+import com.ssafy.project.EmotionPlanet.Dto.UserSecretDto;
 import com.ssafy.project.EmotionPlanet.Service.UserService;
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
-import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
-import org.springframework.security.oauth2.core.OAuth2AuthenticationException;
-import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.*;
 import java.net.HttpURLConnection;
@@ -120,7 +117,7 @@ public class PrincipalOauth2UserService {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=54115c9fc805ecfb96348d18733e6e4a");  //본인이 발급받은 key
-            sb.append("&redirect_uri=http://localhost:5500/login");     // 본인이 설정해 놓은 경로
+            sb.append("&redirect_uri=http://localhost:5500/login/KaKaoLogin");     // 본인이 설정해 놓은 경로
             sb.append("&code=" + authorize_code);
             bw.write(sb.toString());
             bw.flush();
@@ -186,21 +183,31 @@ public class PrincipalOauth2UserService {
             }
             System.out.println("response body : " + result);
 
-            JsonParser parser = new JsonParser();
-            JsonElement element = parser.parse(result);
+            JSONParser parser = new JSONParser();
+            JSONObject jsonObject = (JSONObject) parser.parse(result);
 
-            JsonObject properties = element.getAsJsonObject().get("properties").getAsJsonObject();
-            JsonObject kakao_account = element.getAsJsonObject().get("kakao_account").getAsJsonObject();
+            JSONObject kakao_account = (JSONObject) jsonObject.get("kakao_account");
+            JSONObject profile = (JSONObject) kakao_account.get("profile");
 
-            String nickname = properties.getAsJsonObject().get("nickname").getAsString();
-            String email = kakao_account.getAsJsonObject().get("email").getAsString();
-
+            String nickname = Long.toString((Long) jsonObject.get("id"));
+            String email = (String) kakao_account.get("email");
+            String profileImg = (String) profile.get("profile_image_url");
+            System.out.println(nickname);
+            System.out.println(email);
             userInfo.put("accessToken", access_Token);
             userInfo.put("nickname", nickname);
             userInfo.put("email", email);
+            userInfo.put("profileImg", profileImg);
+
+            UserSecretDto userSecretDto = new UserSecretDto();
+            userSecretDto.setEmail((String) userInfo.get("email"));
+            userSecretDto.setNickname((String) userInfo.get("nickname"));
+            userSecretDto.setProfileImg((String) userInfo.get("profile_image_url"));
 
         } catch (IOException e) {
             // TODO Auto-generated catch block
+            e.printStackTrace();
+        } catch (ParseException e) {
             e.printStackTrace();
         }
 
