@@ -1,15 +1,20 @@
 <template>
-  <div id="feed" v-if="feed">
+  <div id="feed">
     <div id="header">
       <section id="profile_image">
-        <img :src="feed.authorDetail.profileImg" />
+        <img :src="$store.state.searchUserInfo.profileImg" />
       </section>
       <div id="profile_content">
-        <section id="username" style="font-size:2rem;">{{feed.authorDetail.nickname}}</section>
-        <section style="font-size:1.2rem;">{{feed.date}}</section>
+        <section id="username" style="font-size:2rem;">{{ this.$store.state.searchUserInfo.nickname }}</section>
+        <section style="font-size:1.2rem;">{{ feed.date }}</section>
       </div>
       <div id="setting" style="z-index: 2;" v-if="isMine">
-        <i @click="onCommentSetting" class="fas fa-ellipsis-v" style="color:black"></i>
+        <i @click="onSetting" class="fas fa-ellipsis-v"></i>
+        <div id="detail" v-if="isOpend" style="" >
+          <p style="margin-bottom:0; margin-top:1rem;">수정</p>
+          <hr>
+          <p @click="deleteComment">삭제</p>
+        </div>
       </div>
     </div>
     <div id="post_image" style="z-index: 1;">
@@ -19,7 +24,7 @@
     </div>
     <div id="like">
       <div id="heart">
-        <i class="far fa-heart fa-lg" :class="{'fas': this.feed.like}"  @click="like"></i>
+        <i class="far fa-heart fa-lg" :class="{'fas': this.feed.like}" @click="like"></i>
       </div>
        <p id="feed_likes" v-for="(like, idx) in feed.likes" :key="idx">{{like["nickname"]}}</p>
       <p class="likes" >{{feed.likes}} likes</p>
@@ -28,14 +33,14 @@
       <div id="tag">
         <p id="my_tag" v-for="(tag, idx) in feed.tags" :key="idx">#{{tag["name"]}}</p>
       </div> 
-        <p id="caption" style="font-size:1.4rem"><span style="font-weight:bold; margin-right:5px;">{{feed.author}}</span>{{feed.descr}}</p>
+        <p id="caption" style="font-size:1.4rem"><span style="font-weight:bold; margin-right:5px;">{{this.$store.state.searchUserInfo.nickname}}</span>{{feed.descr}}</p>
     </div>
-    <comment-list :feedNo="post"></comment-list>
+    <comment-list :feedNo="feed.no"></comment-list>
   </div>
 </template>
 
 <script>
-import CommentList from './CommentList.vue';
+import CommentList from '@/components/MainPage/FeedTab/CommentList.vue';
 import axios from 'axios';
 const session = window.sessionStorage;
 
@@ -43,15 +48,13 @@ export default {
   components: { CommentList },
   name: "Feed",
   props: {
-    post: Number,
+    feed: Object,
   },
   data(){
     return{
       // date:this.post.date.toLocaleDateString(),
-      isCommentSettingOpened:false,
-      isUserFeedSettingOpened: false,
       isMine:false,
-      feed:null,
+      isOpend:false,
       posts:[],
       planetStyles: [
         { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
@@ -65,102 +68,22 @@ export default {
   },
    computed: {
     tmp: function () {
-      const name = this.feed.tags[0]
+      const name = this.feed.planet
       const style = this.planetStyles.find(el => el.name === name) || {}
       return style
     }
   },
   methods: {
-    onCommentSetting:function(){
-      this.$store.commit('commentSettingModalActivate')
-      // if(this.isCommentSettingOpened){
-      // 	this.isCommentSettingOpened=false
-      // }else{
-      // 	this.isCommentSettingOpened=true
-      // }
-    },
-    onUserFeedSetting2:function(){
-      this.$store.commit('userFeedSettingModalActivate2')
-      // if(this.isUserFeedSettingOpened){
-      // 	this.isUserFeedSettingOpened=false
-      // }else{
-      // 	this.isUserFeedSettingOpened=true
-      // }
+    onSetting:function(){
+      if(this.isOpend){
+        this.isOpend=false
+      }else{
+        this.isOpend=true
+      }
     },
     like() {
-      this.feed.like ? this.cancelLike(): this.doLike();
+      this.feed.like ? this.feed.likes-- : this.feed.likes++;
       this.feed.like= !this.feed.like;
-    },
-    doLike:function(){
-      const userdata = JSON.parse(session.getItem('userInfo')) ;
-      const likeItem={
-        targetNo:this.post,
-        userNo:userdata.no,
-      }
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        };
-        axios({
-            method: 'post',
-            url:`http://13.125.47.126:8080/feeds/like`,
-            data:likeItem,
-            headers: headers,  // 넣는거 까먹지 마세요
-          }).then((res) => {
-          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-          this.getFeed()
-          }).catch((error) => {
-            console.log(error);
-          }).then(() => {
-            console.log('피드 좋아요');
-          });
-    },
-    getFeed:function(){
-       let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        };
-        axios({
-            method: 'get',
-            url:`http://13.125.47.126:8080/feed/${this.post}`,
-            headers: headers,  // 넣는거 까먹지 마세요
-          }).then((res) => {
-          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-          console.log('!!!!!!!!!!!!!!!!!!!')
-          console.log(res.data)
-          this.feed=res.data
-          this.isMine=res.data.owner
-          }).catch((error) => {
-            console.log(error);
-          }).then(() => {
-            console.log('피드 하나 가져오기');
-          });
-    },
-    cancelLike:function(){
-      const userdata = JSON.parse(session.getItem('userInfo')) ;
-      const likeItem={
-        targetNo:this.post,
-        userNo:userdata.no,
-      }
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        };
-        axios({
-            method: 'delete',
-            url:`http://13.125.47.126:8080/feeds/like`,
-            data:likeItem,
-            headers: headers,  // 넣는거 까먹지 마세요
-          }).then((res) => {
-          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-          this.getFeed()
-          }).catch((error) => {
-            console.log(error);
-          }).then(() => {
-            console.log('피드 좋아요');
-          });
-      
-
     },
     
     // getComments:function(){
@@ -188,7 +111,25 @@ export default {
     
   },
   created(){
-   this.getFeed()
+    let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+    };
+    axios({
+        method: 'get',
+        url:`http://13.125.47.126:8080/feed/${this.feed}`,
+        headers: headers,  // 넣는거 까먹지 마세요
+      }).then((res) => {
+      this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+      console.log('!!!!!!!!!!!!!!!!!!!')
+      console.log(res.data)
+      this.feed=res.data
+      this.isMine=res.data.owner
+      }).catch((error) => {
+        console.log(error);
+      }).then(() => {
+        console.log('피드 하나 가져오기');
+      });
     
   }
   
@@ -196,9 +137,6 @@ export default {
 </script>
 
 <style scoped>
-  .fas{
-    color: crimson;
-  }
   #setting{
     font-size: 2rem;
     margin-left: auto;
@@ -260,10 +198,10 @@ export default {
     
     /* background-color: antiquewhite; */
   }
-  /* #post_image img{
+  #post_image img{
     width: 90vh;
     height: 90vh;
-  } */
+  }
   #post_image{
     position: relative;
     overflow: hidden;

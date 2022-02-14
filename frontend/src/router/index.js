@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '@/views/accounts/Login'
+import MoreInfo from '@/views/accounts/MoreInfo'
 import Signup from '@/views/accounts/Signup'
 import KaKaoLogin from '@/views/accounts/KaKaoLogin'
 import EmotionTest from '@/views/EmotionTest'
@@ -9,6 +10,8 @@ import Mypage from '@/views/user/Mypage.vue'
 import Userpage from '@/views/user/Userpage.vue'
 import List from '@/components/user/List'
 import PickItem from '@/components/user/PickItem'
+import UserList from '@/components/SearchUser/UserList'
+import UserPickItem from '@/components/SearchUser/UserPickItem'
 
 import Main from '@/views/main/Main.vue'
 import Setting from '@/views/Setting'
@@ -33,6 +36,16 @@ const routes = [
     component: Login,
     meta: {
       loginRequired: false,
+      testRequired: false,
+      showingNav: false,
+    }
+  },
+  {
+    path: '/moreInfo',
+    name: 'MoreInfo',
+    component: MoreInfo,
+    meta: {
+      loginRequired: true,
       testRequired: false,
       showingNav: false,
     }
@@ -102,7 +115,7 @@ const routes = [
     children: [
       {
         path: ':tab',
-        component: List,
+        component: UserList,
         props: true,
         meta: {
           loginRequired: true,
@@ -112,7 +125,7 @@ const routes = [
       },
       {
         path: 'item/:id/:tag/:index',
-        component: PickItem,
+        component: UserPickItem,
         props: true,
         meta: {
           loginRequired: true,
@@ -294,7 +307,7 @@ router.beforeEach((to, from, next) => {
     userUpdate.then(() => next())
   }
   // 감정 테스트가 필요한 경우 테스트페이지로 redirect
-  if (to.meta.testRequired && !store.state.userInfo.mood ){
+  if (to.meta.testRequired && store.state.userInfo != null &&!store.state.userInfo.mood ){
     console.log(store.state.userInfo.mood)
     next({ name:'EmotionTest' })
   }

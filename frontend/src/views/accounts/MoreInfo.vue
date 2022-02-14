@@ -15,7 +15,6 @@
         id="email"
         v-model="this.$store.state.userInfo.email"
         autocomplete="off"
-        @input = "validateEmail"
         readonly>
       </article>
       <article id="nickname_form">
@@ -68,7 +67,7 @@
 <script>
 // 소셜로그인 최초로 했을 때 추가 정보(전화번호, 닉네임, 생년월일) 받는 페이지
   import axios from 'axios'
-
+  const session = window.sessionStorage
   export default {
     name: 'MoreInfo',
     data: function () {
@@ -89,33 +88,26 @@
         this.$store.state.userInfo.nickname = this.credentials.nickname
         this.$store.state.userInfo.tel = this.credentials.tel
         this.$store.state.userInfo.birth = this.credentials.birth
-        const info = { no: this.$store.state.userInfo.no, nickname: this.credentials.nickname, tel: this.credentials.tel, birth: this.credentials.birth  }
-        axios({
-            method: 'put',
-            url: 'http://13.125.47.126:8080/users',
-            data: info,
-          })
-          .then( () => {
-            this.$store.commit('moreInfoConfirmModalActivate')
-            // alert('갱신이 완료되었습니다!')
-            // this.$router.push('Login')
-          })
-          .catch(res => {
-            // alert(res.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
-            this.$store.commit('signupFailModalActivate1', res.response.data.message)
-          })
-      },
-      checkEmail: function(){
-        axios({
-          method: 'get',
-          url: 'http://13.125.47.126:8080/register/checkByEmail/' + this.credentials.email,
+        const body = { no: this.$store.state.userInfo.no, nickname: this.credentials.nickname, tel: this.credentials.tel, birth: this.credentials.birth  }
+        let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+      axios({
+        method: "put",
+        url: "http://13.125.47.126:8080/users/update",
+        data: body,
+        headers: headers,
+      })
+        .then((res) => {
+          console.log("업데이트 성공")
+          this.$store.dispatch('allTokenRefreshOnUserInfo', res)
+          this.$store.commit('moreInfoConfirmModalActivate')
         })
-        .then(() => { //중복 이메일 없는 경우
-          this.isValid.validateEmailcheck = true
-        })
-        .catch(()=> { //중복 이메일 있는 경우
-          this.isValid.validateEmailcheck = false
-        })
+        .catch((err) => {
+          console.log("업데이트 실패", err)
+          //  this.$store.commit('signupFailModalActivate1', err.response.data.message)
+        });
       },
       checkNickname: function(el){
         this.credentials.nickname = el.target.value // 한글 입력 이슈 해결하기 위해 사용. 한박자 느린거?
@@ -136,7 +128,6 @@
         const poss = ['010', '011', '012', '013', '014',
                       '015', '016', '017', '018', '019']
 
-        console.log(nums)
         if (event.inputType == 'deleteContentBackward'){
           if (nums == 3 || nums == 8){
             this.credentials.tel = this.credentials.tel.slice(0, nums - 1)
