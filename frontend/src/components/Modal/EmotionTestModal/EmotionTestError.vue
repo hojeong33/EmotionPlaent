@@ -1,7 +1,7 @@
 <template>
 	<div id="emotiontest_error">
     <div id="modal">
-			<h4> 잘못된 요청입니다.</h4>
+			<h4> 잘못된 요청입니다</h4>
 			<hr>
 			<p @click="goBack">확인</p>
     </div>

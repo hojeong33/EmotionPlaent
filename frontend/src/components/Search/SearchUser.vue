@@ -4,7 +4,7 @@
       <div v-for="result in this.$store.state.userSearch"
       :key="result.no"
       id="result">
-        <img src="../../assets/images/icons/user.png" alt="" id="user">
+        <img :src="result.profileImg" alt="" id="user">
         <div id="search">
           <span id="title">@{{ result.nickname }}</span>
           <!-- <span id="content">{{ result.email }}</span> -->
@@ -24,12 +24,11 @@
 export default {
   name: 'SearchUser',
   methods: {
-    getInfo(el) {
-      console.log(el)
+    async getInfo(el) {
       this.$store.state.searchUserNo = el
-      this.$store.dispatch('userfollowdate', el)
-      this.$store.dispatch('userSelect', el)
-      this.$router.push('Userpage')
+      await this.$store.dispatch('userSelect', el)
+      await this.$store.dispatch('userfollowdate', el)
+      this.$router.push({ path: `/userpage/feed` })
     }
   },
   created() {

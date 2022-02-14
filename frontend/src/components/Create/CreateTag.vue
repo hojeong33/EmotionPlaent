@@ -9,7 +9,7 @@
       <h3>활동 태그 하나는 필수에요!</h3>
       <h3>알맞는 키워드를 넣어주세요.</h3>
     </article>
-    <act-container />
+    <act-container @check-category="pickTag" @selected="isSelected"/>
     <footer>
       <button id="btn-before" @click="beforePage">이전</button>
       <button id="btn-next" @click="nextPage">다음</button>
@@ -25,7 +25,8 @@ export default {
   data: function () {
     return {
       selectedKeyword: '',
-      selectedAct: []
+      selectedAct: [],
+      selectChecked: false,
     }
   },
   components: {
@@ -39,7 +40,19 @@ export default {
       this.$emit('before-page')
     },
     nextPage(){
-      this.$emit('next-page')
+      if (!this.selectChecked) {
+        // alert('행동 태그를 선택해주세요')
+        this.$store.commit('pickYourTagModalActivate')
+      } else {
+        this.$emit('next-page')
+      }
+    },
+    pickTag (event) {
+      // console.log(event)
+      this.selectedKeyword = event
+    },
+    isSelected (event) {
+      this.selectChecked = event
     },
     selectAct: function(actKeyword) {
       if (document.getElementById(actKeyword.target.textContent).className === 'checked_category') {
@@ -55,7 +68,7 @@ export default {
         }
       }
     }
-  }
+  },
 
 }
 </script>

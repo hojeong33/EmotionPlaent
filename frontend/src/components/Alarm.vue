@@ -67,16 +67,17 @@ export default {
   },
   methods: {
     cancel() {
-      this.$emit('cancelAlarm')
-      this.$store.state.alarm = []
       this.$store.dispatch('readAlarm', this.$store.state.userInfo.no)
+      this.$emit('cancelAlarm')
+      // console.log("여기가 알림 닫는곳")
+      // console.log(this.$store.state.searchUserNo)
+      // console.log(this.$store.state.searchUserInfo)
     },
-    follow(el) {
-      console.log(el)
+     async follow(el) {
       this.$store.state.searchUserNo = el
-      this.$store.dispatch('userSelect', el)
-      this.$store.dispatch('userfollowdate', el)
-      this.$router.push('Userpage')
+      await this.$store.dispatch('userSelect', el)
+      await this.$store.dispatch('userfollowdate', el)
+      this.$router.push({ path: `/userpage/feed` })
     }
   }
 }

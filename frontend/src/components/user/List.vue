@@ -2,11 +2,11 @@
   <article id="list-container">
 		<filter-tab :user-mood="userMood" @filtering="filtering" />
 
-		<div id="feed-container" v-if="tap == 'feed'"> 
-			<feed-item v-for="(feed, idx) in filteredFeeds" :key="idx" :feed="feed" />
+		<div id="feed-container" v-if="tab == 'feed'"> 
+			<feed-list :feeds="filteredFeeds"/>
 		</div>
 
-		<div id="pick-container" v-if="tap == 'pick'">
+		<div id="pick-container" v-if="tab == 'pick'">
 			<div id="pick-tab">
 				<h3 @click="pickTap = 1" :class="pickTap == 1 ? 'active': ''">음악</h3>
 				<h3 @click="pickTap = 2" :class="pickTap == 2 ? 'active': ''">영화</h3>
@@ -18,10 +18,10 @@
 		</div>
 
 		<div id="no-result" 
-		v-if="(tap == 'feed' && !filteredFeeds.length)||(tap == 'pick' && !filteredPicks.length)">
+		v-if="(tab == 'feed' && !filteredFeeds.length)||(tab == 'pick' && !filteredPicks.length)">
 			<img id="nothing" src="@/assets/images/etc/alien.png" alt="no result">
-			<p v-if="tap == 'feed' && !filteredFeeds.length">게시글이 없어요...</p>
-			<p v-if="tap == 'pick' && !filteredPicks.length">찜목록이 없어요...</p>
+			<p v-if="tab == 'feed' && !filteredFeeds.length">게시글이 없어요...</p>
+			<p v-if="tab == 'pick' && !filteredPicks.length">찜목록이 없어요...</p>
 		</div>
 		
 	</article>
@@ -29,7 +29,8 @@
 
 <script>
 import FilterTab from '@/components/user/FilterTab'
-import FeedItem from '@/components/user/FeedItem'
+// import FeedItem from '@/components/user/FeedItem'
+import FeedList from '@/components/MainPage/FeedTab/FeedList'
 import PickList from '@/components/user/PickList'
 import feedData from '@/assets/data/userFeed'
 import pickData from '../../assets/data/pickData'
@@ -54,12 +55,11 @@ export default {
 		}
 	},
 	props: {
-		userMood: Number,
-		tap: String
+		tab: String
 	},
 	components: {
 		FilterTab,
-		FeedItem,
+		FeedList,
 		PickList
 	},
 	methods: {
@@ -92,7 +92,13 @@ export default {
       })
       return temp
     },
+		userMood(){
+			return this.$store.state.userInfo.mood
+		}
 	},
+	created(){
+		console.log(this.$route)
+	}
 }
 </script>
 
@@ -121,12 +127,12 @@ export default {
 	}
 
 	#feed-container {
-		width: 80%;
-		display: grid;
+		width: 100%;
+		/* display: grid;
 		grid-template-columns: 1fr 1fr 1fr 1fr;
 		grid-auto-flow: row;
 		justify-content: center;
-		gap: 1rem;
+		gap: 1rem; */
 	}
 
 	#pick-container {

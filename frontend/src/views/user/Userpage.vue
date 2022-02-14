@@ -1,8 +1,8 @@
 <template>
-  <section id="mypage-container">
+  <section id="mypage-container" v-if="$store.state.searchUserInfo !== null">
     <side-profile-card :user-info="userInfo" />
     <article id="profile-container">
-      <img id="profile-img"  :src="$store.state.searchUserInfo.profileImg">
+      <img id="profile-img" :src="$store.state.searchUserInfo.profileImg">
       <div id="profile-card">
         <div id="name-card">
           <h1>{{ this.$store.state.searchUserInfo.nickname }}</h1>
@@ -13,8 +13,8 @@
         </div>
         <div id="info-card">
           <h3>이야기 0개</h3>
-          <h3>팔로우 {{ this.$store.state.searchUserFollowInfo.userFollow.length }}</h3>
-          <h3>팔로잉 {{ this.$store.state.searchUserFollowInfo.userFollowing.length }}</h3>
+          <h3 @click="showFollowerList">팔로우 {{ this.$store.state.searchUserFollowInfo.userFollow.length }}</h3>
+          <h3 @click="showFollowingList">팔로잉 {{ this.$store.state.searchUserFollowInfo.userFollowing.length }}</h3>
         </div>
       </div>
     </article>
@@ -57,6 +57,15 @@ export default {
     unfollow() {
       this.$store.dispatch('deletefollow', this.$store.state.searchUserNo)
     },
+    showFollowerList: function () {
+      this.$store.commit('userpagefollowerListActivate')
+    },
+    showFollowingList: function () {
+      this.$store.commit('userpagefollowingListActivate')
+    }
+  },
+  mounted(){
+
   },
   created(){
     window.addEventListener('load', () => {
@@ -64,8 +73,6 @@ export default {
         this.userPageTab = 'pick'
       }
     })
-
-    console.log(this.$store.state.searchUserFollowInfo.followcheck)
   }
 }
 </script>

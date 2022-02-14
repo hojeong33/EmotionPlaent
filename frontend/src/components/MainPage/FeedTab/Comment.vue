@@ -2,8 +2,8 @@
   <div>
     <div>
     <!-- <div style="position: absolute;"> -->
-      <img id="comment_img" :src=commentData.userRequestDto.profileImg alt="">
-      <span style="font-weight:bold; font-size:1.2rem;">{{commentData.userRequestDto.nickname}} </span> <span style="font-size:1.2rem">{{commentData.descr}} </span>
+      <img id="comment_img" :src="comment.userRequestDto.profileImg" alt="">
+      <span style="font-weight:bold; font-size:1.2rem;">{{comment.userRequestDto.nickname}} </span> <span style="font-size:1.2rem">{{comment.descr}} </span>
     </div>
     <div  v-if="isMine" style="text-align:right; margin-bottom:1rem">
       <i @click="onSetting" class="fas fa-ellipsis-v"></i>
@@ -17,12 +17,12 @@
 </template>
 
 <script>
-import axios from 'axios'
-const session = window.sessionStorage;
+// import axios from 'axios'
+// const session = window.sessionStorage;
 export default {
     name:'Comment',
     props:{
-        comment:Number
+        comment:Object
     },
     data(){
       return{
@@ -97,27 +97,12 @@ export default {
       //   })
       // },
     },
-    created(){
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-    };
-    axios({
-        method: 'get',
-        url:`http://13.125.47.126:8080/comment/${this.comment}`,
-        headers: headers,  // 넣는거 까먹지 마세요
-      }).then((res) => {
-      this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-      console.log('!!!!!!!!!!!!!!!!!!!')
-      console.log(res.data)
-      this.commentData=res.data
-      // this.getComments()
-      }).catch((error) => {
-        console.log(error);
-      }).then(() => {
-        console.log('댓글 하나 가져오기');
-      });
-    },
+
+    // created(){
+    //   console.log('여기 프롭스')
+    //   console.log(this.comment)
+  
+    // },
     // watch:{
     //   comment:function(){
         

@@ -56,7 +56,7 @@
         v-model="credentials.pin"
         placeholder="등록하신 PIN 번호를 입력해주세요.">
       </article> -->
-      <a href="">이메일을 잊었나요?</a>
+      <router-link :to="{ name: 'EmailFind' }">이메일을 잊었나요?</router-link>
       <article id="pf-buttons">
         <button @click="send_mail">메일 받기</button>
         <button @click="go_to_back">뒤로가기</button>
@@ -68,7 +68,6 @@
 <script>
 import { mapState } from 'vuex'
 import axios from 'axios'
-const session = window.sessionStorage;
 export default {
   data: function(){
     return {
@@ -88,10 +87,6 @@ export default {
   },
   methods: {
     send_mail(){
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-    };
     let data = {
       email: this.credentials.email,
       tel: this.credentials.tel,
@@ -99,16 +94,16 @@ export default {
     };
     axios({
         method: 'post',
-        url: 'http://13.125.47.126:8080/users/findPw',
-        data: data,
-        headers: headers,  
+        url: 'http://13.125.47.126:8080/register/findPw',
+        data: data, 
       }).then((res) => {
-      this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+       console.log("메일 전송 성공" , res)
+       alert("매일 전송 성공")
+      }).then(()=>{
+        this.$router.push("/login")
       }).catch((error) => {
         console.log(error);
-      }).then(() => {
-        console.log('getQSSList End!!');
-      });
+      })
     },
 
     emailInput(){
@@ -134,7 +129,6 @@ export default {
       const n = this.credentials.tel.charCodeAt(nums-1)
       const poss = ['010', '011', '012', '013', '014',
                     '015', '016', '017', '018', '019']
-      console.log(nums)
       if (event.inputType == 'deleteContentBackward'){
         if (nums == 3 || nums == 8){
           this.credentials.tel = this.credentials.tel.slice(0, nums - 1)
@@ -150,9 +144,7 @@ export default {
         this.credentials.tel = this.credentials.tel.slice(0, nums - 1)
       }
       if (nums == 13 && poss.indexOf(this.credentials.tel.slice(0,3)) > -1){
-        console.log(poss.indexOf(this.credentials.tel.slice(0,3)))
-        console.log(nums)
-        this.telCheck()
+        this.isValid.validateTel = true
       }
       else {
         this.isValid.validateTel = false

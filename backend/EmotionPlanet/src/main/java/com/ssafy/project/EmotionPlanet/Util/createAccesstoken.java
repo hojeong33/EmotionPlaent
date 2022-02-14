@@ -15,8 +15,6 @@ public class createAccesstoken {
 	private String clientId = "1f072a1166fd47dfbe23973e82a573ee";
 	private String clientSecret = "a8709cb4a4a249e5b586ac8316cb1bb6";
 	
-	
-
 	private SpotifyApi spotifyApi = new SpotifyApi.Builder().setClientId(clientId).setClientSecret(clientSecret)
 			.build();
 

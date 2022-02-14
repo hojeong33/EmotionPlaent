@@ -69,7 +69,7 @@ export default {
   },
    computed: {
     tmp: function () {
-      const name = this.post.planet
+      const name = this.feed.planet
       const style = this.planetStyles.find(el => el.name === name) || {}
       return style
     }

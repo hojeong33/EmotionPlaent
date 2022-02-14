@@ -10,8 +10,8 @@
         </div>
         <div id="info-card">
           <h3>이야기 {{ userInfo.posts }}</h3>
-          <h3>팔로우 {{ this.$store.state.userFollowInfo.userFollow.length }}</h3>
-          <h3>팔로잉 {{ this.$store.state.userFollowInfo.userFollowing.length }}</h3>
+          <h3 @click="showFollowerList" style="cursor: pointer;">팔로우 {{ this.$store.state.userFollowInfo.userFollow.length }}</h3>
+          <h3 @click="showFollowingList" style="cursor: pointer;">팔로잉 {{ this.$store.state.userFollowInfo.userFollowing.length }}</h3>
         </div>
       </div>
     </article>
@@ -47,14 +47,23 @@ export default {
     changeTab(tap){
       this.myPageTab = tap
       this.$router.push({ path: `/mypage/${tap}` })
+    },
+    showFollowerList: function () {
+      this.$store.commit('mypagefollowerListActivate')
+    },
+    showFollowingList: function () {
+      this.$store.commit('mypagefollowingListActivate')
     }
   },
-  created(){
-    window.addEventListener('load', () => {
-      if (this.$route.params.tap != 'feed'){
-        this.myPageTab = 'pick'
-      }
-    })
+  computed:{
+    to(){
+      return this.$router.app._route.path
+    }
+  },
+  mounted(){
+    if (this.to.includes('item')){
+      this.myPageTab = 'pick'
+    }
   }
 }
 </script>
@@ -123,6 +132,7 @@ export default {
     margin: auto;
     border-left: 1px solid #cccccc;
     border-right: 1px solid #cccccc;
+    background-color: white;
     display: flex;
     flex-direction: column;
     align-items: center;

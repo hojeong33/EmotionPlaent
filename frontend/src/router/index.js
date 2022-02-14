@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '@/views/accounts/Login'
 import Signup from '@/views/accounts/Signup'
+import KaKaoLogin from '@/views/accounts/KaKaoLogin'
 import EmotionTest from '@/views/EmotionTest'
 
 import Mypage from '@/views/user/Mypage.vue'
@@ -16,8 +17,9 @@ import PwChange from '@/components/Settings/PwChange'
 import Withdrawal from '@/components/Settings/Withdrawal'
 import FeedDetail from '@/components/FeedDetail'
 import PwFind from '@/components/Settings/PwFind'
-
+import EmailFind from '@/components/Settings/EmailFind' 
 import ProfileUpdate from '@/components/Settings/ProfileUpdate'
+import SearchResult from '@/components/Search/SearchResult'
 
 import store from '../store/index.js'
 
@@ -30,6 +32,16 @@ const routes = [
     component: Login,
     meta: {
       loginRequired: false,
+      testRequired: false,
+      showingNav: false,
+    }
+  },
+  {
+    path: '/login/KaKaoLogin',
+    name: 'KaKaoLogin',
+    component: KaKaoLogin,
+    meta: {
+      loginRequired: false,
       testRequired: false
     }
   },
@@ -39,7 +51,8 @@ const routes = [
     component: Signup,
     meta: {
       loginRequired: false,
-      testRequired: false
+      testRequired: false,
+      showingNav: false,
     }
   },
   {
@@ -49,16 +62,18 @@ const routes = [
     component: Mypage,
     meta: {
       loginRequired: true,
-      testRequired: true
+      testRequired: true, 
+      showingNav: true,
     },
     children: [
       {
-        path: ':tap',
+        path: ':tab',
         component: List,
         props: true,
         meta: {
           loginRequired: true,
-          testRequired: true
+          testRequired: true,
+          showingNav: true,
         },
       },
       {
@@ -67,7 +82,8 @@ const routes = [
         props: true,
         meta: {
           loginRequired: true,
-          testRequired: true
+          testRequired: true,
+          showingNav: true,
         },
       }
     ]
@@ -79,16 +95,18 @@ const routes = [
     component: Userpage,
     meta: {
       loginRequired: true,
-      testRequired: false
+      testRequired:  true,
+      showingNav: true,
     },
     children: [
       {
-        path: ':tap',
+        path: ':tab',
         component: List,
         props: true,
         meta: {
           loginRequired: true,
-          testRequired: false
+          testRequired: true,
+          showingNav: true,
         },
       },
       {
@@ -97,7 +115,8 @@ const routes = [
         props: true,
         meta: {
           loginRequired: true,
-          testRequired: false
+          testRequired: true,
+          showingNav: true,
         },
       }
     ]
@@ -108,7 +127,8 @@ const routes = [
     component:Main,
     meta: {
       loginRequired: true,
-      testRequired: true
+      testRequired: true,
+      showingNav: true,
     },
   },
   {
@@ -117,7 +137,8 @@ const routes = [
     component: EmotionTest,
     meta: {
       loginRequired: true,
-      testRequired: false
+      testRequired: false,
+      showingNav: false,
     },
   },
   {
@@ -127,7 +148,8 @@ const routes = [
     component: Setting,
     meta: {
       loginRequired: true,
-      testRequired: true
+      testRequired: true,
+      showingNav: true,
     },
     children: [
       {
@@ -135,7 +157,8 @@ const routes = [
         component: UserInfo,
         meta: {
           loginRequired: true,
-          testRequired: true
+          testRequired: true,
+          showingNav: true,
         },
       },
       {
@@ -143,7 +166,8 @@ const routes = [
         component: PwChange,
         meta: {
           loginRequired: true,
-          testRequired: true
+          testRequired: true,
+          showingNav: true,
         },
       },
       {
@@ -151,15 +175,28 @@ const routes = [
         component: Withdrawal,
         meta: {
           loginRequired: true,
-          testRequired: true
+          testRequired: true,
+          showingNav: true,
         },
       },
       {
         path: 'password-find',
+        name: 'Password-find',
         component: PwFind,
         meta: {
-          loginRequired: true,
-          testRequired: true
+          loginRequired: false,
+          testRequired: false,
+          showingNav: false,
+        },
+      },
+      {
+        path: 'email-find',
+        name: 'EmailFind',
+        component: EmailFind,
+        meta: {
+          loginRequired: false,
+          testRequired: false,
+          showingNav: false,
         },
       },
       {
@@ -167,7 +204,8 @@ const routes = [
         component: ProfileUpdate,
         meta: {
           loginRequired: true,
-          testRequired: true
+          testRequired: true,
+          showingNav: true,
         },
       }
     ],  
@@ -178,7 +216,18 @@ const routes = [
     component: FeedDetail,
     meta: {
       loginRequired: true,
-      testRequired: true
+      testRequired: true,
+      showingNav: true,
+    },
+  },
+  {
+    path: '/search/',
+    name: 'SearchResult',
+    component: SearchResult,
+    meta: {
+      loginRequired: true,
+      testRequired: true,
+      showingNav: true,
     },
   }
 ]
@@ -197,7 +246,7 @@ const decodeAccessToken = jwt.decode(token)
 const userUpdate = new Promise(() => {
   console.log('user data updated!')
   if(decodeAccessToken != null){
-  store.commit('userUpdate', decodeAccessToken.userInfo)
+  store.commit('userUpdate', decodeAccessToken)
   }
 })
 
@@ -211,21 +260,13 @@ router.beforeEach((to, from, next) => {
     console.log('do not matched!!')
     next({ name:'Main' })
   }
+  //네비게이션 랜더 유무
+  store.commit('navActivate2', to.meta.showingNav)
 
-  const body = document.querySelector('body')
-
-  if (to.name == 'Signup' || to.name == 'Login' || to.name == 'EmotionTest'){
-    body.setAttribute('class', 'astro')
-    next()
-  }
-  else {
-    body.removeAttribute('class')
-    next()
-  }
   // 네비게이션 바 Active와 매칭
   if (to.name == 'Main'){store.commit('navActivate', 1)}
-  else if (to.matched[0].path == '/mypage'){store.commit('navActivate', 2)}
-  else if (to.matched[0].path == '/setting'){store.commit('navActivate', 4)}
+  else if (to.matched.langth && to.matched[0].path == '/mypage'){store.commit('navActivate', 2)}
+  else if (to.matched.langth && to.matched[0].path == '/setting'){store.commit('navActivate', 4)}
   else {store.commit('navActivate', -1)}
 
   //로그인이 필요한 서비스의 경우 로그인 페이지로 redirect
@@ -247,6 +288,8 @@ router.beforeEach((to, from, next) => {
     console.log('메인')
     next({ name:'Main' })
   }
+
+  next()
 })
 
 // router.push의 중복 에러 해결방법

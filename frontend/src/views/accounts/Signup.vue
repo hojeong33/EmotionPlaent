@@ -348,14 +348,14 @@
     background-color: white;
     width: 30%;
     min-width: 450px;
-    margin: 2rem auto;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
     justify-content: flex-start;
     align-items: center;
-    border-radius: 20px;
     padding: 3rem 2rem 1.5rem;
+    border-left: 2px #cccccc solid;
+    border-right: 2px #cccccc solid;
   }
 
   #signup_header {

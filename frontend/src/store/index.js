@@ -55,6 +55,7 @@ export default new Vuex.Store({
       { id: 7, name: '떠돌이행성', img: "spaceship.png", color: '#FCBB74' },
     ],
     navActive: [false, false, false, false, false],
+    showingNav: true,
     user: null,
     // 피드작성
     feedCreateData: [
@@ -68,6 +69,7 @@ export default new Vuex.Store({
     commentSettingModalActive: false,
     logoutModalActive: false,
     userFeedSettingModalActive: false,
+    userFeedSettingModalActive2: false,
     profileImgChangeModalActive: false,
     loginConfirmModalActive: false,
     signupConfirmModalActive: false,
@@ -82,8 +84,18 @@ export default new Vuex.Store({
     signupFailModalActive2: false,
     commentNeedContentModalActive:false,
     moreInfoConfirmModalActive: false,
-    serverErrorMessage: null,
-    loginErrorMessage: null,
+    feedUpdateActive: false,
+    pickYourImageModalActive: false,
+    tooMuchImagesModalActive: false,
+    pickYourTagModalActive: false,
+    mypagefollowingListActive: false,
+    mypagefollowerListActive: false,
+    userpagefollowingListActive: false,
+    userpagefollowerListActive: false,
+  
+    // 모달의 에러 메시지
+    serverErrorMessage: '',
+    loginErrorMessage: '',
 
     // 알림 부분
     alarm: [], 
@@ -106,6 +118,9 @@ export default new Vuex.Store({
       })
       Vue.set(navActive, payload, true)
     },
+    navActivate2: function(state, payload) {
+        state.showingNav = payload
+    },
     //검색부분
     updateSearch: function(state, searchWords){
       console.log(state)
@@ -116,6 +131,7 @@ export default new Vuex.Store({
       console.log("userUpdate 접근 =====")
       console.log(payload)
       const userdata = JSON.parse(session.getItem('userInfo')) 
+      console.log(userdata)
       if (!session.getItem('userInfo')){
         session.setItem('userInfo', JSON.stringify(payload.userInfo)) //토큰값으로 들어오면 
       }
@@ -132,7 +148,7 @@ export default new Vuex.Store({
 
       console.log('userUpdate 완료 ======' + session.getItem('userInfo'))
       state.userInfo = JSON.parse(session.getItem('userInfo')) 
-      return userdata
+      // return userdata
     },
 
     tokenTest(){
@@ -158,7 +174,7 @@ export default new Vuex.Store({
     feedTag: function(state, feedtag) {
       state.feedCreateData[0].tags[1] = feedtag
       // state.feedCreateData[0].tags.push({name: `${feedtag}`, type: 0})
-      console.log(state.feedCreateData[0].tags)
+      // console.log(state.feedCreateData[0].tags)
     },
     
     // 모달부분입니다
@@ -169,6 +185,10 @@ export default new Vuex.Store({
     userFeedSettingModalActivate: function (state) {
       state.userFeedSettingModalActive = !state.userFeedSettingModalActive
       console.log(state.userFeedSettingModalActive)
+    },
+    userFeedSettingModalActivate2: function (state) {
+      state.userFeedSettingModalActive2 = !state.userFeedSettingModalActive2
+      console.log(state.userFeedSettingModalActive2)
     },
     logoutModalActivate: function (state) {
       state.logoutModalActive = !state.logoutModalActive
@@ -233,6 +253,39 @@ export default new Vuex.Store({
       state.moreInfoConfirmModalActive = !state.moreInfoConfirmModalActive
       console.log(state.moreInfoConfirmModalActive)
     },
+    feedUpdateActivate: function (state) {
+      state.feedUpdateActive = !state.feedUpdateActive
+      console.log(state.feedUpdateActive)
+    },
+    pickYourImageModalActivate: function (state) {
+      state.pickYourImageModalActive = !state.pickYourImageModalActive
+      console.log(state.pickYourImageModalActive)
+    },
+    tooMuchImagesModalActivate: function (state) {
+      state.tooMuchImagesModalActive = !state.tooMuchImagesModalActive
+      console.log(state.tooMuchImagesModalActive)
+    },
+    pickYourTagModalActivate: function (state) {
+      state.pickYourTagModalActive = !state.pickYourTagModalActive
+      console.log(state.pickYourTagModalActive)
+    },
+    mypagefollowingListActivate: function (state) {
+      state.mypagefollowingListActive = !state.mypagefollowingListActive
+      console.log(state.mypagefollowingListActive)
+    },
+    mypagefollowerListActivate: function (state) {
+      state.mypagefollowerListActive = !state.mypagefollowerListActive
+      console.log(state.mypagefollowerListActive)
+    },
+    userpagefollowingListActivate: function (state) {
+      state.userpagefollowingListActive = !state.userpagefollowingListActive
+      console.log(state.userpagefollowingListActive)
+    },
+    userpagefollowerListActivate: function (state) {
+      state.userpagefollowerListActive = !state.userpagefollowerListActive
+      console.log(state.userpagefollowerListActive)
+    },
+    
   },
   actions: {
 
@@ -351,7 +404,8 @@ export default new Vuex.Store({
             console.log("알림 날짜 " + obj.date)
             console.log("알림 타입 " + obj.type)
             // alert(obj.message)
-            this.state.alarm.unshift(obj);
+            // this.state.alarm.unshift(obj);
+            this.dispatch('alarmselect')
             console.log("---------------------------------")
           });
         },
@@ -580,7 +634,7 @@ export default new Vuex.Store({
           headers: headers,
         }).then((res) => {
           this.state.recommendMusic = res.data
-          this.dispatch('accessTokenRefresh', res)
+          this.dispatch('accessTokenRefresh', res) 
         
         }).catch((error) => {
           console.log(error);
@@ -654,11 +708,11 @@ export default new Vuex.Store({
       const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
       console.log('decodeAccessToken data', decodeAccessToken);
       commit('userUpdate', decodeAccessToken)
+
+      return new Promise((resolve) => {
+        resolve(true)
+      })
     },
-    // userInfo: function(state, payload){
-    //   console.log(payload)
-    //   state.user = payload
-    // },
 
     //유저정보 수정부분
     updateuser(state ,el) {
@@ -706,7 +760,7 @@ export default new Vuex.Store({
         };
       axios({
         method: "post",
-        url: "http://localhost:8080/s3/users/img",
+        url: "http://13.125.47.126:8080/s3/users/img",
         data: el,
         headers: headers,
       })

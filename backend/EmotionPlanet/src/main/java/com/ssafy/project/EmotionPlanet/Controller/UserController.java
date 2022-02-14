@@ -142,6 +142,7 @@ public class UserController {
 	
 	@GetMapping(value = "/register/findEmail/{tel}") // 이메일 찾기
 	public ResponseEntity<String> findemail(@PathVariable String tel) {
+		System.out.println(tel);
 		String email = userService.findEamil(tel);
 		if(email != null) {
 			System.out.println("이메일 찾기 성공");

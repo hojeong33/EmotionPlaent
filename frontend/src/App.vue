@@ -1,10 +1,12 @@
 <template>
   <div id="app">
-    <navigation />
+    <navigation v-if="showingNav" />
     <create v-if="navActive[0]" />
     <router-view/>
+    <!-- 모달창 -->
     <logout-modal v-if="logoutModalActive" />
     <user-feed-setting v-if="userFeedSettingModalActive" />
+    <user-feed-setting2 v-if="userFeedSettingModalActive2" />
     <comment-setting v-if="commentSettingModalActive" />
     <profile-img-change v-if="profileImgChangeModalActive" />
     <login-confirm v-if="loginConfirmModalActive" />
@@ -21,15 +23,25 @@
     <comment-need-content v-if="commentNeedContentModalActive" />
     <more-info-confirm v-if="moreInfoConfirmModalActive" />
     <more-info-error v-if="signupFailModalActive1" />
+    <update v-if="feedUpdateActive" />
+    <pick-your-image v-if="pickYourImageModalActive" />
+    <too-much-images-modal v-if="tooMuchImagesModalActive" />
+    <pick-your-tag v-if="pickYourTagModalActive" />
+    <mypage-follower-list v-if="mypagefollowerListActive" />
+    <mypage-following-list v-if="mypagefollowingListActive" />
+    <userpage-follower-list v-if="userpagefollowerListActive" />
+    <userpage-following-list v-if="userpagefollowingListActive" />
   </div>
 </template>
 
 <script>
 import Create from '@/views/Create'
+import Update from '@/views/Update'
 import Navigation from '@/components/Navigation'
 // 모달창
 //// 세팅
 import UserFeedSetting from '@/components/Modal/SettingModal/UserFeedSetting.vue'
+import UserFeedSetting2 from '@/components/Modal/SettingModal/UserFeedSetting2.vue'
 import CommentSetting from '@/components/Modal/SettingModal/CommentSetting.vue'
 //// 로그인과 로그아웃
 import LoginConfirm from '@/components/Modal/LoginLogoutModal/LoginConfirm.vue'
@@ -48,9 +60,18 @@ import FirstEmotionTestConfirm from '@/components/Modal/EmotionTestModal/FirstEm
 import EmotionTestError from '@/components/Modal/EmotionTestModal/EmotionTestError.vue'
 import EmotionTestPickMore from '@/components/Modal/EmotionTestModal/EmotionTestPickMore.vue'
 import EmotionTestResult from '@/components/Modal/EmotionTestModal/EmotionTestResult.vue'
+//// 피드 관련
+import PickYourImage from '@/components/Modal/FeedCreateModal/PickYourImage.vue'
+import TooMuchImagesModal from '@/components/Modal/FeedCreateModal/TooMuchImagesModal.vue'
+import PickYourTag from '@/components/Modal/FeedCreateModal/PickYourTag.vue'
 // 기타
 import ProfileImgChange from '@/components/Modal/ProfileImgChange.vue'
 import CommentNeedContent from '@/components/Modal/CommentNeedContent.vue'
+//팔로우, 팔로워
+import MypageFollowingList from '@/components/Modal/FollowModal/Mypage/MypageFollowingList.vue'
+import MypageFollowerList from '@/components/Modal/FollowModal/Mypage/MypageFollowerList.vue'
+import UserpageFollowingList from '@/components/Modal/FollowModal/Userpage/UserpageFollowingList.vue'
+import UserpageFollowerList from '@/components/Modal/FollowModal/Userpage/UserpageFollowerList.vue'
 
 import { mapState } from 'vuex'
 
@@ -59,12 +80,14 @@ import { mapState } from 'vuex'
 export default {
   components: {
     Create,
+    Update,
     Navigation,
+    //모달창
     LogoutModal,
     UserFeedSetting,
+    UserFeedSetting2,
     CommentSetting,
     ProfileImgChange,
-    //모달창
     LoginConfirm,
     SignupConfirm,
     EmotionTestTooMuchPick,
@@ -79,19 +102,24 @@ export default {
     CommentNeedContent,
     MoreInfoConfirm,
     MoreInfoError,
+    PickYourImage,
+    TooMuchImagesModal,
+    PickYourTag,
+    MypageFollowingList,
+    MypageFollowerList,
+    UserpageFollowingList,
+    UserpageFollowerList,
+    
 
   },
   computed:
     mapState([
-      'navActive', 'modalActive', 'profileImgChangeModalActive', 'commentSettingModalActive', 'logoutModalActive', 'userFeedSettingModalActive', 'loginConfirmModalActive', 
+      'navActive', 'showingNav', 'modalActive', 'profileImgChangeModalActive', 'commentSettingModalActive', 'logoutModalActive', 'userFeedSettingModalActive', 'loginConfirmModalActive', 
       'signupConfirmModalActive', 'emotionTestTooMuchPickModalActive', 'firstEmotionTestConfirmModalActive', 'emotionTestErrorActive', 'emotionTestPickMoreModalActive', 
       'emotionTestResultModalActive', 'loginFailModalActive', 'signupFailModalActive1', 'signupFailModalActive2', 'ReturnToLoginModalActive', 'commentNeedContentModalActive',
-      'moreInfoConfirmModalActive', 
+      'moreInfoConfirmModalActive', 'feedUpdateActive', 'pickYourImageModalActive', 'tooMuchImagesModalActive', 'pickYourTagModalActive', 'mypagefollowingListActive', 'mypagefollowerListActive',
+      'userpagefollowingListActive', 'userpagefollowerListActive',
     ]),
-    // feedActive(){
-    //   console.log(this.$store.state.navActive[0])
-    //   return this.$store.state.navActive[0]
-    // },
 }
 
 </script>
@@ -99,11 +127,18 @@ export default {
 
 <style scoped>
   #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    position: relative;
+    min-width: 100vw;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    flex-wrap: nowrap;
+    background-color: rgba(235, 235, 235, 0.5);
+    font-family: '비트로 프라이드 TTF', sans-serif !important;
+    }
+    @font-face {
+      font-family:'비트로 프라이드 TTF';
+      src: url('assets/font/비트로 프라이드 TTF.ttf') format('truetype');
   }
 </style>

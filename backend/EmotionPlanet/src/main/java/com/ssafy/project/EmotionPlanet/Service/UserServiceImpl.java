@@ -100,7 +100,21 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String findEamil(String tel) { // 이메일 찾기
-		return userDao.findEamil(tel);
+		String email = userDao.findEamil(tel);
+		if(email!= null) {
+			String[] splitall = email.split("@");
+			String[] splitemail = splitall[0].split("");
+			String str = "";
+			int half = splitemail.length / 2;
+			for (int i = 0; i < splitemail.length ; i++) {
+				if(i == half-1 || i == half)
+					str += "_";
+				else
+					str += splitemail[i];
+			}
+			return str+"@"+splitall[1];
+		}else
+			return null;
 	}
 
 	@Override

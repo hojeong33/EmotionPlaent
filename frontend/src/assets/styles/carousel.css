@@ -1,7 +1,7 @@
-img{
+/* img{
     width:10rem;
     height:10rem;
-}
+} */
 .card-carousel-wrapper {
 	display: flex;
 	align-items: center;
@@ -54,7 +54,7 @@ transform: translatex(0px);
 }
 .card-carousel-cards .card-carousel--card {
 margin: 0 10px;
-cursor: pointer;
+/* cursor: pointer; */
 box-shadow: 0 4px 15px 0 rgba(40, 44, 53, 0.06), 0 2px 2px 0 rgba(40, 44, 53, 0.08);
 background-color: #fff;
 border-radius: 4px;

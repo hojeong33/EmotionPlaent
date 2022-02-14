@@ -12,7 +12,7 @@
 					<p id="upload_date">date</p>
 				</div>
 				<div id="setting">
-					<i @click="onUserFeedSetting" class="fas fa-ellipsis-v"></i>
+					<i @click="onUserFeedSetting2" class="fas fa-ellipsis-v"></i>
 					<user-feed-setting v-if="isUserFeedSettingOpened" @cancel="isUserFeedSettingOpened=false"></user-feed-setting>
 				</div>
 				<!-- 만약 다른 유저의 피드 디테일이라면 팔로우 버튼이 나타나게 -->
@@ -125,8 +125,8 @@ export default {
 			// 	this.isCommentSettingOpened=true
 			// }
 		},
-		onUserFeedSetting:function(){
-			this.$store.commit('userFeedSettingModalActivate')
+		onUserFeedSetting2:function(){
+			this.$store.commit('userFeedSettingModalActivate2')
 			// if(this.isUserFeedSettingOpened){
 			// 	this.isUserFeedSettingOpened=false
 			// }else{
