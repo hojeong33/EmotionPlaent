@@ -6,12 +6,12 @@
       <button @click="showOption = 'card'" :class="showOption == 'card' ? 'c-active':'c' " />
     </div>
     <div v-if="showOption == 'grid'" id="grid-container">
-      <search-feed-small v-for="feed in feeds"
+      <feed-small v-for="feed in feeds"
         :feed="feed"
         :key="feeds.indexOf(feed)" />
     </div>
     <div v-if="showOption == 'card'" id="card-container">
-      <search-feed-card v-for="feed in feeds"
+      <feed v-for="feed in feeds"
         :feed="feed"
         :key="feeds.indexOf(feed)" />
     </div>
@@ -19,8 +19,8 @@
 </template>
 
 <script>
-import SearchFeedCard from "./SearchFeedCard.vue";
-import SearchFeedSmall from "./SearchFeedSmall.vue";
+import Feed from "@/components/SearchUser/Feed.vue";
+import FeedSmall from "@/components/SearchUser/FeedSmall.vue";
 
 export default {
   name: "FeedList",
@@ -33,8 +33,8 @@ export default {
     feeds: Array,
   },
   components: {
-    SearchFeedCard,
-    SearchFeedSmall
+    Feed,
+    FeedSmall
   }
 };
 </script>
@@ -83,18 +83,18 @@ export default {
   }
 
   .g {
-    background-image: url('../../../assets/images/icons/grid.png');
+    background-image: url('../../assets/images/icons/grid.png');
   }
 
   .g-active {
-    background-image: url('../../../assets/images/icons/grid-active.png');
+    background-image: url('../../assets/images/icons/grid-active.png');
   }
 
   .c {
-    background-image: url('../../../assets/images/icons/card.png');
+    background-image: url('../../assets/images/icons/card.png');
   }
 
   .c-active {
-    background-image: url('../../../assets/images/icons/card-active.png');
+    background-image: url('../../assets/images/icons/card-active.png');
   }
 </style>

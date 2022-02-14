@@ -15,19 +15,20 @@
         <i @click="onUserFeedSetting" class="fas fa-ellipsis-v"></i>
       </div>
     </div>
-    <div id="post_image">
-      <img :src="feed.postImage" alt="">
+    <div id="post_image" style="z-index: 1;">
+      <div id="my_img" v-for="(img, idx) in feed.imgs" :key="idx"><div><img :src="img.imgLink" alt=""></div></div>
       <p class="overlay_content" >{{ feed.authorDetail.nickname}}님은 {{tmp.name}} <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p>
     </div>
     <div id="like">
       <div id="heart">
-        <i class="far fa-heart fa-lg" :class="{'fas': this.feed.hasBeenLiked}" @click="like"></i>
+        <i class="far fa-heart fa-lg" :class="{'fas': this.feed.like}" @click="like"></i>
       </div>
-      <p class="likes" >{{feed.likes}} likes</p>
+      <p v-if="feed.likes" class="likes" >{{feed.likes.length}} likes</p>
+      <p v-else>0 likes</p>
     </div>
     <div id="content">
       <div id="tag">
-        <p id="my_tag" v-for="tag in feed.tags" :key="tag">#{{tag.name}}</p>
+        <p id="my_tag" v-for="(tag, idx) in feed.tags" :key="idx">#{{tag.name}}</p>
       </div> 
         <p id="caption">{{feed.descr}}</p>
     </div>
@@ -50,7 +51,7 @@ export default {
       planetStyles: [
         { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
         { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
-        { id: 3, name: '중립행성', img: "neutral.png", color: '#C5D3DC' },
+        { id: 3, name: '심심행성', img: "neutral.png", color: '#C5D3DC' },
         { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
         { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
         { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },

@@ -9,6 +9,8 @@ import Mypage from '@/views/user/Mypage.vue'
 import Userpage from '@/views/user/Userpage.vue'
 import List from '@/components/user/List'
 import PickItem from '@/components/user/PickItem'
+import UserList from '@/components/SearchUser/UserList'
+import UserPickItem from '@/components/SearchUser/UserPickItem'
 
 import Main from '@/views/main/Main.vue'
 import Setting from '@/views/Setting'
@@ -102,7 +104,7 @@ const routes = [
     children: [
       {
         path: ':tab',
-        component: List,
+        component: UserList,
         props: true,
         meta: {
           loginRequired: true,
@@ -112,7 +114,7 @@ const routes = [
       },
       {
         path: 'item/:id/:tag/:index',
-        component: PickItem,
+        component: UserPickItem,
         props: true,
         meta: {
           loginRequired: true,

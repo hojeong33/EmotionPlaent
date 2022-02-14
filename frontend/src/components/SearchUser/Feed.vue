@@ -2,10 +2,10 @@
   <div id="feed">
     <div id="header">
       <section id="profile_image">
-        <img :src="this.$store.state.userInfo.profileImg" />
+        <img :src="$store.state.searchUserInfo.profileImg" />
       </section>
       <div id="profile_content">
-        <section id="username" style="font-size:2rem;">{{ this.$store.state.userInfo.nickname }}</section>
+        <section id="username" style="font-size:2rem;">{{ this.$store.state.searchUserInfo.nickname }}</section>
         <section style="font-size:1.2rem;">{{ feed.date }}</section>
       </div>
       <div id="setting" style="z-index: 2;" v-if="isMine">
@@ -33,7 +33,7 @@
       <div id="tag">
         <p id="my_tag" v-for="(tag, idx) in feed.tags" :key="idx">#{{tag["name"]}}</p>
       </div> 
-        <p id="caption" style="font-size:1.4rem"><span style="font-weight:bold; margin-right:5px;">{{this.$store.state.userInfo.nickname}}</span>{{feed.descr}}</p>
+        <p id="caption" style="font-size:1.4rem"><span style="font-weight:bold; margin-right:5px;">{{this.$store.state.searchUserInfo.nickname}}</span>{{feed.descr}}</p>
     </div>
     <comment-list :feedNo="feed.no"></comment-list>
   </div>
@@ -117,7 +117,7 @@ export default {
     };
     axios({
         method: 'get',
-        url:`http://13.125.47.126:8080/feed/${this.post}`,
+        url:`http://13.125.47.126:8080/feed/${this.feed}`,
         headers: headers,  // 넣는거 까먹지 마세요
       }).then((res) => {
       this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서

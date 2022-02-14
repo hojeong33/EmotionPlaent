@@ -68,7 +68,6 @@ export default {
 
   },
   created(){
-    this.$store.dispatch("searchUserFeed", this.$store.state.searchUserNo)
     window.addEventListener('load', () => {
       if (this.$route.params.tap != 'feed'){
         this.userPageTab = 'pick'

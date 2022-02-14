@@ -5,7 +5,7 @@
 			<option value="0">전체</option>
 			<option value="1">행복행성</option>
 			<option value="2">우울행성</option>
-			<option value="3">중립행성</option>
+			<option value="3">심심행성</option>
 			<option value="4">공포행성</option>
 			<option value="5">깜짝행성</option>
 			<option value="6">분노행성</option>
@@ -22,7 +22,7 @@ export default {
 				{ id: 0, name: 'default'},
         { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
         { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
-        { id: 3, name: '중립행성', img: "neutral.png", color: '#ABBECA' },
+        { id: 3, name: '심심행성', img: "neutral.png", color: '#ABBECA' },
         { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
         { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
         { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },

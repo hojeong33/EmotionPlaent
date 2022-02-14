@@ -2,6 +2,7 @@
   <div class="feed-s">
     <img class="feed-s-thumbnail" :src="post.imgs[0].imgLink" :alt="this.$store.state.userInfo.username"
     @mouseover="hover = true">
+    <img class="feed-planet" :src="require(`@/assets/images/emotions/${planet}`)" id="planet">
     <span class="feed-s-info" v-show="hover" @mouseleave="hover = false">
       <span class="info">
         <img src="@/assets/images/icons/heart.png" alt="heart">
@@ -19,12 +20,30 @@
 export default {
   data(){
     return {
-      hover: false
+      hover: false,
+      planetStyles: [
+				{ id: 0, name: 'default'},
+        { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
+        { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
+        { id: 3, name: '심심행성', img: "neutral.png", color: '#ABBECA' },
+        { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
+        { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
+        { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
+      ],
     }
   },
   props: {
     post: Object,
-  }
+  },
+  computed: {
+    planet() {
+			const idx = this.post.tags[0].no
+			if (idx){
+				return this.planetStyles[idx].img
+			}
+			return "neutral.png"
+		}
+  },
 }
 </script>
 
@@ -73,4 +92,15 @@ export default {
     flex-wrap: nowrap;
     align-items: center;
   }
+
+  .feed-planet {
+		position: absolute;
+		width: 25%;
+		height: 25%;
+		bottom: 5%;
+    left: 5%;
+		border-radius: 50%;
+		border: 3px solid;
+		border-color: white;
+	}
 </style>
