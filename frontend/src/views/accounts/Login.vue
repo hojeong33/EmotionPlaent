@@ -130,17 +130,11 @@ export default {
     axios.post(url, params).then((res) => {
       // alert("로그인 성공")
       console.log(res.headers);
-      // storage 설정
-      session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-      session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
-
-      const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
-      console.log('decodeAccessToken data', decodeAccessToken);
-      this.$store.commit('userUpdate', decodeAccessToken.userInfo)
+      this.$store.dispatch('allTokenRefresh', res)
       console.log(this.$store.state.userInfo.email)
       this.sendToken();
       if (this.$store.state.userInfo.tel === null) {
-        this.$router.push('MoreInfo')
+        this.$router.push('/moreInfo')
       }
       else{
         this.$store.commit('loginConfirmModalActivate')
@@ -149,9 +143,7 @@ export default {
     }).catch((error) => {
       console.log(error);
       // this.$store.commit('loginFailModalActivate')
-    }).then(() => {
-      console.log('tokenVerify End!!');
-    });
+    })
   },
 
   sendToken() {

@@ -69,7 +69,7 @@ export default {
           this.$store.dispatch("allTokenRefreshOnUserInfo", res); // store아닌곳에서
           this.$store.state.userInfo.profileImg = this.images
           this.cancel()
-          this.$router.push('/main')
+          this.$router.go(-1)
         })
         .catch((error) => {
           console.log("이미지 변경 실패");

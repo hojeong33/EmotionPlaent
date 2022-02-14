@@ -126,7 +126,7 @@
 
 <script>
 import axios from 'axios'
-
+const session = window.sessionStorage;
 export default {
   data: function(){
     return {
@@ -242,11 +242,25 @@ export default {
       console.log(this.credentials.pwConf)
       if (this.credentials.pwConf !== null) {
         this.$store.dispatch('updateuser', this.credentials.pwConf)
+        const authInst = window.gapi.auth2.getAuthInstance();
+            console.log('signout called', authInst)
+            authInst.signOut()
+            .then(() => {
+              // eslint-disable-next-line
+              console.log('User Signed Out!!!');
+              authInst.disconnect();
+              session.clear();
+            })
+            .then(() => {
+              window.location.reload()
+            })
+            .catch(() => alert('fail'))
+            alert("비밀번호 변경 완료 다시 로그인 해주세요")
       }
       else {
         this.$store.dispatch('updateuser', null)
+        this.$router.go(-1)
       }
-      this.$router.push("/Main")
     },
     pw_change() {
       if (this.pwActivate === false) {

@@ -293,6 +293,7 @@ export default new Vuex.Store({
     
   },
   actions: {
+      
       //알림 읽기 + 7일 이후 읽은 알림 삭제
       readAlarm(state, el){
           axios({
@@ -626,6 +627,7 @@ export default new Vuex.Store({
         this.state.userSearch = []
       })
     },
+
     //검색 끝 추천탭 시작입니다
     recommendMusic() {
       let headers = {
@@ -750,32 +752,6 @@ export default new Vuex.Store({
           console.log(err);
         });
     },
-
-    updateimg(state , el) {
-      // const attachFiles = document.querySelector("#inputFileUploadInsert"); // 파일 인풋에 id값 지정하기
-      // const body = {
-      //   no: 2,
-      //   file : el,
-      // };
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        "Content-Type": "multipart/form-data",
-        };
-      axios({
-        method: "post",
-        url: "http://13.125.47.126:8080/s3/users/img",
-        data: el,
-        headers: headers,
-      })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-    },
-
   },
   modules: {
     

@@ -1,15 +1,6 @@
 <template>
   <div id="mainpage-container">
     <side-profile-card :user-info="userInfo"> </side-profile-card>
-    <!-- <button @click="follow">팔로우 신청</button>
-    <button @click="comment">댓글 알림</button>
-    <button @click="feedlike">피드 좋아요</button>
-    <button @click="picklike">찜 좋아요</button>
-    <button @click="alarmdelete(1)">알림 삭제하기</button>
-    <button @click="alarmselect">알림 가져오기</button>
-    <button @click="socketconnect">소켓 재연결</button> 
-    <button @click="test">테스트</button>--> 
-    <button @click="test1">테스트</button>
     <div class="container justify-content-center">
       <div class="example">
         <div class="tabs">
@@ -43,7 +34,6 @@ import Recommend from "../../components/MainPage/RecommendTab/Recommend.vue";
 import FeedList from "../../components/MainPage/FeedTab/FeedList.vue";
 import posts from "../../assets/data/posts.js";
 import SideProfileCard from "@/components/SideProfileCard.vue";
-import axios from 'axios';
 const session = window.sessionStorage;
 
 export default {
@@ -87,55 +77,6 @@ export default {
     
     console.log("세션 유저 인포")
     console.log(session.getItem('userInfo'))
-  },
-  methods: {
-    test1(){
-      let headers = {
-          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        };
-        axios({
-          method: 'get',
-          url: 'http://localhost:8080/searchs/byTag/feed/'+this.$store.state.userInfo.no+'/서면',
-          headers: headers,  // 넣는거 까먹지 마세요
-        }).then((res) => {
-          console.log("태그 피드 검색 성공")
-          console.log(res.data)
-          this.$store.dispatch('accessTokenRefresh', res) 
-        }).catch((error) => {
-          console.log("태그 피드 검색 실패")
-          console.log(error);
-        })
-    },
-    test(){
-      let el = {
-        receiver: 3,
-        feedno: 1,
-        commentno: 1,
-      }
-      this.$store.dispatch("comment", el);
-    },
-    follow() {
-      this.$store.dispatch("follow");
-    },
-    comment() {
-      this.$store.dispatch("comment");
-    },
-    feedlike() {
-      this.$store.dispatch("feedlike");
-    },
-    picklike() {
-      this.$store.dispatch("picklike");
-    },
-    alarmdelete(el) {
-      this.$store.dispatch("alarmdelete", el);
-    },
-    alarmselect() {
-      this.$store.dispatch("alarmselect");
-    },
-    socketconnect() {
-      this.$store.dispatch("connect");
-    },
   },
 };
 </script>
