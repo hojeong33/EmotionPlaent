@@ -32,7 +32,6 @@ export default {
     if (this.$route.path.includes('pick')){
       this.tab = 'pick'
     }
-    console.log(this.vm)
   }
 }
 </script>
