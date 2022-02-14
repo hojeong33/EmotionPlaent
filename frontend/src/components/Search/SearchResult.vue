@@ -14,7 +14,7 @@
 				<pick-list v-for="(pick, idx) in filteredPicks" :key="idx" :pick="pick" />
 			</div>
 		</div>
-    <feed-list v-if="tab=='feed'" :feeds="feeds" />
+    <feed-list v-if="tab=='feed'"/>
     <div id="no-result" v-if="(tab == 'feed' && !feeds.length)||(tab == 'pick' && !filteredPicks.length)">
 			<img id="nothing" src="@/assets/images/etc/alien.png" alt="no result">
 			<p v-if="tab == 'feed' && !filteredFeeds.length">게시글이 없어요...</p>
@@ -24,23 +24,19 @@
 </template>
 
 <script>
-import PickList from '@/components/user/PickList'
-import FeedList from '@/components/MainPage/FeedTab/FeedList'
-import feeds from '@/assets/data/posts.js'
-import pickData from '@/assets/data/pickData'
+import FeedList from '@/components/Search/_SearchFeedList'
+import PickList from '@/components/Search/_SearchPickList'
 
 export default {
   data(){
     return {
-      feeds,
-      pickData,
       tab: 'feed',
       pickTap: 1
     }
   },
   components: {
-    PickList,
-    FeedList
+    FeedList,
+    PickList
   },
   computed: {
     filteredPicks(){

@@ -38,7 +38,7 @@ export default {
 		goBack: function () {
 			// console.log('여기옴')
 			// console.log(this.$store.state.userInfo)
-			this.$store.commit('mypagefollowingListActivate')
+			this.$store.commit('userpagefollowingListActivate')
 		}
 	},
 	created () {

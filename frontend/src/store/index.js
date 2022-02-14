@@ -13,10 +13,13 @@ export default new Vuex.Store({
   state: {
     // feedActive: false,
     //검색부분
-    words: null,
+    words: null, //검색창
     tagSearch: [],
     userSearch: [],
     pickSearch: [],
+    tagSearchResult: [], //검색 결과
+    userSearchResult: [],
+    pickSearchResult: [],
     //메인 추천탭 부분
     userEmotion: null,
     recommendType: 1,
@@ -582,6 +585,7 @@ export default new Vuex.Store({
 
 
     //여기 검색부분입니다
+    // 글자가 포함된 태그리스트와 태그별 피드 개수를 가져옴
     searchTag() {
       let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
@@ -598,6 +602,27 @@ export default new Vuex.Store({
       })
       .catch(()=> {
         console.log('태그 없음')
+        this.state.tagSearch = []
+      })
+    },
+    // 클릭하는 태그의 피드 정보 전체를 가져옴
+    searchTagSearch(state, el) {
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+      axios({
+        method: 'get',
+        url:'http://13.125.47.126:8080/searchs/byTag/list/' + el,
+        headers: headers,
+      }).then(res => {
+        console.log(res.data)
+        this.dispatch('accessTokenRefresh', res)
+        this.state.tagSearchResult = res.data
+        console.log('태그검색 결과 가져옴')
+      })
+      .catch(()=> {
+        console.log('태그검색 결과 못가져옴')
         this.state.tagSearch = []
       })
     },
