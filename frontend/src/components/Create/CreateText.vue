@@ -11,7 +11,7 @@
     <div v-if="feedData.tags.length" id="pickTags">
       <div id="moodTag">
         <img id="planet_img" :src="require('@/assets/images/emotions/' + planetImg)" alt="">
-        <p style="margin:auto 0.2rem; color: #5E39B3; font-weight: bold;">{{feedData.tags[0].name}}</p>
+        <p style="margin:auto 0.2rem; color: #5E39B3; font-weight: bold;">{{feedData.tags[0].name}}행성</p>
       </div>
       <div id="actTag">
         <p style="margin:auto 0.2rem; color: #5E39B3; font-weight: bold;">{{feedData.tags[1].name}}</p>

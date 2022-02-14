@@ -100,6 +100,9 @@ export default new Vuex.Store({
     // 알림 부분
     alarm: [], 
     socketcount : 0, // 소켓 연결 일정시간 이상 안되면 재로그인 시키기
+
+    // 댓글
+    comments: []
   },
   mutations: {
     navActivate: function({ navActive }, payload){
@@ -285,6 +288,10 @@ export default new Vuex.Store({
       state.userpagefollowerListActive = !state.userpagefollowerListActive
       console.log(state.userpagefollowerListActive)
     },
+    // 댓글
+    GET_COMMENTS: function(state, comments) {
+      state.comments = comments
+    }
     
   },
   actions: {
@@ -771,6 +778,38 @@ export default new Vuex.Store({
           console.log(err);
         });
     },
+    // 댓글
+    getComments: function({commit}, feedNum) {
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+      axios({
+        method: 'get',
+        url:`http://13.125.47.126:8080/comments/returnNo/${feedNum}`,
+        headers: headers,  // 넣는거 까먹지 마세요
+      }).then((res) => {
+      this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+      commit('GET_COMMENTS', res.data)
+      // console.log('!!!!!!!!!!!!!!!!!!!댓글 여러개 가져오기')
+      // console.log(res.data)
+      // this.comments=res.data
+      // console.log('정답은?????')
+      // console.log(this.comments)
+      // this.commentsData=[]
+      // for (let i=0; i<this.comments.length; i++){
+      //   const commentNo=this.comments[i]
+      //   this.getComment(commentNo)
+      // }
+      // this.commentsList = this.commentsData.slice(0,2)
+      // console.log(this.comments)
+      
+      }).catch((error) => {
+        console.log(error);
+      }).then(() => {
+        console.log('댓글 목록 가져오기');
+      });
+    }
 
   },
   modules: {

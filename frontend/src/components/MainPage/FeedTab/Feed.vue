@@ -199,9 +199,10 @@ export default {
     
     /* background-color: antiquewhite; */
   }
+  /* 임시로 해놓음!!!!!!!!!!!!!!!!!!! */
   #post_image img{
-    width: 90vh;
-    height: 90vh;
+    width: 10vh;
+    height: 10vh;
   }
   #post_image{
     position: relative;
