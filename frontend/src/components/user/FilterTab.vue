@@ -44,7 +44,7 @@ export default {
 			if (idx){
 				return this.planetStyles[idx].img
 			}
-			return "neutral.png"
+			return "spaceship.png"
 		}
   },
 }
