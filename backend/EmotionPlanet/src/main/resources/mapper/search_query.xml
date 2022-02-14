@@ -17,15 +17,7 @@
 		order by
 		count desc;
 	</select>
-
-	<select id="userSelect" parameterType="String"
-		resultType="com.ssafy.project.EmotionPlanet.Dto.UserDto">
-		select no, nickname, profile_img as profileImg
-		from user
-		where nickname like
-		CONCAT(#{name},'%');
-	</select>
-
+	
 	<select id="feedSelect" parameterType="String"
 			resultType="com.ssafy.project.EmotionPlanet.Dto.FeedDto">
 		select f.no f.descr f.author f.date
@@ -36,6 +28,17 @@
 													where t.name = #{name}
 							          			)
 	</select>
+
+	
+	<select id="userSelect" parameterType="String"
+		resultType="com.ssafy.project.EmotionPlanet.Dto.UserDto">
+		select no, nickname, profile_img as profileImg
+		from user
+		where nickname like
+		CONCAT(#{name},'%');
+	</select>
+
+	
 
 	<select id="pickSelect" parameterType="String"
 			resultType="com.ssafy.project.EmotionPlanet.Dto.PickDto">

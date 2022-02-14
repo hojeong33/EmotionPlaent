@@ -1,8 +1,8 @@
 <template>
-  <section id="mypage-container">
+  <section id="mypage-container" v-if="$store.state.searchUserInfo !== null">
     <side-profile-card :user-info="userInfo" />
     <article id="profile-container">
-      <img id="profile-img"  :src="$store.state.searchUserInfo.profileImg">
+      <img id="profile-img" :src="$store.state.searchUserInfo.profileImg">
       <div id="profile-card">
         <div id="name-card">
           <h1>{{ this.$store.state.searchUserInfo.nickname }}</h1>
@@ -58,14 +58,15 @@ export default {
       this.$store.dispatch('deletefollow', this.$store.state.searchUserNo)
     },
   },
+  mounted(){
+
+  },
   created(){
     window.addEventListener('load', () => {
       if (this.$route.params.tap != 'feed'){
         this.userPageTab = 'pick'
       }
     })
-
-    console.log(this.$store.state.searchUserFollowInfo.followcheck)
   }
 }
 </script>

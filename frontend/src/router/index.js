@@ -16,7 +16,7 @@ import PwChange from '@/components/Settings/PwChange'
 import Withdrawal from '@/components/Settings/Withdrawal'
 import FeedDetail from '@/components/FeedDetail'
 import PwFind from '@/components/Settings/PwFind'
-
+import EmailFind from '@/components/Settings/EmailFind' 
 import ProfileUpdate from '@/components/Settings/ProfileUpdate'
 
 import store from '../store/index.js'
@@ -156,10 +156,20 @@ const routes = [
       },
       {
         path: 'password-find',
+        name: 'Password-find',
         component: PwFind,
         meta: {
-          loginRequired: true,
-          testRequired: true
+          loginRequired: false,
+          testRequired: false
+        },
+      },
+      {
+        path: 'email-find',
+        name: 'EmailFind',
+        component: EmailFind,
+        meta: {
+          loginRequired: false,
+          testRequired: false
         },
       },
       {
