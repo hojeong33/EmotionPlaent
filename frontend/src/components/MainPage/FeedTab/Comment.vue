@@ -1,16 +1,24 @@
 <template>
-  <div id="comment">
-    <img id="comment_img" :src=comment.userImage alt="">
-    <span style="font-weight:bold; margin-left:">{{comment.username}} </span> {{comment.commentText}}
-    <div id="comment_setting">
-      <i @click="onCommentSetting" class="fas fa-ellipsis-v"></i>
-      <!-- 댓글 하나하나에 유저데이터가 들어가서 해당 유저의 댓글이 지워져야 함-->							
+  <div>
+    <div>
+    <!-- <div style="position: absolute;"> -->
+      <img id="comment_img" :src="comment.userRequestDto.profileImg" alt="">
+      <span style="font-weight:bold; font-size:1.2rem;">{{comment.userRequestDto.nickname}} </span> <span style="font-size:1.2rem">{{comment.descr}} </span>
+    </div>
+    <div  v-if="isMine" style="text-align:right; margin-bottom:1rem">
+      <i @click="onSetting" class="fas fa-ellipsis-v"></i>
+      <div id="setting" v-if="isOpend">
+        <p style="margin-bottom:0; margin-top:1rem;">수정</p>
+        <hr>
+        <p @click="deleteComment">삭제</p>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-
+// import axios from 'axios'
+// const session = window.sessionStorage;
 export default {
     name:'Comment',
     props:{
@@ -18,23 +26,93 @@ export default {
     },
     data(){
       return{
+        isOpend:false,
+        isMine:this.comment.owner,
+        commentData:null,
       }
     },
     methods:{
-      onCommentSetting:function(){
-        this.$store.commit('commentSettingModalActivate')
+      onSetting:function(){
+        // console.log(this.isMine)
+        if(this.isOpend){
+          this.isOpend=false
+        }else{
+          this.isOpend=true
+        }
+      },
+      deleteComment:function(){
+        // console.log(this.comment.no)
+        // console.log(this.comment.feedNo)
+        
+        // let headers = {
+        //   'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        //   'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        // };
+        // axios({
+        // method:'delete',
+        // url:`http://13.125.47.126:8080/comments/${this.comment}`,
+        // headers:headers
+        // })
+        // .then((res)=>{
+        //   console.log(res);
+        //   console.log('response header', res.headers);
+        //   if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
+        //     session.setItem('at-jwt-access-token', "");
+        //     session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+        //     console.log("Access Token을 교체합니다!!!")
+        //     }
+        //   axios({
+        //   method:'get',
+        //   url:`http://13.125.47.126:8080/comments/${this.comment.feedNo}`,
+        //   headers:headers,
+        //   })
+        //   .then((res) => {
+        //     console.log(res);
+        //     console.log('response header', res.headers);
+        //     if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
+        //       session.setItem('at-jwt-access-token', "");
+        //       session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+        //       console.log("Access Token을 교체합니다!!!")
+        //       }
+        //       console.log(res.data)
+        //       this.comments=res.data
+        //       this.commentsList=res.data.slice(0,2)
+        //     }).catch((error) => {
+        //       console.log(error);
+        //     }).then(() => {
+        //       console.log('댓글 가져오기 클리어');
 
-      }
-    }
+        //     });
+        // })
+        
+
+      },
+      // updateComment:function(){
+      //   axios({
+      //     method:'put',
+      //     url:'http://13.125.47.126:8080/comments',
+      //   })
+      //   .then((res)=>{
+      //     // console.log(res.data)
+      //   })
+      // },
+    },
+
+    // created(){
+    //   console.log('여기 프롭스')
+    //   console.log(this.comment)
+  
+    // },
+    // watch:{
+    //   comment:function(){
+        
+    //   }
+    // }
 
 }
 </script>
 
 <style scoped>
-#comment {
-  margin-top: 0.2rem;
-  margin-bottom: 0.2rem;
-}
 #comment_img{
   width: 2rem;
   height: 2rem; 
@@ -43,11 +121,16 @@ export default {
   margin:2px;
 
 }
-#comment_setting{
-  float:right;
+
+#setting{
   width: 10%;
+  border:1px solid black;
   border-radius: 10px;
   text-align: center;
-  margin-left: auto;
+  display: flex;
+  flex-direction:column;
+  position: absolute;
+  transform: translate(34rem,-10px);
+  background-color: white;
 }
 </style>
