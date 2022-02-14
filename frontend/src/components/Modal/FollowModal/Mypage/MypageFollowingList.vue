@@ -15,13 +15,12 @@
 				<p id="no_following">팔로잉 목록이 없습니다...</p>
 			</div>
 			<div id="my_following_list" v-else>
-				<div id="userInfo" v-for="(followingInfo, index) in myFollowingInfo" :key="index">
-					{{followingInfo}}
-					<!-- <img id="profile_img" src="@/assets/images/icons/profileimg.png" alt="">
-					<p id="username">아이디</p> -->
-				</div>
-				<div id="follow_cancel">
-					<button id="follow_cancel">취소</button>
+				<div v-for="(followingInfo, index) in myFollowingInfo" :key="index">
+					<div id="userInfo">
+						<img id="profile_img" :src="followingInfo.profileImg" alt="">
+						<p id="username">{{followingInfo.nickname}}</p>
+						<button id="follow_cancel">취소</button>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -109,15 +108,14 @@ export default {
 	font-weight: bold;
 }
 #my_following_list{
-	display: flex;
-	flex-direction: row;
-	justify-content: left;
-	margin: 1rem;
+	margin-left: 1rem;
 	overflow-y: scroll;
 }
 #userInfo{
 	display: flex;
 	flex-direction: row;
+	margin-bottom:1rem;
+	margin-top: 1rem;
 }
 #profile_img {
 	width: 2rem;
@@ -134,6 +132,7 @@ export default {
 	margin-bottom: auto;
 }
 #follow_cancel{
+	margin-right: 0.5rem;
 	margin-left: auto;
 	margin-top: auto;
 	margin-bottom: auto;
@@ -141,7 +140,7 @@ export default {
 	color: white;
 	border-radius: 10px;
 	font-size: 0.8rem;
-	padding:0.5px;
+	padding: 0.1rem;
 }
 hr {
 	margin: 0;

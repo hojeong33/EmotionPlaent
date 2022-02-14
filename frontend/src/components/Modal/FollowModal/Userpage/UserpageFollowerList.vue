@@ -15,15 +15,12 @@
 				<p id="no_follower">팔로워 목록이 없습니다...</p>
 			</div>
 			<div id="my_follower_list" v-else>
-				<div id="userInfo" v-for="(followerInfo, index) in myFollowerInfo" :key="index">
-					{{followerInfo}}
-					<!-- <img id="profile_img" src="@/assets/images/icons/profileimg.png" alt="">
-					<p id="username">아이디</p> -->
-					<!-- 만약 팔로우를 안 했으면 팔로우 등장 / 아니면 없어짐 -->
-					<!-- <p id="follower_check">팔로우</p> -->
-				</div>
-				<div id="follow_cancel">
-					<button id="follow_cancel">삭제</button>
+				<div v-for="(followerInfo, index) in myFollowerInfo" :key="index">
+					<div id="userInfo">
+						<img id="profile_img" :src="followerInfo.profileImg" alt="">
+						<p id="username">{{followerInfo.nickname}}</p>
+						<button id="follow_cancel">취소</button>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -41,11 +38,11 @@ export default {
 		goBack: function () {
 			// console.log('여기옴')
 			// console.log(this.$store.state.userInfo)
-			this.$store.commit('userpagefollowerListActivate')
+			this.$store.commit('mypagefollowerListActivate')
 		}
 	},
 	created () {
-		this.myFollowerInfo = this.$store.state.userFollowInfo.userFollow
+		this.myFollowerInfo = this.$store.state.searchUserFollowInfo.userFollow
 	}
 }
 </script>
@@ -111,23 +108,16 @@ export default {
 	font-weight: bold;
 }
 #my_follower_list{
-	display: flex;
-	flex-direction: row;
-	justify-content: left;
-	margin: 1rem;
-	overflow-y: scroll;
-}
-#my_follower_list{
-	display: flex;
-	flex-direction: row;
-	justify-content: left;
-	margin: 1rem;
+	margin-left: 1rem;
 	overflow-y: scroll;
 }
 #userInfo{
 	display: flex;
 	flex-direction: row;
+	margin-bottom:1rem;
+	margin-top: 1rem;
 }
+
 #profile_img {
 	width: 2rem;
 	height: 2rem;
@@ -149,6 +139,7 @@ export default {
 	margin-bottom: auto;
 }
 #follow_cancel{
+	margin-right: 0.5rem;
 	margin-left: auto;
 	margin-top: auto;
 	margin-bottom: auto;
@@ -156,7 +147,7 @@ export default {
 	color: white;
 	border-radius: 10px;
 	font-size: 0.8rem;
-	padding:0.5px;
+	padding: 0.1rem;
 }
 hr {
 	margin: 0;
