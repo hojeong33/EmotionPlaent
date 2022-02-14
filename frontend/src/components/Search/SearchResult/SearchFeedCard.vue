@@ -2,11 +2,11 @@
   <div id="feed">
     <div id="header">
       <section id="profile_image">
-        <img :src="feed.userImage" />
+        <img :src="feed.authorDetail.profileImg" />
       </section>
       <div id="profile_content">
-        <section id="username">{{feed.username}}</section>
-        <section>{{feed.date}}</section>
+        <section id="username">{{ feed.authorDetail.nickname }}</section>
+        <section>{{ feed.date }}</section>
       </div>
       <!-- <div id="setting">
         <i class="fas fa-ellipsis-v"></i>
@@ -17,7 +17,7 @@
     </div>
     <div id="post_image">
       <img :src="feed.postImage" alt="">
-      <p class="overlay_content" >{{feed.username}}님은 {{feed.planet}} <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p>
+      <p class="overlay_content" >{{ feed.authorDetail.nickname}}님은 {{tmp.name}} <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p>
     </div>
     <div id="like">
       <div id="heart">
@@ -27,9 +27,9 @@
     </div>
     <div id="content">
       <div id="tag">
-        <p id="my_tag" v-for="tag in feed.tag" :key="tag">#{{tag}}</p>
+        <p id="my_tag" v-for="tag in feed.tags" :key="tag">#{{tag.name}}</p>
       </div> 
-        <p id="caption">{{feed.caption}}</p>
+        <p id="caption">{{feed.descr}}</p>
     </div>
     <comment-list :comments="feed.comments"></comment-list>
   </div>
@@ -59,8 +59,8 @@ export default {
   },
    computed: {
     tmp: function () {
-      const name = this.feed.planet
-      const style = this.planetStyles.find(el => el.name === name) || {}
+      const idx = this.feed.tags[0].no
+      const style = this.planetStyles.find(el => el.id === idx) || {}
       return style
     }
   },

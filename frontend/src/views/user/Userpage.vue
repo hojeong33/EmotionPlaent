@@ -12,7 +12,7 @@
           @click="unfollow">언팔로우</button>
         </div>
         <div id="info-card">
-          <h3>이야기 0개</h3>
+          <h3>이야기 {{ this.$store.state.searchUserFeedInfo.length }}개</h3>
           <h3 @click="showFollowerList">팔로우 {{ this.$store.state.searchUserFollowInfo.userFollow.length }}</h3>
           <h3 @click="showFollowingList">팔로잉 {{ this.$store.state.searchUserFollowInfo.userFollowing.length }}</h3>
         </div>
@@ -68,6 +68,7 @@ export default {
 
   },
   created(){
+    this.$store.dispatch("searchUserFeed", this.$store.state.searchUserNo)
     window.addEventListener('load', () => {
       if (this.$route.params.tap != 'feed'){
         this.userPageTab = 'pick'

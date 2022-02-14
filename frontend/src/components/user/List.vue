@@ -32,15 +32,11 @@ import FilterTab from '@/components/user/FilterTab'
 // import FeedItem from '@/components/user/FeedItem'
 import FeedList from '@/components/user/FeedList'
 import PickList from '@/components/user/PickList'
-import feedData from '@/assets/data/userFeed'
-import pickData from '../../assets/data/pickData'
 
 export default {
 	name: 'UserFeed',
 	data: function () {
 		return {
-			feedData,
-			pickData,
 			planetStyles: [
 				{ id: 0, name: 'default'},
         { id: 1, name: '행복행성', img: "happy.png", color: '#ED5A8E' },
@@ -52,6 +48,7 @@ export default {
       ],
 			filter: 0,
 			pickTap: 1,
+			filteredFeed: []
 		}
 	},
 	props: {
@@ -65,20 +62,21 @@ export default {
 	methods: {
 		filtering(payload){
       this.filter = payload
+			this.filteredFeed = []
     }
 	},
 	computed: {
 		filteredFeeds(){
 			if (this.filter){
-				const temp = []
-				this.feedData.forEach(feed => {
-					if (feed.planet == this.filter){
-						temp.push(feed)
+				this.$store.state.userFeedInfo.forEach(feed => {
+					if (feed.tags[0].no == this.filter){
+						this.filteredFeed.push(feed)
 					}
 				});
-				return temp
+				console.log(this.filteredFeed)
+				return this.filteredFeed
 			}
-			return this.feedData
+			return this.$store.state.userFeedInfo
 		},
 		filteredPicks(){
       const temp = []

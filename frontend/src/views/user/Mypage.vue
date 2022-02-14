@@ -8,10 +8,13 @@
           <h1>{{ this.$store.state.userInfo.nickname }}</h1>
           <button @click="$router.push({name: 'Setting'})">프로필 수정</button>
         </div>
-        <div id="info-card">
-          <h3>이야기 {{ userInfo.posts }}</h3>
-          <h3 @click="showFollowerList" style="cursor: pointer;">팔로우 {{ this.$store.state.userFollowInfo.userFollow.length }}</h3>
-          <h3 @click="showFollowingList" style="cursor: pointer;">팔로잉 {{ this.$store.state.userFollowInfo.userFollowing.length }}</h3>
+        <div id="info">
+          <h3>{{ this.$store.state.userInfo.intro }}</h3>
+          <div id="info-card">
+            <h3>이야기 {{ this.$store.state.userFeedInfo.length }}</h3>
+            <h3 @click="showFollowerList" style="cursor: pointer;">팔로우 {{ this.$store.state.userFollowInfo.userFollow.length }}</h3>
+            <h3 @click="showFollowingList" style="cursor: pointer;">팔로워 {{ this.$store.state.userFollowInfo.userFollowing.length }}</h3>
+          </div>
         </div>
       </div>
     </article>
@@ -59,6 +62,9 @@ export default {
     to(){
       return this.$router.app._route.path
     }
+  },
+  created() {
+    this.$store.dispatch("searchUserFeed", this.$store.state.userInfo.no)
   },
   mounted(){
     if (this.to.includes('item')){
@@ -108,7 +114,7 @@ export default {
     border: 1px #5E39B3 solid;
     border-radius: 20px;
     padding: 0.41rem 0.45rem;
-    margin-bottom: 0.7rem;
+    margin-bottom: 0.1rem;
     cursor: pointer;
     line-height: 1rem;
   }
@@ -164,7 +170,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     margin-top: 0.2rem;
-    margin-bottom: 1.2rem;
+    margin-bottom: 0rem;
     width: 100%;
   }
   
@@ -174,6 +180,7 @@ export default {
     justify-content: space-between;
     align-items: center;
     width: 100%;
+    margin-top: 1.4rem;
   }
   
   #card {
@@ -235,6 +242,11 @@ export default {
   .activate {
     color: black;
     font-size: 1.3rem;
+  }
+
+  #info {
+    display: flex;
+    flex-direction: column;
   }
 
 </style>

@@ -1,6 +1,6 @@
 <template>
   <div class="feed-s">
-    <img class="feed-s-thumbnail" :src="post.postImage" :alt="post.username"
+    <img class="feed-s-thumbnail" :src="post.imgs[0].imgLink" :alt="this.$store.state.userInfo.username"
     @mouseover="hover = true">
     <span class="feed-s-info" v-show="hover" @mouseleave="hover = false">
       <span class="info">
@@ -23,7 +23,7 @@ export default {
     }
   },
   props: {
-    post: Object
+    post: Object,
   }
 }
 </script>
