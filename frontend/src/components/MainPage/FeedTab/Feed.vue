@@ -2,51 +2,61 @@
   <div id="feed">
     <div id="header">
       <section id="profile_image">
-        <img :src="feed.userImage" />
+        <img :src="feed.authorDetail.profileImg" />
       </section>
       <div id="profile_content">
-        <section id="username">{{feed.username}}</section>
-        <section>{{feed.date}}</section>
+        <section id="username" style="font-size:2rem;">{{feed.authorDetail.nickname}}</section>
+        <section style="font-size:1.2rem;">{{feed.date}}</section>
       </div>
-      <!-- <div id="setting">
-        <i class="fas fa-ellipsis-v"></i>
-      </div> -->
-      <div id="setting">
-        <i @click="onUserFeedSetting" class="fas fa-ellipsis-v"></i>
+      <div id="setting" style="z-index: 2;" v-if="isMine">
+        <i @click="onSetting" class="fas fa-ellipsis-v"></i>
+        <div id="detail" v-if="isOpend" style="" >
+          <p style="margin-bottom:0; margin-top:1rem;">수정</p>
+          <hr>
+          <p @click="deleteComment">삭제</p>
+        </div>
       </div>
     </div>
-    <div id="post_image">
-      <img :src="feed.postImage" alt="">
-      <p class="overlay_content" >{{feed.username}}님은 {{feed.planet}} <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p>
+    <div id="post_image" style="z-index: 1;">
+      <div id="my_img" v-for="img in feed.imgs" :key="img"><div><img :src="img.imgLink" alt=""></div></div>
+      <!-- <img :src="post.postImage" alt="" v> -->
+      <!-- <p class="overlay_content" >{{post.author}}님은 {{post.tag[0]}} <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p> -->
     </div>
     <div id="like">
       <div id="heart">
-        <i class="far fa-heart fa-lg" :class="{'fas': this.feed.hasBeenLiked}" @click="like"></i>
+        <i class="far fa-heart fa-lg" :class="{'fas': this.feed.like}" @click="like"></i>
       </div>
+       <p id="feed_likes" v-for="like in feed.likes" :key="like">{{like["nickname"]}}</p>
       <p class="likes" >{{feed.likes}} likes</p>
     </div>
     <div id="content">
       <div id="tag">
-        <p id="my_tag" v-for="tag in feed.tag" :key="tag">#{{tag}}</p>
+        <p id="my_tag" v-for="tag in feed.tags" :key="tag">#{{tag["name"]}}</p>
       </div> 
-        <p id="caption">{{feed.caption}}</p>
+        <p id="caption" style="font-size:1.4rem"><span style="font-weight:bold; margin-right:5px;">{{feed.author}}</span>{{feed.descr}}</p>
     </div>
-    <comment-list :comments="feed.comments"></comment-list>
+    <comment-list :feedNo="post"></comment-list>
   </div>
 </template>
 
 <script>
 import CommentList from './CommentList.vue';
+import axios from 'axios';
+const session = window.sessionStorage;
 
 export default {
-  components: { CommentList, },
+  components: { CommentList },
   name: "Feed",
   props: {
-    feed: Object,
-    comments:Array
+    post: Number,
   },
   data(){
     return{
+      // date:this.post.date.toLocaleDateString(),
+      isMine:false,
+      isOpend:false,
+      feed:null,
+      posts:[],
       planetStyles: [
         { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
         { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
@@ -54,7 +64,7 @@ export default {
         { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
         { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
         { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
-      ],
+      ]
     }
   },
    computed: {
@@ -65,14 +75,65 @@ export default {
     }
   },
   methods: {
-    like() {
-      this.feed.hasBeenLiked ? this.feed.likes-- : this.feed.likes++;
-      this.feed.hasBeenLiked = !this.feed.hasBeenLiked;
+    onSetting:function(){
+      if(this.isOpend){
+        this.isOpend=false
+      }else{
+        this.isOpend=true
+      }
     },
-    onUserFeedSetting:function(){
-      this.$store.commit('userFeedSettingModalActivate')
-		}
+    like() {
+      this.feed.like ? this.feed.likes-- : this.feed.likes++;
+      this.feed.like= !this.feed.like;
+    },
+    
+    // getComments:function(){
+    //   let headers = {
+    //     'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+    //     'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+    // };
+    // axios({
+    //     method: 'get',
+    //     url:`http://13.125.47.126:8080/comments/returnNo/${this.post}`,
+    //     headers: headers,  // 넣는거 까먹지 마세요
+    //   }).then((res) => {
+    //   this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+    //   console.log('!!!!!!!!!!!!!!!!!!!')
+    //   console.log(res.data)
+    //   this.comments=res.data
+    //   this.commentsList=res.data.slice(0,2)
+    //   this.getComments()
+    //   }).catch((error) => {
+    //     console.log(error);
+    //   }).then(() => {
+    //     console.log('댓글 목록 가져오기');
+    //   });
+    // }
+    
+  },
+  created(){
+    let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+    };
+    axios({
+        method: 'get',
+        url:`http://13.125.47.126:8080/feed/${this.post}`,
+        headers: headers,  // 넣는거 까먹지 마세요
+      }).then((res) => {
+      this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+      console.log('!!!!!!!!!!!!!!!!!!!')
+      console.log(res.data)
+      this.feed=res.data
+      this.isMine=res.data.owner
+      }).catch((error) => {
+        console.log(error);
+      }).then(() => {
+        console.log('피드 하나 가져오기');
+      });
+    
   }
+  
 };
 </script>
 
@@ -112,6 +173,7 @@ export default {
   #my_tag{
     color:rgb(37, 37, 201);
     margin-bottom:3px;
+    font-size:1.2rem;
   }
   #header{
     display:flex;
@@ -151,9 +213,21 @@ export default {
   .overlay_content {
     position: absolute;
     padding: 0rem 1rem;
+    margin-right:16rem;
     background-color: white;
     border-radius: 10px;
   }
-
+  #detail{
+    width: 8%;
+    font-size: 20px;
+    border:1px solid black;
+    border-radius: 10px;
+    text-align: center;
+    display: flex;
+    flex-direction:column;
+    position: absolute;
+    /* transform: translate(34rem,-10px); */
+    background-color: white;
+  }
 
 </style>

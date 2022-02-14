@@ -30,7 +30,7 @@
 <script>
 import FilterTab from '@/components/user/FilterTab'
 // import FeedItem from '@/components/user/FeedItem'
-import FeedList from '@/components/MainPage/FeedTab/FeedList'
+import FeedList from '@/components/user/FeedList'
 import PickList from '@/components/user/PickList'
 import feedData from '@/assets/data/userFeed'
 import pickData from '../../assets/data/pickData'
