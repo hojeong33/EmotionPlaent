@@ -14,13 +14,18 @@ export default {
   data(){
     return {
       tab: 'feed',
-      pickTap: 1
+      pickTap: 1,
     }
   },
   methods: {
     changeTab(payload){
       this.tab = payload
       this.$router.push({ path: `/search/${this.tab}` })
+    }
+  },
+  watch: {
+    test(){
+      console.log(this.test)
     }
   },
   mounted(){
