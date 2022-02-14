@@ -35,7 +35,7 @@
       </div> 
         <p id="caption" style="font-size:1.4rem"><span style="font-weight:bold; margin-right:5px;">{{feed.author}}</span>{{feed.descr}}</p>
     </div>
-    <comment-list :feedNo="post"></comment-list>
+    <comment-list :feedNo="post" @delete-comment="commentKey++" :key="commentKey"></comment-list>
   </div>
 </template>
 
@@ -64,7 +64,8 @@ export default {
         { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
         { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
         { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
-      ]
+      ],
+      commentKey: 0,
     }
   },
    computed: {
@@ -199,18 +200,10 @@ export default {
     
     /* background-color: antiquewhite; */
   }
-<<<<<<< HEAD
-  /* 임시로 해놓음!!!!!!!!!!!!!!!!!!! */
-  #post_image img{
-    width: 10vh;
-    height: 10vh;
-  }
-=======
   /* #post_image img{
     width: 90vh;
     height: 90vh;
   } */
->>>>>>> 9abdac32eb486587f9b98819a362874b8c7b1ba5
   #post_image{
     position: relative;
     overflow: hidden;

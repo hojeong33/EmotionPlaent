@@ -105,6 +105,8 @@ export default new Vuex.Store({
     comments: [],
     commentsOnTwo: [],
     comment:[],
+    commentNum: null,
+    commentDeleted: false
   },
   mutations: {
     navActivate: function({ navActive }, payload){
@@ -183,9 +185,10 @@ export default new Vuex.Store({
     },
     
     // 모달부분입니다
-    commentSettingModalActivate: function (state) {
+    commentSettingModalActivate: function (state, commentNum) {
       state.commentSettingModalActive = !state.commentSettingModalActive
-      console.log(state.commentSettingModalActive)
+      state.commentNum = commentNum
+      console.log(state.commentSettingModalActive, commentNum)
     },
     userFeedSettingModalActivate: function (state) {
       state.userFeedSettingModalActive = !state.userFeedSettingModalActive
@@ -291,10 +294,12 @@ export default new Vuex.Store({
       console.log(state.userpagefollowerListActive)
     },
     // 댓글
-    GET_COMMENTS: function(state, comments) {
-      state.comments = comments
+    isDelete: function (state) {
+      if (state.commentNum) {
+        state.commentDeleted = state.commentNum
+      }
+      console.log(state.commentDeleted)
     }
-    
   },
   actions: {
       //알림 읽기 + 7일 이후 읽은 알림 삭제
@@ -779,38 +784,6 @@ export default new Vuex.Store({
           console.log(err);
         });
     },
-    // 댓글
-    getComments: function({commit}, feedNum) {
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-      axios({
-        method: 'get',
-        url:`http://13.125.47.126:8080/comments/returnNo/${feedNum}`,
-        headers: headers,  // 넣는거 까먹지 마세요
-      }).then((res) => {
-      this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-      commit('GET_COMMENTS', res.data)
-      // console.log('!!!!!!!!!!!!!!!!!!!댓글 여러개 가져오기')
-      // console.log(res.data)
-      // this.comments=res.data
-      // console.log('정답은?????')
-      // console.log(this.comments)
-      // this.commentsData=[]
-      // for (let i=0; i<this.comments.length; i++){
-      //   const commentNo=this.comments[i]
-      //   this.getComment(commentNo)
-      // }
-      // this.commentsList = this.commentsData.slice(0,2)
-      // console.log(this.comments)
-      
-      }).catch((error) => {
-        console.log(error);
-      }).then(() => {
-        console.log('댓글 목록 가져오기');
-      });
-    }
 
   },
   modules: {

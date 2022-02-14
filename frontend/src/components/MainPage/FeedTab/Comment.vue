@@ -1,16 +1,11 @@
 <template>
   <div v-if="commentData">
-    <div>
-    <!-- <div style="position: absolute;"> -->
+    <div id="comments">
       <img id="comment_img" :src="commentData.userRequestDto.profileImg" alt="">
-      <span style="font-weight:bold; font-size:1.2rem;">{{commentData.userRequestDto.nickname}} </span> <span style="font-size:1.2rem">{{commentData.descr}} </span>
-    </div>
-    <div  v-if="isMine" style="text-align:right; margin-bottom:1rem">
-      <i @click="onSetting" class="fas fa-ellipsis-v"></i>
-      <div id="setting" v-if="isOpend">
-        <p style="margin-bottom:0; margin-top:1rem;">수정</p>
-        <hr>
-        <p @click="deleteComment">삭제</p>
+      <p id="username">{{commentData.userRequestDto.nickname}} </p> 
+      <p id="user_comment">{{commentData.descr}} </p>
+      <div id="comment_setting">
+        <i @click="onCommentSetting" class="fas fa-ellipsis-v"></i>
       </div>
     </div>
   </div>
@@ -32,17 +27,10 @@ export default {
       }
     },
     methods:{
-      onSetting:function(){
-        if (this.commentData) {
-          this.isMine = true
-        }
-        // console.log(this.isMine)
-        if(this.isOpend){
-          this.isOpend=false
-        }else{
-          this.isOpend=true
-        }
+      onCommentSetting:function(){
+			this.$store.commit('commentSettingModalActivate', this.comment)
       },
+    },
       deleteComment:function(){
         // console.log(this.comment.no)
         // console.log(this.comment.feedNo)
@@ -99,75 +87,57 @@ export default {
       //     // console.log(res.data)
       //   })
       // },
-    },
-<<<<<<< HEAD
-    created: function (){
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        };
-      axios({
-        method: 'get',
-        url:`http://13.125.47.126:8080/comment/${this.comment}`,
-        headers: headers,  // 넣는거 까먹지 마세요
-        }).then((res) => {
-        this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-        // console.log('!!!!!!!!!!!!!!!!!!!댓글 하나 가져오기')
-        // console.log(res.data)
-        this.commentData = res.data
-        // console.log(this.commentData)
-        // this.getComments()
-        }).catch((error) => {
-          console.log(error);
-        }).then(() => {
-          // this.commentsData
-          // console.log('댓글 하나 가져오기');
-        });
-    },
-
-=======
     created(){
       let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-    };
-    axios({
-        method: 'get',
-        url:`http://13.125.47.126:8080/comment/${this.comment}`,
-        headers: headers,  // 넣는거 까먹지 마세요
-      }).then((res) => {
-      this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-      console.log('!!!!!!!!!!!!!!!!!!!')
-      console.log(res.data)
-      this.commentData=res.data
-      // this.getComments()
-      }).catch((error) => {
-        console.log(error);
-      })
+      };
+      axios({
+          method: 'get',
+          url:`http://13.125.47.126:8080/comment/${this.comment}`,
+          headers: headers,  // 넣는거 까먹지 마세요
+        }).then((res) => {
+        this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+        console.log('!!!!!!!!!!!!!!!!!!!')
+        console.log(res.data)
+        this.commentData=res.data
+        // this.getComments()
+        }).catch((error) => {
+          console.log(error);
+        })
     },
->>>>>>> 9abdac32eb486587f9b98819a362874b8c7b1ba5
 }
 </script>
 
 <style scoped>
-#comment_img{
-  width: 2rem;
-  height: 2rem; 
-  border-radius: 70%;
-  overflow:hidden;
-  margin:2px;
-
+#comments {
+	display: flex;
+	flex-direction: row;
+	justify-content: left;
+	align-items: center;
+	font-size: 1rem;
+	margin-top: 0.5rem;
+	margin-bottom: 0.5rem;
 }
-
-#setting{
-  width: 10%;
-  border:1px solid black;
-  border-radius: 10px;
-  text-align: center;
-  display: flex;
-  flex-direction:column;
-  position: absolute;
-  transform: translate(34rem,-10px);
-  background-color: white;
+#comment_img{
+  width: 5vh;
+	height: 5vh;
+	border-radius: 5vh;
+	margin-right: 0.5rem;
+}
+#user_comment {
+	margin-top:auto;
+	margin-bottom: auto;
+	margin-left: 0.5rem;
+}
+#username {
+	font-weight: bold;
+	margin: 0rem;
+	font-size: 1.2rem;
+}
+#comment_setting {
+	margin-left: auto;
+	margin-right: 1rem;
+  cursor: pointer;
 }
 </style>

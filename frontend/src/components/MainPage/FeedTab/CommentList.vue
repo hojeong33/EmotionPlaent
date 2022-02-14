@@ -21,7 +21,8 @@
 <script>
 import Comment from './Comment.vue'
 import axios from 'axios';
-import {mapActions} from 'vuex'
+import {mapState} from 'vuex'
+
 const session = window.sessionStorage;
 
 export default {
@@ -68,6 +69,7 @@ export default {
       }).then((res) => {
       this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
       this.comments=res.data.reverse()
+      this.comments.sort()
       console.log('댓글이 갱신됐슴다!!!!!!!!!!!!!!!!!!!', this.comments)
       })
       .catch((error) => {
@@ -94,18 +96,10 @@ export default {
             headers: headers,  // 넣는거 까먹지 마세요
           })
           .then((res) => {
-<<<<<<< HEAD
-            this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-            this.getComments(commentItem.feedNo)
-            // this.getComments()
-            // console.log(res.data)
-            // console.log('댓글 다시 가져옴!!!!!!!!!!!!!!!!!!!!!!')
-=======
              this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
              console.log(res.data)
              console.log('댓글 다시 가져옴!!!!!!!!!!!!!!!!!!!!!!')
              this.getComments()
->>>>>>> 9abdac32eb486587f9b98819a362874b8c7b1ba5
           })
           .catch((error) => {
             console.log(error);
@@ -118,6 +112,20 @@ export default {
         alert('내용을 채워주세요')
       }
     },
+  },
+  computed: {
+    ...mapState([
+      'commentDeleted'
+    ])
+  },
+  watch: {
+    commentDeleted: function () {
+      const idx = this.comments.indexOf(this.commentDeleted)
+      console.log('지워지는 값', idx)
+      if (idx > -1) {
+        this.$emit('delete-comment')
+      } 
+    }
   },
   created(){
     this.getComments()
