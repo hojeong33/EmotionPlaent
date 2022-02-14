@@ -22,8 +22,8 @@
         placeholder="비밀번호를 입력해주세요">
       </article>
       <div id="link">
-        <a href="#">이메일 찾기</a>
-        <a href="#">비밀번호 찾기</a>
+        <router-link :to="{ name: 'EmailFind' }">이메일 찾기</router-link>
+        <router-link :to="{ name: 'Password-find' }">비밀번호 찾기</router-link>
         <router-link :to="{ name: 'Signup' }" class="gosignup">회원가입</router-link>
       </div>
       <button id="login_btn">로그인</button>
@@ -33,7 +33,7 @@
       <p>Google로 로그인</p>
     </button>
     <article>
-      <button id="kakao" class="social_login">
+      <button id="kakao" class="social_login" @click="handleClickKaKaoSignin">
         <img id="kakao" src="../../assets/images/etc/kakao.png">
         <p>Kakao로 로그인</p>
         </button>
@@ -56,6 +56,7 @@ export default {
         pw: null,
       },
       googleUser: null,
+      kakaoOauthUrl: null,
     }
   },
   methods: {
@@ -113,7 +114,7 @@ export default {
     })
     .catch(err=> {
       console.log('나는 에러야!', err)
-      this.$store.dispatch('loginFailModalActivate', err.response.data.message)
+      this.$store.commit('loginFailModalActivate', err.response.data.message)
       // alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
     })
     this.credentials.email = "";
@@ -171,6 +172,30 @@ export default {
       }
       console.log('headers : ', headers);
     }
+  },
+
+  handleClickKaKaoSignin() {
+    const params = {
+        redirectUri: "http://localhost:5500/login",
+    };
+    window.Kakao.Auth.authorize(params);
+    const authorization_code = this.$route.query.code
+    this.kakaoValidate(authorization_code)
+  },
+
+  kakaoValidate(code) {
+    axios({
+        method: 'post',
+        url: 'http://13.125.47.126:8080/login/auth',
+        data: code
+      }).then((res) => {
+        console.log('카카오 데이터 받아오기 : ' + res.data)
+        this.kakaoOauthUrl = res.data
+      }).catch((error) => {
+        console.log(error);
+      }).then(() => {
+        console.log('getQSSList End!!');
+      });
   },
   
   trans() {

@@ -62,7 +62,12 @@ public class UserServiceImpl implements UserService {
 		if (changeuserDto.getMood() != 0) { // 감정 정보 변경
 			System.out.println("===================1번====================== " + changeuserDto.getNo());
 			userDto.setMood(changeuserDto.getMood());
-		} else if (changeuserDto.getTel() != null) {  // 구글 로그인 회원 기본 정보 갱신
+		} 
+//		else if(changeuserDto.getMood() == 0){
+//			System.out.println("===================1.5번====================== " + changeuserDto.getNo());
+//			userDto.setMood(changeuserDto.getMood());
+//		} 
+		else if (changeuserDto.getTel() != null) {  // 구글 로그인 회원 기본 정보 갱신
 			System.out.println("===================2번======================");
 			userDto.setNickname(changeuserDto.getNickname());
 			userDto.setTel(changeuserDto.getTel());
@@ -95,7 +100,21 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public String findEamil(String tel) { // 이메일 찾기
-		return userDao.findEamil(tel);
+		String email = userDao.findEamil(tel);
+		if(email!= null) {
+			String[] splitall = email.split("@");
+			String[] splitemail = splitall[0].split("");
+			String str = "";
+			int half = splitemail.length / 2;
+			for (int i = 0; i < splitemail.length ; i++) {
+				if(i == half-1 || i == half)
+					str += "_";
+				else
+					str += splitemail[i];
+			}
+			return str+"@"+splitall[1];
+		}else
+			return null;
 	}
 
 	@Override

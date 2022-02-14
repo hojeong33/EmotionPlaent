@@ -1,43 +1,23 @@
 <template>
   <div id="pf-container">
     <section id="pf-header">
-      <h1>비밀번호 찾기</h1>
-      <h3>비밀번호를 잊으셨군요</h3>
-      <h3>임시 비밀번호를 보내드릴게요</h3>
+      <h1>이메일 찾기</h1>
+      <h3>이메일을 잊으셨군요</h3>
+      <h3>이메일을 알려드릴게요</h3>
     </section>
     <section id="pf-body">
-      <article id="email-form">
-        <div id="email-form-header">
-          <label for="email">이메일</label>
-          <span v-show="credentials.email">
-            <input type="checkbox" id="checkbox" v-model="checked">
-            <label for="checkbox">여기로 받을게요</label>
-          </span>
-        </div>
-        <input type="email" 
-        id="email"
-        v-model="credentials.email"
-        @input="emailInput"
-        placeholder="등록하신 이메일을 입력해주세요.">
-      </article>
-      <article id="te-form">
-        <label for="target-email">전달받을 이메일</label>
-        <input type="text" id="target-email"
-        v-model="credentials.target_email"
-        :disabled="checked" :class="{'disabled':checked }"
-        placeholder="임시 비밀번호를 받을 이메일을 입력해주세요.">
-      </article>
       <article id="tel-form">
         <label for="tel">휴대전화</label>
         <input type="text" id="tel"
-        v-model="credentials.tel"
-        @input="tel_helper" maxlength="13"
+        v-model="tel"
+        @input="tel_helper"
+        @keyup.enter="send_tel" maxlength="13"
         placeholder="등록하신 휴대전화를 입력해주세요.">
-        <span v-if="credentials.tel">
-          <p v-if="!isValid.validateTel" class="warn">
-            전화번호가 이상해요.
+        <span v-if="tel">
+          <p v-if="!validateTel" class="warn">
+            전화번호를 똑바로 입력하세요
           </p>
-          <p v-if="isValid.validateTel" class="collect">
+          <p v-if="validateTel" class="collect">
             가능한 전화번호예요.
           </p>
         </span>
@@ -56,9 +36,8 @@
         v-model="credentials.pin"
         placeholder="등록하신 PIN 번호를 입력해주세요.">
       </article> -->
-      <router-link :to="{ name: 'EmailFind' }">이메일을 잊었나요?</router-link>
       <article id="pf-buttons">
-        <button @click="send_mail">메일 받기</button>
+        <button @click="send_tel">이메일 찾기</button>
         <button @click="go_to_back">뒤로가기</button>
       </article>
     </section>
@@ -66,102 +45,62 @@
 </template>
 
 <script>
-import { mapState } from 'vuex'
 import axios from 'axios'
 export default {
   data: function(){
     return {
-      credentials : {
-        email: null,
-        target_email: null,
-        tel: null,
-        pin: null
-      },
-      isValid: {
-        validateEmail: false,
-        validateTel: false,
-      },
-      checked: false,
-      help: false
+      tel: null,
+      validateTel: false,
     }
   },
   methods: {
-    send_mail(){
-    let data = {
-      email: this.credentials.email,
-      tel: this.credentials.tel,
-      requestemail : this.credentials.target_email,
-    };
-    axios({
-        method: 'post',
-        url: 'http://13.125.47.126:8080/register/findPw',
-        data: data, 
+    send_tel(){
+    if(this.tel){
+      axios({
+        method: 'get',
+        url: 'http://13.125.47.126:8080/register/findEmail/' + this.tel,
       }).then((res) => {
-       console.log("메일 전송 성공" , res)
-       alert("매일 전송 성공")
-      }).then(()=>{
-        this.$router.push("/login")
+       alert(res.data)
+       this.$router.push("/login")
       }).catch((error) => {
         console.log(error);
       })
+    }else{
+      alert("전화번호를 입력해 주세요")
+    }
     },
 
-    emailInput(){
-      if (!this.credentials.email){
-        console.log('-1')
-        this.credentials.target_email = null
-        this.checked = false
-      }
-      // else {
-      //   if (this.user.email == this.credentials.email){
-      //   this.isValid.validateEmail = true
-      //   }
-      //   else {
-      //     this.isValid.validateEmail = false
-      //   }
-      // }
-    },
-    go_to_back: function(){
-      this.$router.go(-1)
-    },
     tel_helper: function(event){
-      const nums = this.credentials.tel.length
-      const n = this.credentials.tel.charCodeAt(nums-1)
+      const nums = this.tel.length
+      const n = this.tel.charCodeAt(nums-1)
       const poss = ['010', '011', '012', '013', '014',
                     '015', '016', '017', '018', '019']
       if (event.inputType == 'deleteContentBackward'){
         if (nums == 3 || nums == 8){
-          this.credentials.tel = this.credentials.tel.slice(0, nums - 1)
+          this.tel = this.tel.slice(0, nums - 1)
         }
         return
       }
       if (n > 47 && n < 58){
         if (nums == 3 || nums == 8){
-          this.credentials.tel += '-'
+          this.tel += '-'
         }
       }
       else {
-        this.credentials.tel = this.credentials.tel.slice(0, nums - 1)
+        this.tel = this.tel.slice(0, nums - 1)
       }
-      if (nums == 13 && poss.indexOf(this.credentials.tel.slice(0,3)) > -1){
-        this.isValid.validateTel = true
+      if (nums == 13 && poss.indexOf(this.tel.slice(0,3)) > -1){
+        this.validateTel = true
       }
       else {
-        this.isValid.validateTel = false
+        this.validateTel = false
       }
     },
+
+    go_to_back(){
+      this.$router.go(-1)
+    },
   },
-  computed: mapState(['user']),
-  watch: {
-    checked(){
-      if (this.checked){
-        this.credentials.target_email = this.credentials.email
-      }
-      else {
-        this.credentials.target_email = null
-      }
-    }
-  }
 }
 </script>
 

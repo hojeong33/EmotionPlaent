@@ -1,34 +1,33 @@
 <template>
   <div id="container">
-    <div id="results" v-if="this.$store.state.userSearch.length !== 0">
-      <div v-for="result in this.$store.state.userSearch"
-      :key="result.no"
-      id="result">
-        <img :src="result.profileImg" alt="" id="user">
+    <div id="results" v-if="this.pickSearch.length !== 0">
+      <div v-for="result in this.pickSearch"
+        :key="result.no"
+        id="result">
+        <img src="../../assets/images/icons/treasure-chest.png" alt="" id="treasure">
         <div id="search">
-          <span id="title">@{{ result.nickname }}</span>
-          <!-- <span id="content">{{ result.email }}</span> -->
+          <span id="title">#{{ result.mood }}</span>
+          <span id="content">보물상자: {{ result.count }}개</span>
         </div>
-        <img src="../../assets/images/icons/search_dark.png" 
-        @click="getInfo(result.no)" alt="" id="go">
+        <img src="../../assets/images/icons/search_dark.png" alt="" id="go">
       </div>
     </div>
     <div v-else id="no_result">
       <img id="nothing" src="@/assets/images/etc/alien.png" alt="">
-      <h3>찾는 여행자가 없어요...</h3>
-    </div>  
+      <p>찾는 보물상자가 없어요...</p>
+    </div>
   </div>
 </template>
 
 <script>
 export default {
-  name: 'SearchUser',
-  methods: {
-    async getInfo(el) {
-      this.$store.state.searchUserNo = el
-      await this.$store.dispatch('userSelect', el)
-      await this.$store.dispatch('userfollowdate', el)
-      this.$router.push({ path: `/userpage/feed` })
+  name: 'SearchPick',
+  data() {
+    return {
+      pickSearch: [
+        { no: 1, mood: '우울', count: 3 },
+        { no: 2, mood: '행복', count: 3 },
+      ]
     }
   },
   created() {
@@ -43,7 +42,6 @@ export default {
     font-weight: bold;
     margin: 0;
   }
-
   #container {
     width: 100%;
     background-color: white;
@@ -75,7 +73,7 @@ export default {
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;
-    padding-left: 0.5rem;
+    padding-left: 1rem;
     padding-right: 2rem;
   }
 
@@ -84,16 +82,16 @@ export default {
     font-weight: bold;
   }
 
+  #treasure {
+    width: 4vh;
+    height: 4vh;
+    border-radius: 40%;
+  }
+  
   #go {
     width: 3vh;
     height: 3vh;
     cursor: pointer;
-  }
-
-  #user {
-    width: 4vh;
-    height: 4vh;
-    border-radius: 40%;
   }
 
   #no_result {

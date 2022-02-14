@@ -1,13 +1,14 @@
 <template>
   <div>
     <side-profile-card :user-info="userInfo"> </side-profile-card>
-    <!-- <button @click="follow">팔로우 신청</button> 알림 테스트부분
-	<button @click="comment">댓글 알림</button>
-	<button @click="feedlike">피드 좋아요</button>
-	<button @click="picklike">찜 좋아요</button>
-	<button @click="alarmdelete(1)">알림 삭제하기</button>
-	<button @click="alarmselect">알림 가져오기</button> -->
-    <button @click="socketconnect">소켓 재연결</button>
+    <!-- <button @click="follow">팔로우 신청</button>
+    <button @click="comment">댓글 알림</button>
+    <button @click="feedlike">피드 좋아요</button>
+    <button @click="picklike">찜 좋아요</button>
+    <button @click="alarmdelete(1)">알림 삭제하기</button>
+    <button @click="alarmselect">알림 가져오기</button>
+    <button @click="socketconnect">소켓 재연결</button> 
+    <button @click="test">테스트</button>--> 
     <div class="container justify-content-center">
       <div class="example">
         <div class="tabs">
@@ -70,20 +71,31 @@ export default {
     },
   },
   created() {
-    console.log("유저인포");
-    console.log(session.userInfo);
     if (this.$store.state.recommendReload === 0) {
-
         this.$store.dispatch("recommendMusic");
 				this.$store.dispatch("recommendMovie");
 				this.$store.dispatch("recommendActivity");
-
-      this.$store.state.recommendReload = 1;
+        
+        this.$store.dispatch("userfollowdate", this.$store.state.userInfo.no);
+        this.$store.dispatch("alarmselect")
+        this.$store.dispatch("connect")
+        this.$store.state.recommendReload = 1;
     }
-    this.$store.dispatch("userfollowdate", this.$store.state.userInfo.no);
+    console.log("유저인포");
+    console.log(this.$store.state.userInfo);
+    
+    console.log("세션 유저 인포")
+    console.log(session.getItem('userInfo'))
   },
   methods: {
-
+    test(){
+      let el = {
+        receiver: 3,
+        feedno: 1,
+        commentno: 1,
+      }
+      this.$store.dispatch("comment", el);
+    },
     follow() {
       this.$store.dispatch("follow");
     },

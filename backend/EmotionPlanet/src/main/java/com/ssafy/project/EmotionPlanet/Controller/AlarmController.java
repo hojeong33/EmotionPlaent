@@ -46,8 +46,23 @@ public class AlarmController {
         int userNo = Integer.parseInt(no);
         List<AlarmDto> list = alarmService.selectAlram(userNo);
         if(list != null) {
+        	System.out.println("알림 성공");
         	return new ResponseEntity<List<AlarmDto>>(list, HttpStatus.OK);
         }else {
+        	System.out.println("알림 실패");
+        	throw new ResponseStatusException(HttpStatus.FORBIDDEN, "다시 시도해주세요");
+        }
+    }
+    
+    @GetMapping(value = "/alarm/read/{receiver}")
+    public ResponseEntity<Integer> readAlram(@PathVariable String receiver) { 
+        int Receiver = Integer.parseInt(receiver);
+        int result = alarmService.readanddeleteAlram(Receiver);
+        if(result == SUCCESS) {
+        	System.out.println("알림 읽기 성공");
+        	return new ResponseEntity<Integer>(SUCCESS, HttpStatus.OK);
+        }else {
+        	System.out.println("알림 읽기 실패");
         	throw new ResponseStatusException(HttpStatus.FORBIDDEN, "다시 시도해주세요");
         }
     }

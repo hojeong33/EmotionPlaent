@@ -2,13 +2,15 @@
   <div id="search_body">
     <section id="search_header">
       <div id="tabs">
-        <p @click="toggleTag" :class="onTag ? 'active': 'inactive'">태그</p>
-        <p @click="toggleUser" :class="onUser ? 'active': 'inactive'">계정</p>
+        <p @mousedown="toggleTag" :class="onTag ? 'active': 'inactive'">이야기</p>
+        <p @mousedown="toggleUser" :class="onUser ? 'active': 'inactive'">여행자</p>
+        <p @mousedown="togglePick" :class="onPick ? 'active': 'inactive'">보물상자</p>
       </div>
     </section>
     <section id="search_content">
       <search-tag v-if="onTag"></search-tag>
       <search-user v-if="onUser"></search-user>
+      <search-pick v-if="onPick"></search-pick>
     </section>
     <section id="search_footer">
       <button @click="cancel">X</button>
@@ -19,14 +21,16 @@
 <script>
 import SearchTag from './SearchTag.vue'
 import SearchUser from './SearchUser.vue'
+import SearchPick from './SearchPick.vue'
 
 export default {
   name: 'Search',
-  components: { SearchTag, SearchUser },
+  components: { SearchTag, SearchUser, SearchPick },
   data() {
     return {
       onTag: true,
       onUser: false,
+      onPick: false,
     }
   },
   methods: {
@@ -36,10 +40,17 @@ export default {
     toggleTag: function () {
       this.onTag = true
       this.onUser = false
+      this.onPick = false
     },
     toggleUser: function () {
       this.onUser = true
       this.onTag = false
+      this.onPick = false
+    },
+    togglePick: function () {
+      this.onUser = false
+      this.onTag = false
+      this.onPick = true
     },
   }
 }
@@ -55,7 +66,7 @@ export default {
   }
 
   #search_header {
-    z-index: 10;
+    z-index: 22;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -64,9 +75,10 @@ export default {
     min-width: 300px;
     height: 10%;
     min-height: 55px;
-    border-top: 0.2rem solid gainsboro;
-    border-left: 0.2rem solid gainsboro;
-    border-right: 0.2rem solid gainsboro;
+    border-radius: 10px 10px 0 0;
+    border-top: 0.15rem solid gainsboro;
+    border-left: 0.15rem solid gainsboro;
+    border-right: 0.15rem solid gainsboro;
   }
   
   #search_content {
@@ -77,7 +89,7 @@ export default {
     min-width: 300px;
     height: 80%;
     min-height: 300px;
-    border: 0.2rem solid gainsboro;
+    border: 0.15rem solid gainsboro;
   }
   
   #search_footer {
@@ -88,9 +100,10 @@ export default {
     min-width: 300px;
     height: 10%;
     min-height: 60px;
-    border-bottom: 0.2rem solid gainsboro;
-    border-left: 0.2rem solid gainsboro;
-    border-right: 0.2rem solid gainsboro;
+    border-bottom: 0.15rem solid gainsboro;
+    border-left: 0.15rem solid gainsboro;
+    border-right: 0.15rem solid gainsboro;
+    border-radius: 0 0 10px 10px;
   }
 
   h3 {
@@ -112,7 +125,7 @@ export default {
   }
 
   .active {
-    border-bottom: 0.3rem solid #5E39B3;
+    border-bottom: 0.2rem solid #5E39B3;
   }
 
   button {
@@ -122,13 +135,14 @@ export default {
     font-weight: bold;
     border: none;
     border-radius: 20px;
-    padding: 0 2rem;
-    margin: 0.4rem;
+    padding: 0 2.7rem;
+    margin: 0.55rem;
     cursor: pointer;
     line-height: 2rem;
   }
 
   #tabs {
+    z-index: inherit;
     width: 100%;
     display: flex;
     justify-content: space-evenly;

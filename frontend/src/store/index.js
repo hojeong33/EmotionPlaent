@@ -16,6 +16,7 @@ export default new Vuex.Store({
     words: null,
     tagSearch: [],
     userSearch: [],
+    pickSearch: [],
     //메인 추천탭 부분
     userEmotion: null,
     recommendType: 1,
@@ -45,13 +46,13 @@ export default new Vuex.Store({
       userFollowing : [],
     },
     planetStyles: [
-      { id: 0, name: '떠돌이행성', img: "spaceship.png", color: '#FCBB74' },
       { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
       { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
-      { id: 3, name: '중립행성', img: "neutral.png", color: '#ABBECA' },
+      { id: 3, name: '심심행성', img: "neutral.png", color: '#ABBECA' },
       { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
       { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
       { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
+      { id: 7, name: '떠돌이행성', img: "spaceship.png", color: '#FCBB74' },
     ],
     navActive: [false, false, false, false, false],
     user: null,
@@ -86,8 +87,6 @@ export default new Vuex.Store({
 
     // 알림 부분
     alarm: [], 
-    lookuser : 2,
-    alarmcheck : 0, // 이걸로 알람온거 체크할수 있을거 같은데...
     socketcount : 0, // 소켓 연결 일정시간 이상 안되면 재로그인 시키기
   },
   mutations: {
@@ -115,27 +114,24 @@ export default new Vuex.Store({
 
     userUpdate(state, payload){
       console.log("userUpdate 접근 =====")
+      console.log(payload)
       const userdata = JSON.parse(session.getItem('userInfo')) 
       if (!session.getItem('userInfo')){
-        session.setItem('userInfo', JSON.stringify(payload)) //토큰값으로 들어오면 
-      }
-
-      else if (payload === 0) { // 아직 안할래요 눌렀을 때
-        userdata.mood = payload
-        session.setItem('userInfo', JSON.stringify(userdata))
+        session.setItem('userInfo', JSON.stringify(payload.userInfo)) //토큰값으로 들어오면 
       }
       
-      else if(typeof(payload) == 'number'){ // 감테하고 넘길때
-        userdata.userInfo.mood = payload
-        session.setItem('userInfo', JSON.stringify(userdata.userInfo))
-      } 
+      // else if(typeof(payload) == 'number'){ // 감테하고 넘길때
+      //   userdata.mood = payload
+      //   session.setItem('userInfo', JSON.stringify(userdata))
+      // } 
       
       else if (session.getItem('userInfo')){
-        session.setItem('userInfo', JSON.stringify(payload)) 
+        session.setItem('userInfo', JSON.stringify(payload.userInfo)) 
       }
-      console.log('userUpdate 완료 ======' + session.getItem('userInfo'))
-      state.userInfo = userdata
 
+
+      console.log('userUpdate 완료 ======' + session.getItem('userInfo'))
+      state.userInfo = JSON.parse(session.getItem('userInfo')) 
       return userdata
     },
 
@@ -240,15 +236,194 @@ export default new Vuex.Store({
   },
   actions: {
 
+      //알림 읽기 + 7일 이후 읽은 알림 삭제
+      readAlarm(state, el){
+          axios({
+            method: 'get',
+            url: 'http://13.125.47.126:8080/alarm/read/'+ el,
+          }).then((res) => {
+            console.log("알림 읽기 성공")
+            console.log(res.data)
+            this.state.alarm = []
+          }).catch((error) => {
+            console.log('알림 읽기 실패');
+            console.log(error)
+          })
+        },
+
+     // 여기는 알림 시작 --------------------------------------------------------
+     follow(state, el) { //팔로우 알림 보내는 부분
+      console.log("팔로우 알림");
+      if (this.stompClient && this.stompClient.connected) {
+        const msg = {
+          sender: this.state.userInfo.no,
+          receiver: el,
+          type: 1, 
+        };
+        this.stompClient.send(
+          "/alarm/send/" + el,
+          JSON.stringify(msg),
+          {}
+        );
+      }
+    },
+
+    // let el = {
+    //   receiver: 00,
+    //   feedno: 00,
+    //   pickno: 00,
+    //   commentno: 00,
+    // }
+
+    comment(state, el) { // 댓글달면 누가 댓글달았는지 알려주는 부분
+      console.log("댓글 알림");
+      if (this.stompClient && this.stompClient.connected) {
+        const msg = {
+          sender: this.state.userInfo.no,
+          receiver: el.receiver,
+          feedno: el.feedno, // 여기 나중에 수정해야함
+          commentno: el.commentno,
+          type: 2, 
+        };
+        this.stompClient.send(
+          "/alarm/send/" + el.receiver,
+          JSON.stringify(msg),
+          {}
+        );
+      }
+    },
+
+    feedlike(state, el) { //피드 좋아요누르면 누가 좋아요 눌렀는지 알려주는 부분
+      console.log("좋아요 알림");
+      if (this.stompClient && this.stompClient.connected) {
+        const msg = {
+          sender: this.state.userInfo.no,
+          receiver: el.receiver,
+          feedno: el.feedno, // 여기 나중에 수정해야함
+          type: 3, 
+        };
+        this.stompClient.send(
+          "/alarm/send/" + el.receiver,
+          JSON.stringify(msg),
+          {}
+        );
+      }
+    },
+
+    picklike(state, el) { //찜목록 좋아요누르면 누가 좋아요 눌렀는지 알려주는 부분
+      console.log("좋아요 알림");
+      if (this.stompClient && this.stompClient.connected) {
+        const msg = {
+          sender: this.state.userInfo.no,
+          receiver: el.receiver,
+          pickno: el.pickno, // 여기 나중에 수정해야함
+          type: 4, 
+        };
+        this.stompClient.send(
+          "/alarm/send/" + el.receiver,
+          JSON.stringify(msg),
+          {}
+        );
+      }
+    },
+
+    connect() { // 웹 소켓 연결하는 부분.
+      const serverURL = "http://13.125.47.126:8080";
+      let socket = new SockJS(serverURL);
+      this.stompClient = Stomp.over(socket);
+      console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
+      this.stompClient.connect(
+        {},
+        (frame) => {
+          // 소켓 연결 성공
+          this.connected = true;
+          console.log("소켓 연결 성공",frame);
+          // 서버의 메시지 전송 endpoint를 구독합니다.
+          // 이런형태를 pub sub 구조라고 합니다.
+          this.stompClient.subscribe(`/alarm/receive/${this.state.userInfo.no}`, (res) => {
+            console.log("---------------------------------")
+            const obj = JSON.parse(res.body);
+            console.log("보낸사람 아이디 " + obj.sender)
+            console.log("보낸사람 닉네임 " + obj.senderNickname)
+            console.log("보낸사람 프로필 " + obj.senderImg)
+            console.log("피드 번호 " + obj.feedno)
+            console.log("댓글 번호 " + obj.commentno)
+            console.log("알림 날짜 " + obj.date)
+            console.log("알림 타입 " + obj.type)
+            // alert(obj.message)
+            this.state.alarm.unshift(obj);
+            console.log("---------------------------------")
+          });
+        },
+        (error) => {
+          // 소켓 연결 실패
+          console.log("소켓 연결 실패", error);
+          this.connected = false;
+          this.state.socketcount++
+          if(this.state.socketcount > 10){
+            const authInst = window.gapi.auth2.getAuthInstance();
+            console.log('signout called', authInst)
+            authInst.signOut()
+            .then(() => {
+              // eslint-disable-next-line
+              console.log('User Signed Out!!!');
+              authInst.disconnect();
+              session.clear();
+            })
+            .then(() => {
+              window.location.reload()
+            })
+            .catch(() => alert('fail'))
+            alert("서버 문제 발생")
+          }
+          this.dispatch('connect'); // 소켓 재연결 시도
+        }
+      );
+    },
+
+    // 이부분은 나중에 알림 부분에서 사용할 예정
+    alarmselect(){ // 디비에 있는 알림 가져오기
+      axios({
+        method: 'get',
+        url:'http://13.125.47.126:8080/alarm/' + this.state.userInfo.no,
+      })
+      .then((res)=>{
+        console.log('알림 가져오기 성공')
+        this.state.alarm = res.data
+      })
+      .catch(err=> {
+        console.log('알림 가져오기 실패')
+        console.log(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
+      })
+    },
+    
+    alarmdelete(state ,el){ // 읽은 알림 지우기=> 알림번호 넘겨주는거 생각해야함
+      axios({
+        method: 'delete',
+        url:'http://13.125.47.126:8080/alarm/' + el, // 여기 알림번호 넘겨줘야한다.
+      })
+      .then((res)=>{
+        console.log('알림 삭제 성공')
+        console.log(res.data)
+      })
+      .catch(err=> {
+        console.log('알림 삭제 실패')
+        console.log(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
+      })
+    },
+    // 여기는 알림 끝 -----------------------------------------------------
+
+
+
     //팔로우 삭제
-    deletefollow() {
+    deletefollow(state, el) {
       let headers = {
           'at-jwt-access-token': session.getItem('at-jwt-access-token'),
           'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
       let data = {
         sender : this.state.userInfo.no,
-        receiver : this.state.searchUserNo,
+        receiver : el,
       };
       axios({
           method: 'delete',
@@ -268,14 +443,14 @@ export default new Vuex.Store({
       },
 
     //팔로우 신청
-    sendfollow() {
+    sendfollow(state, el) {
       let headers = {
           'at-jwt-access-token': session.getItem('at-jwt-access-token'),
           'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
       let data = {
         sender : this.state.userInfo.no,
-        receiver : this.state.searchUserNo,
+        receiver : el,
       };
       axios({
           method: 'post',
@@ -286,6 +461,7 @@ export default new Vuex.Store({
         console.log("팔로우 성공")
         this.state.searchUserFollowInfo.followcheck = 1
         this.dispatch('accessTokenRefresh', res) // store에서
+        this.dispatch('follow',el)
         }).catch((error) => {
           console.log("팔로우 실패")
           console.log(error);
@@ -295,17 +471,16 @@ export default new Vuex.Store({
       },
 
     // 여기는 회원 번호로 회원의 정보를 가져오는 부분입니다.
-    userSelect() {
+    userSelect(state, el) {
       let headers = {
           'at-jwt-access-token': session.getItem('at-jwt-access-token'),
           'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
         };
         axios({
           method: 'get',
-          url: 'http://13.125.47.126:8080/users/'+ this.state.searchUserNo,
+          url: 'http://13.125.47.126:8080/users/'+ el,
           headers: headers,  // 넣는거 까먹지 마세요
         }).then((res) => {
-         
           console.log("유저 정보 갱신 성공")
           console.log(res.data)
           this.state.searchUserInfo = res.data
@@ -351,148 +526,6 @@ export default new Vuex.Store({
         });
       },
 
-    // 여기는 알림 시작 --------------------------------------------------------
-    follow() { //팔로우 알림 보내는 부분
-      console.log("팔로우 알림");
-      if (this.stompClient && this.stompClient.connected) {
-        const msg = {
-          sender: this.state.userInfo.no,
-          receiver: this.state.lookuser,
-          type: 1, 
-        };
-        this.stompClient.send(
-          "/alarm/send/" + this.state.lookuser,
-          JSON.stringify(msg),
-          {}
-        );
-      }
-    },
-
-    comment() { // 댓글달면 누가 댓글달았는지 알려주는 부분
-      console.log("댓글 알림");
-      if (this.stompClient && this.stompClient.connected) {
-        const msg = {
-          sender: this.state.userInfo.no,
-          receiver: this.state.lookuser,
-          feedno: 1, // 여기 나중에 수정해야함
-          commentno: 2,
-          type: 2, 
-        };
-        this.stompClient.send(
-          "/alarm/send/" + this.state.lookuser,
-          JSON.stringify(msg),
-          {}
-        );
-      }
-    },
-
-    feedlike() { //피드 좋아요누르면 누가 좋아요 눌렀는지 알려주는 부분
-      console.log("좋아요 알림");
-      if (this.stompClient && this.stompClient.connected) {
-        const msg = {
-          sender: this.state.userInfo.no,
-          receiver: this.state.lookuser,
-          feedno: 1, // 여기 나중에 수정해야함
-          type: 3, 
-        };
-        this.stompClient.send(
-          "/alarm/send/" + this.state.lookuser,
-          JSON.stringify(msg),
-          {}
-        );
-      }
-    },
-
-    picklike() { //피드 좋아요누르면 누가 좋아요 눌렀는지 알려주는 부분
-      console.log("좋아요 알림");
-      if (this.stompClient && this.stompClient.connected) {
-        const msg = {
-          sender: this.state.userInfo.no,
-          receiver: this.state.lookuser,
-          pickno: 1, // 여기 나중에 수정해야함
-          type: 4, 
-        };
-        this.stompClient.send(
-          "/alarm/send/" + this.state.lookuser,
-          JSON.stringify(msg),
-          {}
-        );
-      }
-    },
-
-    connect() { // 웹 소켓 연결하는 부분.
-      const serverURL = "http://13.125.47.126:8080";
-      let socket = new SockJS(serverURL);
-      this.stompClient = Stomp.over(socket);
-      console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
-      this.stompClient.connect(
-        {},
-        (frame) => {
-          // 소켓 연결 성공
-          this.connected = true;
-          console.log("소켓 연결 성공",frame);
-          // 서버의 메시지 전송 endpoint를 구독합니다.
-          // 이런형태를 pub sub 구조라고 합니다.
-          this.stompClient.subscribe(`/alarm/receive/${this.state.userInfo.no}`, (res) => {
-            console.log("---------------------------------")
-            const obj = JSON.parse(res.body);
-            console.log("보낸사람 아이디 " + obj.sender)
-            console.log("보낸사람 닉네임 " + obj.senderNickname)
-            console.log("보낸사람 프로필 " + obj.senderImg)
-            console.log("피드 번호 " + obj.feedno)
-            console.log("댓글 번호 " + obj.commentno)
-            console.log("알림 날짜 " + obj.date)
-            console.log("알림 타입 " + obj.type)
-            console.log("알림 내용 " + obj.message)
-            alert(obj.message)
-            console.log("---------------------------------")
-            this.state.alarmcheck++; // 이거 실시간 알람오는거 증가시켜서 알림보여주기 알림보면 0으로 초기화?
-            console.log(this.state.alarmcheck)
-          });
-        },
-        (error) => {
-          // 소켓 연결 실패
-          console.log("소켓 연결 실패", error);
-          this.connected = false;
-          this.dispatch('connect'); // 소켓 재연결 시도
-        }
-      );
-    },
-
-    // 이부분은 나중에 알림 부분에서 사용할 예정
-    alarmselect(){ // 디비에 있는 알림 가져오기
-      axios({
-        method: 'get',
-        url:'http://13.125.47.126:8080/alarm/' + this.state.userInfo.no,
-      })
-      .then((res)=>{
-        this.dispatch('accessTokenRefresh', res)
-        console.log('알림 가져오기 성공')
-        console.log(res.data)
-      })
-      .catch(err=> {
-        console.log('알림 가져오기 실패')
-        console.log(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
-      })
-    },
-    
-    alarmdelete(state ,el){ // 읽은 알림 지우기=> 알림번호 넘겨주는거 생각해야함
-      axios({
-        method: 'delete',
-        url:'http://13.125.47.126:8080/alarm/' + el, // 여기 알림번호 넘겨줘야한다.
-      })
-      .then((res)=>{
-        this.dispatch('accessTokenRefresh', res)
-        console.log('알림 삭제 성공')
-        console.log(res.data)
-      })
-      .catch(err=> {
-        console.log('알림 삭제 실패')
-        console.log(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
-      })
-    },
-    // 여기는 알림 끝 -----------------------------------------------------
-
 
     //여기 검색부분입니다
     searchTag() {
@@ -507,15 +540,14 @@ export default new Vuex.Store({
       }).then(res => {
         this.dispatch('accessTokenRefresh', res)
         this.state.tagSearch = res.data
-        console.log('then')
-        console.log(res.data)
+        console.log('태그 있음')
       })
-      .catch(err=> {
-        console.log('catch')
+      .catch(()=> {
+        console.log('태그 없음')
         this.state.tagSearch = []
-        console.log(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
       })
     },
+
     searchUser() {
       let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
@@ -529,13 +561,11 @@ export default new Vuex.Store({
       .then((res)=>{
         this.dispatch('accessTokenRefresh', res)
         this.state.userSearch = res.data
-        console.log('then')
-        console.log(res.data)
+        console.log('유저 있음')
       })
-      .catch(err=> {
-        console.log('catch')
+      .catch(()=> {
+        console.log('유저 없음')
         this.state.userSearch = []
-        console.log(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
       })
     },
     //검색 끝 추천탭 시작입니다
@@ -550,7 +580,7 @@ export default new Vuex.Store({
           headers: headers,
         }).then((res) => {
           this.state.recommendMusic = res.data
-          this.dispatch('accessTokenRefresh', res)
+          this.dispatch('accessTokenRefresh', res) 
         
         }).catch((error) => {
           console.log(error);
@@ -609,11 +639,11 @@ export default new Vuex.Store({
     },
 
     allTokenRefreshOnUserInfo({commit},res){ // 유저 정보 갱신할때 사용
-      console.log("allTokenRefreshOnUserInfo : " + res.headers)
+      console.log("allTokenRefreshOnUserInfo : " + res.headers['at-jwt-access-token'])
       session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
       const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
       console.log('decodeAccessToken data', decodeAccessToken);
-      commit('userUpdate', decodeAccessToken.userInfo)
+      commit('userUpdate', decodeAccessToken)
     },
 
     allTokenRefresh({commit},res){
@@ -631,7 +661,7 @@ export default new Vuex.Store({
     },
 
     //유저정보 수정부분
-    async updateuser(state ,el) {
+    updateuser(state ,el) {
       const body = {
         no: this.state.userInfo.no,
         nickname: this.state.userInfo.nickname,
@@ -643,7 +673,7 @@ export default new Vuex.Store({
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
         };
-      await axios({
+      axios({
         method: "put",
         url: "http://13.125.47.126:8080/users/update",
         data: body,
@@ -676,7 +706,7 @@ export default new Vuex.Store({
         };
       axios({
         method: "post",
-        url: "http://localhost:8080/s3/users/img",
+        url: "http://13.125.47.126:8080/s3/users/img",
         data: el,
         headers: headers,
       })

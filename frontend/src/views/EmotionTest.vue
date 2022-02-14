@@ -148,7 +148,7 @@
             // alert(`당신은 ${ res.data.name }행성 입니다!`)
             console.log("여기는 결과 네임")
             console.log(`${res.data.name}`)
-            this.$store.commit('userUpdate', res.data.no)
+            console.log(res.data.no)
             
             const userdata = JSON.parse(session.getItem('userInfo')) 
             console.log('userdate===')
@@ -183,27 +183,29 @@
         }
       },
       go_to_back: function(){
-        this.$store.commit('userUpdate', 0)
-        let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        };
-        const userdata = JSON.parse(session.getItem('userInfo')) 
-        const body = { no: userdata.no, mood: 0 }
-        axios({
-          method: 'put',
-          url: 'http://13.125.47.126:8080/users/update',
-          data: body,
-          headers: headers,
-        }).then(res => {
-          console.log("여기는 데이터 수정하는 부분")
-          console.log(res)
-          this.$store.dispatch('allTokenRefreshOnUserInfo', res)
-          // this.$store.commit('emotionTestResultModalActivate')
-        }).catch(err => {
-          console.log(err)
-        })
-        this.$router.go(-1)
+        // const userdata = JSON.parse(session.getItem('userInfo')) 
+        // console.log("유저데이터")
+        // console.log(userdata)
+        // let headers = {
+        // 'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        // 'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        // };
+        // const body = { no: userdata.no, mood: 7 }
+        // axios({
+        //   method: 'put',
+        //   url: 'http://13.125.47.126:8080/users/update',
+        //   data: body,
+        //   headers: headers,
+        // }).then(res => {
+        //   console.log("여기는 데이터 수정하는 부분")
+        //   console.log(res)
+        //   this.$store.dispatch('allTokenRefreshOnUserInfo', res)
+        //   this.$router.push({ name: 'Main' })
+        // }).catch(err => {
+        //   console.log(err)
+        //   console.log("무슨 에러?")
+        // })
+        this.$router.push({ name: 'Main' })
       },
     },
     computed: {

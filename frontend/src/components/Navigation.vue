@@ -22,11 +22,23 @@
           :src="require(`@/assets/images/icons/${home}`)">
           <img @click="navClick" id="my_page"
           :src="require(`@/assets/images/icons/${myPage}`)">
-          <img @click="navClick" id="alarm"
-          :src="require(`@/assets/images/icons/${alarm}`)">
+          <div id="alarm_menu">
+            <img @click="alarmClick" id="alarm"
+            :src="require(`@/assets/images/icons/${alarm}`)">
+            <span id="alarm_box" v-if="this.alarmCount >= 1">
+              <span id="count_box">
+                <p v-if="this.alarmCount <= 9" id="alarm_count">{{ alarmCount }}</p>
+                <!-- <p id="alarm_count">{{ alarmCount }}</p> -->
+                <p v-if="this.alarmCount >= 10" id="nine">9</p>
+                <p v-if="this.alarmCount >= 10" id="plus">+</p>
+              </span>
+            </span>
+            <alarm v-if="alarming" id="alarm_drop" v-on:cancelAlarm="alarmClose" @blur="alarmClose"></alarm>
+          </div>
           <img @click="navClick" id="setting"
            :src="require(`@/assets/images/icons/${setting}`)">
-           <button @click="signout">logout</button>
+           <img src="@/assets/images/icons/power.png" @click="signout" 
+           id="logout" style="cursor:pointer;">
         </div>
       </div>
     </nav>
@@ -36,6 +48,7 @@
 // import {mapState} from 'vuex'
 // 똑같은 페이지 눌렀을 때 새로고침이 안 됨 - 수정 필요
 import Search from '@/components/Search/Search'
+import Alarm from '@/components/Alarm'
 
 const session = window.sessionStorage
 
@@ -46,16 +59,18 @@ export default {
       //검색입니둥
       searching: false,
       searchWords: null,
+      //알람입니둥
+      alarming: false,
     }
   },
-  components: { Search },
+  components: { Search, Alarm },
   methods: {
     navClick(event){
       console.log(this.$router)
       if (event.target.id == 'write'){this.$store.commit('navActivate', 0)}
       else if (event.target.id == 'home' || event.target.id =='logo_img'){this.$router.push({ name:'Main' })}
       else if (event.target.id == 'my_page'){this.$router.push({ name:'Mypage' })}
-      else if (event.target.id == 'alarm'){this.$store.commit('navActivate', 3)}
+      // else if (event.target.id == 'alarm'){this.$store.commit('navActivate', 3)}
       else {this.$router.push({ name:'Setting' })}
     },
     //검색 부분입니둥
@@ -89,6 +104,15 @@ export default {
       })
       .catch(() => alert('fail'))
     },
+    alarmClick() {
+      this.$store.commit('navActivate', 3)
+      this.alarming = true
+      this.$store.dispatch('alarmselect')
+    },
+    alarmClose() {
+      this.$store.commit('navActivate', 3)
+      this.alarming = false
+    },
   },
   computed: {
     feed(){
@@ -113,6 +137,16 @@ export default {
     },
     navActive(){
       return this.$store.state.navActive
+    },
+    alarmCount() {
+      let count = 0
+      this.$store.state.alarm.forEach(el => {
+        if(el.readcheck == 0){
+          count++
+        }
+      });
+      console.log(count)
+      return count
     }
   }
 }
@@ -190,11 +224,68 @@ export default {
   height: 25px;
   margin: 10px;
 }
+#logout{
+  width: 33px;
+  height: 33px;
+  margin: 5px;
+}
+#alarm_menu{
+  /* width: 25px;
+  height: 25px;
+  margin: 10px; */
+  position: relative;
+}
 #alarm{
   width: 25px;
   height: 25px;
   margin: 10px;
   position: relative;
+}
+#alarm_box{
+  display: flex;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: red;
+  top: 0;
+  left: 1.4rem;
+  position: absolute;
+}
+#count_box{
+  display: flex;
+  align-items: center;
+  left: 0.28rem;
+  bottom: -1.2rem;
+  position: absolute;
+}
+
+#alarm_count{
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+}
+
+#alarm_drop {
+  z-index: 20;
+  width: 15%;
+  min-width: 300px;
+  height: 30%;
+  min-height: 340px;
+  position: absolute;
+  background-color: white;
+  margin: 0.7rem -7.8rem;
+}
+
+#nine{
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+}
+
+#plus {
+  font-size: 1rem;
+  font-weight: bold;
+  color: white
 }
 /* .note-num {
   position: absolute;
@@ -226,7 +317,7 @@ img{
 }
 
 #dropdown {
-  z-index: 10;
+  z-index: 20;
   width: 25%;
   min-width: 150px;
   height: 15%;
