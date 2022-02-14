@@ -109,7 +109,9 @@
   </div>
 </template>
 
+
 <script>
+// 회원가입 완료 후 로그인 페이지로 이동하게 만들어야 함
   import axios from 'axios'
 
   export default {
@@ -150,20 +152,25 @@
         if (this.credentials.pw === this.credentials.passwordConfirmation){ // 입력 비밀번호가 일치하면 회원가입 (나중에 여기다 벨류체크)
           axios({
             method: 'post',
-            url: 'http://13.125.47.126:8080/users',
+            url: 'http://13.125.47.126:8080/register',
             data: this.credentials
           })
           .then( () => {
-            if (alert('가입이 완료되었습니다.')){
-              this.$router.push({name:'Login'}) // 가입 완료시 로그인 페이지로 이동
-            }
+            this.$store.commit('signupConfirmModalActivate')
+            // this.$router.push({name:'Login'}) // 가입 완료시 로그인 페이지로 이동
+
+            // if (alert('가입이 완료되었습니다.')){
+            //   this.$router.push({name:'Login'}) // 가입 완료시 로그인 페이지로 이동
+            // }
           })
           .catch(res => {
-            alert(res.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
+            this.$store.commit('signupFailModalActivate1', res.response.data.message)
+            //alert(res.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
           })
         }
         else {
-          alert('비밀번호를 확인해주세요.')
+          this.$store.commit('signupFailModalActivate2')
+          // alert('비밀번호를 확인해주세요.')
         }
         this.credentials.email ="";
         this.credentials.nickname="";
@@ -174,7 +181,7 @@
       checkEmail: function(){
         axios({
           method: 'get',
-          url: 'http://13.125.47.126:8080/users/checkByEmail/' + this.credentials.email,
+          url: 'http://13.125.47.126:8080/register/checkByEmail/' + this.credentials.email,
         })
         .then(() => { //중복 이메일 없는 경우
           this.isValid.validateEmailcheck = true
@@ -187,7 +194,7 @@
         this.credentials.nickname = el.target.value // 한글 입력 이슈 해결하기 위해 사용. 한박자 느린거?
         axios({
           method: 'get',
-          url: 'http://13.125.47.126:8080/users/checkByNickname/' + this.credentials.nickname,
+          url: 'http://13.125.47.126:8080/register/checkByNickname/' + this.credentials.nickname,
           })
           .then(() => { //중복 닉네임 없는 경우
             this.isValid.validateNicknamecheck = true
@@ -245,7 +252,7 @@
       telCheck: function(){
         axios({
           method: 'get',
-          url: 'http://13.125.47.126:8080/users/checkByTel/' + this.credentials.tel
+          url: 'http://13.125.47.126:8080/register/checkByTel/' + this.credentials.tel
         })
         .then(res => {
           console.log(res)

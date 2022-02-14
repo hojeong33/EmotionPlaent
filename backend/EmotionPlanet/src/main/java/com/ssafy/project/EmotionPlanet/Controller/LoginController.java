@@ -1,20 +1,34 @@
 package com.ssafy.project.EmotionPlanet.Controller;
 
 import javax.servlet.http.HttpSession;
+import javax.websocket.Session;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.ssafy.project.EmotionPlanet.Config.JWT.JwtService;
 import com.ssafy.project.EmotionPlanet.Config.OAuth.PrincipalOauth2UserService;
+import com.ssafy.project.EmotionPlanet.Dto.ErrorDto;
 import com.ssafy.project.EmotionPlanet.Dto.TokenDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserSecretDto;
 import com.ssafy.project.EmotionPlanet.Service.LoginService;
 import com.ssafy.project.EmotionPlanet.Service.UserService;
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.io.*;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @CrossOrigin(
@@ -39,6 +53,10 @@ public class LoginController {
     @Autowired
     LoginService loginService;
 
+    @Autowired
+    BCryptPasswordEncoder bCryptPasswordEncoder;
+
+
 //    @PostMapping(value = "/login")  // post 방식으로 들어옴
 //    public ResponseEntity<?> login(@RequestBody UserDto dto, HttpSession session) { // 로그인
 //        UserDto userDto = loginService.login(dto);
@@ -55,16 +73,19 @@ public class LoginController {
 //    }
 
     @PostMapping(value = "/login")  // post 방식으로 들어옴
-    public ResponseEntity<?> login(@RequestBody UserDto dto, HttpSession session) { // 로그인
+    public ResponseEntity<?> login(@RequestBody UserDto dto) { // 로그인
         UserDto user = loginService.login(dto);
-        UserSecretDto userDto = new UserSecretDto(user.getNo(), user.getEmail(), user.getNickname(), user.getBirth(), user.getProfileImg(), user.getTel(), user.getMood());
+        UserSecretDto userDto = new UserSecretDto();
+        if(user != null) userDto = new UserSecretDto(user.getNo(), user.getEmail(),
+                user.getNickname(), user.getBirth(), user.getProfileImg(), user.getTel(), user.getIntro() ,
+                user.getPublish(), user.getMood());
 
         HttpHeaders res = new HttpHeaders();
-        if (userDto != null) {
+        if (user != null) {
         	System.out.println("로그인 성공");
             System.out.println(userDto);
-
             TokenDto atJWT = jwtService.create(userDto);
+            System.out.println("로그인 컨트롤 atJWT");
             System.out.println(atJWT);
             res.add("at-jwt-access-token", atJWT.getAccessJws());
             res.add("at-jwt-refresh-token", atJWT.getRefreshJws());
@@ -74,7 +95,10 @@ public class LoginController {
             return ResponseEntity.ok().headers(res).body(userDto);
         } else {
         	System.out.println("로그인 실패");
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "이메일 혹은 비밀번호가 잘못되었습니다.");
+            ErrorDto errorDto = new ErrorDto();
+            errorDto.setMessage("이메일 혹은 비밀번호가 잘못되었습니다.");
+            //throw new ResponseStatusException(HttpStatus.NOT_FOUND, "이메일 혹은 비밀번호가 잘못되었습니다.");
+            return ResponseEntity.badRequest().body(errorDto);
         }
     }
 
@@ -82,13 +106,17 @@ public class LoginController {
     public ResponseEntity<?> tokenVerify(String idToken){
         System.out.println("RequestBody value : " + idToken);
         UserDto user =  principalOauth2UserService.tokenVerify(idToken);
-        UserSecretDto userDto = new UserSecretDto(user.getNo(), user.getEmail(), user.getNickname(), user.getBirth(), user.getProfileImg(), user.getTel(), user.getMood());
         HttpHeaders res = new HttpHeaders();
-
+        UserSecretDto userDto = null;
         if (user.getEmail() != null) {
             principalOauth2UserService.insertUser(user);
+            user = userService.userSelectByEmail(user.getEmail());
+            userDto = new UserSecretDto(user.getNo(), user.getEmail(),
+                    user.getNickname(), user.getBirth(), user.getProfileImg(),
+                    user.getTel(), user.getIntro() , user.getPublish(), user.getMood());
 
             TokenDto atJWT = jwtService.create(userDto);
+            System.out.println("로그인 컨트롤 atJWT");
             System.out.println(atJWT);
             res.add("at-jwt-access-token", atJWT.getAccessJws());
             res.add("at-jwt-refresh-token", atJWT.getRefreshJws());
@@ -96,7 +124,31 @@ public class LoginController {
             userService.userRefreshToken(user);
         }
 
-        return ResponseEntity.ok().headers(res).body(userDto);
+        return ResponseEntity.ok().headers(res).body(user);
+    }
+
+    
+    /////////////////////////카카오
+    // 카카오 연동정보 조회
+    @RequestMapping(value = "/login/oauth_kakao")
+    public String oauthKakao(
+            @RequestParam(value = "code", required = false) String code
+            , Model model) throws Exception {
+
+        System.out.println("#########" + code);
+        String access_Token = principalOauth2UserService.getAccessToken(code);
+        System.out.println("###access_Token#### : " + access_Token);
+
+
+        HashMap<String, Object> userInfo = principalOauth2UserService.getUserInfo(access_Token);
+        System.out.println("###access_Token#### : " + access_Token);
+        System.out.println("###userInfo#### : " + userInfo.get("email"));
+        System.out.println("###nickname#### : " + userInfo.get("nickname"));
+
+        JSONObject kakaoInfo =  new JSONObject(userInfo);
+        model.addAttribute("kakaoInfo", kakaoInfo);
+
+        return "/home"; //본인 원하는 경로 설정
     }
 
     @GetMapping(value = "/qss/list")

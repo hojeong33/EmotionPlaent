@@ -1,5 +1,6 @@
 package com.ssafy.project.EmotionPlanet.Controller;
 
+import com.ssafy.project.EmotionPlanet.Config.JWT.JwtService;
 import com.ssafy.project.EmotionPlanet.Dto.CommentDto;
 import com.ssafy.project.EmotionPlanet.Service.CommentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,9 @@ public class CommentController {
 
     @Autowired
     CommentServiceImpl commentService;
+
+    @Autowired
+    JwtService jwtService;
 
     private static final int SUCCESS = 1;
 
@@ -47,6 +51,37 @@ public class CommentController {
 //        } else {
 //            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "댓글이 없습니다.");
 //        }
+    }
+
+    @GetMapping(value ="/comments/returnNo{no}") // 댓글 목록
+    public ResponseEntity<?> myListReturnNo(@PathVariable String no) {
+        int userNo = Integer.parseInt(no);
+        List<Integer> comments = commentService.listOnNo(userNo);
+        if(comments != null) {
+            return new ResponseEntity<List<Integer>>(comments, HttpStatus.OK);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "내가 작성한 피드가 없습니다.");
+        }
+    }
+
+    @GetMapping(value = "/comment/{no}")
+    public ResponseEntity<CommentDto> read(@RequestHeader(value="at-jwt-access-token") String jwt, @PathVariable String no) {
+        int commentNo = Integer.parseInt(no);
+
+        String decode = jwtService.decode(jwt);
+        System.out.println("디코딩 내용 : " + decode);
+        String[] arr = decode.split("\\{|\\}| |,|\"|:");
+        String userNo = "";
+        for(int i = 0; i < arr.length; i++){
+            if (arr[i].equals("no")) {
+                userNo = arr[i + 2];
+                break;
+            }
+        }
+
+        CommentDto comment = commentService.read(commentNo, Integer.parseInt(userNo));
+
+        return new ResponseEntity<CommentDto>(comment, HttpStatus.OK);
     }
 
     @PutMapping(value ="/comments") // 댓글 수정

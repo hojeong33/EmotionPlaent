@@ -1,7 +1,7 @@
 <template>
-  <div id="container">
-		<img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)">
-		<select id="selectbox" @change="filtering">
+  <div id="filter-container">
+		<img id="planet_img" :src="require('@/assets/images/emotions/' + planet)">
+		<select id="selectbox" v-model="filterValue" @change="filtering">
 			<option value="0">전체</option>
 			<option value="1">행복행성</option>
 			<option value="2">우울행성</option>
@@ -20,67 +20,70 @@ export default {
 		return {
 			planetStyles: [
 				{ id: 0, name: 'default'},
-        { id: 1, name: '행복행성', img: "happy.png", color: '#ED5A8E' },
-        { id: 2, name: '우울행성', img: "depressed.png", color: '#6BD9E8' },
-        { id: 3, name: '중립행성', img: "neutral.png", color: '#C5D3DC' },
-        { id: 4, name: '공포행성', img: "fear.png", color: '#FEA95C' },
-        { id: 5, name: '깜짝행성', img: "suprised.png", color: '#FB5D38' },
-        { id: 6, name: '분노행성', img: "rage.png", color: '#2A61F0' },
+        { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
+        { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
+        { id: 3, name: '중립행성', img: "neutral.png", color: '#ABBECA' },
+        { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
+        { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
+        { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
       ],
-			filterValue: null,
-			planetImg: null,
-			mood: null,
+			filterValue: '0',
 		}
 	},
 	props: {
 		userMood: Number,
 	},
 	methods: {
-		filtering: function (onselect) {
-			this.filterValue = onselect.target.value
-			this.$emit('filtering', this.filterValue)
+		filtering: function () {
+			this.$emit('filtering', Number(this.filterValue))
 		}
 	},
-	created() {
-		this.mood = this.userMood
-	},
 	computed: {
-    tmp: function () {
-      const mood = this.mood
-      const style = this.planetStyles.find(el => el.id === mood) || {}
-      return style
-    }
+    planet() {
+			const idx = Number(this.filterValue)
+			if (idx){
+				return this.planetStyles[idx].img
+			}
+			return "neutral.png"
+		}
   },
 }
 </script>
 
 <style scoped>
-#container {
-	display: flex;
-	justify-content: center;
-}
+	#filter-container {
+		display: flex;
+		justify-content: flex-end;
+		align-items: center;
+		align-self: flex-end;
+		margin: 2rem;
+	}
 
-#planet_img {
-  width: 4vh;
-  height: 4vh;
-}
+	#planet_img {
+		width: 5%;
+		height: inherit;
+		aspect-ratio: 1/1;
+	}
 
-select { 
-	width: 11.5vh;
-	height: 3vh;
-	padding-top: 4px;
-	padding-right: 21px;
-	/* padding-left: 5px; */
-	border-radius:0; /* 아이폰 사파리 보더 없애기 */ 
-	-webkit-appearance:none; /* 화살표 없애기 for chrome*/ 
-	-moz-appearance:none; /* 화살표 없애기 for firefox*/ 
-	appearance:none; /* 화살표 없애기 공통*/ 
-	background: url('../../assets/images/etc/rocket.png') no-repeat 97% 50%/2.2vh auto;
-	border-style: none;
-	font-weight: bold;
-	text-align: center;
-}
-select::-ms-expand {
-	display: none;
-}
+	select { 
+		padding: 0.2rem 2rem 0;
+		border: none;
+		border-radius:0; /* 아이폰 사파리 보더 없애기 */ 
+		-webkit-appearance:none; /* 화살표 없애기 for chrome*/ 
+		-moz-appearance:none; /* 화살표 없애기 for firefox*/ 
+		appearance:none; /* 화살표 없애기 공통*/ 
+		background: url('../../assets/images/etc/rocket.png') no-repeat 97% 50%/2.2vh auto;
+		font-size: 1.5rem;
+		font-weight: bold;
+		text-align: center;
+		cursor: pointer;
+	}
+
+	select:focus {
+		outline: none;
+	}
+
+	select::-ms-expand {
+		display: none;
+	}
 </style>

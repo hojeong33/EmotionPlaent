@@ -10,6 +10,9 @@ public class CommentDto {
     private int author;
     private LocalDateTime date;
 
+    private boolean owner;
+    private UserRequestDto userRequestDto;
+
     public CommentDto() {
     }
 
@@ -27,14 +30,6 @@ public class CommentDto {
 
     public void setNo(int no) {
         this.no = no;
-    }
-
-    public String getdescr() {
-        return descr;
-    }
-
-    public void setdescr(String descr) {
-        this.descr = descr;
     }
 
     public int getAuthor() {
@@ -59,5 +54,29 @@ public class CommentDto {
 
     public void setFeedNo(int feedNo) {
         this.feedNo = feedNo;
+    }
+
+    public String getDescr() {
+        return descr;
+    }
+
+    public void setDescr(String descr) {
+        this.descr = descr;
+    }
+
+    public boolean isOwner() {
+        return owner;
+    }
+
+    public void setOwner(boolean owner) {
+        this.owner = owner;
+    }
+
+    public UserRequestDto getUserRequestDto() {
+        return userRequestDto;
+    }
+
+    public void setUserRequestDto(UserRequestDto userRequestDto) {
+        this.userRequestDto = userRequestDto;
     }
 }

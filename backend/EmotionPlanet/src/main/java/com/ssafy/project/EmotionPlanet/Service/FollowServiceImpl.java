@@ -24,6 +24,8 @@ public class FollowServiceImpl implements FollowService {
 	public int followRegister(FollowDto followDto) {
 		UserDto dto = userDao.userSelect(followDto.getReceiver());
 		if(dto.getPublish() != SUCCESS)
+			followDto.setType(2);
+		else
 			followDto.setType(SUCCESS);
 		if(followDao.followRegister(followDto) == SUCCESS)
 			return SUCCESS;
@@ -55,6 +57,7 @@ public class FollowServiceImpl implements FollowService {
 
 	@Override
 	public int followUpdate(FollowDto followDto) {
+		followDto.setType(1);
 		if(followDao.followUpdate(followDto) == SUCCESS)
 			return SUCCESS;
 		else

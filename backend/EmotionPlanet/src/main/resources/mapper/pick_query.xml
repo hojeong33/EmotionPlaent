@@ -15,6 +15,7 @@
         where no = #{no}
     </select>
 
+
     <insert id="create" parameterType="com.ssafy.project.EmotionPlanet.Dto.PickDto">
         insert into feed(userNo, name, tagNo)
         values (  #{userNo}, #{name}, #{tagNo})
@@ -40,6 +41,18 @@
         insert into pick_like(pickNo, userNo)
         values (  #{pickNo}, #{userNo} )
     </insert>
+
+    <select id="liking" parameterType="map" resultType="int">
+        select count(*)
+        from pick_like
+        where pickNo = #{pickNo} and userNo = #{userNo}
+    </select>
+
+    <select id="likes" parameterType="int">
+        select count(*)
+        from pick_like
+        where pickNo = #{pickNo}
+    </select>
 
     <delete id="unlike" parameterType="map">
         delete from pick_like where pickNo = #{pickNo} and userNo = #{userNo}

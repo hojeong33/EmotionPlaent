@@ -1,27 +1,28 @@
 <template>
-  <div class="card_container">
+  <div class="card_container" v-show="isActive">
     <div class="card_header">
-      <img id="profile_image" src="https://www.thesprucepets.com/thmb/meRd41is751DsQQjofaiKV_ZUBg=/941x0/filters:no_upscale():max_bytes(150000):strip_icc():format(webp)/cat-talk-eyes-553942-hero-df606397b6ff47b19f3ab98589c3e2ce.jpg" alt="">
+      <img id="profile_image" :src="this.$store.state.userInfo.profileImg" alt="">
+      <span id="opacity"></span>
       <div class="overlay_content">
-        <h2>{{ userInfo.username }}</h2>
+        <h2>{{ this.$store.state.userInfo.nickname }}</h2>
         <button id="update" @click="$router.push({name: 'Setting'})">프로필 수정</button>
       </div>
     </div>
     <div class="card_body">
-      <p>게시글 {{ userInfo.posts }}</p>
-      <p>팔로우 {{ userInfo.followings }} </p>
-      <p>팔로워 {{ userInfo.followers }} </p>
+      <p>이야기 {{ this.$store.state.userFollowInfo.userFollow.length }}개</p>
+      <p>팔로우 {{ this.$store.state.userFollowInfo.userFollow.length }}명</p>
+      <p>팔로워 {{ this.$store.state.userFollowInfo.userFollowing.length }}명</p>
     </div>
     <div id="card_footer">
       <div id="where">
         <span style="font-size:1rem; font-weight:bold">나는 지금...</span>
         <span id="at">
           <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)">
-          <p id="planet_name" style="font-size:1.4rem; font-weight:bold; margin-top:0.4rem; margin-left:0.3rem" :style="{color:tmp.color}">{{tmp.name }}</p>
+          <p id="planet_name" style="font-size:1.4rem; font-weight:bold; margin-top:0.4rem; margin-left:0.3rem" :style="{color:tmp.color}">{{tmp.name }} 탐험중</p>
         </span>
       </div>
       <div id="footer_buttons">
-        <button @click="createFeed">피드 작성</button>
+        <button @click="createFeed">이야기 들려주기</button>
         <button @click="$router.push({ name:'EmotionTest' })">테스트 다시하기</button>
       </div>
     </div>  
@@ -39,25 +40,36 @@ export default {
       planetStyles: [
         { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
         { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
-        { id: 3, name: '중립행성', img: "neutral.png", color: '#ABBECA' },
+        { id: 3, name: '심심행성', img: "neutral.png", color: '#ABBECA' },
         { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
         { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
         { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
-      ]
+        { id: 7, name: '떠돌이행성', img: "spaceship.png", color: '#FCBB74' },
+      ],
+      isActive: false
     }
   },
   computed: {
     tmp: function () {
-      const mood = this.userInfo.mood
+      const mood = this.$store.state.userInfo.mood
       const style = this.planetStyles.find(el => el.id === mood) || {}
       return style
     }
   },
-  methods: {
+   methods: {
     createFeed: function(){
-      this.$store.commit('activateFeed')
+      this.$store.commit('navActivate', 0)
+    },
+    resize(){
+      window.innerWidth > 1000 ? this.isActive = true: this.isActive = false
     }
   },
+  mounted(){
+    if (window.innerWidth > 1000){
+      this.isActive = true
+    }
+    window.addEventListener('resize', this.resize)
+  }
 }
 </script>
 
@@ -84,6 +96,10 @@ export default {
     justify-content: center;
     align-items: flex-end;
     height: 25vh;
+    background-image: url('../assets/images/emotions/cover_s.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
   }
 
   .overlay_content {
@@ -135,6 +151,7 @@ export default {
   }
 
   #update {
+    z-index: 10;
     background-color: gray;
     color: white;
     font-size: 0.8rem;
@@ -184,8 +201,17 @@ export default {
 
   #profile_image {
     position: relative;
-    width: 43vh;
-    height: 28vh;
-    border-radius: 10px;
+    align-self: center;
+    z-index: 10;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+  } 
+  #opacity {
+    width: 100%;
+    height: 100%;
+    background-color: rgb(0, 0, 0, 0.2);
+    position: absolute;
+    left: 0;
   }
 </style>

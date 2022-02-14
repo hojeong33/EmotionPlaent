@@ -24,7 +24,7 @@ public class PickContentController {
 
     private static final int SUCCESS = 1;
 
-    @GetMapping(value ="/pickContent/{no}") // 목록 선탣
+    @GetMapping(value ="/pickContent/{no}") // 컨텐츠 선택
     public ResponseEntity<PickContentDto> select(@PathVariable String no) {
         int contentNo = Integer.parseInt(no);
         PickContentDto pickContentDto = pickContentService.select(contentNo);
@@ -35,10 +35,19 @@ public class PickContentController {
         }
     }
 
-    @DeleteMapping(value ="/pickContent/{no}") // 목록 삭제
-    public ResponseEntity<Integer> delete(@PathVariable String no) {
-        int contentNo = Integer.parseInt(no);
-        int result = pickContentService.delete(contentNo);
+    @PostMapping(value ="/pickContent") // 컨텐츠 추가
+    public ResponseEntity<?> create(@RequestBody PickContentDto pickContentDto) {
+        int result = pickContentService.create(pickContentDto);
+        if(result != 0) {
+            return new ResponseEntity<Integer>(result, HttpStatus.OK);
+        }else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "해당 컨텐츠를 찾을 수 없습니다.");
+        }
+    }
+
+    @DeleteMapping(value ="/pickContent/{no}") // 컨텐츠 삭제
+    public ResponseEntity<Integer> delete(@RequestBody PickContentDto pickContentDto) {
+        int result = pickContentService.delete(pickContentDto);
         if(result == SUCCESS) {
             return new ResponseEntity<Integer>(result, HttpStatus.OK);
         }else {

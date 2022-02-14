@@ -1,6 +1,7 @@
 package com.ssafy.project.EmotionPlanet.Controller;
 
-import com.ssafy.project.EmotionPlanet.Dto.FeedLikeDto;
+import com.ssafy.project.EmotionPlanet.Config.JWT.JwtService;
+import com.ssafy.project.EmotionPlanet.Dto.LikeDto;
 import com.ssafy.project.EmotionPlanet.Dto.PickDto;
 import com.ssafy.project.EmotionPlanet.Service.PickService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,9 @@ public class PickController {
     @Autowired
     PickService pickService;
 
+    @Autowired
+    JwtService jwtService;
+
     private static final int SUCCESS = 1;
 
     @PostMapping(value ="/picks") // 목록 생성
@@ -37,9 +41,20 @@ public class PickController {
     }
 
     @GetMapping(value ="/picks/{no}") // 해당 목록 가져오기
-    public ResponseEntity<PickDto> list(@PathVariable String no) {
+    public ResponseEntity<PickDto> list(@RequestHeader(value="at-jwt-access-token") String jwt, @PathVariable String no) {
         int pickNo = Integer.parseInt(no);
-        PickDto pick = pickService.select(pickNo);
+        String decode = jwtService.decode(jwt);
+        System.out.println("디코딩 내용 : " + decode);
+        String[] arr = decode.split("\\{|\\}| |,|\"|:");
+        String userNo = "";
+        for(int i = 0; i < arr.length; i++){
+            if (arr[i].equals("no")) {
+                userNo = arr[i + 2];
+                break;
+            }
+        }
+
+        PickDto pick = pickService.select(pickNo, Integer.parseInt(userNo));
         if(pick != null) {
             return new ResponseEntity<PickDto>(pick, HttpStatus.OK);
         } else {
@@ -53,6 +68,17 @@ public class PickController {
         List<PickDto> picks = pickService.list(userNo);
         if(picks != null) {
             return new ResponseEntity<List<PickDto>>(picks, HttpStatus.OK);
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "작성된 목록이 없습니다.");
+        }
+    }
+
+    @GetMapping(value ="/picks/user/returnNo/{no}") // 유저가 만든 목록 번호
+    public ResponseEntity<?> listOnNo(@PathVariable String no) {
+        int userNo = Integer.parseInt(no);
+        List<Integer> picks = pickService.listOnNo(userNo);
+        if(picks != null) {
+            return new ResponseEntity<List<Integer>>(picks, HttpStatus.OK);
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "작성된 목록이 없습니다.");
         }
@@ -80,9 +106,9 @@ public class PickController {
     }
 
     @PostMapping(value ="/picks/like") // 좋아요
-    public ResponseEntity<Integer> like(@RequestBody FeedLikeDto feedLikeDto) {
-        int pickNo = feedLikeDto.getFeedNo();
-        int userNo = feedLikeDto.getUserNo();
+    public ResponseEntity<Integer> like(@RequestBody LikeDto likeDto) {
+        int pickNo = likeDto.getTargetNo();
+        int userNo = likeDto.getUserNo();
 
         int result = pickService.like(userNo, pickNo);
         if(result == SUCCESS) {
@@ -93,9 +119,9 @@ public class PickController {
     }
 
     @DeleteMapping(value ="/picks/like") // 좋아요 취소
-    public ResponseEntity<Integer> unlike(@RequestBody FeedLikeDto feedLikeDto) {
-        int pickNo = feedLikeDto.getFeedNo();
-        int userNo = feedLikeDto.getUserNo();
+    public ResponseEntity<Integer> unlike(@RequestBody LikeDto likeDto) {
+        int pickNo = likeDto.getTargetNo();
+        int userNo = likeDto.getUserNo();
 
         int result = pickService.unlike(userNo, pickNo);
         if(result == SUCCESS) {

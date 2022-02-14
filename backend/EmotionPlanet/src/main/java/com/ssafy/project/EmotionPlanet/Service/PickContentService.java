@@ -10,5 +10,7 @@ public interface PickContentService {
 
     public PickContentDto select(int no);
 
-    public int delete(int no);
+    public int create(PickContentDto pickContentDto);
+
+    public int delete(PickContentDto pickContentDto);
 }

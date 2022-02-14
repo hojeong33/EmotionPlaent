@@ -3,21 +3,42 @@
     <nav class="navbar navbar-expand-lg" id="navbar-default">
       <div class="container">
         <div>
-          <img src="@/assets/images/logo/EMOTION PLANET.png" id="logo_img" alt="" @click="goMain">
+          <img src="@/assets/images/logo/EMOTION PLANET.png" id="logo_img" alt="logo" @click="navClick">
         </div>
         <form class="d-flex" id="searches">
-          <input id="search_bar" class="form-control" type="search" placeholder="Search" aria-label="Search">
+          <div class="search_menu" v-on:cancel="searchOff">
+            <input id="search_bar" class="form-control" autocomplete="off"
+            type="search" placeholder="Search" aria-label="Search"
+            @focus="searchOn" :value="searchWords" @input="search">
+            <search v-if="searching" v-on:cancel="searchOff" id="dropdown"></search>
+          </div>
           <!-- <button class="btn btn-outline-success" type="submit" id="search"><img src="@/assets/images/search.png" id="search"></button> -->
           <img src="@/assets/images/icons/search.png" id="search" type="submit">
         </form>
         <div id="icons">
-          <img @click="changeImg_write" :src="require(`@/assets/images/icons/${imgName_write}`)" id="write">
-          <img src="@/assets/images/icons/home.png" id="home" @click="goMain">
-          <img @click="changeImg_profile" :src="require(`@/assets/images/icons/${imgName_profile}`)" id="my_page">
-          <div>
-            <img @click="changeImg_alarm" :src="require(`@/assets/images/icons/${imgName_alarm}`)" id="alarm">
+          <img @click="navClick"  id="write"
+          :src="require(`@/assets/images/icons/${feed}`)">
+          <img @click="navClick" id="home"
+          :src="require(`@/assets/images/icons/${home}`)">
+          <img @click="navClick" id="my_page"
+          :src="require(`@/assets/images/icons/${myPage}`)">
+          <div id="alarm_menu">
+            <img @click="alarmClick" id="alarm"
+            :src="require(`@/assets/images/icons/${alarm}`)">
+            <span id="alarm_box" v-if="this.alarmCount >= 1">
+              <span id="count_box">
+                <p v-if="this.alarmCount <= 9" id="alarm_count">{{ alarmCount }}</p>
+                <!-- <p id="alarm_count">{{ alarmCount }}</p> -->
+                <p v-if="this.alarmCount >= 10" id="nine">9</p>
+                <p v-if="this.alarmCount >= 10" id="plus">+</p>
+              </span>
+            </span>
+            <alarm v-if="alarming" id="alarm_drop" v-on:cancelAlarm="alarmClose" @blur="alarmClose"></alarm>
           </div>
-          <img @click="changeImg_setting" :src="require(`@/assets/images/icons/${imgName_setting}`)" id="setting">
+          <img @click="navClick" id="setting"
+           :src="require(`@/assets/images/icons/${setting}`)">
+           <img src="@/assets/images/icons/power.png" @click="signout" 
+           id="logout" style="cursor:pointer;">
         </div>
       </div>
     </nav>
@@ -25,118 +46,109 @@
 </template>
 <script>
 // import {mapState} from 'vuex'
+// 똑같은 페이지 눌렀을 때 새로고침이 안 됨 - 수정 필요
+import Search from '@/components/Search/Search'
+import Alarm from '@/components/Alarm'
+
+const session = window.sessionStorage
 
 export default {
   name: 'App',
   data: function (){
     return {
-      imgName_write: 'more.png',
-      imgName_profile: 'user.png',
-      imgName_setting: 'settings.png',
-      imgName_alarm: 'bell.png',
-      isActive: [false, false, false, false], //네브바에서 선택됐는지 여부를 파악,
-      searchInput: 'null',
-      // searchFinish,
-      
+      //검색입니둥
+      searching: false,
+      searchWords: null,
+      //알람입니둥
+      alarming: false,
     }
   },
+  components: { Search, Alarm },
   methods: {
-    changeImg_write() {
-      if (this.isActive[0] === false) {
-        this.$store.commit('activateFeed')
-        this.imgName_write = 'more_selected.png'
-        this.isActive[0] = this.$store.state.feedActive
-
-        if (this.isActive[1] === true || this.isActive[2] === true || this.isActive[3] === true) {
-          this.imgName_profile = 'user.png'
-          this.imgName_alarm = 'bell.png'
-          this.imgName_setting = 'settings.png'
-          this.isActive[1] = false
-          this.isActive[2] = false
-          this.isActive[3] = false
-      
-
-        }
-      }
-
-        // 얘는 페이지 바뀌면 색이 빠지는 것을 어떻게 코드를 짜야 하나... ㅠㅠ
-
+    navClick(event){
+      console.log(this.$router)
+      if (event.target.id == 'write'){this.$store.commit('navActivate', 0)}
+      else if (event.target.id == 'home' || event.target.id =='logo_img'){this.$router.push({ name:'Main' })}
+      else if (event.target.id == 'my_page'){this.$router.push({ name:'Mypage' })}
+      // else if (event.target.id == 'alarm'){this.$store.commit('navActivate', 3)}
+      else {this.$router.push({ name:'Setting' })}
     },
-    changeImg_profile() {
-      if (this.imgName_profile === 'user.png') {
-        this.imgName_profile = 'user_selected.png'
-        this.$router.push({name:'Mypage'})
-        this.isActive[1] = true
-        
-        if (this.isActive[0] === true || this.isActive[2] === true || this.isActive[3] === true) {
-          this.imgName_write = 'more.png'
-          this.imgName_alarm = 'bell.png'
-          this.imgName_setting = 'settings.png'
-          this.isActive[0] = false
-          this.isActive[2] = false
-          this.isActive[3] = false
-        }
-      } 
+    //검색 부분입니둥
+    searchOn() {
+      this.searching = true
     },
-    changeImg_alarm() {
-      if (this.imgName_alarm === 'bell.png') {
-        this.imgName_alarm = 'bell_selected.png'
-        this.$router.push('#')
-        this.isActive[2] = true
-
-        if (this.isActive[0] === true || this.isActive[1] === true || this.isActive[3] === true) {
-          this.imgName_write = 'more.png'
-          this.imgName_profile = 'user.png'
-          this.imgName_setting = 'settings.png'
-          this.isActive[0] = false
-          this.isActive[1] = false
-          this.isActive[3] = false
-        }
-      } 
+    searchOff() {
+      this.searching = false
+      this.$store.state.words = null
+      this.$store.state.tagSearch = []
+      this.$store.state.userSearch = []
     },
-    changeImg_setting() {
-      if (this.imgName_setting === 'settings.png') {
-        this.imgName_setting = 'settings_selected.png'
-        this.$router.push({name: 'Setting'})
-        this.isActive[3] = true
-        
-        if (this.isActive[0] === true || this.isActive[1] === true || this.isActive[2] === true) {
-          this.imgName_write = 'more.png'
-          this.imgName_profile = 'user.png'
-          this.imgName_alarm = 'bell.png'
-          this.isActive[0] = false
-          this.isActive[1] = false
-          this.isActive[2] = false
-        }
-      } 
+    search( searchWords ) {
+      this.$store.commit('updateSearch', searchWords.target.value)
+      this.$store.dispatch('searchTag')
+      this.$store.dispatch('searchUser')
     },
-    goMain() {
-      this.$router.push({name: 'Main'})
-      this.imgName_write = 'more.png'
-      this.imgName_profile = 'user.png'
-      this.imgName_alarm = 'bell.png'
-      this.imgName_setting = 'settings.png'
+    // 검색 끝
+    signout() {
+      const authInst = window.gapi.auth2.getAuthInstance();
+      console.log('signout called', authInst)
+      authInst.signOut()
+      .then(() => {
+        // eslint-disable-next-line
+        console.log('User Signed Out!!!');
+        authInst.disconnect();
+        session.clear();
+      })
+      .then(() => {
+        window.location.reload()
+      })
+      .catch(() => alert('fail'))
     },
-    // search() {
-    //   if (this.searchInput) {
-    //     axios({
-
-    //     })
-    //     .then({
-
-    //     })
-    //     .catch(err => {
-    //       alert(err)
-    //     })
-    //   }
-    // }
-
+    alarmClick() {
+      this.$store.commit('navActivate', 3)
+      this.alarming = true
+      this.$store.dispatch('alarmselect')
+    },
+    alarmClose() {
+      this.$store.commit('navActivate', 3)
+      this.alarming = false
+    },
   },
-  //  computed: {
-  //   ...mapState([
-  //     'feedActive'
-  //   ]) 
-  // }
+  computed: {
+    feed(){
+      if (!this.navActive[0]){return 'more.png'}
+      else{return 'more_selected.png'}
+    },
+    home(){
+      if (!this.navActive[1]){return 'home.png'}
+      else{return 'home_selected.png'}
+    },
+    myPage(){
+      if (!this.navActive[2]){return 'user.png'}
+      return 'user_selected.png'
+    },
+    alarm(){
+      if (!this.navActive[3]){return 'bell.png'}
+      return 'bell_selected.png'
+    },
+    setting(){
+      if (!this.navActive[4]){return 'settings.png'}
+      return 'settings_selected.png'
+    },
+    navActive(){
+      return this.$store.state.navActive
+    },
+    alarmCount() {
+      let count = 0
+      this.$store.state.alarm.forEach(el => {
+        if(el.readcheck == 0){
+          count++
+        }
+      });
+      console.log(count)
+      return count
+    }
+  }
 }
 </script>
 
@@ -212,11 +224,68 @@ export default {
   height: 25px;
   margin: 10px;
 }
+#logout{
+  width: 33px;
+  height: 33px;
+  margin: 5px;
+}
+#alarm_menu{
+  /* width: 25px;
+  height: 25px;
+  margin: 10px; */
+  position: relative;
+}
 #alarm{
   width: 25px;
   height: 25px;
   margin: 10px;
   position: relative;
+}
+#alarm_box{
+  display: flex;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: red;
+  top: 0;
+  left: 1.4rem;
+  position: absolute;
+}
+#count_box{
+  display: flex;
+  align-items: center;
+  left: 0.28rem;
+  bottom: -1.2rem;
+  position: absolute;
+}
+
+#alarm_count{
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+}
+
+#alarm_drop {
+  z-index: 20;
+  width: 15%;
+  min-width: 300px;
+  height: 30%;
+  min-height: 340px;
+  position: absolute;
+  background-color: white;
+  margin: 0.7rem -7.8rem;
+}
+
+#nine{
+  font-size: 1rem;
+  font-weight: bold;
+  color: white;
+}
+
+#plus {
+  font-size: 1rem;
+  font-weight: bold;
+  color: white
 }
 /* .note-num {
   position: absolute;
@@ -236,9 +305,25 @@ export default {
   width: 25px;
   height: 25px;
   margin: 10px;
+  position: relative;
 } 
 img{
   cursor: pointer;
+}
+
+.search_menu {
+  display: flex;
+  flex-direction: column;
+}
+
+#dropdown {
+  z-index: 20;
+  width: 25%;
+  min-width: 150px;
+  height: 15%;
+  position: absolute;
+  background-color: white;
+  margin-top: 3.5rem;
 }
 </style>
 

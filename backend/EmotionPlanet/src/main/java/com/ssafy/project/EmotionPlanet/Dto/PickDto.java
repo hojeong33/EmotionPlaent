@@ -10,18 +10,24 @@ public class PickDto {
     private int tagNo;
     private String name;
     private LocalDateTime date;
+    private int type; //0 노래 1 영화 2 활동
 
-    List<PickContentDto> contentsList;
+    private int likes;
+    private boolean like;
+    private boolean owner;
+
+    List<Integer> contentsList;
 
     public PickDto() {
     }
 
-    public PickDto(int no, int userNo, int tagNo, String name, LocalDateTime date) {
+    public PickDto(int no, int userNo, int tagNo, String name, LocalDateTime date, int type) {
         this.no = no;
         this.userNo = userNo;
         this.tagNo = tagNo;
         this.name = name;
         this.date = date;
+        this.type = type;
     }
 
     public int getNo() {
@@ -64,11 +70,43 @@ public class PickDto {
         this.date = date;
     }
 
-    public List<PickContentDto> getContentsList() {
+    public int getType() {
+        return type;
+    }
+
+    public void setType(int type) {
+        this.type = type;
+    }
+
+    public boolean isOwner() {
+        return owner;
+    }
+
+    public void setOwner(boolean owner) {
+        this.owner = owner;
+    }
+
+    public boolean isLike() {
+        return like;
+    }
+
+    public void setLike(boolean like) {
+        this.like = like;
+    }
+
+    public int getLikes() {
+        return likes;
+    }
+
+    public void setLikes(int likes) {
+        this.likes = likes;
+    }
+
+    public List<Integer> getContentsList() {
         return contentsList;
     }
 
-    public void setContentsList(List<PickContentDto> contentsList) {
+    public void setContentsList(List<Integer> contentsList) {
         this.contentsList = contentsList;
     }
 }

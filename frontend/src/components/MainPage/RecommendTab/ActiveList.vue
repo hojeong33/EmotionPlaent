@@ -1,14 +1,24 @@
 <template>
   <div>
-    <h3>활동</h3>
+    <h3>{{ tmp.name }}을 탐사하기</h3>
     <div class="card-carousel-wrapper">
         <div class="card-carousel--nav__left" @click="moveCarousel(-1)" :disabled="atHeadOfList"></div>
         <div class="card-carousel">
             <div class="card-carousel--overflow-container">
-                <div class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
-                    <div class="card-carousel--card" v-for="item in items" :key="item.index"><img src="../../../assets/images/default_image.png"/>
+                <div v-if="this.$store.state.recommendType === 1" class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
+                    <div class="card-carousel--card" v-for="item in this.$store.state.recommendActivity.slice(0, 10)" :key="item.index">
+                        <img :src="item.imgLink"/>
                         <div class="card-carousel--card--footer">
-                            <p>{{ item.name }}</p>
+                            <p>{{ item.title }}</p>
+                            <p class="tag" v-for="(tag, index) in item.tag" :key="index" :class="index &gt; 0 ? 'secondary' : ''" >{{ tag }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="this.$store.state.recommendType === 0" class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
+                    <div class="card-carousel--card" v-for="item in this.$store.state.recommendActivity.slice(10)" :key="item.index">
+                        <img :src="item.imgLink"/>
+                        <div class="card-carousel--card--footer">
+                            <p>{{ item.title }}</p>
                             <p class="tag" v-for="(tag, index) in item.tag" :key="index" :class="index &gt; 0 ? 'secondary' : ''" >{{ tag }}</p>
                         </div>
                     </div>
@@ -17,7 +27,6 @@
         </div>
         <div class="card-carousel--nav__right" @click="moveCarousel(1)" :disabled="atEndOfList"></div>
     </div>
-    <p style="text-align:right; margin-right:5rem;">더보기</p>   
   </div>
 </template>
 
@@ -29,21 +38,16 @@ export default {
         currentOffset: 0,
         windowSize: 3,
         paginationFactor: 220,
-        items: [
-            {name: '활동명'},
-            {name: '활동명'},
-            {name: '활동명'},
-            {name: '활동명'},
-            {name: '활동명'},
-            {name: '활동명'},
-            {name: '활동명'},
-            {name: '활동명'}
-        ]
         }
     },
     computed: {
+        tmp: function () {
+        const mood = this.$store.state.userInfo.mood
+        const style = this.$store.state.planetStyles.find(el => el.id === mood) || {}
+        return style
+        },
         atEndOfList() {
-        return this.currentOffset <= (this.paginationFactor * -1) * (this.items.length - this.windowSize);
+        return this.currentOffset <= (this.paginationFactor * -1) * (this.$store.state.recommendActivity.length - this.windowSize);
         },
         atHeadOfList() {
         return this.currentOffset === 0;

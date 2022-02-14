@@ -2,55 +2,51 @@
   <div id="feed">
     <div id="header">
       <section id="profile_image">
-        <!-- <img :src="post.userImage" /> -->
+        <img :src="post.userImage" />
       </section>
       <div id="profile_content">
-        <section id="username" style="font-size:2rem;">{{post.author}}</section>
-        <section style="font-size:1.2rem;">{{post.date}}</section>
+        <section id="username">{{post.username}}</section>
+        <section>{{post.date}}</section>
       </div>
-      <div id="setting">
+      <!-- <div id="setting">
         <i class="fas fa-ellipsis-v"></i>
+      </div> -->
+      <div id="setting">
+        <i @click="onUserFeedSetting" class="fas fa-ellipsis-v"></i>
       </div>
     </div>
     <div id="post_image">
-      <div id="my_img" v-for="img in post.imgs" :key="img"><div><img :src="img.imgLink" alt=""></div></div>
-      <!-- <img :src="post.postImage" alt="" v> -->
-      <!-- <p class="overlay_content" >{{post.author}}님은 {{post.tag[0]}} <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p> -->
+      <img :src="post.postImage" alt="">
+      <p class="overlay_content" >{{post.username}}님은 {{post.planet}} <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p>
     </div>
     <div id="like">
       <div id="heart">
-        <!-- <i class="far fa-heart fa-lg" :class="{'fas': this.post.hasBeenLiked}" @click="like"></i> -->
+        <i class="far fa-heart fa-lg" :class="{'fas': this.post.hasBeenLiked}" @click="like"></i>
       </div>
-       <p id="feed_likes" v-for="like in post.likes" :key="like">#{{like["nickname"]}}</p>
-      <!-- <p class="likes" >{{post.likes}} likes</p> -->
+      <p class="likes" >{{post.likes}} likes</p>
     </div>
     <div id="content">
       <div id="tag">
-        <p id="my_tag" v-for="tag in post.tags" :key="tag">#{{tag["name"]}}</p>
+        <p id="my_tag" v-for="tag in post.tag" :key="tag">#{{tag}}</p>
       </div> 
-        <p id="caption" style="font-size:1.4rem"><span style="font-weight:bold; margin-right:5px;">{{post.author}}</span>{{post.descr}}</p>
+        <p id="caption">{{post.caption}}</p>
     </div>
-    <comment-list :comments="comments" :commentsList="commentsList" :feedNo="post.no"></comment-list>
+    <comment-list :comments="post.comments"></comment-list>
   </div>
 </template>
 
 <script>
 import CommentList from './CommentList.vue';
-import axios from 'axios';
-const session = window.sessionStorage;
 
 export default {
-  components: { CommentList },
+  components: { CommentList, },
   name: "Feed",
   props: {
     post: Object,
+    comments:Array
   },
   data(){
     return{
-      // date:this.post.date.toLocaleDateString(),
-      comments:[],
-      commentsList:[],
-      posts:[],
       planetStyles: [
         { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
         { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
@@ -58,7 +54,7 @@ export default {
         { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
         { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
         { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
-      ]
+      ],
     }
   },
    computed: {
@@ -73,37 +69,10 @@ export default {
       this.post.hasBeenLiked ? this.post.likes-- : this.post.likes++;
       this.post.hasBeenLiked = !this.post.hasBeenLiked;
     },
-    
-  },
-  created(){
-    let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-      axios({
-        method:'get',
-        url:`http://13.125.47.126:8080/comments/${this.post.no}`,
-        headers:headers,
-      })
-    .then((res) => {
-    console.log(res);
-    console.log('response header', res.headers);
-    if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
-      session.setItem('at-jwt-access-token', "");
-      session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-      console.log("Access Token을 교체합니다!!!")
-      }
-      console.log(res.data)
-      this.comments=res.data
-      this.commentsList=res.data.slice(0,2)
-    }).catch((error) => {
-      console.log(error);
-    }).then(() => {
-      console.log('댓글 가져오기 클리어');
-
-    });
+    onUserFeedSetting:function(){
+      this.$store.commit('userFeedSettingModalActivate')
+		}
   }
-  
 };
 </script>
 
@@ -143,7 +112,6 @@ export default {
   #my_tag{
     color:rgb(37, 37, 201);
     margin-bottom:3px;
-    font-size:1.2rem;
   }
   #header{
     display:flex;
@@ -183,7 +151,6 @@ export default {
   .overlay_content {
     position: absolute;
     padding: 0rem 1rem;
-    margin-right:16rem;
     background-color: white;
     border-radius: 10px;
   }

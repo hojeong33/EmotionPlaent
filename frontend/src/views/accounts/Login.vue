@@ -4,11 +4,8 @@
       <h1>어서오세요!</h1>
       <h1>오늘은 어떤 이야기를</h1>
       <h1>들려주실건가요? 😉</h1>
-      <!-- <div>
-        <img src="../../assets/images/sun.png" id="sun">
-      </div> -->
     </div>
-    <section id="login_body">
+    <form @submit.prevent="login" id="login_body">
       <article id="email_form">
         <label for="email">이메일</label>
         <input type="text"
@@ -24,28 +21,23 @@
         v-model="credentials.pw"
         placeholder="비밀번호를 입력해주세요">
       </article>
-    </section>
-    <article id="link">
-      <a href="#">이메일 찾기</a>
-      <a href="#">비밀번호 찾기</a>
-      <router-link :to="{ name: 'Signup' }" class="gosignup">회원가입</router-link>
-    </article>
-    <article>
-      <button id="login_btn" @click="login">로그인</button>
-    </article>
-    <button id="google" class="social_login">
+      <div id="link">
+        <router-link :to="{ name: 'EmailFind' }">이메일 찾기</router-link>
+        <router-link :to="{ name: 'Password-find' }">비밀번호 찾기</router-link>
+        <router-link :to="{ name: 'Signup' }" class="gosignup">회원가입</router-link>
+      </div>
+      <button id="login_btn">로그인</button>
+    </form>
+    <button id="google" class="social_login" @click="handleClickSignIn">
       <img id="google" src="../../assets/images/etc/Google__G__Logo.png">
       <p>Google로 로그인</p>
     </button>
     <article>
-      <button id="kakao" class="social_login">
+      <button id="kakao" class="social_login" @click="handleClickKaKaoSignin">
         <img id="kakao" src="../../assets/images/etc/kakao.png">
         <p>Kakao로 로그인</p>
         </button>
     </article>
-    <a href="https://accounts.google.com/o/oauth2/v2/auth?scope=https://www.googleapis.com/auth/userinfo.email&response_type=code&client_id=172274534251-rpo5d1a1i23k75l87vrcjiid99413h9a.apps.googleusercontent.com&redirect_uri=http://localhost:8080/auth/google/callback">구글로그인</a>
-    <div id="my-signin2"></div>
-    <button @click="signout">signout</button>
   </div>
 </template>
 
@@ -64,141 +56,166 @@ export default {
         pw: null,
       },
       googleUser: null,
+      kakaoOauthUrl: null,
     }
   },
-  mounted() {
-    window.gapi.signin2.render('my-signin2', {
-      scope: 'profile email',
-      width: 240,
-      height: 50,
-      longtitle: true,
-      theme: 'dark',
-      onsuccess: this.onSuccess,
-      onfailure: this.onFailure,
+  methods: {
+    //OAUTH
+  async handleClickSignIn() {
+    try {
+      const googleUser = await this.$gAuth.signIn();
+      if (!googleUser) {
+        return null;
+      }
+      console.log("googleUser", googleUser);
+      console.log("getId", googleUser.getId());
+      console.log("getBasicProfile", googleUser.getBasicProfile());
+      console.log("getAuthResponse", googleUser.getAuthResponse());
+      console.log(
+        "getAuthResponse",
+        this.$gAuth.GoogleAuth.currentUser.get().getAuthResponse()
+      );
+      this.isSignIn = this.$gAuth.isAuthorized;
+      this.onSuccess(googleUser)
+    } catch (error) {
+      //on fail do something
+      this.onFailure(error)
+    }
+  },
+  onSuccess(googleUser) {
+    // eslint-disable-next-line
+    console.log(googleUser);
+    this.googleUser = googleUser;
+    this.tokenVerify()
+  },
+  onFailure(error) {
+    // eslint-disable-next-line
+    console.log(error);
+  },
+  login: function() {
+    axios({
+      method: 'post',
+      url:'http://13.125.47.126:8080/login',
+      data: this.credentials
+    })
+    .then((res)=>{
+      console.log(res.headers);
+      // storage 설정
+      session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+      session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
+
+      this.$store.dispatch('allTokenRefresh', res)
+      
+      this.sendToken();
+      // this.$router.push('EmotionTest')
+      // this.$router.push({ name: 'Main' })
+      console.log(res)
+      this.$store.commit('loginConfirmModalActivate')
+    })
+    .catch(err=> {
+      console.log('나는 에러야!', err)
+      this.$store.commit('loginFailModalActivate', err.response.data.message)
+      // alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
+    })
+    this.credentials.email = "";
+    this.credentials.pw ="";
+  },
+
+  tokenVerify() {
+    const url = 'http://13.125.47.126:8080/login/auth';
+    const params = new URLSearchParams();
+    params.append('idToken', this.googleUser.wc.id_token);
+    console.log(params)
+    axios.post(url, params).then((res) => {
+      // alert("로그인 성공")
+      console.log(res.headers);
+      // storage 설정
+      session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+      session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
+
+      const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
+      console.log('decodeAccessToken data', decodeAccessToken);
+      this.$store.commit('userUpdate', decodeAccessToken.userInfo)
+      console.log(this.$store.state.userInfo.email)
+      this.sendToken();
+      if (this.$store.state.userInfo.tel === null) {
+        this.$router.push('MoreInfo')
+      }
+      else{
+        this.$store.commit('loginConfirmModalActivate')
+        // this.$router.push('EmotionTest')
+      }
+    }).catch((error) => {
+      console.log(error);
+      this.$store.commit('loginFailModalActivate')
+    }).then(() => {
+      console.log('tokenVerify End!!');
     });
   },
 
-  methods: {
-    //OAUTH
-    onSuccess(googleUser) {
-      // eslint-disable-next-line
-      console.log(googleUser);
-      this.googleUser = googleUser;
-      this.tokenVerify()
-    },
-    onFailure(error) {
-      // eslint-disable-next-line
-      console.log(error);
-    },
+  sendToken() {
+    console.log('나는 sendToken!')
+    const decodeAccessToken = jwt.decode(session.getItem('at-jwt-access-token'));
+    let headers = null;
+    if(decodeAccessToken.exp < Date.now()/1000 + 60){
+      console.log('만료됨!!');
+      headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      }
+      console.log('headers : ', headers);
+    }else{
+      console.log('만료되지않음!!');
+      headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      }
+      console.log('headers : ', headers);
+    }
+  },
 
-    signout() {
-      const authInst = window.gapi.auth2.getAuthInstance();
-      authInst.signOut().then(() => {
-        // eslint-disable-next-line
-        console.log('User Signed Out!!!');
-      })
-    },
+  handleClickKaKaoSignin() {
+    const params = {
+        redirectUri: "http://localhost:5500/login",
+    };
+    window.Kakao.Auth.authorize(params);
+    const authorization_code = this.$route.query.code
+    this.kakaoValidate(authorization_code)
+  },
 
-    // login: function () {
-    //   axios({
-    //     method: 'post',
-    //     url:'http://localhost:8080/login',
-    //     data: this.credentials
-    //   })
-    //   .then((res)=>{
-    //     alert("로그인 성공")
-    //     this.$store.commit('userData', this.credentials)
-    //     this.$router.push({ name: 'Main' })
-    //   })
-    //   .catch(err=> {
-    //     alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
-    //   })
-    //   this.credentials.email = "";
-    //   this.credentials.pw ="";
-    // },
-
-    login: function () {
-      axios({
+  kakaoValidate(code) {
+    axios({
         method: 'post',
-        url:'http://13.125.47.126:8080/login',
-        data: this.credentials
-      })
-      .then((res)=>{
-        alert("로그인 성공")
-        console.log(res.headers);
-        // storage 설정
-        session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-        session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
-
-        const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
-        console.log('decodeAccessToken data', decodeAccessToken);
-        this.sendToken();
-      })
-      .catch(err=> {
-        alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
-      })
-      this.credentials.email = "";
-      this.credentials.pw ="";
-    },
-
-    tokenVerify() {
-      const url = 'http://13.125.47.126:8080/login/auth';
-      const params = new URLSearchParams();
-      params.append('idToken', this.googleUser.wc.id_token);
-      console.log(params)
-      axios.post(url, params).then((res) => {
-        alert("로그인 성공")
-        console.log(res.headers);
-        // storage 설정
-        session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-        session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
-
-        const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
-        console.log('decodeAccessToken data', decodeAccessToken);
-        this.sendToken();
-
+        url: 'http://13.125.47.126:8080/login/auth',
+        data: code
+      }).then((res) => {
+        console.log('카카오 데이터 받아오기 : ' + res.data)
+        this.kakaoOauthUrl = res.data
       }).catch((error) => {
         console.log(error);
       }).then(() => {
-        console.log('tokenVerify End!!');
+        console.log('getQSSList End!!');
       });
-    },
-
-    sendToken() {
-      const decodeAccessToken = jwt.decode(session.getItem('at-jwt-access-token'));
-      let headers = null;
-      if(decodeAccessToken.exp < Date.now()/1000 + 60){
-        console.log('만료됨!!');
-        headers = {
-          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        }
-        console.log('headers : ', headers);
-      }else{
-        console.log('만료되지않음!!');
-        headers = {
-          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        }
-        console.log('headers : ', headers);
-      }
-    },
-
-    trans() {
-      let headers = {
-          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        };
-      axios.get('http://13.125.47.126:8080/qss/list', {
-        headers: headers,
+  },
+  
+  trans() {
+    let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+    };
+    let data = {
+      name: '',
+      type: ''
+    };
+    axios({
+        method: 'get',
+        url: 'http://13.125.47.126:8080/qss/list',
+        data: data, // post 나 put에 데이터 넣어 줄때
+        headers: headers,  // 넣는거 까먹지 마세요
       }).then((res) => {
-        console.log(res);
-        console.log('response header', res.headers);
-        if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
-          session.setItem('at-jwt-access-token', "");
-          session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-          console.log("Access Token을 교체합니다!!!")
-        }
+
+      this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+      this.dispatch('accessTokenRefresh', res) // store에서
 
       }).catch((error) => {
         console.log(error);
@@ -206,6 +223,7 @@ export default {
         console.log('getQSSList End!!');
       });
     },
+
     
   },
 }

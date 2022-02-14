@@ -29,18 +29,56 @@ public class PickServiceImpl implements PickService{
     public List<PickDto> list(int userNo) {
 
         List<PickDto> pickDtos = pickDao.list(userNo);
-
-        for (PickDto pickDto : pickDtos) {
-            pickDto.setContentsList(pickContentDao.list(pickDto.getNo()));
-        }
-
         return pickDtos;
     }
 
     @Override
-    public PickDto select(int no) {
+    public List<Integer> listOnNo(int userNo) {
+
+        List<PickDto> pickDtos = pickDao.list(userNo);
+        List<Integer> picksNo = new ArrayList<>();
+
+        for (PickDto pickDto : pickDtos) {
+            picksNo.add(pickDto.getNo());
+        }
+        return picksNo;
+    }
+
+    @Override
+    public PickDto select(int no, int userNo) {
         PickDto pickDto = pickDao.select(no);
-        pickDto.setContentsList(pickContentDao.list(pickDto.getNo()));
+
+        int like = pickDao.liking(userNo, pickDto.getNo());
+        if(like != 0) pickDto.setLike(true);
+        else pickDto.setLike(false);
+
+        if(userNo == pickDto.getUserNo()) pickDto.setOwner(true);
+        else pickDto.setOwner(false);
+
+        int likes = pickDao.likes(pickDto.getNo());
+        pickDto.setLikes(likes);
+
+        int type = pickDto.getType();
+
+        List<Integer> contentListNo = new ArrayList<>();
+        if (type == 0) {
+            List<PickContentDto> pickContentDtos = pickContentDao.listOnMusic(no);
+            for (PickContentDto pickContentDto : pickContentDtos) {
+                contentListNo.add(pickContentDto.getNo());
+            }
+        } else if (type == 1) {
+            List<PickContentDto> pickContentDtos = pickContentDao.listOnMovie(no);
+            for (PickContentDto pickContentDto : pickContentDtos) {
+                contentListNo.add(pickContentDto.getNo());
+            }
+        } else {
+            List<PickContentDto> pickContentDtos = pickContentDao.listOnActivity(no);
+            for (PickContentDto pickContentDto : pickContentDtos) {
+                contentListNo.add(pickContentDto.getNo());
+            }
+        }
+
+        pickDto.setContentsList(contentListNo);
         return pickDto;
     }
 

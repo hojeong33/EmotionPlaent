@@ -8,8 +8,9 @@
       <h3>이제 자유태그와 글을 작성할 수 있습니다!</h3>
       <h3>여러분의 하루를 공유해주세요</h3> 
     </article>
-    <input type="text" id="tag-input">
-    <textarea id="text-input" />
+    {{feedData.tags[0].name}} {{feedData.tags[1].name}}
+    <input type="text" id="tag-input" v-model="freeTag">
+    <textarea id="text-input" v-model="feedText" />
     <footer>
       <span id="secret">
         <input type="checkbox" id="secret-check" v-model="isChecked">
@@ -17,18 +18,33 @@
       </span>
       <span>
         <button id="btn-before" @click="beforePage">이전</button>
-        <button id="btn-next">작성</button>
+                <button id="btn-before" @click="feedUpdate">수정테스트</button>
+        <button id="btn-next" @click="feedWrite">작성</button>
       </span>
     </footer>
   </section>
 </template>
 
 <script>
+import {mapState} from 'vuex'
+import axios from 'axios'
+
+const session = window.sessionStorage;
+
 export default {
   name: 'CreateText',
   data: function () {
     return {
-      isChecked: false
+      isChecked: false,
+      freeTag: null,
+      feedText: null,
+      feedData: {
+        descr: '대충 글 수정',
+        author: null,
+        tags: [],
+        no: 143
+      },
+      Feedimages: [],
     }
   },
   methods: {
@@ -38,7 +54,84 @@ export default {
     beforePage(){
       this.$emit('before-page')
     },
-  }
+    feedWrite () {
+      console.log(this.feedData)
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+      const formData = new FormData();
+      this.Feedimages.forEach((file) => formData.append("files", file.image));
+      this.Feedimages.forEach((file) => console.log(file));
+
+      axios({
+          method: 'post',
+          url: 'http://13.125.47.126:8080/feeds',
+          data: this.feedData, // post 나 put에 데이터 넣어 줄때
+          headers: headers,  // 넣는거 까먹지 마세요
+        }).then((res) => {
+            console.log("피드 작성 : " + res.data)
+            this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+
+          axios({
+            method: 'post',
+            url: 'http://13.125.47.126:8080/s3/file/' + res.data,
+            data: formData, // post 나 put에 데이터 넣어 줄때
+            headers: headers,  // 넣는거 까먹지 마세요
+          }).then((res) => {
+            console.log(res.data)
+            this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+          }).catch((error) => {
+            console.log(error);
+          });
+
+        }).catch((error) => {
+          console.log(error);
+        }).then(() => {
+          console.log('getQSSList End!!');
+        });
+
+    },
+    feedUpdate () {
+      let headers = {
+        'Content-Type': 'multipart/form-data',
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+
+      const formData2 = new FormData();
+      this.Feedimages.forEach((file) => formData2.append("multipartFile", file.image));
+      this.Feedimages.forEach((file) => console.log(file));
+      formData2.append(
+        "userInfo",
+        new Blob([JSON.stringify(this.feedData)], { type: "application/json" })
+      );
+
+      axios({
+        method: 'put',
+        url: 'http://13.125.47.126:8080/feeds',
+        data: formData2, // post 나 put에 데이터 넣어 줄때
+        headers: headers,  // 넣는거 까먹지 마세요
+      }).then((res) => {
+          console.log("피드 작성 : " + res.data)
+          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+      }).catch((error) => {
+        console.log(error);
+      }).then(() => {
+        console.log('getQSSList End!!');
+      });
+    },
+  },
+  computed: 
+    mapState([
+      'feedCreateData', 'rawImg'
+    ]),
+  created: function () {
+    this.Feedimages = this.rawImg
+    this.feedData.author = this.feedCreateData[0].author
+    this.feedData.tags = this.feedCreateData[0].tags
+    console.log(this.feedData)
+  }, 
 }
 </script>
 

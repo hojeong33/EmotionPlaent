@@ -1,44 +1,69 @@
 package com.ssafy.project.EmotionPlanet.Config.JWT;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.project.EmotionPlanet.Dao.UserDao;
 import com.ssafy.project.EmotionPlanet.Dto.TokenDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserSecretDto;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.io.Encoders;
 import io.jsonwebtoken.security.Keys;
+import org.apache.commons.collections4.MapUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.io.UnsupportedEncodingException;
 import java.util.Base64;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 @Service
 public class JwtService {
 
+    @Autowired
+    UserDao userDao;
 
+//    @Value("{jwt.secret}")
+//    private String encodeKey;
     private final String encodeKey = "6ZIjhannFz8FQQhGkPM80cx8aKhZJB1zF-L0BYFumUNGPoNorcTfqNVisFU2oxH_ZrpjoozNFb7b-3_qDMCeiQ";
     private final Integer accessExpMin = 30;
     private final Integer refreshExpMin = 10080;
 
-    public String create() {
-        JwtBuilder builder = Jwts.builder();
-        builder.setHeaderParam("typ", "JWT");
-        builder.setIssuer("EmotionPlanet");
-        builder.setSubject("EP");
-        builder.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 5)); //5분 기준
-        builder.setIssuedAt(new Date());
+//    public String create() {
+//        JwtBuilder builder = Jwts.builder();
+//        builder.setHeaderParam("typ", "JWT");
+//        builder.setIssuer("EmotionPlanet");
+//        builder.setSubject("EP");
+//        builder.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 5)); //5분 기준
+//        builder.setIssuedAt(new Date());
+//
+////        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
+////        String secretKey = Encoders.BASE64URL.encode(key.getEncoded());
+////        System.out.println(secretKey);
+////        encodeKey = secretKey;
+//        SecretKey finalKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(encodeKey));
+//        builder.signWith(finalKey);
+//
+//        String jws = builder.compact();
+//        return jws;
+//    }
 
-//        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
-//        String secretKey = Encoders.BASE64URL.encode(key.getEncoded());
-//        System.out.println(secretKey);
-//        encodeKey = secretKey;
-        SecretKey finalKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(encodeKey));
-        builder.signWith(finalKey);
+    public String createAccess(String email) {
+        UserDto user = userDao.userSelectByEmail(email);
 
-        String jws = builder.compact();
-        return jws;
+        UserSecretDto userDto = new UserSecretDto(user.getNo(), user.getEmail(),
+                user.getNickname(), user.getBirth(), user.getProfileImg(), user.getTel(), user.getIntro() ,
+                user.getPublish(), user.getMood());
+        System.out.println("==== create Access === " + "\n" + userDto.toString());
+        return createJws(accessExpMin, userDto);
+    }
+
+    public String createRefresh() {
+        return createJws(refreshExpMin, null);
     }
 
     public TokenDto create(UserSecretDto userInfo) {
@@ -58,7 +83,6 @@ public class JwtService {
     }
 
     public String createJws(Integer expMin, UserSecretDto userInfo) {
-
         SecretKey secretKey = Keys.hmacShaKeyFor(Decoders.BASE64URL.decode(encodeKey));
 
         //JWT Builder create
@@ -85,7 +109,6 @@ public class JwtService {
     }
 
     public boolean validate(String token) {
-
         Jws<Claims> jws;
 //        SecretKey key = Keys.secretKeyFor(SignatureAlgorithm.HS512);
 //        String encodeKey = Encoders.BASE64URL.encode(key.getEncoded());
@@ -98,8 +121,8 @@ public class JwtService {
             jpb.setSigningKey(secretKey);
             jws = jpb.build().parseClaimsJws(token);
 
-            System.out.println(jws);
-            System.out.println(jws.getBody().getSubject());
+            System.out.println("jws : " + jws);
+            System.out.println("jws.gs : " + jws.getBody().getSubject());
 
             return true;
         }catch(JwtException e) {
@@ -115,8 +138,10 @@ public class JwtService {
         byte[] decodedBytes = decoder.decode(splitToken[1]);
 
         String decodedString = null;
+
         try {
             decodedString = new String(decodedBytes, "UTF-8");
+
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

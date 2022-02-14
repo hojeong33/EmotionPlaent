@@ -19,14 +19,6 @@
         v-model="credentials.email"
         @input="emailInput"
         placeholder="등록하신 이메일을 입력해주세요.">
-        <span v-if="credentials.email">
-          <p v-if="!isValid.validateEmail" class="warn">
-            일치하지 않는 이메일이에요.
-          </p>
-          <p v-if="isValid.validateEmail" class="collect">
-            일치하는 이메일입니다.
-          </p>
-        </span>
       </article>
       <article id="te-form">
         <label for="target-email">전달받을 이메일</label>
@@ -43,14 +35,14 @@
         placeholder="등록하신 휴대전화를 입력해주세요.">
         <span v-if="credentials.tel">
           <p v-if="!isValid.validateTel" class="warn">
-            등록되지 않은 휴대전화입니다.
+            전화번호가 이상해요.
           </p>
           <p v-if="isValid.validateTel" class="collect">
-            등록된 휴대전화입니다.
+            가능한 전화번호예요.
           </p>
         </span>
       </article>
-      <article id="pin-form">
+      <!-- <article id="pin-form">
         <span>
           <label for="pin">PIN 번호</label>
           <img src="../../assets/images/icons/help.png" alt="help" id="help"
@@ -63,10 +55,10 @@
         <input type="password" id="pin"
         v-model="credentials.pin"
         placeholder="등록하신 PIN 번호를 입력해주세요.">
-      </article>
+      </article> -->
       <a href="">이메일을 잊었나요?</a>
       <article id="pf-buttons">
-        <button>변경하기</button>
+        <button @click="send_mail">메일 받기</button>
         <button @click="go_to_back">뒤로가기</button>
       </article>
     </section>
@@ -75,7 +67,8 @@
 
 <script>
 import { mapState } from 'vuex'
-
+import axios from 'axios'
+const session = window.sessionStorage;
 export default {
   data: function(){
     return {
@@ -94,6 +87,30 @@ export default {
     }
   },
   methods: {
+    send_mail(){
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+    };
+    let data = {
+      email: this.credentials.email,
+      tel: this.credentials.tel,
+      requestemail : this.credentials.target_email,
+    };
+    axios({
+        method: 'post',
+        url: 'http://13.125.47.126:8080/users/findPw',
+        data: data,
+        headers: headers,  
+      }).then((res) => {
+      this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+      }).catch((error) => {
+        console.log(error);
+      }).then(() => {
+        console.log('getQSSList End!!');
+      });
+    },
+
     emailInput(){
       if (!this.credentials.email){
         console.log('-1')
@@ -117,7 +134,6 @@ export default {
       const n = this.credentials.tel.charCodeAt(nums-1)
       const poss = ['010', '011', '012', '013', '014',
                     '015', '016', '017', '018', '019']
-
       console.log(nums)
       if (event.inputType == 'deleteContentBackward'){
         if (nums == 3 || nums == 8){

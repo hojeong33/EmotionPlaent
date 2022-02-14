@@ -8,10 +8,19 @@ import java.util.List;
 @Mapper
 public interface PickContentDao {
 
-    public List<PickContentDto> list(int pickNo);
+    public List<PickContentDto> listOnMusic(int pickNo);
+    public List<PickContentDto> listOnMovie(int pickNo);
+    public List<PickContentDto> listOnActivity(int pickNo);
 
-    public PickContentDto select(int no);
+    public PickContentDto selectOnMusic(int no);
+    public PickContentDto selectOnMovie(int no);
+    public PickContentDto selectOnActivity(int no);
 
-    public int delete(int no);
+    public int createOnMusic(PickContentDto pickContentDto);
+    public int createOnMovie(PickContentDto pickContentDto);
+    public int createOnActivity(PickContentDto pickContentDto);
 
+    public int deleteOnMusic(int no);
+    public int deleteOnMovie(int no);
+    public int deleteOnActivity(int no);
 }
