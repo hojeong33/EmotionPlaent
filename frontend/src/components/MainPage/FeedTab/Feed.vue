@@ -1,5 +1,5 @@
 <template>
-  <div id="feed">
+  <div id="feed" v-if="feed">
     <div id="header">
       <section id="profile_image">
         <img :src="feed.authorDetail.profileImg" />
@@ -9,29 +9,24 @@
         <section style="font-size:1.2rem;">{{feed.date}}</section>
       </div>
       <div id="setting" style="z-index: 2;" v-if="isMine">
-        <i @click="onSetting" class="fas fa-ellipsis-v" style="color:black"></i>
-        <div id="detail" v-if="isOpend" style="" >
-          <p style="margin-bottom:0; margin-top:1rem;">수정</p>
-          <hr>
-          <p @click="deleteComment">삭제</p>
-        </div>
+        <i @click="onCommentSetting" class="fas fa-ellipsis-v" style="color:black"></i>
       </div>
     </div>
     <div id="post_image" style="z-index: 1;">
-      <div id="my_img" v-for="img in feed.imgs" :key="img"><div><img :src="img.imgLink" alt=""></div></div>
-      <!-- <img :src="feed.postImage" alt="" > -->
-      <!-- <p class="overlay_content" >{{feed.authorDetail.nickname}}님은 {{feed.tags[1]}} <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p> -->
+      <div id="my_img" v-for="(img, idx) in feed.imgs" :key="idx"><div><img :src="img.imgLink" alt=""></div></div>
+      <!-- <img :src="post.postImage" alt="" v> -->
+      <!-- <p class="overlay_content" >{{post.author}}님은 {{post.tag[0]}} <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p> -->
     </div>
     <div id="like">
       <div id="heart">
         <i class="far fa-heart fa-lg" :class="{'fas': this.feed.like}"  @click="like"></i>
       </div>
-       <p id="feed_likes" v-for="like in feed.likes" :key="like">{{like["nickname"]}}</p>
-      <p class="likes">{{feed.likes}} likes</p>
+       <p id="feed_likes" v-for="(like, idx) in feed.likes" :key="idx">{{like["nickname"]}}</p>
+      <p class="likes" >{{feed.likes}} likes</p>
     </div>
     <div id="content">
       <div id="tag">
-        <p id="my_tag" v-for="tag in feed.tags" :key="tag">#{{tag["name"]}}</p>
+        <p id="my_tag" v-for="(tag, idx) in feed.tags" :key="idx">#{{tag["name"]}}</p>
       </div> 
         <p id="caption" style="font-size:1.4rem"><span style="font-weight:bold; margin-right:5px;">{{feed.author}}</span>{{feed.descr}}</p>
     </div>
@@ -53,8 +48,9 @@ export default {
   data(){
     return{
       // date:this.post.date.toLocaleDateString(),
+      isCommentSettingOpened:false,
+      isUserFeedSettingOpened: false,
       isMine:false,
-      isOpend:false,
       feed:null,
       posts:[],
       planetStyles: [
@@ -75,13 +71,21 @@ export default {
     }
   },
   methods: {
-    
-    onSetting:function(){
-      if(this.isOpend){
-        this.isOpend=false
-      }else{
-        this.isOpend=true
-      }
+    onCommentSetting:function(){
+      this.$store.commit('commentSettingModalActivate')
+      // if(this.isCommentSettingOpened){
+      // 	this.isCommentSettingOpened=false
+      // }else{
+      // 	this.isCommentSettingOpened=true
+      // }
+    },
+    onUserFeedSetting2:function(){
+      this.$store.commit('userFeedSettingModalActivate2')
+      // if(this.isUserFeedSettingOpened){
+      // 	this.isUserFeedSettingOpened=false
+      // }else{
+      // 	this.isUserFeedSettingOpened=true
+      // }
     },
     like() {
       this.feed.like ? this.cancelLike(): this.doLike();
@@ -256,10 +260,10 @@ export default {
     
     /* background-color: antiquewhite; */
   }
-  #post_image img{
+  /* #post_image img{
     width: 90vh;
     height: 90vh;
-  }
+  } */
   #post_image{
     position: relative;
     overflow: hidden;

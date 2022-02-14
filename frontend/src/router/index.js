@@ -19,7 +19,8 @@ import FeedDetail from '@/components/FeedDetail'
 import PwFind from '@/components/Settings/PwFind'
 import EmailFind from '@/components/Settings/EmailFind' 
 import ProfileUpdate from '@/components/Settings/ProfileUpdate'
-import SearchResult from '@/components/Search/SearchResult'
+import SearchResult from '@/components/Search/SearchResult/SearchResult'
+import SearchList from '@/components/Search/SearchResult/SearchList'
 
 import store from '../store/index.js'
 
@@ -211,7 +212,7 @@ const routes = [
     ],  
   },
   {
-    path: '/feed/detail',
+    path: '/feed/:feedNo',
     name: 'FeedDetail',
     component: FeedDetail,
     props:true,
@@ -222,15 +223,28 @@ const routes = [
     },
   },
   {
-    path: '/search/',
+    path: '/search',
     name: 'SearchResult',
+    redirect: '/search/feed',
     component: SearchResult,
     meta: {
       loginRequired: true,
-      testRequired: true,
+      testRequired: true, 
       showingNav: true,
     },
-  }
+    children: [
+      {
+        path: ':tab',
+        component: SearchList,
+        props: true,
+        meta: {
+          loginRequired: true,
+          testRequired: true,
+          showingNav: true,
+        },
+      },
+    ]
+  },
 ]
 
 const router = new VueRouter({

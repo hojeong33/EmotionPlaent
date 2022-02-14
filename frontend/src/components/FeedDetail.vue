@@ -1,7 +1,7 @@
 <template>
 	<div id="feed_detail">
 		<div id="img_box">
-			<img id="feedImg" :src="`${postImage}`" alt="">
+      <div v-for="(img, idx) in feed.imgs" :key="idx"><img  id="feedImg" :src="img.imgLink" alt=""></div>
 			<p class="overlay_content" >{{feed.authorDetail.nickname}} <img id="planet_img" :src="require('@/assets/images/emotions/happy.png')" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p>
 		</div>
 		<div id="feed_text">
@@ -12,7 +12,7 @@
 					<p id="upload_date">{{feed.date}}</p>
 				</div>
 				<div id="setting">
-					<i @click="onUserFeedSetting2" class="fas fa-ellipsis-v"></i>
+					<i @click="onModalFeed" class="fas fa-ellipsis-v" style="color:black"></i>
 					<user-feed-setting v-if="isUserFeedSettingOpened" @cancel="isUserFeedSettingOpened=false"></user-feed-setting>
 				</div>
 				<!-- 만약 다른 유저의 피드 디테일이라면 팔로우 버튼이 나타나게 -->
@@ -28,12 +28,12 @@
 				</div>
 				<br>
 				<div id="comments">
-					<div id="comment" v-for="(comment, idx) in comments" :key="idx">
-						<img id="profile_image" :src="`${comment.userImage}`" alt="">
-						<p id="username">{{comment.username}}</p>
-						<p id="user_comment">{{comment.comment}}</p>
+					<div id="comment" v-for="(comment, idx) in commentsData" :key="idx">
+						<img id="profile_image" :src="comment.userRequestDto.profileImg" alt="">
+						<p id="username">{{comment.userRequestDto.nickname}}</p>
+						<p id="user_comment">{{comment.descr}}</p>
 						<div id="comment_setting">
-							<i @click="onCommentSetting" class="fas fa-ellipsis-v"></i>
+              <i @click="onModalComment" class="fas fa-ellipsis-v" style="color:black"></i>
 							<!-- 댓글 하나하나에 유저데이터가 들어가서 해당 유저의 댓글이 지워져야 함-->							
 							<!-- <comment-setting v-if="isCommentSettingOpened" @cancel="isCommentSettingOpened=false"></comment-setting> -->
 						</div>
@@ -42,15 +42,12 @@
 			</div>
 			<hr>
 			<div id="likes">
-				<div v-if="feed.like">
-					<i id="heart" class="fas fa-heart fa-lg" style="color: crimson;" @click="like"></i>
-				</div>
-				<div v-else>
-					<i id="heart" class="far fa-heart fa-lg" @click="like"></i>
-				</div>
-				&nbsp;
-				<p id="like_count">{{ feed.likes }} likes</p>
-			</div>
+        <div id="heart">
+          <i class="far fa-heart fa-lg" :class="{'fas': this.feed.like}"  @click="like"></i>
+        </div>
+        <p id="feed_likes" v-for="(like, idx) in feed.likes" :key="idx">{{like["nickname"]}}</p>
+        <p class="likes">{{feed.likes}} likes</p>
+      </div>
 			<hr>
 			<div id="comment_write">
         <input id="comment-input" @keyup.enter="createComment" v-model.trim="commentContent" placeholder="댓글을 입력해 주세요."> 
@@ -67,41 +64,40 @@ const session = window.sessionStorage;
 export default {
 	data: function () {
 		return {
+      isMineFeed:false,
+      isMineComment:false,
 			feed:null,
-      commentsNo:[],
+      comments:[],
+      commentsData:[],
 			commentContent:null,
 			isCommentSettingOpened:false,
 			isUserFeedSettingOpened: false,
 		}
 	},
-  // computed:{
-  //   feedNo2:this.feedNo
-  // },
 	props:{
 		feedNo:Number,
 	},
 	methods: {
     getComment:function(commentNo){
       let headers = {
-    'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-    'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-    };
-    axios({
-        method: 'get',
-        url:`http://13.125.47.126:8080/comment/${commentNo}`,
-        headers: headers,  // 넣는거 까먹지 마세요
-      }).then((res) => {
-      this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-      console.log('!!!!!!!!!!!!!!!!!!!댓글 하나 가져오기')
-      console.log(res.data)
-      this.commentsData.push(res.data)
-      // this.getComments()
-      }).catch((error) => {
-        console.log(error);
-      }).then(() => {
-        console.log('댓글 하나 가져오기');
-      });
-    },
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+        axios({
+          method: 'get',
+          url:`http://13.125.47.126:8080/comment/${commentNo}`,
+          headers: headers,  // 넣는거 까먹지 마세요
+          }).then((res) => {
+            this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+            this.commentsData.push(res.data)
+            this.isMineComment=res.data.owner
+            // this.getComments()
+          }).catch((error) => {
+            console.log(error);
+          }).then(() => {
+            console.log('댓글 하나 가져오기');
+          });
+        },
     getComments:function(){
       let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
@@ -111,25 +107,20 @@ export default {
           method: 'get',
           url:`http://13.125.47.126:8080/comments/returnNo/${this.feedNo}`,
           headers: headers,  // 넣는거 까먹지 마세요
-        }).then((res) => {
-        this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-        console.log('!!!!!!!!!!!!!!!!!!!댓글 여러개 가져오기')
-        console.log(res.data)
-        this.comments=res.data
-        this.commentsData=[]
-        for (let i=0; i<this.comments.length; i++){
-          const commentNo=this.comments[i]
-          this.getComment(commentNo)
-        }
-        this.commentsList=this.commentsData.slice(0,2)
-        console.log(this.commentsList)
-        
-        }).catch((error) => {
-          console.log(error);
-        }).then(() => {
-          console.log('댓글 목록 가져오기');
-        });
-    },
+          }).then((res) => {
+          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+          this.comments=res.data.reverse()
+          this.commentsData=[]
+          for (let i=0; i<this.comments.length; i++){
+            const commentNo=this.comments[i]
+            this.getComment(commentNo)
+          }
+          }).catch((error) => {
+            console.log(error);
+          }).then(() => {
+            console.log('댓글 목록 가져오기');
+          });
+        },
     createComment:function(){
       const userdata = JSON.parse(session.getItem('userInfo')) 
       const commentItem={
@@ -168,7 +159,6 @@ export default {
         this.$store.commit('commentNeedContentModalActivate')
       }
     },
-
 		getFeed:function(){
 		let headers = {
 			'at-jwt-access-token': session.getItem('at-jwt-access-token'),
@@ -182,17 +172,82 @@ export default {
 			this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
 			this.feed=res.data
 			console.log(this.feed)
-			// this.isMine=res.data.owner
+      this.getComments()
+			this.isMineFeed=res.data.owner
 			}).catch((error) => {
 				console.log(error);
 			}).then(() => {
 				console.log('피드 하나 가져오기');
 			});
 		},
-		like: function () {
-			this.liked = !this.liked
-			console.log(this.liked)
-		},
+    like:function(){
+      this.feed.like ? this.cancelLike(): this.doLike();
+      this.feed.like= !this.feed.like;
+    },
+    doLike:function(){
+      const userdata = JSON.parse(session.getItem('userInfo')) ;
+      const likeItem={
+        targetNo:this.feedNo,
+        userNo:userdata.no,
+      }
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+        axios({
+            method: 'post',
+            url:`http://13.125.47.126:8080/feeds/like`,
+            data:likeItem,
+            headers: headers,  // 넣는거 까먹지 마세요
+          }).then((res) => {
+          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+          this.getFeed()
+          }).catch((error) => {
+            console.log(error);
+          }).then(() => {
+            console.log('피드 좋아요');
+          });
+    },
+    cancelLike:function(){
+      const userdata = JSON.parse(session.getItem('userInfo')) ;
+      const likeItem={
+        targetNo:this.feedNo,
+        userNo:userdata.no,
+      }
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+        axios({
+            method: 'delete',
+            url:`http://13.125.47.126:8080/feeds/like`,
+            data:likeItem,
+            headers: headers,  // 넣는거 까먹지 마세요
+          }).then((res) => {
+          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+          this.getFeed()
+          }).catch((error) => {
+            console.log(error);
+          }).then(() => {
+            console.log('피드 좋아요');
+          });
+    },
+    onModalFeed:function(){
+      if(this.isMineFeed){
+        this.onCommentSetting()
+      }
+      else{
+        this.onUserFeedSetting2
+      }
+    },
+    onModalComment:function(){
+      if(this.isMineComment){
+        this.onCommentSetting()
+      }
+      else{
+        this.onUserFeedSetting2
+      }
+    },
 		onCommentSetting:function(){
 			this.$store.commit('commentSettingModalActivate')
 			// if(this.isCommentSettingOpened){
@@ -218,6 +273,9 @@ export default {
 </script>
 
 <style scoped>
+.fas{
+    color: crimson;
+  }
 #feed_detail {
 	width: 110vh;
 	height: 80vh;
