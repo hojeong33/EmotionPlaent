@@ -653,7 +653,7 @@ export default new Vuex.Store({
 
       const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
       console.log('decodeAccessToken data', decodeAccessToken);
-      commit('userUpdate', decodeAccessToken.userInfo)
+      commit('userUpdate', decodeAccessToken)
 
       return new Promise((resolve) => {
         resolve(true)

@@ -80,7 +80,7 @@ const routes = [
     component: Userpage,
     meta: {
       loginRequired: true,
-      testRequired: false
+      testRequired:  true,
     },
     children: [
       {
@@ -89,7 +89,7 @@ const routes = [
         props: true,
         meta: {
           loginRequired: true,
-          testRequired: false
+          testRequired: true
         },
       },
       {
@@ -98,7 +98,7 @@ const routes = [
         props: true,
         meta: {
           loginRequired: true,
-          testRequired: false
+          testRequired: true
         },
       }
     ]
