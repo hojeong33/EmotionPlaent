@@ -75,7 +75,7 @@ public class FeedController {
         }
     }
 
-    @GetMapping(value ="/feeds/my/returnNo{no}") // 내가 작성한 피드 목록
+    @GetMapping(value ="/feeds/my/returnNo/{no}") // 내가 작성한 피드 목록
     public ResponseEntity<List<Integer>> myListReturnNo(@PathVariable String no) {
         int userNo = Integer.parseInt(no);
         List<Integer> feeds = feedService.myListReturnNo(userNo);
