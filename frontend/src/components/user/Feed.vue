@@ -1,12 +1,12 @@
 <template>
-  <div id="feed" v-if="feed">
+  <div id="feed">
     <div id="header">
       <section id="profile_image">
-        <img :src="feed.authorDetail.profileImg" />
+        <img :src="this.$store.state.userInfo.profileImg" />
       </section>
       <div id="profile_content">
-        <section id="username" style="font-size:2rem;">{{feed.authorDetail.nickname}}</section>
-        <section style="font-size:1.2rem;">{{feed.date}}</section>
+        <section id="username" style="font-size:2rem;">{{ this.$store.state.userInfo.nickname }}</section>
+        <section style="font-size:1.2rem;">{{ feed.date }}</section>
       </div>
       <div id="setting" style="z-index: 2;" v-if="isMine">
         <i @click="onSetting" class="fas fa-ellipsis-v"></i>
@@ -33,14 +33,14 @@
       <div id="tag">
         <p id="my_tag" v-for="(tag, idx) in feed.tags" :key="idx">#{{tag["name"]}}</p>
       </div> 
-        <p id="caption" style="font-size:1.4rem"><span style="font-weight:bold; margin-right:5px;">{{feed.author}}</span>{{feed.descr}}</p>
+        <p id="caption" style="font-size:1.4rem"><span style="font-weight:bold; margin-right:5px;">{{this.$store.state.userInfo.nickname}}</span>{{feed.descr}}</p>
     </div>
-    <comment-list :feedNo="post"></comment-list>
+    <comment-list :feedNo="feed.no"></comment-list>
   </div>
 </template>
 
 <script>
-import CommentList from './CommentList.vue';
+import CommentList from '@/components/MainPage/FeedTab/CommentList.vue';
 import axios from 'axios';
 const session = window.sessionStorage;
 
@@ -48,14 +48,13 @@ export default {
   components: { CommentList },
   name: "Feed",
   props: {
-    post: Number,
+    feed: Object,
   },
   data(){
     return{
       // date:this.post.date.toLocaleDateString(),
       isMine:false,
       isOpend:false,
-      feed:null,
       posts:[],
       planetStyles: [
         { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
@@ -199,10 +198,10 @@ export default {
     
     /* background-color: antiquewhite; */
   }
-  /* #post_image img{
+  #post_image img{
     width: 90vh;
     height: 90vh;
-  } */
+  }
   #post_image{
     position: relative;
     overflow: hidden;

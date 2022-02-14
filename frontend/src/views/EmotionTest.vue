@@ -295,6 +295,7 @@
     justify-content: flex-start;
     align-items: center;
     border-radius: 20px;
+    border: 2px #5E39B3 solid ;
     padding: 3rem 4rem 1.5rem;
     }
 

@@ -1,31 +1,37 @@
 <template>
   <div id="profile_img_change_modal">
     <div id="modal">
-      <h3>프로필 사진 바꾸기</h3>
+      <div id="header">
+        <h3>프로필 사진 바꾸기</h3>
 
-      <div v-if="!images">
-        <!-- 이미지 미리보기 만들어야 함 -->
-        <img
-          src="../../assets/images/icons/image.png"
-          alt=""
-          id="default-img"
+        <div v-if="!images" id="thumbnail">
+          <!-- 이미지 미리보기 만들어야 함 -->
+          <img
+            src="../../assets/images/icons/image.png"
+            alt=""
+            id="default-img"
+          />
+          <p id="img-text">이미지를 올려주세요</p>
+        </div>
+        <div v-else>
+          <img :src="images" alt="" />
+        </div>
+      </div>
+
+      <div id="uploading">
+        <label for="file">이미지 업로드</label>
+        <input
+          type="file"
+          id="file"
+          accept="image/*"
+          @change="imgUpload"
+          ref="feedImg"
         />
-        <p id="img-text">이미지를 올려주세요</p>
       </div>
-      <div v-else>
-        <img :src="images" alt="" />
+      <div id="footer_buttons">
+        <button @click="changeprofileImg">변경하기</button>
+        <button @click="cancel">취소</button>
       </div>
-
-      <label for="file">이미지 업로드</label>
-      <input
-        type="file"
-        id="file"
-        accept="image/*"
-        @change="imgUpload"
-        ref="feedImg"
-      />
-      <button @click="changeprofileImg">변경하기</button>
-      <button @click="cancel">취소</button>
     </div>
   </div>
 </template>
@@ -69,7 +75,7 @@ export default {
           this.$store.dispatch("allTokenRefreshOnUserInfo", res); // store아닌곳에서
           this.$store.state.userInfo.profileImg = this.images
           this.cancel()
-          this.$router.push('/main')
+          this.$router.go(-1)
         })
         .catch((error) => {
           console.log("이미지 변경 실패");
@@ -100,18 +106,65 @@ export default {
 #modal {
   display: flex;
   flex-direction: column;
+  justify-content: center;
+  align-items: center;
   background-color: white;
   border-radius: 20px;
   width: 20vw;
   height: 50vh;
   text-align: center;
 }
-hr {
-  margin: 0rem;
+
+h3 {
+  margin: 0rem 2rem 1rem;
 }
 p {
   margin: auto;
   font-weight: bold;
   cursor: pointer;
 }
+
+#header {
+  height: 45%;
+}
+
+#uploading {
+  display: flex;
+  width: 100%;
+  height: 25%;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-top: 0.2rem solid gainsboro;
+  border-bottom: 0.2rem solid gainsboro;
+}
+
+#file {
+  width: 80%;
+}
+
+#default-img {
+  width: 5rem;
+  height: 5rem;
+}
+
+button {
+  background-color: #5E39B3;
+  color: white;
+  font-size: 1rem;
+  font-weight: bold;
+  border: 1px #5E39B3 solid;
+  border-radius: 20px;
+  padding: 0.6rem 1.5rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  line-height: 1rem;
+}
+#footer_buttons {
+  display: flex;
+  width: 80%;
+  justify-content: space-around;
+  padding-top: 2rem;
+}
+
 </style>

@@ -1,16 +1,16 @@
 <template>
   <div class="feed-s">
-    <img class="feed-s-thumbnail" :src="feed.imgs[0].imgLink" :alt="feed.authorDetail.nickname"
+    <img class="feed-s-thumbnail" :src="post.imgs[0].imgLink" :alt="this.$store.state.userInfo.username"
     @mouseover="hover = true">
     <img class="feed-planet" :src="require(`@/assets/images/emotions/${planet}`)" id="planet">
     <span class="feed-s-info" v-show="hover" @mouseleave="hover = false">
       <span class="info">
         <img src="@/assets/images/icons/heart.png" alt="heart">
-        <p>{{ feed.likes }}</p>
+        <p>{{ post.likes }}</p>
       </span>
       <span class="info">
         <img src="@/assets/images/icons/chat.png" alt="comment">
-        <p>{{ feed.comments.length }}</p>
+        <p>{{ post.comments.length }}</p>
       </span>
     </span>
   </div>
@@ -33,11 +33,11 @@ export default {
     }
   },
   props: {
-    feed: Object
+    post: Object,
   },
   computed: {
     planet() {
-			const idx = this.feed.tags[0].no
+			const idx = this.post.tags[0].no
 			if (idx){
 				return this.planetStyles[idx].img
 			}
@@ -87,6 +87,12 @@ export default {
     padding: 1rem;
   }
 
+  .info {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+  }
+
   .feed-planet {
 		position: absolute;
 		width: 25%;
@@ -97,10 +103,4 @@ export default {
 		border: 3px solid;
 		border-color: white;
 	}
-
-  .info {
-    display: flex;
-    flex-wrap: nowrap;
-    align-items: center;
-  }
 </style>
