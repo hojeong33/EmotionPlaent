@@ -162,12 +162,17 @@ public class FeedServiceImpl implements FeedService{
 
         List<CommentDto> comments = commentDao.list(no);
         List<ImgDto> imgs = imgDao.list(no);
+        List<TagDto> tags = tagDao.list(no);
         for(CommentDto comment : comments){
             commentDao.delete(comment.getNo());
         }
         for(ImgDto img : imgs){
-            s3Service.deleteFile(img.getImgName());
+            s3Dao.deleteByNo(img.getNo());
         }
+        for(TagDto tag : tags){
+            tagDao.deleteRelation(tag.getNo(), no);
+        }
+
         return feedDao.delete(no);
     }
 

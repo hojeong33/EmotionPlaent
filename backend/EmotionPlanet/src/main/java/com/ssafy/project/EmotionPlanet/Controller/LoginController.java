@@ -1,5 +1,6 @@
 package com.ssafy.project.EmotionPlanet.Controller;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 import javax.websocket.Session;
 
@@ -92,7 +93,7 @@ public class LoginController {
             user.setRefreshToken(atJWT.getRefreshJws());
             userService.userRefreshToken(user);
 
-            return ResponseEntity.ok().headers(res).body(userDto);
+            return ResponseEntity.ok().headers(res).body(user);
         } else {
         	System.out.println("로그인 실패");
             ErrorDto errorDto = new ErrorDto();
@@ -129,11 +130,23 @@ public class LoginController {
 
     
     /////////////////////////카카오
+
+    @GetMapping(value = "/login/getKakaoAuthUrl")
+    public ResponseEntity<?> getKakaoAuthUrl(
+            HttpServletRequest request) throws Exception {
+        String reqUrl =
+                "https://kauth.kakao.com/oauth/authorize"
+                        + "?client_id=54115c9fc805ecfb96348d18733e6e4a"
+                        + "&redirect_uri=http://localhost:8080/login/oauth_kakao"
+                        + "&response_type=code";
+
+        return ResponseEntity.ok().body(reqUrl);
+    }
+
     // 카카오 연동정보 조회
     @RequestMapping(value = "/login/oauth_kakao")
-    public String oauthKakao(
-            @RequestParam(value = "code", required = false) String code
-            , Model model) throws Exception {
+    public ResponseEntity<?> oauthKakao(
+            @RequestBody String code) throws Exception {
 
         System.out.println("#########" + code);
         String access_Token = principalOauth2UserService.getAccessToken(code);
@@ -146,9 +159,29 @@ public class LoginController {
         System.out.println("###nickname#### : " + userInfo.get("nickname"));
 
         JSONObject kakaoInfo =  new JSONObject(userInfo);
-        model.addAttribute("kakaoInfo", kakaoInfo);
+        UserDto userDto = new UserDto();
+        userDto.setEmail((String) userInfo.get("email"));
+        userDto.setNickname((String) userInfo.get("nickname"));
+        userDto.setProfileImg((String) userInfo.get("profile_image_url"));
+        userDto.setPw(bCryptPasswordEncoder.encode("security"));
 
-        return "/home"; //본인 원하는 경로 설정
+        principalOauth2UserService.insertUser(userDto);
+        UserDto user = userService.userSelectByEmail(userDto.getEmail());
+        UserSecretDto userSecretDto = new UserSecretDto();
+        userSecretDto = new UserSecretDto(user.getNo(), user.getEmail(),
+                user.getNickname(), user.getBirth(), user.getProfileImg(),
+                user.getTel(), user.getIntro() , user.getPublish(), user.getMood());
+
+        HttpHeaders res = new HttpHeaders();
+        TokenDto atJWT = jwtService.create(userSecretDto);
+        System.out.println("로그인 컨트롤 atJWT");
+        System.out.println(atJWT);
+        res.add("at-jwt-access-token", atJWT.getAccessJws());
+        res.add("at-jwt-refresh-token", atJWT.getRefreshJws());
+        user.setRefreshToken(atJWT.getRefreshJws());
+        userService.userRefreshToken(user);
+
+        return ResponseEntity.ok().headers(res).body(kakaoInfo);
     }
 
     @GetMapping(value = "/qss/list")

@@ -2,6 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Login from '@/views/accounts/Login'
 import Signup from '@/views/accounts/Signup'
+import KaKaoLogin from '@/views/accounts/KaKaoLogin'
 import EmotionTest from '@/views/EmotionTest'
 
 import Mypage from '@/views/user/Mypage.vue'
@@ -27,6 +28,15 @@ const routes = [
     path: '/login',
     name: 'Login',
     component: Login,
+    meta: {
+      loginRequired: false,
+      testRequired: false
+    }
+  },
+  {
+    path: '/login/KaKaoLogin',
+    name: 'KaKaoLogin',
+    component: KaKaoLogin,
     meta: {
       loginRequired: false,
       testRequired: false

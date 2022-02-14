@@ -33,6 +33,7 @@ public class JwtInterceptor implements HandlerInterceptor {
         System.out.println("at-jwt-access-token : " + atJwtToken);
         System.out.println("at-jwt-refresh-token : " + atJwtRefreshToken);
         System.out.println("request method : " + request.getMethod());
+        System.out.println("request URI : " + request.getRequestURI());
 
         if ("OPTIONS".equals(request.getMethod())) {
             System.out.println("request method is OPTIONS!!");
