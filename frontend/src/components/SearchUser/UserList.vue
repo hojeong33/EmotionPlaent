@@ -28,10 +28,10 @@
 </template>
 
 <script>
-import FilterTab from '@/components/user/FilterTab'
+import FilterTab from '@/components/SearchUser/FilterTab'
 // import FeedItem from '@/components/user/FeedItem'
-import FeedList from '@/components/user/FeedList'
-import PickList from '@/components/user/PickList'
+import FeedList from '@/components/SearchUser/FeedList'
+import PickList from '@/components/SearchUser/PickList'
 
 export default {
 	name: 'UserFeed',
@@ -67,8 +67,9 @@ export default {
 	},
 	computed: {
 		filteredFeeds(){
+			console.log(this.$store.state.searchUserInfo)
 			if (this.filter){
-				this.$store.state.userFeedInfo.forEach(feed => {
+				this.$store.state.searchUserFeedInfo.forEach(feed => {
 					if (feed.tags[0].no == this.filter){
 						this.filteredFeed.push(feed)
 					}
@@ -76,7 +77,7 @@ export default {
 				console.log(this.filteredFeed)
 				return this.filteredFeed
 			}
-			return this.$store.state.userFeedInfo
+			return this.$store.state.searchUserFeedInfo
 		},
 		filteredPicks(){
       const temp = []
