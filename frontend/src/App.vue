@@ -3,6 +3,7 @@
     <navigation />
     <create v-if="navActive[0]" />
     <router-view/>
+    <!-- 모달창 -->
     <logout-modal v-if="logoutModalActive" />
     <user-feed-setting v-if="userFeedSettingModalActive" />
     <user-feed-setting2 v-if="userFeedSettingModalActive2" />
@@ -23,6 +24,13 @@
     <more-info-confirm v-if="moreInfoConfirmModalActive" />
     <more-info-error v-if="signupFailModalActive1" />
     <update v-if="feedUpdateActive" />
+    <pick-your-image v-if="pickYourImageModalActive" />
+    <too-much-images-modal v-if="tooMuchImagesModalActive" />
+    <pick-your-tag v-if="pickYourTagModalActive" />
+    <mypage-follower-list v-if="mypagefollowerListActive" />
+    <mypage-following-list v-if="mypagefollowingListActive" />
+    <userpage-follower-list v-if="userpagefollowerListActive" />
+    <userpage-following-list v-if="userpagefollowingListActive" />
   </div>
 </template>
 
@@ -52,9 +60,18 @@ import FirstEmotionTestConfirm from '@/components/Modal/EmotionTestModal/FirstEm
 import EmotionTestError from '@/components/Modal/EmotionTestModal/EmotionTestError.vue'
 import EmotionTestPickMore from '@/components/Modal/EmotionTestModal/EmotionTestPickMore.vue'
 import EmotionTestResult from '@/components/Modal/EmotionTestModal/EmotionTestResult.vue'
+//// 피드 관련
+import PickYourImage from '@/components/Modal/FeedCreateModal/PickYourImage.vue'
+import TooMuchImagesModal from '@/components/Modal/FeedCreateModal/TooMuchImagesModal.vue'
+import PickYourTag from '@/components/Modal/FeedCreateModal/PickYourTag.vue'
 // 기타
 import ProfileImgChange from '@/components/Modal/ProfileImgChange.vue'
 import CommentNeedContent from '@/components/Modal/CommentNeedContent.vue'
+//팔로우, 팔로워
+import MypageFollowingList from '@/components/Modal/FollowModal/Mypage/MypageFollowingList.vue'
+import MypageFollowerList from '@/components/Modal/FollowModal/Mypage/MypageFollowerList.vue'
+import UserpageFollowingList from '@/components/Modal/FollowModal/Userpage/UserpageFollowingList.vue'
+import UserpageFollowerList from '@/components/Modal/FollowModal/Userpage/UserpageFollowerList.vue'
 
 import { mapState } from 'vuex'
 
@@ -85,6 +102,14 @@ export default {
     CommentNeedContent,
     MoreInfoConfirm,
     MoreInfoError,
+    PickYourImage,
+    TooMuchImagesModal,
+    PickYourTag,
+    MypageFollowingList,
+    MypageFollowerList,
+    UserpageFollowingList,
+    UserpageFollowerList,
+    
 
   },
   computed:
@@ -92,7 +117,8 @@ export default {
       'navActive', 'modalActive', 'profileImgChangeModalActive', 'commentSettingModalActive', 'logoutModalActive', 'userFeedSettingModalActive', 'userFeedSettingModalActive2', 'loginConfirmModalActive', 
       'signupConfirmModalActive', 'emotionTestTooMuchPickModalActive', 'firstEmotionTestConfirmModalActive', 'emotionTestErrorActive', 'emotionTestPickMoreModalActive', 
       'emotionTestResultModalActive', 'loginFailModalActive', 'signupFailModalActive1', 'signupFailModalActive2', 'ReturnToLoginModalActive', 'commentNeedContentModalActive',
-      'moreInfoConfirmModalActive', 'feedUpdateActive',
+      'moreInfoConfirmModalActive', 'feedUpdateActive', 'pickYourImageModalActive', 'tooMuchImagesModalActive', 'pickYourTagModalActive', 'mypagefollowingListActive', 'mypagefollowerListActive',
+      'userpagefollowingListActive', 'userpagefollowerListActive',
     ]),
     // feedActive(){
     //   console.log(this.$store.state.navActive[0])
@@ -104,12 +130,13 @@ export default {
 
 
 <style scoped>
-  #app {
-    font-family: Avenir, Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    position: relative;
-  }
+#app {
+font-family: '비트로 프라이드 TTF', sans-serif !important;
+}
+@font-face {
+  font-family:'비트로 프라이드 TTF';
+  src: url('assets/font/비트로 프라이드 TTF.ttf') format('truetype');
+}
+
+
 </style>

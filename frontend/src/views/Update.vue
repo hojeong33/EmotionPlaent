@@ -106,8 +106,9 @@ export default {
       this.uploadImageIndex = num + 1;
 
       if (this.feedImages.length > 3) {
-        alert('사진이 너무 많습니다')
         this.feedImages = []
+        // alert('사진이 너무 많습니다')
+        this.$store.commit('tooMuchImagesModalActivate')
       } else {
         this.$store.commit('feedImg', this.feedImages)
         this.$store.commit('rawImg', this.rawImage)
@@ -204,10 +205,10 @@ export default {
       console.log('getQSSList End!!');
     });
   },
-  mounted(){
-    const container = document.getElementById('update_container')
-    container.setAttribute('style', `height:${window.innerHeight}px`)
-  }
+  // mounted(){
+  //   const container = document.getElementById('update_container')
+  //   container.setAttribute('style', `height:${window.innerHeight}px`)
+  // }
 }
 </script>
 
@@ -379,12 +380,12 @@ button {
   border: none;
   border-radius: 50%;
   opacity: 0.75;
+  position: absolute;
   width: 2rem;
   height: 2rem;
   top: 45%;
-  right: 50%;
+  right: 1000%;
   cursor: pointer;
-  position: absolute;
 }
 .carousel-btn2 {
   background-size: cover;

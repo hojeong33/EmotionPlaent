@@ -57,7 +57,8 @@ export default {
     },
     nextPage(){
       if (this.images.length === 0) {
-        alert('이미지를 선택해주세요')
+        // alert('이미지를 선택해주세요')
+        this.$store.commit('pickYourImageModalActivate')
       } else {
         this.$emit('next-page')
       }
@@ -82,8 +83,9 @@ export default {
       this.uploadImageIndex = num + 1;
 
       if (this.images.length > 3) {
-        alert('사진이 너무 많습니다')
+        // alert('사진이 너무 많습니다')
         this.images = []
+        this.$store.commit('tooMuchImagesModalActivate')
       } else {
         this.$store.commit('feedImg', this.images)
         this.$store.commit('rawImg', this.rawImage)

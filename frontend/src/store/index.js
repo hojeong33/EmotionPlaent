@@ -83,6 +83,14 @@ export default new Vuex.Store({
     commentNeedContentModalActive:false,
     moreInfoConfirmModalActive: false,
     feedUpdateActive: false,
+    pickYourImageModalActive: false,
+    tooMuchImagesModalActive: false,
+    pickYourTagModalActive: false,
+    mypagefollowingListActive: false,
+    mypagefollowerListActive: false,
+    userpagefollowingListActive: false,
+    userpagefollowerListActive: false,
+  
     // 모달의 에러 메시지
     serverErrorMessage: '',
     loginErrorMessage: '',
@@ -118,26 +126,24 @@ export default new Vuex.Store({
 
     userUpdate(state, payload){
       console.log("userUpdate 접근 =====")
+      console.log(payload)
       const userdata = JSON.parse(session.getItem('userInfo')) 
       if (!session.getItem('userInfo')){
-        session.setItem('userInfo', JSON.stringify(payload)) //토큰값으로 들어오면 
-      }
-
-      else if (payload === 0) { // 아직 안할래요 눌렀을 때
-        userdata.mood = payload
-        session.setItem('userInfo', JSON.stringify(userdata))
+        session.setItem('userInfo', JSON.stringify(payload.userInfo)) //토큰값으로 들어오면 
       }
       
-      else if(typeof(payload) == 'number'){ // 감테하고 넘길때
-        userdata.userInfo.mood = payload
-        session.setItem('userInfo', JSON.stringify(userdata.userInfo))
-      } 
+      // else if(typeof(payload) == 'number'){ // 감테하고 넘길때
+      //   userdata.mood = payload
+      //   session.setItem('userInfo', JSON.stringify(userdata))
+      // } 
       
       else if (session.getItem('userInfo')){
-        session.setItem('userInfo', JSON.stringify(payload)) 
+        session.setItem('userInfo', JSON.stringify(payload.userInfo)) 
       }
+
+
       console.log('userUpdate 완료 ======' + session.getItem('userInfo'))
-      state.userInfo = userdata
+      state.userInfo = JSON.parse(session.getItem('userInfo')) 
       return userdata
     },
 
@@ -246,7 +252,36 @@ export default new Vuex.Store({
     feedUpdateActivate: function (state) {
       state.feedUpdateActive = !state.feedUpdateActive
       console.log(state.feedUpdateActive)
-    }
+    },
+    pickYourImageModalActivate: function (state) {
+      state.pickYourImageModalActive = !state.pickYourImageModalActive
+      console.log(state.pickYourImageModalActive)
+    },
+    tooMuchImagesModalActivate: function (state) {
+      state.tooMuchImagesModalActive = !state.tooMuchImagesModalActive
+      console.log(state.tooMuchImagesModalActive)
+    },
+    pickYourTagModalActivate: function (state) {
+      state.pickYourTagModalActive = !state.pickYourTagModalActive
+      console.log(state.pickYourTagModalActive)
+    },
+    mypagefollowingListActivate: function (state) {
+      state.mypagefollowingListActive = !state.mypagefollowingListActive
+      console.log(state.mypagefollowingListActive)
+    },
+    mypagefollowerListActivate: function (state) {
+      state.mypagefollowerListActive = !state.mypagefollowerListActive
+      console.log(state.mypagefollowerListActive)
+    },
+    userpagefollowingListActivate: function (state) {
+      state.userpagefollowingListActive = !state.userpagefollowingListActive
+      console.log(state.userpagefollowingListActive)
+    },
+    userpagefollowerListActivate: function (state) {
+      state.userpagefollowerListActive = !state.userpagefollowerListActive
+      console.log(state.userpagefollowerListActive)
+    },
+    
   },
   actions: {
 
@@ -623,7 +658,7 @@ export default new Vuex.Store({
       session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
       const decodeAccessToken = jwt.decode(res.headers['at-jwt-access-token']);
       console.log('decodeAccessToken data', decodeAccessToken);
-      commit('userUpdate', decodeAccessToken.userInfo)
+      commit('userUpdate', decodeAccessToken)
     },
 
     allTokenRefresh({commit},res){

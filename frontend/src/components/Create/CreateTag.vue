@@ -41,7 +41,8 @@ export default {
     },
     nextPage(){
       if (!this.selectChecked) {
-        alert('행동 태그를 선택해주세요')
+        // alert('행동 태그를 선택해주세요')
+        this.$store.commit('pickYourTagModalActivate')
       } else {
         this.$emit('next-page')
       }
