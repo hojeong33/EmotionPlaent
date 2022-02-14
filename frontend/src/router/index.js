@@ -67,7 +67,7 @@ const routes = [
     },
     children: [
       {
-        path: ':tap',
+        path: ':tab',
         component: List,
         props: true,
         meta: {
@@ -100,7 +100,7 @@ const routes = [
     },
     children: [
       {
-        path: ':tap',
+        path: ':tab',
         component: List,
         props: true,
         meta: {
@@ -241,26 +241,12 @@ const router = new VueRouter({
 let token = window.sessionStorage.getItem('at-jwt-access-token');
 const jwt = require('jsonwebtoken');
 const decodeAccessToken = jwt.decode(token)
-const body = document.querySelector('body')
-
-function backgroundSet(payload){
-  if (payload){
-    body.setAttribute('class', 'astro')
-  }
-  else {
-    body.removeAttribute('class')
-  }
-  return new Promise((resolve) => {
-    console.log('background update!!', payload)
-    resolve()
-  })
-}
 
 //유저 정보 업데이트
 const userUpdate = new Promise(() => {
   console.log('user data updated!')
   if(decodeAccessToken != null){
-  store.commit('userUpdate', decodeAccessToken.userInfo)
+  store.commit('userUpdate', decodeAccessToken)
   }
 })
 
@@ -274,17 +260,8 @@ router.beforeEach((to, from, next) => {
     console.log('do not matched!!')
     next({ name:'Main' })
   }
-
+  //네비게이션 랜더 유무
   store.commit('navActivate2', to.meta.showingNav)
- 
-
-  if (!to.meta.loginRequired || !to.meta.testRequired){
-    backgroundSet(true).then(() => next())
-  }
-  else {
-    console.log('why did you call me?')
-    backgroundSet(false).then(() => next())
-  }
 
   // 네비게이션 바 Active와 매칭
   if (to.name == 'Main'){store.commit('navActivate', 1)}
@@ -311,6 +288,8 @@ router.beforeEach((to, from, next) => {
     console.log('메인')
     next({ name:'Main' })
   }
+
+  next()
 })
 
 // router.push의 중복 에러 해결방법

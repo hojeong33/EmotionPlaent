@@ -131,6 +131,7 @@ export default new Vuex.Store({
       console.log("userUpdate 접근 =====")
       console.log(payload)
       const userdata = JSON.parse(session.getItem('userInfo')) 
+      console.log(userdata)
       if (!session.getItem('userInfo')){
         session.setItem('userInfo', JSON.stringify(payload.userInfo)) //토큰값으로 들어오면 
       }
@@ -147,7 +148,7 @@ export default new Vuex.Store({
 
       console.log('userUpdate 완료 ======' + session.getItem('userInfo'))
       state.userInfo = JSON.parse(session.getItem('userInfo')) 
-      return userdata
+      // return userdata
     },
 
     tokenTest(){
