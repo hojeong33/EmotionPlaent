@@ -122,6 +122,7 @@ export default {
 </script>
 
 <style scoped>
+
 .container {
   width: 50vw;
   min-width: 700px;
