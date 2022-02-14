@@ -9,7 +9,7 @@
         <section style="font-size:1.2rem;">{{feed.date}}</section>
       </div>
       <div id="setting" style="z-index: 2;" v-if="isMine">
-        <i @click="onSetting" class="fas fa-ellipsis-v"></i>
+        <i @click="onSetting" class="fas fa-ellipsis-v" style="color:black"></i>
         <div id="detail" v-if="isOpend" style="" >
           <p style="margin-bottom:0; margin-top:1rem;">수정</p>
           <hr>
@@ -19,15 +19,15 @@
     </div>
     <div id="post_image" style="z-index: 1;">
       <div id="my_img" v-for="img in feed.imgs" :key="img"><div><img :src="img.imgLink" alt=""></div></div>
-      <!-- <img :src="post.postImage" alt="" v> -->
-      <!-- <p class="overlay_content" >{{post.author}}님은 {{post.tag[0]}} <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p> -->
+      <!-- <img :src="feed.postImage" alt="" > -->
+      <!-- <p class="overlay_content" >{{feed.authorDetail.nickname}}님은 {{feed.tags[1]}} <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p> -->
     </div>
     <div id="like">
       <div id="heart">
-        <i class="far fa-heart fa-lg" :class="{'fas': this.feed.like}" @click="like"></i>
+        <i class="far fa-heart fa-lg" :class="{'fas': this.feed.like}"  @click="like"></i>
       </div>
        <p id="feed_likes" v-for="like in feed.likes" :key="like">{{like["nickname"]}}</p>
-      <p class="likes" >{{feed.likes}} likes</p>
+      <p class="likes">{{feed.likes}} likes</p>
     </div>
     <div id="content">
       <div id="tag">
@@ -69,12 +69,13 @@ export default {
   },
    computed: {
     tmp: function () {
-      const name = this.feed.planet
+      const name = this.feed.tags[0]
       const style = this.planetStyles.find(el => el.name === name) || {}
       return style
     }
   },
   methods: {
+    
     onSetting:function(){
       if(this.isOpend){
         this.isOpend=false
@@ -83,8 +84,79 @@ export default {
       }
     },
     like() {
-      this.feed.like ? this.feed.likes-- : this.feed.likes++;
+      this.feed.like ? this.cancelLike(): this.doLike();
       this.feed.like= !this.feed.like;
+    },
+    doLike:function(){
+      const userdata = JSON.parse(session.getItem('userInfo')) ;
+      const likeItem={
+        targetNo:this.post,
+        userNo:userdata.no,
+      }
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+        axios({
+            method: 'post',
+            url:`http://13.125.47.126:8080/feeds/like`,
+            data:likeItem,
+            headers: headers,  // 넣는거 까먹지 마세요
+          }).then((res) => {
+          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+          this.getFeed()
+          }).catch((error) => {
+            console.log(error);
+          }).then(() => {
+            console.log('피드 좋아요');
+          });
+    },
+    getFeed:function(){
+       let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+        axios({
+            method: 'get',
+            url:`http://13.125.47.126:8080/feed/${this.post}`,
+            headers: headers,  // 넣는거 까먹지 마세요
+          }).then((res) => {
+          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+          console.log('!!!!!!!!!!!!!!!!!!!')
+          console.log(res.data)
+          this.feed=res.data
+          this.isMine=res.data.owner
+          }).catch((error) => {
+            console.log(error);
+          }).then(() => {
+            console.log('피드 하나 가져오기');
+          });
+    },
+    cancelLike:function(){
+      const userdata = JSON.parse(session.getItem('userInfo')) ;
+      const likeItem={
+        targetNo:this.post,
+        userNo:userdata.no,
+      }
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+        axios({
+            method: 'delete',
+            url:`http://13.125.47.126:8080/feeds/like`,
+            data:likeItem,
+            headers: headers,  // 넣는거 까먹지 마세요
+          }).then((res) => {
+          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+          this.getFeed()
+          }).catch((error) => {
+            console.log(error);
+          }).then(() => {
+            console.log('피드 좋아요');
+          });
+      
+
     },
     
     // getComments:function(){
@@ -112,25 +184,7 @@ export default {
     
   },
   created(){
-    let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-    };
-    axios({
-        method: 'get',
-        url:`http://13.125.47.126:8080/feed/${this.post}`,
-        headers: headers,  // 넣는거 까먹지 마세요
-      }).then((res) => {
-      this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-      console.log('!!!!!!!!!!!!!!!!!!!')
-      console.log(res.data)
-      this.feed=res.data
-      this.isMine=res.data.owner
-      }).catch((error) => {
-        console.log(error);
-      }).then(() => {
-        console.log('피드 하나 가져오기');
-      });
+   this.getFeed()
     
   }
   
@@ -138,6 +192,9 @@ export default {
 </script>
 
 <style scoped>
+  .fas{
+    color: crimson;
+  }
   #setting{
     font-size: 2rem;
     margin-left: auto;

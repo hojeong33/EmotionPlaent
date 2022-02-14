@@ -2,14 +2,14 @@
 	<div id="feed_detail">
 		<div id="img_box">
 			<img id="feedImg" :src="`${postImage}`" alt="">
-			<p class="overlay_content" >조은누리님은 행복행성 <img id="planet_img" :src="require('@/assets/images/emotions/happy.png')" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p>
+			<p class="overlay_content" >{{feed.authorDetail.nickname}} <img id="planet_img" :src="require('@/assets/images/emotions/happy.png')" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p>
 		</div>
 		<div id="feed_text">
 			<div id="text_head">
-				<img id="profile_image" :src="`${userImage}`" alt="">
+				<img id="profile_image" :src="feed.authorDetail.profileImg" alt="">
 				<div id="profile_info">
-					<p id="username">{{ username }}</p>
-					<p id="upload_date">date</p>
+					<p id="username">{{feed.authorDetail.nickname }}</p>
+					<p id="upload_date">{{feed.date}}</p>
 				</div>
 				<div id="setting">
 					<i @click="onUserFeedSetting2" class="fas fa-ellipsis-v"></i>
@@ -20,11 +20,11 @@
 			<hr>
 			<div id="text_body">
 				<div>
-					<p id="caption">{{caption}}</p>
+					<p id="caption">{{feed.descr}}</p>
 				</div>
 				<br>
 				<div id="tags">
-					<p id="tag" v-for="(t, idx) in tag" :key="idx">#{{ t }}</p>
+					<p id="tag" v-for="(t, idx) in feed.tags" :key="idx">#{{ t['name'] }}</p>
 				</div>
 				<br>
 				<div id="comments">
@@ -42,14 +42,14 @@
 			</div>
 			<hr>
 			<div id="likes">
-				<div v-if="liked">
+				<div v-if="feed.like">
 					<i id="heart" class="fas fa-heart fa-lg" style="color: crimson;" @click="like"></i>
 				</div>
 				<div v-else>
 					<i id="heart" class="far fa-heart fa-lg" @click="like"></i>
 				</div>
 				&nbsp;
-				<p id="like_count">{{ likes }} likes</p>
+				<p id="like_count">{{ feed.likes }} likes</p>
 			</div>
 			<hr>
 			<div id="comment_write">
@@ -61,61 +61,137 @@
 </template>
 
 <script>
-
+import axios from 'axios';
+const session = window.sessionStorage;
 
 export default {
 	data: function () {
 		return {
-			username: "조은누리",
-			date:"2022-01-01",
-			userImage: "https://newspenguin.com/news/photo/202006/1837_5156_215.jpg",
-			postImage:
-				"http://cdn.catholicnews.co.kr/news/photo/202001/22135_43951_5525.jpg",
-			tag:["우울행성","보았어요","밤하늘"],
-			likes: 36,
-			hasBeenLiked: false,
-			caption: "안녕하세요~~~~~ 오늘 내 기분은 ☀️!!! 랄라라라라라라라라라라라라라",
-			comment_cnt:"2",
-			comments:[
-				{
-					userImage: "https://s3.ap-northeast-2.amazonaws.com/elasticbeanstalk-ap-northeast-2-176213403491/media/magazine_img/magazine_280/5-3-%EC%8D%B8%EB%84%A4%EC%9D%BC.jpg",
-					username: '최강상후',
-					comment: "반가워요",
-				},
-				{
-					userImage: "https://i0.wp.com/dailypetcare.net/wp-content/uploads/2020/11/Screen-Shot-2020-11-24-at-9.10.35-PM-edited-e1606302091776.png?fit=1236%2C694&ssl=1",
-					username: 'soonil',
-					comment: "안녕하세요"
-				}
-				],
-			planet:"행복행성",
-			// commentContent: null
-			liked: false,
+			feed:null,
+      commentsNo:[],
 			commentContent:null,
 			isCommentSettingOpened:false,
 			isUserFeedSettingOpened: false,
 		}
 	},
+  // computed:{
+  //   feedNo2:this.feedNo
+  // },
+	props:{
+		feedNo:Number,
+	},
 	methods: {
+    getComment:function(commentNo){
+      let headers = {
+    'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+    'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+    };
+    axios({
+        method: 'get',
+        url:`http://13.125.47.126:8080/comment/${commentNo}`,
+        headers: headers,  // 넣는거 까먹지 마세요
+      }).then((res) => {
+      this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+      console.log('!!!!!!!!!!!!!!!!!!!댓글 하나 가져오기')
+      console.log(res.data)
+      this.commentsData.push(res.data)
+      // this.getComments()
+      }).catch((error) => {
+        console.log(error);
+      }).then(() => {
+        console.log('댓글 하나 가져오기');
+      });
+    },
+    getComments:function(){
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+      axios({
+          method: 'get',
+          url:`http://13.125.47.126:8080/comments/returnNo/${this.feedNo}`,
+          headers: headers,  // 넣는거 까먹지 마세요
+        }).then((res) => {
+        this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+        console.log('!!!!!!!!!!!!!!!!!!!댓글 여러개 가져오기')
+        console.log(res.data)
+        this.comments=res.data
+        this.commentsData=[]
+        for (let i=0; i<this.comments.length; i++){
+          const commentNo=this.comments[i]
+          this.getComment(commentNo)
+        }
+        this.commentsList=this.commentsData.slice(0,2)
+        console.log(this.commentsList)
+        
+        }).catch((error) => {
+          console.log(error);
+        }).then(() => {
+          console.log('댓글 목록 가져오기');
+        });
+    },
+    createComment:function(){
+      const userdata = JSON.parse(session.getItem('userInfo')) 
+      const commentItem={
+          descr:this.commentContent,
+          author:userdata.no,
+          feedNo:this.feedNo
+        }
+      if(commentItem.descr){
+        this.commentContent=null
+        let headers = {
+          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+        axios({
+            method: 'post',
+            url:'http://13.125.47.126:8080/comments',
+            data: commentItem, // post 나 put에 데이터 넣어 줄때
+            headers: headers,  // 넣는거 까먹지 마세요
+          })
+          .then((res) => {
+             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+            //  console.log(res.data)
+            //  console.log('댓글 다시 가져옴!!!!!!!!!!!!!!!!!!!!!!')
+             this.getComments()
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+          .then(() => {
+            console.log('댓글 작성 완료');
+          });
+
+        
+      }
+      else{
+        this.$store.commit('commentNeedContentModalActivate')
+      }
+    },
+
+		getFeed:function(){
+		let headers = {
+			'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+			'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+			};
+			axios({
+				method: 'get',
+				url:`http://13.125.47.126:8080/feed/${this.feedNo}`,
+				headers: headers,  // 넣는거 까먹지 마세요
+			}).then((res) => {
+			this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+			this.feed=res.data
+			console.log(this.feed)
+			// this.isMine=res.data.owner
+			}).catch((error) => {
+				console.log(error);
+			}).then(() => {
+				console.log('피드 하나 가져오기');
+			});
+		},
 		like: function () {
 			this.liked = !this.liked
 			console.log(this.liked)
-		},
-		createComment:function(){
-      const commentItem={
-        comment:this.commentContent,
-        username:'default',
-        userImage:'https://cdn.indiepost.co.kr/uploads/images/2018/12/11/VDbIX3-600x338.png'
-      }
-      if(commentItem.comment){
-        this.comments.push(commentItem)
-        this.commentContent=null
-
-      }
-      else{
-        // alert('내용을 채워주세요')
-		this.$store.commit('commentNeedContentModalActivate')
-      }
 		},
 		onCommentSetting:function(){
 			this.$store.commit('commentSettingModalActivate')
@@ -133,6 +209,10 @@ export default {
 			// 	this.isUserFeedSettingOpened=true
 			// }
 		}
+	},
+	created(){
+		this.getFeed()
+		
 	}
 }
 </script>

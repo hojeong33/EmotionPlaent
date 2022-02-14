@@ -1,10 +1,10 @@
 <template>
   <div id="comments">
     <div id="form-commentInfo">
-      <div id="comment-count">댓글 
+      <div id="comment-count"  @click="goToDetail">댓글 
           <span id="count">{{comments.length}}</span>
       </div>
-      <comment v-for="(comment,index) in this.commentsList"
+      <comment v-for="(comment,index) in commentsList"
       :comment="comment"
       :key="index">
       </comment>
@@ -42,6 +42,9 @@ export default {
   },
  
   methods:{
+    goToDetail:function(){
+      this.$router.push({name:'FeedDetail', params:{feedNo:this.feedNo}})
+    },
     commentMore:function(){
       this.commentsList=this.commentsData
       this.isShort=false
@@ -82,28 +85,29 @@ export default {
       let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-    };
-    axios({
-        method: 'get',
-        url:`http://13.125.47.126:8080/comments/returnNo/${this.feedNo}`,
-        headers: headers,  // 넣는거 까먹지 마세요
-      }).then((res) => {
-      this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-      console.log('!!!!!!!!!!!!!!!!!!!댓글 여러개 가져오기')
-      console.log(res.data)
-      this.comments=res.data
-      this.commentsData=[]
-      for (let i=0; i<this.comments.length; i++){
-        const commentNo=this.comments[i]
-        this.getComment(commentNo)
-      }
-      // console.log(this.comments)
-      
-      }).catch((error) => {
-        console.log(error);
-      }).then(() => {
-        console.log('댓글 목록 가져오기');
-      });
+      };
+      axios({
+          method: 'get',
+          url:`http://13.125.47.126:8080/comments/returnNo/${this.feedNo}`,
+          headers: headers,  // 넣는거 까먹지 마세요
+        }).then((res) => {
+        this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+        console.log('!!!!!!!!!!!!!!!!!!!댓글 여러개 가져오기')
+        console.log(res.data)
+        this.comments=res.data
+        this.commentsData=[]
+        for (let i=0; i<this.comments.length; i++){
+          const commentNo=this.comments[i]
+          this.getComment(commentNo)
+        }
+        this.commentsList=this.commentsData.slice(0,2)
+        console.log(this.commentsList)
+        
+        }).catch((error) => {
+          console.log(error);
+        }).then(() => {
+          console.log('댓글 목록 가져오기');
+        });
     },
     createComment:function(){
       const userdata = JSON.parse(session.getItem('userInfo')) 
