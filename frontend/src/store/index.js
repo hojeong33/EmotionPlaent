@@ -580,7 +580,7 @@ export default new Vuex.Store({
           headers: headers,
         }).then((res) => {
           this.state.recommendMusic = res.data
-          this.dispatch('accessTokenRefresh', res)
+          this.dispatch('accessTokenRefresh', res) 
         
         }).catch((error) => {
           console.log(error);
@@ -706,7 +706,7 @@ export default new Vuex.Store({
         };
       axios({
         method: "post",
-        url: "http://localhost:8080/s3/users/img",
+        url: "http://13.125.47.126:8080/s3/users/img",
         data: el,
         headers: headers,
       })
