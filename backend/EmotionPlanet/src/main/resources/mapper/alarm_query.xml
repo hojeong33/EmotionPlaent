@@ -4,7 +4,7 @@
 
 	<insert id="insertAlram"
 		parameterType="com.ssafy.project.EmotionPlanet.Dto.AlarmDto">
-		insert into alarm(sender, receiver, feedno,
+		REPLACE into alarm(sender, receiver, feedno,
 		commentno, pickno, date, type, readcheck)
 		values
 		(#{sender},#{receiver},#{feedno},#{commentno},
