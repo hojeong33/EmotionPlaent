@@ -118,7 +118,7 @@ export default {
       'signupConfirmModalActive', 'emotionTestTooMuchPickModalActive', 'firstEmotionTestConfirmModalActive', 'emotionTestErrorActive', 'emotionTestPickMoreModalActive', 
       'emotionTestResultModalActive', 'loginFailModalActive', 'signupFailModalActive1', 'signupFailModalActive2', 'ReturnToLoginModalActive', 'commentNeedContentModalActive',
       'moreInfoConfirmModalActive', 'feedUpdateActive', 'pickYourImageModalActive', 'tooMuchImagesModalActive', 'pickYourTagModalActive', 'mypagefollowingListActive', 'mypagefollowerListActive',
-      'userpagefollowingListActive', 'userpagefollowerListActive', 'userFeedSettingModalActive2'
+      'userpagefollowingListActive', 'userpagefollowerListActive', 'userFeedSettingModalActive2',
     ]),
 }
 

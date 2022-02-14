@@ -4,8 +4,8 @@
 
 	<select id="tagSelect" parameterType="String"
 		resultType="com.ssafy.project.EmotionPlanet.Dto.TagDto">
-		select name , (select count(*) from feed_tag where feed_tag.tagNo = no) as 'count'
-		from tag
+		select t.name , (select count(*) from feed_tag ft, feed f where ft.tagNo = t.no and ft.feedNo = f.no and f.date between date_add(now(),interval -1 MONTH) and now()) as 'count'
+		from tag t
 		where name like CONCAT(#{name},'%');
 	</select>
 

@@ -24,7 +24,7 @@
     </div>
     <div id="like">
       <div id="heart">
-        <i class="far fa-heart fa-lg" :class="{'fas': this.feed.like}" @click="like"></i>
+        <i class="far fa-heart fa-lg" :class="{'fas': this.zfeed.like}" @click="like"></i>
       </div>
        <p id="feed_likes" v-for="like in feed.likes" :key="like">{{like["nickname"]}}</p>
       <p class="likes" >{{feed.likes}} likes</p>
