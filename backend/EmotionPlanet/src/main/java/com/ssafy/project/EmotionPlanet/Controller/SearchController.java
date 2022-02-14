@@ -24,7 +24,7 @@ public class SearchController {
 	@Autowired
 	SearchService searchService;
 
-	@GetMapping(value = "/searchs/byTag/{name}")  //태그 검색
+	@GetMapping(value = "/searchs/byTag/{name}")  //태그 검색 => 해당 태그명이 포함된 태그 리스트 + 태그 사용된 피드 갯수 리턴
 	public ResponseEntity<List<TagDto>> tagSelect(@PathVariable String name) {
 		List<TagDto> list = searchService.tagSelect(name);
 		if (list != null) {
@@ -37,15 +37,16 @@ public class SearchController {
 		}
 	}
 	
-	@GetMapping(value = "/searchs/byTag/list/{name}")  //태그 리스트 검색
-	public ResponseEntity<List<FeedDto>> tagListSelect(@PathVariable String name) {
-		List<FeedDto> list = searchService.tagListSelect(name);
+	@GetMapping(value = "/searchs/byTag/feed/{no}/{name}")  //태그로 피드 정보들 다 가져오기
+	public ResponseEntity<List<FeedDto>> tagListSelect(@PathVariable String no,@PathVariable String name) {
+		int userNo = Integer.parseInt(no);
+		List<FeedDto> list = searchService.tagfeedSelect(name, userNo);
 		if (list != null) {
-			System.out.println("태그 상세 검색 성공");
-			System.out.println(list);
+			System.out.println("태그포함 피드 검색 성공");
+//			System.out.println(list);
 			return new ResponseEntity<List<FeedDto>>(list, HttpStatus.OK);
 		} else {
-			System.out.println("태그 상세 검색 실패");
+			System.out.println("태그포함 피드 검색 실패");
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하는 정보가 없습니다.");
 		}
 	}

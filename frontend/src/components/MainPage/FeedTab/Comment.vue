@@ -1,9 +1,9 @@
 <template>
-  <div>
+  <div v-if="commentData">
     <div>
     <!-- <div style="position: absolute;"> -->
-      <img id="comment_img" :src="commentData.userRequestDto.profileImg" alt=""> <span style="font-weight:bold; font-size:1.2rem;">{{commentData.userRequestDto.nickname}} </span>
-      <span style="font-size:1.2rem">{{commentData.descr}} </span>
+      <img id="comment_img" :src="commentData.userRequestDto.profileImg" alt="">
+      <span style="font-weight:bold; font-size:1.2rem;">{{commentData.userRequestDto.nickname}} </span> <span style="font-size:1.2rem">{{commentData.descr}} </span>
     </div>
     <div  v-if="isMine" style="text-align:right; margin-bottom:1rem">
       <i @click="onSetting" class="fas fa-ellipsis-v"></i>
@@ -100,6 +100,7 @@ export default {
       //   })
       // },
     },
+<<<<<<< HEAD
     created: function (){
       let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
@@ -124,6 +125,27 @@ export default {
         });
     },
 
+=======
+    created(){
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+    };
+    axios({
+        method: 'get',
+        url:`http://13.125.47.126:8080/comment/${this.comment}`,
+        headers: headers,  // 넣는거 까먹지 마세요
+      }).then((res) => {
+      this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+      console.log('!!!!!!!!!!!!!!!!!!!')
+      console.log(res.data)
+      this.commentData=res.data
+      // this.getComments()
+      }).catch((error) => {
+        console.log(error);
+      })
+    },
+>>>>>>> 9abdac32eb486587f9b98819a362874b8c7b1ba5
 }
 </script>
 

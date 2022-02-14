@@ -102,7 +102,9 @@ export default new Vuex.Store({
     socketcount : 0, // 소켓 연결 일정시간 이상 안되면 재로그인 시키기
 
     // 댓글
-    comments: []
+    comments: [],
+    commentsOnTwo: [],
+    comment:[],
   },
   mutations: {
     navActivate: function({ navActive }, payload){
@@ -295,7 +297,6 @@ export default new Vuex.Store({
     
   },
   actions: {
-
       //알림 읽기 + 7일 이후 읽은 알림 삭제
       readAlarm(state, el){
           axios({

@@ -1,21 +1,15 @@
 <template>
-  <div id="comments">
+  <div id="comments" v-if="comments">
     <div id="form-commentInfo">
       <div id="comment-count">댓글 
           <span id="count">{{comments.length}}</span>
       </div>
-      <div v-if="comments.length === 0">
-        <p>댓글이 없습니다.</p>
-      </div>
-      <div v-else>
-        댓글
-        <comment v-for="(comment,index) in comments"
-        :comment="comment"
-        :key="index">
-        </comment>
-      </div>
-      <!-- <p v-if="isShort" id="comment-more" @click="commentMore">댓글 더보기</p>
-      <p v-if="isAll" id="comment-more" @click="commentShort">댓글 닫기</p> -->
+      <comment v-for="(comment,index) in this.comments"
+      :comment="comment"
+      :key="index">
+      </comment>
+      <p v-if="isShort" id="comment-more" @click="commentMore">댓글 더보기</p>
+      <p v-if="isAll" id="comment-more" @click="commentShort">댓글 닫기</p>
       <div id="comment_write">
         <input id="comment-input" @keyup.enter="createComment" v-model.trim="commentContent" placeholder="댓글을 입력해 주세요."> 
         <img id="submit" @click="createComment" src="@/assets/images/icons/write.png" alt="" style="width:1.6rem;height:1.6rem; margin-bottom:3px;">
@@ -35,9 +29,8 @@ export default {
   name:'CommentList',
   data:function(){
     return{
-      comments:[],//한 피드 내에서 댓글 번호 목록
-      // commentsList:[],//목록 더보기
-      // commentsData:[], // 댓글 하나에 대한 정보들
+      comments:null,
+      commentsList:[],
       commentContent:null,
       isShort:true,
       isAll:false,
@@ -49,46 +42,20 @@ export default {
   },
  
   methods:{
-    ...mapActions([
-      'getComments'
-    ]),
-    // commentMore:function(){
-    //   this.commentsList=this.commentsData
-    //   this.isShort=false
-    //   this.isAll=true
+    commentMore:function(){
+      this.commentsList=this.comments
+      this.isShort=false
+      this.isAll=true
 
-    // },
-    // commentShort:function(){
-    //   this.commentsList=this.commentsData.slice(0,2)
-    //   this.isShort=true
-    //   this.isAll=false
-    // },
+    },
+    commentShort:function(){
+      this.commentsList=this.comments.slice(0,2)
+      this.isShort=true
+      this.isAll=false
+    },
     forceRerender(){
       this.getComments()
     },
-    // getComment:function(commentNo){
-
-    //   let headers = {
-    //     'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-    //     'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-    //     };
-    //     axios({
-    //         method: 'get',
-    //         url:`http://13.125.47.126:8080/comment/${commentNo}`,
-    //         headers: headers,  // 넣는거 까먹지 마세요
-    //       }).then((res) => {
-    //       this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-    //       // console.log('!!!!!!!!!!!!!!!!!!!댓글 하나 가져오기')
-    //       // console.log(res.data)
-    //       // this.commentsData.push(res.data)
-    //       // this.getComments()
-    //       }).catch((error) => {
-    //         console.log(error);
-    //       }).then(() => {
-    //         // this.commentsData
-    //         // console.log('댓글 하나 가져오기');
-    //       });
-    // },
     getComments:function(){
       let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
@@ -100,24 +67,12 @@ export default {
         headers: headers,  // 넣는거 까먹지 마세요
       }).then((res) => {
       this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-      console.log('!!!!!!!!!!!!!!!!!!!댓글 여러개 가져오기')
-      console.log(res.data)
-      this.comments=res.data
-      console.log('정답은?????')
-      console.log(this.comments)
-      // this.commentsData=[]
-      // for (let i=0; i<this.comments.length; i++){
-      //   const commentNo=this.comments[i]
-      //   this.getComment(commentNo)
-      // }
-      // this.commentsList = this.commentsData.slice(0,2)
-      // console.log(this.comments)
-      
-      }).catch((error) => {
+      this.comments=res.data.reverse()
+      console.log('댓글이 갱신됐슴다!!!!!!!!!!!!!!!!!!!', this.comments)
+      })
+      .catch((error) => {
         console.log(error);
-      }).then(() => {
-        console.log('댓글 목록 가져오기');
-      });
+      })
     },
     createComment:function(){
       const userdata = JSON.parse(session.getItem('userInfo')) 
@@ -139,11 +94,18 @@ export default {
             headers: headers,  // 넣는거 까먹지 마세요
           })
           .then((res) => {
+<<<<<<< HEAD
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
             this.getComments(commentItem.feedNo)
             // this.getComments()
             // console.log(res.data)
             // console.log('댓글 다시 가져옴!!!!!!!!!!!!!!!!!!!!!!')
+=======
+             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+             console.log(res.data)
+             console.log('댓글 다시 가져옴!!!!!!!!!!!!!!!!!!!!!!')
+             this.getComments()
+>>>>>>> 9abdac32eb486587f9b98819a362874b8c7b1ba5
           })
           .catch((error) => {
             console.log(error);
