@@ -229,8 +229,6 @@ export default {
         console.log('getQSSList End!!');
       });
     },
-
-    
   },
 }
 </script>
