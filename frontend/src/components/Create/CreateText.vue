@@ -122,7 +122,7 @@ export default {
             this.Feedimages = []
             this.$store.commit('navActivate', 0)
             // console.log('이것은' , this.feedData.tags)
-            this.$router.push('/Main')
+            this.$router.go(0)
           }).catch((error) => {
             console.log(error);
           });
