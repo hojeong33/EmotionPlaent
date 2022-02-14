@@ -34,8 +34,8 @@ public class AlarmServiceImpl implements AlarmService {
 		format.setTimeZone(timeZone);
 		alarmDto.setDate(format.format(date));
 		int result = alarmDao.insertAlram(alarmDto);
-
-		if(result == SUCCESS)
+		System.out.println(result);
+		if(result >= SUCCESS)
 			return alarmDto;
 		return null;
 	}

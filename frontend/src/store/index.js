@@ -403,7 +403,8 @@ export default new Vuex.Store({
             console.log("알림 날짜 " + obj.date)
             console.log("알림 타입 " + obj.type)
             // alert(obj.message)
-            this.state.alarm.unshift(obj);
+            // this.state.alarm.unshift(obj);
+            this.dispatch('alarmselect')
             console.log("---------------------------------")
           });
         },
