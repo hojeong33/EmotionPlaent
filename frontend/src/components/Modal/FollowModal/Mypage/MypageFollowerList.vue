@@ -15,11 +15,10 @@
 				<p id="no_follower">팔로워 목록이 없습니다...</p>
 			</div>
 			<div id="my_follower_list" v-else>
-				<div v-for="(followerInfo, index) in myFollowerInfo" :key="index">
+				<div v-for="followerInfo in myFollowerInfo" :key="followerInfo.no">
 					<div id="userInfo">
-						<img id="profile_img" :src="followerInfo.profileImg" alt="">
-						<p id="username">{{followerInfo.nickname}}</p>
-						<button id="follow_cancel">취소</button>
+						<img id="profile_img" :src="followerInfo.profileImg" alt="" @click="moveToUserPage(followerInfo.no)">
+						<p id="username" @click="moveToUserPage(followerInfo.no)">{{followerInfo.nickname}}</p>
 					</div>
 				</div>
 			</div>
@@ -39,6 +38,13 @@ export default {
 			// console.log('여기옴')
 			// console.log(this.$store.state.userInfo)
 			this.$store.commit('mypagefollowerListActivate')
+		},
+		moveToUserPage (el) {
+			this.$store.state.searchUserNo = el
+			this.$store.dispatch('userSelect', el)
+			this.$store.dispatch('userfollowdate', el)
+			this.$store.commit('mypagefollowerListActivate')
+			this.$router.push({ path: `/userpage/feed` })
 		}
 	},
 	created () {
@@ -110,6 +116,7 @@ export default {
 #my_follower_list{
 	margin-left: 1rem;
 	overflow-y: scroll;
+	height: 40vh;
 }
 #userInfo{
 	display: flex;
@@ -125,29 +132,20 @@ export default {
 	margin-right: 0.5rem;
 	margin-top: auto;
 	margin-bottom: auto;
+	cursor: pointer;
 }
 #username {
 	font-weight: bold;
 	margin-right: 0.5rem;
 	margin-top: auto;
 	margin-bottom: auto;
+	cursor: pointer;
 }
 #following_check{
 	color: blue;
 	font-size: 0.8rem;
 	margin-top: auto;
 	margin-bottom: auto;
-}
-#follow_cancel{
-	margin-right: 0.5rem;
-	margin-left: auto;
-	margin-top: auto;
-	margin-bottom: auto;
-	background-color: #5E39B3;
-	color: white;
-	border-radius: 10px;
-	font-size: 0.8rem;
-	padding: 0.1rem;
 }
 hr {
 	margin: 0;

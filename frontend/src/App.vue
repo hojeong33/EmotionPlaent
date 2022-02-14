@@ -114,7 +114,7 @@ export default {
   },
   computed:
     mapState([
-      'navActive', 'showingNav', 'modalActive', 'profileImgChangeModalActive', 'commentSettingModalActive', 'logoutModalActive', 'userFeedSettingModalActive', 'loginConfirmModalActive', 
+      'navActive', 'showingNav', 'modalActive', 'profileImgChangeModalActive', 'commentSettingModalActive', 'logoutModalActive', 'userFeedSettingModalActive', 'userFeedSettingModalActive2', 'loginConfirmModalActive', 
       'signupConfirmModalActive', 'emotionTestTooMuchPickModalActive', 'firstEmotionTestConfirmModalActive', 'emotionTestErrorActive', 'emotionTestPickMoreModalActive', 
       'emotionTestResultModalActive', 'loginFailModalActive', 'signupFailModalActive1', 'signupFailModalActive2', 'ReturnToLoginModalActive', 'commentNeedContentModalActive',
       'moreInfoConfirmModalActive', 'feedUpdateActive', 'pickYourImageModalActive', 'tooMuchImagesModalActive', 'pickYourTagModalActive', 'mypagefollowingListActive', 'mypagefollowerListActive',

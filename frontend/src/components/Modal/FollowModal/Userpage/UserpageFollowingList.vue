@@ -15,11 +15,10 @@
 				<p id="no_following">팔로잉 목록이 없습니다...</p>
 			</div>
 			<div id="my_following_list" v-else>
-				<div v-for="(followingInfo, index) in myFollowingInfo" :key="index">
+				<div v-for="followingInfo in myFollowingInfo" :key="followingInfo.no">
 					<div id="userInfo">
-						<img id="profile_img" :src="followingInfo.profileImg" alt="">
-						<p id="username">{{followingInfo.nickname}}</p>
-						<button id="follow_cancel">취소</button>
+						<img id="profile_img" :src="followingInfo.profileImg" alt="" @click="moveToUserPage(followingInfo.no)">
+						<p id="username" @click="moveToUserPage(followingInfo.no)">{{followingInfo.nickname}}</p>
 					</div>
 				</div>
 			</div>
@@ -38,7 +37,14 @@ export default {
 		goBack: function () {
 			// console.log('여기옴')
 			// console.log(this.$store.state.userInfo)
-			this.$store.commit('mypagefollowingListActivate')
+			this.$store.commit('userpagefollowingListActivate')
+		},
+		moveToUserPage (el) {
+			this.$store.state.searchUserNo = el
+			this.$store.dispatch('userSelect', el)
+			this.$store.dispatch('userfollowdate', el)
+			this.$store.commit('userpagefollowingListActivate')
+			this.$router.push({ path: `/userpage/feed` })
 		}
 	},
 	created () {
@@ -110,6 +116,7 @@ export default {
 #my_following_list{
 	margin-left: 1rem;
 	overflow-y: scroll;
+	height: 40vh;
 }
 #userInfo{
 	display: flex;
@@ -124,12 +131,14 @@ export default {
 	margin-right: 0.5rem;
 	margin-top: auto;
 	margin-bottom: auto;
+	cursor: pointer;
 }
 #username {
 	font-weight: bold;
 	margin-right: 0.5rem;
 	margin-top: auto;
 	margin-bottom: auto;
+	cursor: pointer;
 }
 #follow_cancel{
 	margin-right: 0.5rem;
