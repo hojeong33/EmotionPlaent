@@ -99,7 +99,7 @@ export default {
       data: this.credentials
     })
     .then((res)=>{
-      console.log(res.headers);
+      console.log('response!!', res.headers);
       // storage 설정
       session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
       session.setItem('at-jwt-refresh-token', res.headers['at-jwt-refresh-token']);
