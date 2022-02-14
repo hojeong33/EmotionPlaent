@@ -14,7 +14,7 @@ export default {
   data(){
     return {
       tab: 'feed',
-      pickTap: 1
+      pickTap: 1,
     }
   },
   methods: {
@@ -23,10 +23,16 @@ export default {
       this.$router.push({ path: `/search/${this.tab}` })
     }
   },
+  watch: {
+    test(){
+      console.log(this.test)
+    }
+  },
   mounted(){
     if (this.$route.path.includes('pick')){
       this.tab = 'pick'
     }
+    console.log(this.vm)
   }
 }
 </script>
