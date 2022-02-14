@@ -18,6 +18,7 @@ export default {
     checked: function(){
       this.isChecked = !this.isChecked
       this.$emit('checked', this.tag)
+      this.$emit('selected', this.isChecked)
     }
   }
 }

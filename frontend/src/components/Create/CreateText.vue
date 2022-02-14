@@ -8,9 +8,25 @@
       <h3>이제 자유태그와 글을 작성할 수 있습니다!</h3>
       <h3>여러분의 하루를 공유해주세요</h3> 
     </article>
-    {{feedData.tags[0].name}} {{feedData.tags[1].name}}
-    <input type="text" id="tag-input" v-model="freeTag">
-    <textarea id="text-input" v-model="feedText" />
+    <div v-if="feedData.tags.length" id="pickTags">
+      <div id="moodTag">
+        <img id="planet_img" :src="require('@/assets/images/emotions/' + planetImg)" alt="">
+        <p style="margin:auto 0.2rem; color: #5E39B3; font-weight: bold;">{{feedData.tags[0].name}}</p>
+      </div>
+      <div id="actTag">
+        <p style="margin:auto 0.2rem; color: #5E39B3; font-weight: bold;">{{feedData.tags[1].name}}</p>
+      </div>
+      <div id="freeTag" v-for="(tag, idx) in feedData.tags.slice(2)" :key="idx"> 
+          <p id="pickTag" style="margin:auto 0.2rem; color: blue; font-weight: bold;">
+            # {{tag.name}}
+          </p>         
+      </div>
+    </div>
+    <div id="freeTag_write">
+      <input type="text" id="tag_input" @keyup.enter="keyPress">
+      <img id="write" @click="freeTagCreate" src="@/assets/images/icons/write.png" alt="" style="width:1.4rem;height:1.4rem; cursor: pointer;">
+    </div>
+    <textarea id="text-input" v-model="feedData.descr" />
     <footer>
       <span id="secret">
         <input type="checkbox" id="secret-check" v-model="isChecked">
@@ -18,7 +34,7 @@
       </span>
       <span>
         <button id="btn-before" @click="beforePage">이전</button>
-                <button id="btn-before" @click="feedUpdate">수정테스트</button>
+        <button id="btn-before" @click="feedUpdate">수정테스트</button>
         <button id="btn-next" @click="feedWrite">작성</button>
       </span>
     </footer>
@@ -37,14 +53,14 @@ export default {
     return {
       isChecked: false,
       freeTag: null,
-      feedText: null,
+      // feedText: null,
       feedData: {
-        descr: '대충 글 수정',
+        descr: '',
         author: null,
         tags: [],
-        no: 143
       },
       Feedimages: [],
+      planetImg: null,
     }
   },
   methods: {
@@ -53,6 +69,20 @@ export default {
     },
     beforePage(){
       this.$emit('before-page')
+    },
+    keyPress (event) {
+      console.log(event.target.value)
+      this.freeTag = event.target.value 
+      this.feedData.tags.push({name: `${this.freeTag}`, type: 0})
+      console.log(this.feedData)
+      event.target.value = null
+    },
+    freeTagCreate () {
+      let free_tag_value = document.getElementById('tag_input').value
+      this.freeTag = free_tag_value
+      this.feedData.tags.push({name: `${this.freeTag}`, type: 0})
+      console.log(this.feedData.tags)
+      document.getElementById('tag_input').value = null
     },
     feedWrite () {
       console.log(this.feedData)
@@ -63,6 +93,11 @@ export default {
       const formData = new FormData();
       this.Feedimages.forEach((file) => formData.append("files", file.image));
       this.Feedimages.forEach((file) => console.log(file));
+      
+      formData.append(
+        "userInfo",
+        new Blob([JSON.stringify(this.feedData)], { type: "application/json" })
+      );
 
       axios({
           method: 'post',
@@ -73,6 +108,7 @@ export default {
             console.log("피드 작성 : " + res.data)
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
 
+
           axios({
             method: 'post',
             url: 'http://13.125.47.126:8080/s3/file/' + res.data,
@@ -81,6 +117,12 @@ export default {
           }).then((res) => {
             console.log(res.data)
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+            this.feedData.tags = []
+            this.feedData.descr = ''
+            this.Feedimages = []
+            this.$store.commit('navActivate', 0)
+            // console.log('이것은' , this.feedData.tags)
+            this.$router.push('/Main')
           }).catch((error) => {
             console.log(error);
           });
@@ -124,12 +166,16 @@ export default {
   },
   computed: 
     mapState([
-      'feedCreateData', 'rawImg'
+      'feedCreateData', 'planetStyles', 'rawImg'
     ]),
   created: function () {
     this.Feedimages = this.rawImg
     this.feedData.author = this.feedCreateData[0].author
-    this.feedData.tags = this.feedCreateData[0].tags
+    this.feedData.tags = [...this.feedCreateData[0].tags]
+
+    let mood = this.$store.state.userInfo.mood
+    let planetstyle = this.planetStyles.find(el => el.id === mood) || {}
+		this.planetImg = planetstyle.img
     console.log(this.feedData)
   }, 
 }
@@ -212,13 +258,10 @@ export default {
     margin: 2rem 1rem 1rem;
   }
 
-  #tag-input {
-    width: 80%;
-    height: 5%;
-    border: 1px #cccccc solid;
-    border-radius: 10px;
-    margin: 1rem;
-    padding: 1rem;
+  #tag_input {
+    width: 90%;
+    border-style:none;
+    outline: none;
   }
 
   #text-input{
@@ -247,4 +290,44 @@ export default {
     background-color: #777777;
     border: 3px #777777 solid;
   }
+  #pickTags {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: left;
+    width: 80%
+
+  }
+#planet_img {
+	width: 2rem;
+	height: 2rem;
+  margin: 0.2rem;
+}
+#moodTag {
+  display: flex;
+  flex-direction: row;
+  border: 1.5px #5E39B3 solid;
+  border-radius: 20px;
+  margin-right: 0.3rem;
+}
+#actTag {
+  display: flex;
+  flex-direction: row;
+  border: 1.5px #5E39B3 solid;
+  border-radius: 20px;
+  margin-right: 0.3rem;
+}
+#freeTag {
+  display: flex;
+  flex-direction: row;
+  margin-right: 0.3rem;
+}
+#freeTag_write{
+  width:80%;
+  border:0.2rem solid gainsboro;
+  border-radius: 10px;
+  margin-top: 1rem;
+  margin-bottom:1rem;
+  height: 6%
+}
 </style>

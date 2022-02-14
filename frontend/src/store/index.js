@@ -69,6 +69,7 @@ export default new Vuex.Store({
     commentSettingModalActive: false,
     logoutModalActive: false,
     userFeedSettingModalActive: false,
+    userFeedSettingModalActive2: false,
     profileImgChangeModalActive: false,
     loginConfirmModalActive: false,
     signupConfirmModalActive: false,
@@ -83,8 +84,18 @@ export default new Vuex.Store({
     signupFailModalActive2: false,
     commentNeedContentModalActive:false,
     moreInfoConfirmModalActive: false,
-    serverErrorMessage: null,
-    loginErrorMessage: null,
+    feedUpdateActive: false,
+    pickYourImageModalActive: false,
+    tooMuchImagesModalActive: false,
+    pickYourTagModalActive: false,
+    mypagefollowingListActive: false,
+    mypagefollowerListActive: false,
+    userpagefollowingListActive: false,
+    userpagefollowerListActive: false,
+  
+    // 모달의 에러 메시지
+    serverErrorMessage: '',
+    loginErrorMessage: '',
 
     // 알림 부분
     alarm: [], 
@@ -162,7 +173,7 @@ export default new Vuex.Store({
     feedTag: function(state, feedtag) {
       state.feedCreateData[0].tags[1] = feedtag
       // state.feedCreateData[0].tags.push({name: `${feedtag}`, type: 0})
-      console.log(state.feedCreateData[0].tags)
+      // console.log(state.feedCreateData[0].tags)
     },
     
     // 모달부분입니다
@@ -173,6 +184,10 @@ export default new Vuex.Store({
     userFeedSettingModalActivate: function (state) {
       state.userFeedSettingModalActive = !state.userFeedSettingModalActive
       console.log(state.userFeedSettingModalActive)
+    },
+    userFeedSettingModalActivate2: function (state) {
+      state.userFeedSettingModalActive2 = !state.userFeedSettingModalActive2
+      console.log(state.userFeedSettingModalActive2)
     },
     logoutModalActivate: function (state) {
       state.logoutModalActive = !state.logoutModalActive
@@ -237,6 +252,39 @@ export default new Vuex.Store({
       state.moreInfoConfirmModalActive = !state.moreInfoConfirmModalActive
       console.log(state.moreInfoConfirmModalActive)
     },
+    feedUpdateActivate: function (state) {
+      state.feedUpdateActive = !state.feedUpdateActive
+      console.log(state.feedUpdateActive)
+    },
+    pickYourImageModalActivate: function (state) {
+      state.pickYourImageModalActive = !state.pickYourImageModalActive
+      console.log(state.pickYourImageModalActive)
+    },
+    tooMuchImagesModalActivate: function (state) {
+      state.tooMuchImagesModalActive = !state.tooMuchImagesModalActive
+      console.log(state.tooMuchImagesModalActive)
+    },
+    pickYourTagModalActivate: function (state) {
+      state.pickYourTagModalActive = !state.pickYourTagModalActive
+      console.log(state.pickYourTagModalActive)
+    },
+    mypagefollowingListActivate: function (state) {
+      state.mypagefollowingListActive = !state.mypagefollowingListActive
+      console.log(state.mypagefollowingListActive)
+    },
+    mypagefollowerListActivate: function (state) {
+      state.mypagefollowerListActive = !state.mypagefollowerListActive
+      console.log(state.mypagefollowerListActive)
+    },
+    userpagefollowingListActivate: function (state) {
+      state.userpagefollowingListActive = !state.userpagefollowingListActive
+      console.log(state.userpagefollowingListActive)
+    },
+    userpagefollowerListActivate: function (state) {
+      state.userpagefollowerListActive = !state.userpagefollowerListActive
+      console.log(state.userpagefollowerListActive)
+    },
+    
   },
   actions: {
 

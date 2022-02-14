@@ -115,7 +115,7 @@
               data: this.selected,
               headers: headers,
             }).then((res) => {
-            console.log(res)
+            // console.log(res)
             this.keywords = res.data
             this.keywords = this.keywords.sort(() => Math.random() - 0.5)
             this.selected = []
@@ -123,7 +123,7 @@
             this.$store.commit('firstEmotionTestConfirmModalActivate')
             this.testNum = 2
             this.page = 1
-            console.log(this.page_of_keywords)
+            // console.log(this.page_of_keywords)
             this.$store.dispatch('accessTokenRefresh', res)
             })
             .catch(() => 
@@ -137,49 +137,58 @@
           }
         }
         else {
-          axios({
-              method: 'post',
-              url: 'http://13.125.47.126:8080/resulttest',
-              data: this.selected,
-              headers: headers,
-            }).then(res => {
-            this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-            
-            // alert(`당신은 ${ res.data.name }행성 입니다!`)
-            console.log("여기는 결과 네임")
-            console.log(`${res.data.name}`)
-            console.log(res.data.no)
-            
-            const userdata = JSON.parse(session.getItem('userInfo')) 
-            console.log('userdate===')
-            console.log(userdata) // 무드번호만 나옴......
-            console.log(userdata.no)
-
-
-            console.log("여기는 에러 직전")
-            const body = { no: userdata.no, mood: res.data.no }
+          if (this.selected.length > 0) {
             axios({
-              method: 'put',
-              url: 'http://13.125.47.126:8080/users/update',
-              data: body,
-              headers: headers,
-            }).then(res => {
-              console.log("여기는 데이터 수정하는 부분")
-              console.log(res)
-              this.$store.dispatch('allTokenRefreshOnUserInfo', res)
-              this.$store.commit('emotionTestResultModalActivate')
-             
-            }).catch(err => {
-              console.log('user/update')
-              console.log(err)
+                method: 'post',
+                url: 'http://13.125.47.126:8080/resulttest',
+                data: this.selected,
+                headers: headers,
+              }).then(res => {
+              this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+              
+              // alert(`당신은 ${ res.data.name }행성 입니다!`)
+              // console.log("여기는 결과 네임")
+              // console.log(`${res.data.name}`)
+              // console.log(res.data.no)
+              
+              const userdata = JSON.parse(session.getItem('userInfo')) 
+              // console.log('userdate===')
+              // console.log(userdata) // 무드번호만 나옴......
+              // console.log(userdata.no)
+  
+  
+              // console.log("여기는 에러 직전")
+              const body = { no: userdata.no, mood: res.data.no }
+              console.log('2번째 감정 테스트 post')
+              axios({
+                method: 'put',
+                url: 'http://13.125.47.126:8080/users/update',
+                data: body,
+                headers: headers,
+              }).then(res => {
+                // console.log("여기는 데이터 수정하는 부분")
+                // console.log(res)
+                console.log('감정 수정')
+                this.$store.dispatch('allTokenRefreshOnUserInfo', res)
+                this.$store.commit('emotionTestResultModalActivate')
+               
+              }).catch(err => {
+                console.log('2번째 감정 수정 오류', err)
+                // console.log('user/update')
+                // console.log(err)
+              })
             })
-          })
-          .catch((err) => {
-            //같은 페이지에서 if문으로 나눠져 있으니까 같은 컴포넌트로 연결해도 되겠지??
-            console.log(err)
-            this.$store.commit('emotionTestErrorModalActivate')
-            // alert('잘못된 요청입니다.')
-          })
+            .catch((err) => {
+              //같은 페이지에서 if문으로 나눠져 있으니까 같은 컴포넌트로 연결해도 되겠지??
+              // console.log(err)
+              console.log('2번째 감정 post 오류', err)
+              this.$store.commit('emotionTestErrorModalActivate')
+              // alert('잘못된 요청입니다.')
+            })
+          } else {
+            this.$store.commit('emotionTestPickMoreModalActivate')
+            // alert('단어를 골라주세요')
+          }
         }
       },
       go_to_back: function(){

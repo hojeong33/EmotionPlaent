@@ -1,5 +1,5 @@
 <template>
-	<div id="user_feed_setting_modal">
+	<div id="user_feed_setting_modal2">
 		<div id="modal">
 			<p @click="feedUpdateActivate">수정</p>
 			<hr>
@@ -15,19 +15,20 @@
 import axios from 'axios'
 
 const session = window.sessionStorage; 
+
 export default {
 	data: function () {
 		return {
-			feedNum: 163,
+			feedNum: 165,
 
 		}
 	},
 	methods: {
 		cancel: function () {
-			this.$store.commit('userFeedSettingModalActivate')
+			this.$store.commit('userFeedSettingModalActivate2')
 		},
 		feedUpdateActivate: function () {
-			this.$store.commit('userFeedSettingModalActivate')
+			this.$store.commit('userFeedSettingModalActivate2')
 			this.$store.commit('feedUpdateActivate')
 		},
 		feedDelete: function () {
@@ -50,14 +51,14 @@ export default {
 				}).then(() => {
 					console.log('getQSSList End!!');
 				})
-			this.$store.commit('userFeedSettingModalActivate')
+			this.$store.commit('userFeedSettingModalActivate2')
 		}
 	}
 }
 </script>
 
 <style scoped>
-#user_feed_setting_modal {
+#user_feed_setting_modal2 {
 	display: flex;
 	justify-content: center;
 	align-items: center;

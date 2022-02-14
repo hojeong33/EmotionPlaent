@@ -147,7 +147,7 @@ export default {
       }
     }).catch((error) => {
       console.log(error);
-      this.$store.commit('loginFailModalActivate')
+      // this.$store.commit('loginFailModalActivate')
     }).then(() => {
       console.log('tokenVerify End!!');
     });
