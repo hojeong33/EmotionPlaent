@@ -1,12 +1,12 @@
 <template>
   <div v-if="commentData">
-    <div id="comments">
+    <div>
+    <!-- <div style="position: absolute;"> -->
       <img id="comment_img" :src="commentData.userRequestDto.profileImg" alt="">
-      <p id="username">{{commentData.userRequestDto.nickname}} </p> 
-      <p id="user_comment">{{commentData.descr}} </p>
-      <div id="comment_setting">
-        <i @click="onCommentSetting" class="fas fa-ellipsis-v"></i>
-      </div>
+      <span style="font-weight:bold; font-size:1.2rem;">{{commentData.userRequestDto.nickname}} </span> <span style="font-size:1.2rem">{{commentData.descr}} </span>
+    </div>
+    <div  v-if="isMine" style="text-align:right; margin-bottom:1rem">
+      <i @click="onCommentSetting" class="fas fa-ellipsis-v"></i>
     </div>
   </div>
 </template>
@@ -15,22 +15,28 @@
 import axios from 'axios'
 const session = window.sessionStorage;
 export default {
-    name:'Comment',
-    props:{
-        comment:Number
+  name:'Comment',
+  props:{
+      comment:Number
+  },
+  data(){
+    return{
+      isMine:false,
+      commentData:null,
+      isCommentSettingOpened:false,
+    
+    }
+  },
+  methods:{
+    onCommentSetting:function(){
+      this.$store.commit('commentSettingModalActivate')
+      // if(this.isCommentSettingOpened){
+      // 	this.isCommentSettingOpened=false
+      // }else{
+      // 	this.isCommentSettingOpened=true
+      // }
     },
-    data(){
-      return{
-        isOpend:false,
-        isMine: false,
-        commentData:null,
-      }
-    },
-    methods:{
-      onCommentSetting:function(){
-			this.$store.commit('commentSettingModalActivate', this.comment)
-      },
-    },
+  },
   created(){
     let headers = {
       'at-jwt-access-token': session.getItem('at-jwt-access-token'),
@@ -55,34 +61,24 @@ export default {
 </script>
 
 <style scoped>
-#comments {
-	display: flex;
-	flex-direction: row;
-	justify-content: left;
-	align-items: center;
-	font-size: 1rem;
-	margin-top: 0.5rem;
-	margin-bottom: 0.5rem;
-}
 #comment_img{
-  width: 5vh;
-	height: 5vh;
-	border-radius: 5vh;
-	margin-right: 0.5rem;
+  width: 2rem;
+  height: 2rem; 
+  border-radius: 70%;
+  overflow:hidden;
+  margin:2px;
+
 }
-#user_comment {
-	margin-top:auto;
-	margin-bottom: auto;
-	margin-left: 0.5rem;
-}
-#username {
-	font-weight: bold;
-	margin: 0rem;
-	font-size: 1.2rem;
-}
-#comment_setting {
-	margin-left: auto;
-	margin-right: 1rem;
-  cursor: pointer;
+
+#setting{
+  width: 10%;
+  border:1px solid black;
+  border-radius: 10px;
+  text-align: center;
+  display: flex;
+  flex-direction:column;
+  position: absolute;
+  transform: translate(34rem,-10px);
+  background-color: white;
 }
 </style>
