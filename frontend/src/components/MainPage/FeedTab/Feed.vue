@@ -36,8 +36,8 @@
       <div id="heart">
         <i class="far fa-heart fa-lg" :class="{'fas': this.feed.like}"  @click="like"></i>
       </div>
-       <p id="feed_likes" v-for="(like, idx) in feed.likes" :key="idx">{{like["nickname"]}}</p>
-      <p class="likes" >{{feed.likes}} likes</p>
+       <p id="feed_likes" v-for="(like, idx) in feed.likes" :key="idx"></p>
+      <p class="likes" >{{feed.likes.length}} likes</p>
     </div>
     <div id="content">
       <div id="tag">
@@ -45,7 +45,7 @@
       </div> 
         <p id="caption" style="font-size:1.4rem"><span style="font-weight:bold; margin-right:5px;">{{feed.author}}</span>{{feed.descr}}</p>
     </div>
-    <comment-list :feedNo="post" @delete-comment="commentKey++" :key="commentKey"></comment-list>
+    <comment-list :feedNo="post" :feedAuthor="feed.author" @delete-comment="commentKey++" :key="commentKey"></comment-list>
   </div>
 </template>
 
@@ -134,29 +134,14 @@ export default {
       this.feed.like= !this.feed.like;
     },
     doLike:function(){
-      const userdata = JSON.parse(session.getItem('userInfo')) ;
-      const likeItem={
-        targetNo:this.post,
-        userNo:userdata.no,
+      let el = {
+        receiver : this.feed.author,
+        feedno : this.post,
       }
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        };
-        axios({
-            method: 'post',
-            url:`http://13.125.47.126:8080/feeds/like`,
-            data:likeItem,
-            headers: headers,  // 넣는거 까먹지 마세요
-          }).then((res) => {
-          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-          this.getFeed()
-          }).catch((error) => {
-            console.log(error);
-          }).then(() => {
-            console.log('피드 좋아요');
-          });
+      this.$store.dispatch('addfeedlike',el)
     },
+
+
     getFeed:function(){
        let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
@@ -179,30 +164,7 @@ export default {
           });
     },
     cancelLike:function(){
-      const userdata = JSON.parse(session.getItem('userInfo')) ;
-      const likeItem={
-        targetNo:this.post,
-        userNo:userdata.no,
-      }
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        };
-        axios({
-            method: 'delete',
-            url:`http://13.125.47.126:8080/feeds/like`,
-            data:likeItem,
-            headers: headers,  // 넣는거 까먹지 마세요
-          }).then((res) => {
-          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-          this.getFeed()
-          }).catch((error) => {
-            console.log(error);
-          }).then(() => {
-            console.log('피드 좋아요');
-          });
-      
-
+      this.$store.dispatch('deletefeedlike',this.post)
     },
     
     // getComments:function(){

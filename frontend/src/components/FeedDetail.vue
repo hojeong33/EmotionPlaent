@@ -45,8 +45,8 @@
         <div id="heart">
           <i class="far fa-heart fa-lg" :class="{'fas': this.feed.like}"  @click="like"></i>
         </div>
-        <p id="feed_likes" v-for="(like, idx) in feed.likes" :key="idx">{{like["nickname"]}}</p>
-        <p class="likes">{{feed.likes}} likes</p>
+        <p id="feed_likes" v-for="(like, idx) in feed.likes" :key="idx"></p>
+        <p class="likes">{{feed.likes.length}} likes</p>
       </div>
 			<hr>
 			<div id="comment_write">
@@ -145,6 +145,12 @@ export default {
             //  console.log(res.data)
             //  console.log('댓글 다시 가져옴!!!!!!!!!!!!!!!!!!!!!!')
              this.getComments()
+             let body = {
+               receiver: this.feed.author,
+               feedno: this.feedNo,
+               commentno: res.data, // 이부분 백 수정하고 테스트해야함
+             }
+             this.$store.dispatch('comment',body)
           })
           .catch((error) => {
             console.log(error);
@@ -185,52 +191,15 @@ export default {
       this.feed.like= !this.feed.like;
     },
     doLike:function(){
-      const userdata = JSON.parse(session.getItem('userInfo')) ;
-      const likeItem={
-        targetNo:this.feedNo,
-        userNo:userdata.no,
+		console.log(this.feedNo)
+      let el = {
+        receiver : this.feed.author,
+        feedno : this.feedNo,
       }
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        };
-        axios({
-            method: 'post',
-            url:`http://13.125.47.126:8080/feeds/like`,
-            data:likeItem,
-            headers: headers,  // 넣는거 까먹지 마세요
-          }).then((res) => {
-          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-          this.getFeed()
-          }).catch((error) => {
-            console.log(error);
-          }).then(() => {
-            console.log('피드 좋아요');
-          });
+      this.$store.dispatch('addfeedlike',el)
     },
     cancelLike:function(){
-      const userdata = JSON.parse(session.getItem('userInfo')) ;
-      const likeItem={
-        targetNo:this.feedNo,
-        userNo:userdata.no,
-      }
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        };
-        axios({
-            method: 'delete',
-            url:`http://13.125.47.126:8080/feeds/like`,
-            data:likeItem,
-            headers: headers,  // 넣는거 까먹지 마세요
-          }).then((res) => {
-          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-          this.getFeed()
-          }).catch((error) => {
-            console.log(error);
-          }).then(() => {
-            console.log('피드 좋아요');
-          });
+      this.$store.dispatch('deletefeedlike',this.feedNo)
     },
     onModalFeed:function(){
       if(this.isMineFeed){

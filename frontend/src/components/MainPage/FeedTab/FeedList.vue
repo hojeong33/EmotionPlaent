@@ -34,7 +34,7 @@ export default {
       };
       axios({
         method:'get',
-        url:`http://13.125.47.126:8080/feeds/my/returnNo/${userdata.no}`,
+        url:`http://13.125.47.126:8080/feeds/returnNo/${userdata.no}`,
         headers:headers,
        })
       .then((res) => {
