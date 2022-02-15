@@ -53,7 +53,7 @@
       </article>
       <article id="birth_form">
         <label for="birth">생년월일</label>
-        <input type="date" id="birth" v-model="credentials.birth">
+        <input type="date" id="birth" v-model="credentials.birth" :max="this.maxdate">
       </article>
       <article id="btn_container">
         <button @click="signup" id="signup_btn">여행티켓 등록하기</button>
@@ -72,6 +72,7 @@
     name: 'MoreInfo',
     data: function () {
       return {
+        maxdate: null,
         credentials: {
           nickname: null,
           tel: null,
@@ -169,6 +170,13 @@
       go_to_back: function(){
         this.$router.push('Login')
       }
+    },
+    created(){
+      var today = new Date();
+      var year = today.getFullYear();
+      var month = ('0' + (today.getMonth() + 1)).slice(-2);
+      var day = ('0' + today.getDate()).slice(-2);
+      this.maxdate = year + '-' + month  + '-' + day;
     },
   }
 </script>
