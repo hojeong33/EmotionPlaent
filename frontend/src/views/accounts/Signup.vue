@@ -99,7 +99,7 @@
       </article>
       <article id="birth_form">
         <label for="birth">생년월일</label>
-        <input type="date" id="birth" v-model="credentials.birth">
+        <input type="date" id="birth" v-model="credentials.birth" :max="this.maxdate">
       </article>
       <article id="btn_container">
         <button @click="signup" id="signup_btn">시민권 등록하기</button>
@@ -118,6 +118,7 @@
     name: 'Signup',
     data: function () {
       return {
+        maxdate: null,
         credentials: {
           email: null,
           nickname: null,
@@ -135,6 +136,13 @@
           validateTel: false // 휴대전화 중복 여부
         },
       }
+    },
+    created(){
+      var today = new Date();
+      var year = today.getFullYear();
+      var month = ('0' + (today.getMonth() + 1)).slice(-2);
+      var day = ('0' + today.getDate()).slice(-2);
+      this.maxdate = year + '-' + month  + '-' + day;
     },
     methods: {
        validateEmail: function(){
