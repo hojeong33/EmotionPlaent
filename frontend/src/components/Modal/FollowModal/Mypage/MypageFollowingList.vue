@@ -117,6 +117,7 @@ export default {
 	margin-left: 1rem;
 	overflow-y: scroll;
 	height: 82%;
+
 }
 #userInfo{
 	display: flex;

@@ -58,7 +58,9 @@ export default {
         tagNo:null,//행성
         userNo:null,
       },
-      forderlists:[],
+      forderlistsNo:[],
+      forderlist:[],
+      pickNo:null,
 		}
 	},
 	methods: {
@@ -77,6 +79,55 @@ export default {
       this.images = URL.createObjectURL(this.$refs.feedImg.files[0]);
     },
     getPlayList:function(){
+      let headers = {
+          // 'Content-Type': 'multipart/form-data',
+          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+        axios({
+          method: 'get',
+          url: `http://13.125.47.126:8080/pick/${this.pickNo}`,
+          headers: headers,  // 넣는거 까먹지 마세요
+        }).then((res) => {
+            console.log("피드 작성 : " + res.data)
+            this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+            this.forderlists.push(res.data)
+            console.log('플레이리스트')
+            console.log(this.forderlists)
+        }).catch((error) => {
+          console.log(error);
+        }).then(() => {
+          console.log('플레이리스트 생성하기');
+        });
+
+    },
+    getPlayLists:function(){
+       let headers = {
+          // 'Content-Type': 'multipart/form-data',
+          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+
+        axios({
+          method: 'get',
+          url: `http://13.125.47.126:8080/picks/type/returnNo/${userdata.no}/${this.listData.type}`,
+          headers: headers,  // 넣는거 까먹지 마세요
+        }).then((res) => {
+            console.log("피드 작성 : " + res.data)
+            this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+            this.forderlistsNo=res.data
+            console.log('쏘오오리')
+            this.forderlist=[]
+            // console.log(this.forderlists)
+            for(let i=0; i<this.forderlistsNo.length; i++){
+              this.pickNo=this.forderlistsNo[i]
+              this.getPlayList()
+            }
+        }).catch((error) => {
+          console.log(error);
+        }).then(() => {
+          console.log('플레이리스트 생성하기');
+        });
 
     },
     createList:function () {
@@ -90,21 +141,22 @@ export default {
         };
   
         const formData2 = new FormData();
-        // formData2.append("multipartFile", this.$refs.feedImg.files[0]);
+        formData2.append("multipartFile", this.$refs.feedImg.files[0]);
         formData2.append(
           "data",
           new Blob([JSON.stringify(this.listData)], { type: "application/json" })
         );
-        let body={userNo:1, type:1, tagNo:1, name:this.listData.name}
+
         axios({
           method: 'post',
           url: 'http://13.125.47.126:8080/picks',
-          data: body, // post 나 put에 데이터 넣어 줄때
+          data: formData2, // post 나 put에 데이터 넣어 줄때
           headers: headers,  // 넣는거 까먹지 마세요
         }).then((res) => {
             console.log("피드 작성 : " + res.data)
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
             this.isClick=true
+            this.getPlayLists()
         }).catch((error) => {
           console.log(error);
         }).then(() => {
@@ -122,7 +174,8 @@ export default {
     this.listData['type']=this.$store.state.type
     this.listData['tagNo']=userdata.mood
     this.listData['userNo']=userdata.no
-    console.log(userdata)
+    // console.log(userdata)
+    this.getPlayLists()
 	}
 }
 </script>

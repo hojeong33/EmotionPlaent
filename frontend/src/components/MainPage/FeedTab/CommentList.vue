@@ -41,6 +41,7 @@ export default {
   props:{
       feedNo:Number,
       feedAuthor:Number,
+ 
   },
  
   methods:{

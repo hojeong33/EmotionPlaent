@@ -43,7 +43,7 @@
       <div id="tag">
         <p id="my_tag" v-for="(tag, idx) in feed.tags" :key="idx">#{{tag["name"]}}</p>
       </div> 
-        <p id="caption" style="font-size:1.4rem"><span style="font-weight:bold; margin-right:5px;">{{feed.authorDetail.nickname}}</span>{{feed.descr}}</p>
+        <p id="caption" style="font-size:1.4rem"><span style="font-weight:bold; margin-right:5px;">{{feed.author}}</span>{{feed.descr}}</p>
     </div>
     <comment-list :feedNo="post" :feedAuthor="feed.author" @delete-comment="commentKey++" :key="commentKey"></comment-list>
   </div>
