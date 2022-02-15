@@ -15,10 +15,10 @@
         placeholder="등록하신 휴대전화를 입력해주세요.">
         <span v-if="tel">
           <p v-if="!validateTel" class="warn">
-            전화번호를 똑바로 입력하세요
+            번호가 이상해요...
           </p>
           <p v-if="validateTel" class="collect">
-            가능한 전화번호예요.
+            가능한 번호예요!
           </p>
         </span>
       </article>
@@ -211,6 +211,7 @@ export default {
     align-items: center;
     width: 80%;
     margin: 0 auto;
+    
   }
 
   #pf-header {

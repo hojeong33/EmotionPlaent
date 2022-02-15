@@ -3,10 +3,11 @@
     <div>
     <!-- <div style="position: absolute;"> -->
       <img id="comment_img" :src="commentData.userRequestDto.profileImg" alt="">
-      <span style="font-weight:bold; font-size:1.2rem;">{{commentData.userRequestDto.nickname}} </span> <span style="font-size:1.2rem">{{commentData.descr}} </span>
-    </div>
-    <div  v-if="isMine" style="text-align:right; margin-bottom:1rem">
-      <i @click="onCommentSetting" class="fas fa-ellipsis-v"></i>
+      <p id="username">{{commentData.userRequestDto.nickname}} </p> 
+      <p id="user_comment">{{commentData.descr}} </p>
+      <div id="comment_setting" v-if="isMine">
+        <i @click="onCommentSetting" class="fas fa-ellipsis-v"></i>
+      </div>
     </div>
   </div>
 </template>
