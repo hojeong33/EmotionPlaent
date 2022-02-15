@@ -13,6 +13,7 @@ export default new Vuex.Store({
   state: {
     // feedActive: false,
     //검색부분
+    searching: false, //검색창 활성화
     words: null, //검색창
     tagSearch: [],
     userSearch: [],
