@@ -79,6 +79,7 @@ export default {
       this.$store.dispatch('recommendMusic')
 			this.$store.dispatch('recommendMovie')
 			this.$store.dispatch('recommendActivity')
+      this.$store.state.loading = true
     },
   },
 };

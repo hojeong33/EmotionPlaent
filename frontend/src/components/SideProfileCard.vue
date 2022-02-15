@@ -10,8 +10,8 @@
     </div>
     <div class="card_body">
       <p>이야기 {{ this.$store.state.userFeedInfo.length }}개</p>
-      <p>팔로우 {{ this.$store.state.userFollowInfo.userFollow.length }}명</p>
-      <p>팔로워 {{ this.$store.state.userFollowInfo.userFollowing.length }}명</p>
+      <p>팔로워 {{ this.$store.state.userFollowInfo.userFollow.length }}명</p>
+      <p>팔로우 {{ this.$store.state.userFollowInfo.userFollowing.length }}명</p>
     </div>
     <div id="card_footer">
       <div id="where">
