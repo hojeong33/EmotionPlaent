@@ -75,7 +75,7 @@ transition: opacity 150ms linear;
 user-select: none;
 }
 .card-carousel-cards .card-carousel--card img:hover {
-opacity: 0.5;
+/* opacity: 0.5; */
 }
 .card-carousel-cards .card-carousel--card--footer {
 border-top: 0;
