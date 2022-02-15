@@ -1,5 +1,5 @@
 <template>
-	<div id="feed_detail">
+	<div id="feed_detail" v-if="feed">
 		<div id="img_box">
       <div v-for="(img, idx) in feed.imgs" :key="idx"><img  id="feedImg" :src="img.imgLink" alt=""></div>
 			<p class="overlay_content" >{{feed.authorDetail.nickname}} <img id="planet_img" :src="require('@/assets/images/emotions/happy.png')" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p>

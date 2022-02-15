@@ -17,7 +17,7 @@
 
 
     <insert id="create" parameterType="com.ssafy.project.EmotionPlanet.Dto.PickDto">
-        insert into feed(userNo, name, tagNo)
+        insert into pick(userNo, name, tagNo)
         values (  #{userNo}, #{name}, #{tagNo})
         <selectKey keyProperty="no" resultType="int" order="AFTER">
             SELECT LAST_INSERT_ID()
