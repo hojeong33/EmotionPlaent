@@ -1,5 +1,6 @@
 <template>
   <div id="mainpage-container">
+    <loading v-if="isLoading"></loading>
     <side-profile-card :user-info="userInfo"> </side-profile-card>
     <div class="container justify-content-center">
       <div class="example">
@@ -29,6 +30,7 @@
 </template>
 
 <script>
+import Loading from "./Loading.vue"
 import TabItem from "./TabItem.vue";
 import Recommend from "../../components/MainPage/RecommendTab/Recommend.vue";
 import FeedList from "../../components/MainPage/FeedTab/FeedList.vue";
@@ -38,7 +40,7 @@ const session = window.sessionStorage;
 
 export default {
   name: "Main",
-  components: { TabItem, Recommend, FeedList, SideProfileCard },
+  components: { Loading, TabItem, Recommend, FeedList, SideProfileCard },
   data() {
     return {
       posts,
@@ -54,6 +56,7 @@ export default {
         followings: 0,
         followers: 20100,
       },
+      isLoading: true
     };
   },
   computed: {
@@ -79,6 +82,11 @@ export default {
     console.log("세션 유저 인포")
     console.log(session.getItem('userInfo'))
   },
+  mounted() {
+    setTimeout(() => {
+      this.isLoading = false
+    }, 2500)
+  }
 };
 </script>
 
