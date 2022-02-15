@@ -111,9 +111,9 @@ export default {
   
   p {
     color: #777777;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: bold;
-    margin: 3rem;
+    margin: 2.5rem;
   }
 
 	#list-container {
@@ -164,11 +164,12 @@ export default {
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		padding-top: 20vh;
+		padding-top: 1rem;
 	}
 
 	#nothing {
-    width: 10%;
+    width: 30%;
+	height: 30%;
     height: inherit;
     aspect-ratio: 1/1;
   }

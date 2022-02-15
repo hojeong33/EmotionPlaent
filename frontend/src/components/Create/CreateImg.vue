@@ -128,7 +128,9 @@ export default {
 
     for (let planet of this.planetStyles) {
       if (planet.id === this.userInfo.mood) {
-        this.feedDto.tags.push({name: `${planet.name}`, type: 1 })
+        let PlanetName = planet.name.slice(0,2)
+        console.log(PlanetName)
+        this.feedDto.tags.push({name: PlanetName, type: 1 })
       }
     }
     console.log(this.feedDto.tags)
@@ -198,15 +200,18 @@ export default {
     display: flex;
     flex-direction: column;
     width: 85%;
-    height: 65%;
+    height: 70%;
     background-color: lightgray;
     border-radius: 20px;
     margin: auto;
     justify-content: center;
     align-items: center;
-    margin: 2rem;
+    margin: 1rem;
   }
-
+  #default-box{
+    text-align: center;
+    margin: auto;
+  }
   #default-img {
     width: 3rem;
     height: 3rem;
@@ -230,6 +235,7 @@ export default {
 
   .uploadedImg {
     width: 100%;
+    height: 100%;
     aspect-ratio: 1/1;
     position: absolute;
   }

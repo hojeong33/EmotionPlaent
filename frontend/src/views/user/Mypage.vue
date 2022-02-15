@@ -9,11 +9,12 @@
           <button @click="$router.push({name: 'Setting'})">프로필 수정</button>
         </div>
         <div id="info">
-          <h3>{{ this.$store.state.userInfo.intro }}</h3>
+          <p>{{ this.$store.state.userInfo.intro }}</p>
+          <br>
           <div id="info-card">
             <h3>이야기 {{ this.$store.state.userFeedInfo.length }}</h3>
-            <h3 @click="showFollowerList" style="cursor: pointer;">팔로우 {{ this.$store.state.userFollowInfo.userFollow.length }}</h3>
-            <h3 @click="showFollowingList" style="cursor: pointer;">팔로워 {{ this.$store.state.userFollowInfo.userFollowing.length }}</h3>
+            <h3 @click="showFollowerList" style="cursor: pointer;">팔로워 {{ this.$store.state.userFollowInfo.userFollow.length }}</h3>
+            <h3 @click="showFollowingList" style="cursor: pointer;">팔로우 {{ this.$store.state.userFollowInfo.userFollowing.length }}</h3>
           </div>
         </div>
       </div>
@@ -149,7 +150,7 @@ export default {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
-    width: 80%;
+    width: 90%;
     padding: 2rem 1rem;
   }
 

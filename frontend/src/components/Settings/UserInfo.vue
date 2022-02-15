@@ -18,42 +18,27 @@
     </article>
     <article id="us_body">
       <div id="us_email">
-        <h3>이메일</h3>
-        <p>{{ this.$store.state.userInfo.email }}</p>
+        <h2>이메일</h2>
+        <span>
+          <p>{{ this.$store.state.userInfo.email }}</p>
+        </span>
       </div>
       <!-- <div id="us_password">
         <h3>비밀번호</h3>
         <a href="" @click="go_to_passwordchange">비밀번호 변경...</a>
       </div> -->
       <div id="short_comment">
-        <h3>소개</h3>
-        <p>{{ this.$store.state.userInfo.intro }}</p>
+        <h2>소개</h2>
+        <span>
+          <p>{{ this.$store.state.userInfo.intro }}</p>
+        </span>
       </div>
       <div id="us_birth">
-        <h3>생년월일</h3>
+        <h2>생년월일</h2>
         <span>
           <p>{{ this.$store.state.userInfo.birth }}</p>
         </span>
       </div>
-      <div id="us_show">
-        <h3>계정 공개</h3>
-        <span>
-          <span>
-            <input type="radio" id="show_all" onclick="return false;"
-            :checked="this.publish == 1 ? 'checked': false" readonly>
-            <label for="show_all">모두에게 공개</label>
-          </span>
-          <span>
-            <input type="radio" id="show_followers" onclick="return false;"
-            :checked="this.publish == 2 ? 'checked': false" readonly>
-            <label for="show_followers">팔로워에게 공개</label>
-          </span>
-        </span>
-      </div>
-      <!-- <div id="us_history">
-        <h3>활동 내역</h3>
-        <a href="">자세히...</a>
-      </div> -->
     </article>
     <button id="withdrawal" @click="go_to_withdrawal">회원 탈퇴</button>
   </section>
@@ -128,8 +113,9 @@ export default {
 
   h2 {
     margin: 0 1rem;
-    font-size: 2.5rem;
+    font-size: 2.3rem;
     font-weight: bold;
+    letter-spacing: 1px;
   }
 
   h3 {
@@ -154,7 +140,7 @@ export default {
 
   p {
     margin: 0;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: bold;
   }
 

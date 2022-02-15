@@ -44,6 +44,9 @@ export default {
 			return "neutral.png"
 		}
   },
+  created () {
+    console.log('이건 피드스몰', this.post)
+  }
 }
 </script>
 
@@ -62,10 +65,15 @@ export default {
   .feed-s {
     position: relative;
     cursor: pointer;
+    border: 1px solid;
+    border-radius: 20px;
+    width: 12rem;
+    height: 12rem;
   }
 
   .feed-s-thumbnail {
     width: 100%;
+    height: 100%;
     aspect-ratio: 1/1;
     border-radius: 20px;
     position: relative;

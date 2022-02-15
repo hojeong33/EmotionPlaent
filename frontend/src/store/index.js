@@ -109,10 +109,12 @@ export default new Vuex.Store({
     alarm: [], 
     socketcount : 0, // 소켓 연결 일정시간 이상 안되면 재로그인 시키기
 
-    //comment
+    // 댓글
     comments: [],
     commentsOnTwo: [],
     comment:[],
+    commentNum: null,
+    commentDeleted: false
   },
   mutations: {
     navActivate: function({ navActive }, payload){
@@ -191,9 +193,10 @@ export default new Vuex.Store({
     },
     
     // 모달부분입니다
-    commentSettingModalActivate: function (state) {
+    commentSettingModalActivate: function (state, commentNum) {
       state.commentSettingModalActive = !state.commentSettingModalActive
-      console.log(state.commentSettingModalActive)
+      state.commentNum = commentNum
+      console.log(state.commentSettingModalActive, commentNum)
     },
     userFeedSettingModalActivate: function (state) {
       state.userFeedSettingModalActive = !state.userFeedSettingModalActive
@@ -298,7 +301,13 @@ export default new Vuex.Store({
       state.userpagefollowerListActive = !state.userpagefollowerListActive
       console.log(state.userpagefollowerListActive)
     },
-    
+    // 댓글
+    isDelete: function (state) {
+      if (state.commentNum) {
+        state.commentDeleted = state.commentNum
+      }
+      console.log(state.commentDeleted)
+    }
   },
   actions: {
       

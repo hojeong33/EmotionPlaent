@@ -15,7 +15,7 @@
     </div>
     <div id="card_footer">
       <div id="where">
-        <span style="font-size:1rem; font-weight:bold">나는 지금...</span>
+        <span style="font-size:1rem; font-weight:bold; margin-left:1.2rem;">나는 지금...</span>
         <span id="at">
           <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)">
           <p id="planet_name" style="font-size:1.4rem; font-weight:bold; margin-top:0.4rem; margin-left:0.3rem" :style="{color:tmp.color}">{{tmp.name }} 탐험중</p>
