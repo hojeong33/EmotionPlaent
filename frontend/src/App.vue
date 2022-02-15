@@ -29,6 +29,7 @@
     <pick-your-tag v-if="pickYourTagModalActive" />
     <mypage-follower-list v-if="mypagefollowerListActive" />
     <mypage-following-list v-if="mypagefollowingListActive" />
+    <!-- 팔로우 -->
     <userpage-follower-list v-if="userpagefollowerListActive" />
     <userpage-following-list v-if="userpagefollowingListActive" />
   </div>
