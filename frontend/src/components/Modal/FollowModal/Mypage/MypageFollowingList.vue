@@ -116,11 +116,8 @@ export default {
 #my_following_list{
 	margin-left: 1rem;
 	overflow-y: scroll;
-<<<<<<< HEAD
 	height: 82%;
-=======
-	height: 40vh;
->>>>>>> 78f3afd7b3c037584847569ac953f8b3107f6279
+
 }
 #userInfo{
 	display: flex;

@@ -40,11 +40,8 @@ export default {
   },
   props:{
       feedNo:Number,
-<<<<<<< HEAD
       feedAuthor:Number,
-=======
-      feedAuthor:Number
->>>>>>> 78f3afd7b3c037584847569ac953f8b3107f6279
+ 
   },
  
   methods:{
