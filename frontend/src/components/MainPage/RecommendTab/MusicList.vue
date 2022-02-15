@@ -7,7 +7,7 @@
             <div class="card-carousel--overflow-container">
                 <div v-if="this.$store.state.recommendType === 1" class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
                     <div id="post_img" class="card-carousel--card"  v-for="item in this.$store.state.recommendMusic.slice(0, 10)" :key="item.index">
-                        <img @click="addPlayList" id="goldstar"  src="@/assets/images/icons/goldstar.png" alt=""> 
+                        <img @click="addPlayList(item)" id="goldstar"  src="@/assets/images/icons/goldstar.png" alt=""> 
                         <img :src="item.imgLink"/>
                         <div class="card-carousel--card--footer">
                             <p>{{ item.artist }} - </p>
@@ -18,7 +18,7 @@
                 </div>
                 <div v-if="this.$store.state.recommendType === 0" class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
                     <div  id="post_img" class="card-carousel--card" v-for="item in this.$store.state.recommendMusic.slice(10)" :key="item.index">
-                        <img id="goldstar" src="@/assets/images/icons/goldstar.png" alt="">
+                        <img @click="addPlayList(item)" id="goldstar" src="@/assets/images/icons/goldstar.png" alt="">
                         <img :src="item.imgLink"/>
                         <div class="card-carousel--card--footer">
                             <p>{{ item.artist }} - </p>
@@ -43,6 +43,7 @@ export default {
         windowSize: 3,
         paginationFactor: 220,
         type:0,
+        sendData:null,
         }
     },
   computed: {
@@ -66,9 +67,10 @@ export default {
             this.currentOffset += this.paginationFactor;
         }
         },
-        addPlayList:function(){
-          this.$store.commit('addPlayListActive',this.type)
-
+        addPlayList:function(item){
+          this.sendData=[this.type,item]
+          this.$store.commit('addPlayListActive',this.sendData)
+          // console.log(this.$store.state.recommendMusic)
         }
     }
 }

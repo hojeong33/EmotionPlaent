@@ -32,6 +32,8 @@ export default new Vuex.Store({
     recommendReload: 0,
     //플레이리스트 만들기
     type:0, // 음악:0 영화:1 활동:2
+    //내가 선택한 아이템
+    item:null,
 
     // 내정보
     userInfo: null,
@@ -328,9 +330,10 @@ export default new Vuex.Store({
       state.feedLikesInfo=likesList
       console.log(state.likesListActive)
     },
-    addPlayListActive:function(state,type){
+    addPlayListActive:function(state,sendData){
       state.addPlayListActive=!state.addPlayListActive
-      state.type=type
+      state.type=sendData[0]
+      state.item=sendData[1]
       console.log(state.addPlayListActive)
     },
     // 댓글
