@@ -21,6 +21,8 @@ export default new Vuex.Store({
     tagSearchResult: [], //검색 결과
     userSearchResult: [],
     pickSearchResult: [],
+    //로딩페이지
+    loading: true,
     //메인 추천탭 부분
     userEmotion: null,
     recommendType: 1,
@@ -751,8 +753,6 @@ export default new Vuex.Store({
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
-      
-			setTimeout(() => {
         axios.get('http://13.125.47.126:8080/recommend/music/' + this.state.userInfo.mood, {
           headers: headers,
         }).then((res) => {
@@ -764,14 +764,12 @@ export default new Vuex.Store({
         }).then(() => {
           console.log('getQSSList End!!');
         });
-      }, 1000);
     },
     recommendMovie() {
       let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
-      setTimeout(() => {
 			axios.get('http://13.125.47.126:8080/recommend/movie/' + this.state.userInfo.mood, {
           headers: headers,
         }).then((res) => {
@@ -783,14 +781,12 @@ export default new Vuex.Store({
         }).then(() => {
           console.log('getQSSList End!!');
         });
-      }, 2000);
     },
     recommendActivity() {
       let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
-      setTimeout(() => {
 			axios.get('http://13.125.47.126:8080/recommend/activity/', {
           headers: headers,
         }).then((res) => {
@@ -802,7 +798,6 @@ export default new Vuex.Store({
       }).then(() => {
         console.log('getQSSList End!!');
       });
-    }, 3000);
   },
 
     accessTokenRefresh({commit}, res) {
