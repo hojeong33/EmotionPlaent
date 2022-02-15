@@ -10,16 +10,16 @@
       </div>
     </div>
     <hr>
-    <div id="no_result" v-if="feedLikesList.length === 0">
+    <div id="no_result" v-if="forderlists.length === 0">
       <img id="nothing" src="@/assets/images/etc/alien.png" alt="no result">
       <p id="no_likes">플레이리스트 목록이 없습니다...</p>
     </div>
     <div id="feed_likes_list" v-else>
-      <div v-for="(liker, index) in feedLikesList" :key="index">
+      <div v-for="(forder, index) in forderlists" :key="index">
         <div id="userInfo">
-          <img id="profile_img" :src="liker.profileImg" alt="">
-          <p id="username">{{liker.nickname}}</p>
-          <!-- <button id="follow_cancel">취소</button> -->
+          <!-- <img id="profile_img" :src="liker.profileImg" alt=""> -->
+          <p id="username">{{forder.name}}</p>
+          <button id="follow_cancel" @click="choiceForder(forder.no)">선택</button>
         </div>
       </div>
     </div>
@@ -44,7 +44,6 @@
 <script>
 import axios from 'axios'
 const session = window.sessionStorage;
-const userdata = JSON.parse(session.getItem('userInfo')) ;
 export default {
 	data () {
 		return {
@@ -59,18 +58,68 @@ export default {
         userNo:null,
       },
       forderlistsNo:[],
-      forderlist:[],
+      forderlists:[],
       pickNo:null,
+      userdata:null,
+      choicedForder:null,
+      item:null,
 		}
 	},
 	methods: {
+    choiceForder:function(forderNo){
+      this.choicedForder=forderNo
+      let sendData=null
+      if (this.type==0){
+         sendData={
+          pickNo:this.choicedForder,
+          author:this.item.artist,
+          title:this.item.title,
+          year:this.item.year,
+          imgLink:this.item.imgLink,
+          type:this.type
+        }
+      }else if(this.type==1){
+        sendData={
+          pickNo:this.choicedForder,
+          targetNo:this.item.no,
+          type:this.type
+        }
+      }else{
+        sendData={
+          pickNo:this.choicedForder,
+          targetNo:this.item.no,
+          type:this.type
+        }
+      }
+      let headers = {
+          // 'Content-Type': 'multipart/form-data',
+          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+        axios({
+          method: 'post',
+          url: `http://13.125.47.126:8080/pickContent`,
+          data:sendData,
+          headers: headers,  // 넣는거 까먹지 마세요
+        }).then((res) => {
+            this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+        }).catch((error) => {
+          console.log(error);
+        }).then(() => {
+          console.log('플레이리스트에 담기');
+        });
+
+      // console.log('데이터 가져오기')
+      // console.log(this.choicedForder)
+      // console.log(this.item)
+    },
 		goBack: function () {
 			this.$store.commit('addPlayListActive',this.type)
       this.isClick=true
 		},
     addList:function(){
       this.isClick=false
-      console.log('여기')
+      // console.log('여기')
       console.log(this.isClick)
 
     },
@@ -89,15 +138,12 @@ export default {
           url: `http://13.125.47.126:8080/pick/${this.pickNo}`,
           headers: headers,  // 넣는거 까먹지 마세요
         }).then((res) => {
-            console.log("피드 작성 : " + res.data)
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
             this.forderlists.push(res.data)
-            console.log('플레이리스트')
-            console.log(this.forderlists)
         }).catch((error) => {
           console.log(error);
         }).then(() => {
-          console.log('플레이리스트 생성하기');
+          console.log('플레이리스트 정보 가져오기');
         });
 
     },
@@ -110,13 +156,11 @@ export default {
 
         axios({
           method: 'get',
-          url: `http://13.125.47.126:8080/picks/type/returnNo/${userdata.no}/${this.listData.type}`,
+          url: `http://13.125.47.126:8080/picks/type/returnNo/${this.userdata.no}/${this.listData.type}`,
           headers: headers,  // 넣는거 까먹지 마세요
         }).then((res) => {
-            console.log("피드 작성 : " + res.data)
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
             this.forderlistsNo=res.data
-            console.log('쏘오오리')
             this.forderlist=[]
             // console.log(this.forderlists)
             for(let i=0; i<this.forderlistsNo.length; i++){
@@ -126,7 +170,7 @@ export default {
         }).catch((error) => {
           console.log(error);
         }).then(() => {
-          console.log('플레이리스트 생성하기');
+          console.log('플레이리스트번호 목록 가져오기');
         });
 
     },
@@ -153,7 +197,6 @@ export default {
           data: formData2, // post 나 put에 데이터 넣어 줄때
           headers: headers,  // 넣는거 까먹지 마세요
         }).then((res) => {
-            console.log("피드 작성 : " + res.data)
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
             this.isClick=true
             this.getPlayLists()
@@ -170,10 +213,12 @@ export default {
 
 	},
 	created () {
+    this.userdata=JSON.parse(session.getItem('userInfo')) 
 		this.feedLikesList = this.$store.state.feedLikesInfo
     this.listData['type']=this.$store.state.type
-    this.listData['tagNo']=userdata.mood
-    this.listData['userNo']=userdata.no
+    this.item=this.$store.state.item
+    this.listData['tagNo']=this.userdata.mood
+    this.listData['userNo']=this.userdata.no
     // console.log(userdata)
     this.getPlayLists()
 	}

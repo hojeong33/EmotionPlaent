@@ -7,7 +7,7 @@
             <div class="card-carousel--overflow-container">
                 <div v-if="this.$store.state.recommendType === 1" class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
                     <div id="post_img" class="card-carousel--card" v-for="item in this.$store.state.recommendActivity.slice(0, 10)" :key="item.index">
-                        <img id="goldstar" src="@/assets/images/icons/goldstar.png" alt="">
+                        <img @click="addPlayList(item)" id="goldstar" src="@/assets/images/icons/goldstar.png" alt="">
                         <img id="active_img" :src="item.imgLink"/>
                         <div class="card-carousel--card--footer">
                             <p>{{ item.title }}</p>
@@ -17,7 +17,7 @@
                 </div>
                 <div v-if="this.$store.state.recommendType === 0" class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
                     <div id="post_img" class="card-carousel--card" v-for="item in this.$store.state.recommendActivity.slice(10)" :key="item.index">
-                        <img id="goldstar" src="@/assets/images/icons/goldstar.png" alt="">
+                        <img @click="addPlayList(item)" id="goldstar" src="@/assets/images/icons/goldstar.png" alt="">
                         <img  :src="item.imgLink"/>
                         <div class="card-carousel--card--footer">
                             <p>{{ item.title }}</p>
@@ -40,6 +40,7 @@ export default {
         currentOffset: 0,
         windowSize: 3,
         paginationFactor: 220,
+        type:2
         }
     },
     computed: {
@@ -63,6 +64,11 @@ export default {
             this.currentOffset += this.paginationFactor;
         }
         },
+        addPlayList:function(item){
+          this.sendData=[this.type,item]
+          this.$store.commit('addPlayListActive',this.sendData)
+          // console.log(this.$store.state.recommendMusic)
+        }
     }
 }
 </script>
