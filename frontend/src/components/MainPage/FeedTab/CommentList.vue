@@ -1,10 +1,10 @@
 <template>
   <div id="comments" v-if="comments">
     <div id="form-commentInfo">
-      <div id="comment-count">댓글 
+      <div id="comment-count"  @click="goToDetail">댓글 
           <span id="count">{{comments.length}}</span>
       </div>
-      <comment v-for="(comment,index) in this.comments"
+      <comment v-for="(comment,index) in this.commentsList"
       :comment="comment"
       :key="index">
       </comment>
@@ -43,6 +43,9 @@ export default {
   },
  
   methods:{
+    goToDetail:function(){
+      this.$router.push({name:'FeedDetail', params:{feedNo:this.feedNo}})
+    },
     commentMore:function(){
       this.commentsList=this.comments
       this.isShort=false
@@ -69,7 +72,7 @@ export default {
       }).then((res) => {
       this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
       this.comments=res.data.reverse()
-      this.comments.sort()
+      this.commentsList=this.comments.slice(0,2)
       console.log('댓글이 갱신됐슴다!!!!!!!!!!!!!!!!!!!', this.comments)
       })
       .catch((error) => {

@@ -31,81 +31,26 @@ export default {
 			this.$store.commit('commentSettingModalActivate', this.comment)
       },
     },
-      deleteComment:function(){
-        // console.log(this.comment.no)
-        // console.log(this.comment.feedNo)
-        
-        // let headers = {
-        //   'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        //   'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        // };
-        // axios({
-        // method:'delete',
-        // url:`http://13.125.47.126:8080/comments/${this.comment}`,
-        // headers:headers
-        // })
-        // .then((res)=>{
-        //   console.log(res);
-        //   console.log('response header', res.headers);
-        //   if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
-        //     session.setItem('at-jwt-access-token', "");
-        //     session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-        //     console.log("Access Token을 교체합니다!!!")
-        //     }
-        //   axios({
-        //   method:'get',
-        //   url:`http://13.125.47.126:8080/comments/${this.comment.feedNo}`,
-        //   headers:headers,
-        //   })
-        //   .then((res) => {
-        //     console.log(res);
-        //     console.log('response header', res.headers);
-        //     if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
-        //       session.setItem('at-jwt-access-token', "");
-        //       session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-        //       console.log("Access Token을 교체합니다!!!")
-        //       }
-        //       console.log(res.data)
-        //       this.comments=res.data
-        //       this.commentsList=res.data.slice(0,2)
-        //     }).catch((error) => {
-        //       console.log(error);
-        //     }).then(() => {
-        //       console.log('댓글 가져오기 클리어');
-
-        //     });
-        // })
-        
-
-      },
-      // updateComment:function(){
-      //   axios({
-      //     method:'put',
-      //     url:'http://13.125.47.126:8080/comments',
-      //   })
-      //   .then((res)=>{
-      //     // console.log(res.data)
-      //   })
-      // },
-    created(){
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-      axios({
-          method: 'get',
-          url:`http://13.125.47.126:8080/comment/${this.comment}`,
-          headers: headers,  // 넣는거 까먹지 마세요
-        }).then((res) => {
-        this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-        console.log('!!!!!!!!!!!!!!!!!!!')
-        console.log(res.data)
-        this.commentData=res.data
-        // this.getComments()
-        }).catch((error) => {
-          console.log(error);
-        })
-    },
+  created(){
+    let headers = {
+      'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+      'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+  };
+  axios({
+      method: 'get',
+      url:`http://13.125.47.126:8080/comment/${this.comment}`,
+      headers: headers,  // 넣는거 까먹지 마세요
+    }).then((res) => {
+    this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+    console.log('!!!!!!!!!!!!!!!!!!!')
+    console.log(res.data)
+    this.commentData=res.data
+    this.isMine=res.data.owner
+    // this.getComments()
+    }).catch((error) => {
+      console.log(error);
+    })
+  },
 }
 </script>
 

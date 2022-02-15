@@ -225,9 +225,10 @@ const routes = [
     ],  
   },
   {
-    path: '/feed/detail',
+    path: '/feed/:feedNo',
     name: 'FeedDetail',
     component: FeedDetail,
+    props:true,
     meta: {
       loginRequired: true,
       testRequired: true,
