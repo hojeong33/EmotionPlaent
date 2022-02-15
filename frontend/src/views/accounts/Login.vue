@@ -118,7 +118,8 @@ export default {
       this.$store.commit('loginConfirmModalActivate')
     })
     .catch(err=> {
-      console.log('나는 에러야!', err)
+      console.log(err)
+      console.log('나는 에러야!', err.response.data.message)
       this.$store.commit('loginFailModalActivate', err.response.data.message)
       // alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
     })

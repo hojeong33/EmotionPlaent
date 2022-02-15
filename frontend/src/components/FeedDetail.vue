@@ -1,5 +1,5 @@
 <template>
-	<div id="feed_detail">
+	<div id="feed_detail" v-if="feed">
 		<div id="img_box">
       <article id="img-box">
         <div id="uploaded-box">

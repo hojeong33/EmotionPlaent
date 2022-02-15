@@ -494,12 +494,12 @@ export default new Vuex.Store({
           console.log("소켓 연결 성공",frame);
           // 서버의 메시지 전송 endpoint를 구독합니다.
           // 이런형태를 pub sub 구조라고 합니다.
-          this.stompClient.subscribe(`/alarm/receive/${this.state.userInfo.no}`, () => {
-            console.log("---------------------------------")
-            // alert(obj.message)
-            // this.state.alarm.unshift(obj);
+          this.stompClient.subscribe(`/alarm/receive/${this.state.userInfo.no}`, (res) => {
             this.dispatch('alarmselect')
-            console.log("---------------------------------")
+            const obj = JSON.parse(res.body);
+            if(obj.type === 1){
+              this.dispatch('userfollowdate', this.state.userInfo.no);
+            }
           });
         },
         (error) => {
@@ -581,6 +581,7 @@ export default new Vuex.Store({
         console.log("언팔로우 성공")
         this.state.searchUserFollowInfo.followcheck = 0
         this.dispatch('accessTokenRefresh', res) // store에서
+        this.dispatch('userfollowdate', el);
         }).catch((error) => {
           console.log("언팔로우 실패")
           console.log(error);
@@ -609,6 +610,7 @@ export default new Vuex.Store({
         this.state.searchUserFollowInfo.followcheck = 1
         this.dispatch('accessTokenRefresh', res) // store에서
         this.dispatch('follow',el)
+        this.dispatch('userfollowdate', el);
         }).catch((error) => {
           console.log("팔로우 실패")
           console.log(error);

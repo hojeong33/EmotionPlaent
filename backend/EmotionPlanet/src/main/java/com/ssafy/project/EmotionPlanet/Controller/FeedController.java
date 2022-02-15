@@ -52,6 +52,8 @@ public class FeedController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "글 양식이 올바르지 않습니다.");
         }
     }
+    
+    
 
     @GetMapping(value ="/feeds/{no}") // 최신 피드 목록
     public ResponseEntity<List<FeedDto>> list(@PathVariable String no) {

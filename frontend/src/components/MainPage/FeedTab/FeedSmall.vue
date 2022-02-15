@@ -1,5 +1,5 @@
 <template>
-  <div class="feed-s">
+  <div class="feed-s" >
     <img class="feed-s-thumbnail" :src="post.postImage" :alt="post.username"
     @mouseover="hover = true">
     <span class="feed-s-info" v-show="hover" @mouseleave="hover = false">
@@ -24,7 +24,7 @@ export default {
   },
   props: {
     post: Object
-  }
+  },
 }
 </script>
 

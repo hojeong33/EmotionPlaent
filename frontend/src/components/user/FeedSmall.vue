@@ -1,9 +1,9 @@
 <template>
   <div class="feed-s">
     <img class="feed-s-thumbnail" :src="post.imgs[0].imgLink" :alt="this.$store.state.userInfo.username"
-    @mouseover="hover = true">
-    <img class="feed-planet" :src="require(`@/assets/images/emotions/${planet}`)" id="planet">
-    <span class="feed-s-info" v-show="hover" @mouseleave="hover = false">
+    @mouseover="hover = true" >
+    <img class="feed-planet" :src="require(`@/assets/images/emotions/${planet}`)" id="planet" >
+    <span class="feed-s-info" v-show="hover" @mouseleave="hover = false" @click="feeddetail()">
       <span class="info">
         <img src="@/assets/images/icons/heart.png" alt="heart">
         <p>{{ post.likes }}</p>
@@ -34,6 +34,11 @@ export default {
   },
   props: {
     post: Object,
+  },
+    methods:{
+    feeddetail() {
+      this.$router.push({name:'FeedDetail', params:{feedNo:this.post.no}})
+    },
   },
   computed: {
     planet() {

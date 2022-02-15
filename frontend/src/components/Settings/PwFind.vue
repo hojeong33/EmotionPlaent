@@ -32,6 +32,7 @@
         <input type="text" id="tel"
         v-model="credentials.tel"
         @input="tel_helper" maxlength="13"
+        @keyup.enter="send_mail"
         placeholder="등록하신 휴대전화를 입력해주세요.">
         <span v-if="credentials.tel">
           <p v-if="!isValid.validateTel" class="warn">
