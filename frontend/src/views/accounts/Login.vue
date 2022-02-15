@@ -1,44 +1,48 @@
 <template>
   <div id="login_container">
-    <div id="login_header">
-      <h1>어서오세요!</h1>
-      <h1>오늘은 어떤 이야기를</h1>
-      <h1>들려주실건가요? 😉</h1>
-    </div>
-    <form @submit.prevent="login" id="login_body">
-      <article id="email_form">
-        <label for="email">이메일</label>
-        <input type="text"
-        id="email"
-        v-model="credentials.email"
-        placeholder="이메일을 입력해주세요"
-        autocomplete="off">
-      </article>
-      <article id="password_form">
-        <label for="pw">비밀번호</label>
-        <input type="password" 
-        id="pw"
-        v-model="credentials.pw"
-        placeholder="비밀번호를 입력해주세요">
-      </article>
-      <div id="link">
-        <router-link :to="{ name: 'EmailFind' }">이메일 찾기</router-link>
-        <router-link :to="{ name: 'Password-find' }">비밀번호 찾기</router-link>
-        <router-link :to="{ name: 'Signup' }" class="gosignup">회원가입</router-link>
+    <div id="login_innercontainer">
+      <div id="login_header">
+        <h1>어서오세요!</h1>
+        <h1>오늘은 어떤 이야기를</h1>
+        <h1>들려주실건가요? 😉</h1>
       </div>
-      <button id="login_btn">로그인</button>
-    </form>
-    <button id="google" class="social_login" @click="handleClickSignIn">
-      <img id="google" src="../../assets/images/etc/Google__G__Logo.png">
-      <p>Google로 로그인</p>
-    </button>
-    <article>
-      <button id="kakao" class="social_login" @click="handleClickKaKaoSignin">
-        <img id="kakao" src="../../assets/images/etc/kakao.png">
-        <p>Kakao로 로그인</p>
-        </button>
-    </article>
-    <button id="kakao" class="social_logout" @click="logout">로그아웃</button>
+      <br>
+      <form @submit.prevent="login" id="login_body">
+        <article id="email_form">
+          <label for="email">이메일</label>
+          <input type="text"
+          id="email"
+          v-model="credentials.email"
+          placeholder="이메일을 입력해주세요"
+          autocomplete="off">
+        </article>
+        <article id="password_form">
+          <label for="pw">비밀번호</label>
+          <input type="password" 
+          id="pw"
+          v-model="credentials.pw"
+          placeholder="비밀번호를 입력해주세요">
+        </article>
+        <div id="link">
+          <router-link :to="{ name: 'EmailFind' }">이메일 찾기</router-link>
+          <router-link :to="{ name: 'Password-find' }">비밀번호 찾기</router-link>
+          <router-link :to="{ name: 'Signup' }" class="gosignup">회원가입</router-link>
+        </div>
+        <br>
+        <button id="login_btn">로그인</button>
+      </form>
+      <button id="google" class="social_login" @click="handleClickSignIn">
+        <img id="google_img" src="../../assets/images/etc/Google__G__Logo.png">
+        <p>Google로 로그인</p>
+      </button>
+      <article>
+        <button id="kakao" class="social_login" @click="handleClickKaKaoSignin">
+          <img id="kakao_img" src="../../assets/images/etc/kakao.png">
+          <p>Kakao로 로그인</p>
+          </button>
+      </article>
+      <!-- <button id="kakao" class="social_logout" @click="logout">로그아웃</button> -->
+    </div>
   </div>
 </template>
 
@@ -234,13 +238,12 @@ export default {
     margin-left: 0.5rem;
     font-size: 1.125rem;
   }
-
   input {
     border: 2px #5E39B3 solid;
     border-radius: 20px;
-    width: 35vh;
-    min-width: 350px;
-    height: 4.5vh;
+    width: 100%;
+    min-width: 300px;
+    height: 5vh;
     min-height: 40px;
     padding: 0.75rem;
     font-size: 1.25rem;
@@ -289,10 +292,16 @@ export default {
     margin-bottom: 1.125rem;
     cursor: pointer;
   }
-
-  img {
+  #google_img {
+    width: 4vh;
+    height: 4vh;
+    margin-left: 0.4rem;
+    margin-right: 1rem;
+  }
+  #kakao_img {
     width: 5vh;
     height: 5vh;
+    margin-right: 1rem;
   }
 
   p {
@@ -302,19 +311,27 @@ export default {
   #login_container{
     display: flex;
     flex-direction: column;
+    justify-content: flex-start;
     align-items: center;
     background-color: white;
-    /* width: 50%; */
+    width: 30%;
     align-self: center;
-    min-width: 450px;
-    height: 100%;
+    min-width: 700px;
+    min-height: 92.5vh;
+    /* height: 100%; */
+    padding: 2rem;;
     border-radius: 20px;
-    padding: 2rem;
-    border: 2px #5E39B3 solid ;
+    border: 2px  #5E39B3 solid;
     /* border-left: 2px #5E39B3 solid;
     border-right: 2px #cccccc solid; */
   }
-
+  #login_innercontainer{
+    width: 80%;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
   #login_header{
     display: flex;
     flex-direction: column;
@@ -340,6 +357,7 @@ export default {
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    width: 100%;
   }
 
   #login_body > *:first-child {
@@ -361,11 +379,11 @@ export default {
 
   .social_login {
     display: flex;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
     background-color: #F0EDE7;
     color: black;
-    width: 30vh;
+    width: 35vh;
     min-width: 300px;
     height: 4.5vh;
     min-height: 45px;

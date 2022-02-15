@@ -354,8 +354,10 @@
     justify-content: flex-start;
     align-items: center;
     padding: 3rem 2rem 1.5rem;
-    border-left: 2px #cccccc solid;
-    border-right: 2px #cccccc solid;
+    /* border-left: 2px #cccccc solid;
+    border-right: 2px #cccccc solid; */
+    border-radius: 20px;
+    border: 2px  #5E39B3 solid;
   }
 
   #signup_header {
