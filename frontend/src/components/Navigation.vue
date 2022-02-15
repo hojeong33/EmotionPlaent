@@ -61,6 +61,7 @@ export default {
       searchWords: null,
       //알람입니둥
       alarming: false,
+      alarmwatch: 0,
     }
   },
   components: { Search, Alarm },
@@ -148,7 +149,7 @@ export default {
       console.log(count)
       return count
     }
-  }
+  },
 }
 </script>
 
