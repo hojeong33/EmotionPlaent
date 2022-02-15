@@ -39,7 +39,8 @@ export default {
     }
   },
   props:{
-      feedNo:Number
+      feedNo:Number,
+      feedAuthor:Number
   },
  
   methods:{
@@ -103,12 +104,18 @@ export default {
              console.log(res.data)
              console.log('댓글 다시 가져옴!!!!!!!!!!!!!!!!!!!!!!')
              this.getComments()
+             let body = {
+               receiver: this.feedAuthor,
+               feedno: this.feedNo,
+               commentno: res.data,
+             }
+             this.$store.dispatch('comment',body)
           })
           .catch((error) => {
             console.log(error);
           })
           .then(() => {
-            console.log('댓글 작성 완료');
+            console.log('댓글 작성 완료 코멘트 리스트');
           });
       }
       else{
