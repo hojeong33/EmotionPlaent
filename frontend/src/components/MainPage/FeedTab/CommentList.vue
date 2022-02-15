@@ -39,7 +39,8 @@ export default {
     }
   },
   props:{
-      feedNo:Number
+      feedNo:Number,
+      feedAuthor:Number,
   },
  
   methods:{

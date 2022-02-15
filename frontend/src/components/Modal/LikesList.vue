@@ -1,25 +1,25 @@
 <template>
-	<div id="follower_list">
+	<div id="likes_list">
 		<div id="modal">
-		<div id="follower_list_header">
+		<div id="likes_list_header">
 				<div id="title_container">
-					<p id="title">팔로워 </p>
+					<p id="title">좋아요 </p>
 				</div>
 				<div id="cancel">
 					<i @click="goBack" class="fa-solid fa-x" style="font-size: 1.3rem; cursor: pointer;"></i>
 				</div>
 			</div>
 			<hr>
-			<div id="no_result" v-if="myFollowerInfo.length === 0">
+			<div id="no_result" v-if="feedLikesList.length === 0">
 				<img id="nothing" src="@/assets/images/etc/alien.png" alt="no result">
-				<p id="no_follower">팔로워 목록이 없습니다...</p>
+				<p id="no_likes">좋아요 목록이 없습니다...</p>
 			</div>
-			<div id="my_follower_list" v-else>
-				<div v-for="(followerInfo, index) in myFollowerInfo" :key="index">
+			<div id="feed_likes_list" v-else>
+				<div v-for="(liker, index) in feedLikesList" :key="index">
 					<div id="userInfo">
-						<img id="profile_img" :src="followerInfo.profileImg" alt="">
-						<p id="username">{{followerInfo.nickname}}</p>
-						<button id="follow_cancel">취소</button>
+						<img id="profile_img" :src="liker.profileImg" alt="">
+						<p id="username">{{liker.nickname}}</p>
+						<!-- <button id="follow_cancel">취소</button> -->
 					</div>
 				</div>
 			</div>
@@ -31,24 +31,27 @@
 export default {
 	data () {
 		return {
-			myFollowerInfo: []
+			feedLikesList: [],//좋아요 누른 사람 목록
+			// userFollowingList:[],//내가 팔로워한 리스트
 		}
 	},
 	methods: {
 		goBack: function () {
 			// console.log('여기옴')
 			// console.log(this.$store.state.userInfo)
-			this.$store.commit('mypagefollowerListActivate')
+			this.$store.commit('likesListActive')
 		}
 	},
 	created () {
-		this.myFollowerInfo = this.$store.state.userFollowInfo.userFollow
+		this.feedLikesList = this.$store.state.feedLikesInfo
+		// this.userFollowingList=this.$store.state.userFollowing
+		// console.log(this.userFollowingList)
 	}
 }
 </script>
 
 <style scoped>
-#follower_list {
+#likes_list {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -68,7 +71,7 @@ export default {
 	height: 45vh;
 	min-height: 450px;
 }
-#follower_list_header {
+#likes_list_header {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
@@ -104,10 +107,10 @@ export default {
 	height: 5rem;
 	margin-bottom: 0.5rem;
 }
-#no_follower {
+#no_likes {
 	font-weight: bold;
 }
-#my_follower_list{
+#feed_likes_list{
 	margin-left: 1rem;
 	overflow-y: scroll;
 	height: 82%;
