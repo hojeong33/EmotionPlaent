@@ -108,6 +108,9 @@ export default new Vuex.Store({
     userpagefollowerListActive: false,
     likesListActive:false,
     addPlayListActive:false,
+    nicknameErrModalActive:false,
+    pwchangeErrModalActive:false,
+    pwchangeConfirmModalActive:false,
   
     // 모달의 에러 메시지
     serverErrorMessage: '',
@@ -277,6 +280,17 @@ export default new Vuex.Store({
       state.moreInfoConfirmModalActive = !state.moreInfoConfirmModalActive
       console.log(state.moreInfoConfirmModalActive)
     },
+    //정보변경페이지 모달 3개
+    nicknameErrModalActivate: function (state) {
+      state.nicknameErrModalActive = !state.nicknameErrModalActive
+    },
+    pwchangeConfirmModalActivate: function (state) {
+      state.pwchangeConfirmModalActive = !state.pwchangeConfirmModalActive
+    },
+    pwchangeErrModalActivate: function (state) {
+      state.pwchangeErrModalActive = !state.pwchangeErrModalActive
+    },
+    //
     feedUpdateActivate: function (state) {
       state.feedUpdateActive = !state.feedUpdateActive
       console.log(state.feedUpdateActive)
@@ -857,7 +871,7 @@ export default new Vuex.Store({
           console.log(res);
           this.dispatch('allTokenRefreshOnUserInfo', res)
           // console.log(this.state.userInfo)
-          location.reload()
+          // location.reload()
         })
         .catch((err) => {
           console.log("업데이트 실패")

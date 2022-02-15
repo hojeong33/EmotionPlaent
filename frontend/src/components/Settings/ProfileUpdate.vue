@@ -129,7 +129,7 @@
 
 <script>
 import axios from 'axios'
-const session = window.sessionStorage;
+
 export default {
   data: function(){
     return {
@@ -243,42 +243,34 @@ export default {
         }
       })
     },
-    user_change() {
+    async user_change() {
       //낙넴 변경하려 했을 경우
       if (this.credentials.beforeNick !== this.$store.state.userInfo.nickname) {
         console.log(this.isValid.validateNicknamecheck)
         console.log(this.isValid.validateNicknamelength)
         if (this.isValid.validateNicknamecheck == true && this.isValid.validateNicknamelength == true) {
           this.$store.state.userInfo.nickname = this.credentials.beforeNick
+          this.$router.go(-1)
         }
         else {
-          alert('닉네임을 다시 확인해주세요')
+          this.$store.commit('nicknameErrModalActivate')
         }
       }
       
       // 비번 변경하려 했을 경우
-      if (this.credentials.pwConf !== null) {
+      else if (this.credentials.pwConf !== null) {
         if (this.isValid.validateNextPw == true) {
-          this.$store.dispatch('updateuser', this.credentials.pwConf)
-          const authInst = window.gapi.auth2.getAuthInstance();
-          console.log('signout called', authInst)
-          authInst.signOut()
+          await this.$store.dispatch('updateuser', this.credentials.pwConf)
           .then(() => {
-            // eslint-disable-next-line
-            console.log('User Signed Out!!!');
-            authInst.disconnect();
-            session.clear();
-          })
-          .then(() => {
-            window.location.reload()
+            this.$store.commit('pwchangeConfirmModalActivate')
           })
           .catch(() => alert('fail'))
-          alert("비밀번호 변경 완료 다시 로그인 해주세요")
           }
         else {
-          alert('비밀번호를 다시 확인해주세요')
+          this.$store.commit('pwchangeErrModalActivate')
         }
       }
+      // 소개 or 공개비공개 설정 변경
       else {
         this.$store.dispatch('updateuser', null)
         this.$router.go(-1)
