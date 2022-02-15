@@ -43,7 +43,7 @@
       <div id="tag">
         <p id="my_tag" v-for="(tag, idx) in feed.tags" :key="idx">#{{tag["name"]}}</p>
       </div> 
-        <p id="caption" style="font-size:1.4rem"><span style="font-weight:bold; margin-right:5px;">{{feed.author}}</span>{{feed.descr}}</p>
+        <p id="caption" style="font-size:1.4rem"><span style="font-weight:bold; margin-right:5px;">{{feed.authorDetail.nickname}}</span>{{feed.descr}}</p>
     </div>
     <comment-list :feedNo="post" :feedAuthor="feed.author" @delete-comment="commentKey++" :key="commentKey"></comment-list>
   </div>
@@ -140,6 +140,9 @@ export default {
       }
       this.$store.dispatch('addfeedlike',el)
     },
+    cancelLike:function(){
+      this.$store.dispatch('deletefeedlike',this.post)
+    },
 
 
     getFeed:function(){
@@ -163,9 +166,7 @@ export default {
             console.log('피드 하나 가져오기');
           });
     },
-    cancelLike:function(){
-      this.$store.dispatch('deletefeedlike',this.post)
-    },
+    
     
     // getComments:function(){
     //   let headers = {
