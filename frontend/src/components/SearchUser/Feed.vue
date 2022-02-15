@@ -134,7 +134,7 @@ export default {
       this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
       console.log('!!!!!!!!!!!!!!!!!!!')
       console.log(res.data)
-      // this.feed=res.data
+      this.feed=res.data
       this.isMine=res.data.owner
       }).catch((error) => {
         console.log(error);

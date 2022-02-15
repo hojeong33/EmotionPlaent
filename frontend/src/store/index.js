@@ -370,9 +370,8 @@ export default new Vuex.Store({
             console.log("알림 읽기 성공")
             console.log(res.data)
             this.state.alarm = []
-          }).catch((error) => {
-            console.log('알림 읽기 실패');
-            console.log(error)
+          }).catch(() => {
+            console.log('알림 읽기 실패 ');
           })
         },
 
@@ -464,16 +463,8 @@ export default new Vuex.Store({
           console.log("소켓 연결 성공",frame);
           // 서버의 메시지 전송 endpoint를 구독합니다.
           // 이런형태를 pub sub 구조라고 합니다.
-          this.stompClient.subscribe(`/alarm/receive/${this.state.userInfo.no}`, (res) => {
+          this.stompClient.subscribe(`/alarm/receive/${this.state.userInfo.no}`, () => {
             console.log("---------------------------------")
-            const obj = JSON.parse(res.body);
-            console.log("보낸사람 아이디 " + obj.sender)
-            console.log("보낸사람 닉네임 " + obj.senderNickname)
-            console.log("보낸사람 프로필 " + obj.senderImg)
-            console.log("피드 번호 " + obj.feedno)
-            console.log("댓글 번호 " + obj.commentno)
-            console.log("알림 날짜 " + obj.date)
-            console.log("알림 타입 " + obj.type)
             // alert(obj.message)
             // this.state.alarm.unshift(obj);
             this.dispatch('alarmselect')
