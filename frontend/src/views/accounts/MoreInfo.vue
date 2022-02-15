@@ -1,65 +1,67 @@
 <template>
   <div id="signup_container">
-    <section id="signup_header">
-      <h1>앗!</h1>
-      <span id="signup_header_title">
-        <h1 style="color: #5E39B3">당신의 여행티켓</h1>
-        <h1>에 </h1>
-      </span>
-      <h1>갱신절차가 필요해요👽</h1>
-    </section>
-    <section id="signup_form">
-      <article id="email_form">
-        <label for="email">이메일</label>
-        <input type="email"
-        id="email"
-        v-model="this.$store.state.userInfo.email"
-        autocomplete="off"
-        readonly>
-      </article>
-      <article id="nickname_form">
-        <label for="nickname">닉네임</label>
-        <input type="text"
-        id="nickname"
-        v-model="credentials.nickname"
-        placeholder="닉네임은 2자 이상, 10자 이하입니다."
-        autocomplete="off" maxlength="10"
-        @input= "checkNickname">
-        <span v-if="credentials.nickname">
-          <p v-if="!isValid.validateNicknamecheck" class="warn">
-            사용중인 닉네임이에요.
-          </p>
-          <p v-if="isValid.validateNicknamecheck" class="collect">
-           사용가능한 닉네임입니다.
-          </p>
+    <div id="moreinfo_innercontainer">
+      <section id="signup_header">
+        <h1 style="font-size: 2.5rem;"> 앗!</h1>
+        <span id="signup_header_title">
+          <h1 style="color: #5E39B3; font-size: 2.5rem;">당신의 여행티켓</h1>
+          <h1>에 </h1>
         </span>
-      </article>
-      <article id="tel_form">
-        <label for="tel">휴대전화</label>
-        <input type="text"
-        id="tel"
-        v-model="credentials.tel"
-        placeholder="사용중인 전화번호를 입력해주세요."
-        autocomplete="off" maxlength="13"
-        @input= "tel_helper">
-        <span v-if="credentials.tel">
-          <p v-if="!isValid.validateTel" class="warn">
-            사용 불가능한 전화번호에요.
-          </p>
-          <p v-if="isValid.validateTel" class="collect">
-            사용가능한 전화번호입니다.
-          </p>
-        </span>
-      </article>
-      <article id="birth_form">
-        <label for="birth">생년월일</label>
-        <input type="date" id="birth" v-model="credentials.birth">
-      </article>
-      <article id="btn_container">
-        <button @click="signup" id="signup_btn">여행티켓 등록하기</button>
-        <button @click="go_to_back" id="back_to_btn">다음에 할게요</button>
-      </article>
-    </section>
+        <h1 style="font-size: 2.5rem;">갱신절차가 필요해요👽</h1>
+      </section>
+      <section id="signup_form">
+        <article id="email_form">
+          <label for="email">이메일</label>
+          <input type="email"
+          id="email"
+          v-model="this.$store.state.userInfo.email"
+          autocomplete="off"
+          readonly>
+        </article>
+        <article id="nickname_form">
+          <label for="nickname">닉네임</label>
+          <input type="text"
+          id="nickname"
+          v-model="credentials.nickname"
+          placeholder="닉네임은 2자 이상, 10자 이하입니다."
+          autocomplete="off" maxlength="10"
+          @input= "checkNickname">
+          <span v-if="credentials.nickname">
+            <p v-if="!isValid.validateNicknamecheck" class="warn">
+              사용중인 닉네임이에요.
+            </p>
+            <p v-if="isValid.validateNicknamecheck" class="collect">
+            사용가능한 닉네임입니다.
+            </p>
+          </span>
+        </article>
+        <article id="tel_form">
+          <label for="tel">휴대전화</label>
+          <input type="text"
+          id="tel"
+          v-model="credentials.tel"
+          placeholder="사용중인 전화번호를 입력해주세요."
+          autocomplete="off" maxlength="13"
+          @input= "tel_helper">
+          <span v-if="credentials.tel">
+            <p v-if="!isValid.validateTel" class="warn">
+              사용 불가능한 전화번호에요.
+            </p>
+            <p v-if="isValid.validateTel" class="collect">
+              사용가능한 전화번호입니다.
+            </p>
+          </span>
+        </article>
+        <article id="birth_form">
+          <label for="birth">생년월일</label>
+          <input type="date" id="birth" v-model="credentials.birth">
+        </article>
+        <article id="btn_container">
+          <button @click="signup" id="signup_btn">여행티켓 등록하기</button>
+          <button @click="go_to_back" id="back_to_btn">다음에 할게요</button>
+        </article>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -184,9 +186,9 @@
   input {
     border: 2px #5E39B3 solid;
     border-radius: 20px;
-    width: 40vh;
+    width: 100%;
     min-width: 300px;
-    height: 4.5vh;
+    height: 5vh;
     min-height: 40px;
     padding: 0.75rem;
     font-size: 1.25rem;
@@ -205,7 +207,7 @@
   }
 
   input::placeholder {
-    font-size: 1rem !important;
+    font-size: 1.25rem !important;
     font-weight: initial;
     text-shadow: none;
     letter-spacing: -1px;
@@ -248,18 +250,27 @@
   }
 
   #signup_container {
-    background-color: white;
-    width: 30%;
-    min-width: 450px;
-    margin: 4rem auto;
     display: flex;
     flex-direction: column;
-    flex-wrap: nowrap;
     justify-content: flex-start;
     align-items: center;
+    background-color: white;
+    width: 30%;
+    align-self: center;
+    min-width: 700px;
+    min-height: 92.5vh;
+    padding: 2rem;;
     border-radius: 20px;
-    padding: 2rem 3rem 1rem;
-    border: 0.1rem solid #5E39B3;
+    border: 2px  #5E39B3 solid;
+  }
+  #moreinfo_innercontainer{
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 
   #signup_header {
@@ -283,6 +294,7 @@
   }
 
   #signup_form {
+    width: 90%;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -297,6 +309,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-start;
+    width: 100%
   }
 
   #btn_container {

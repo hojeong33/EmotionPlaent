@@ -245,7 +245,6 @@ export default {
     },
     user_change() {
       //이전 비번, 바꿀 비번 둘 다 값이 있고 두 개의 값이 같을 때만
-      if (this.credentials.beforePw && this.credentials.nextPw && this.credentials.beforePw == this.credentials.nextPw)
       if (this.credentials.pwConf !== null) {
         this.$store.dispatch('updateuser', this.credentials.pwConf)
         const authInst = window.gapi.auth2.getAuthInstance();

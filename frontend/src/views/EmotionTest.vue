@@ -192,28 +192,7 @@
         }
       },
       go_to_back: function(){
-        // const userdata = JSON.parse(session.getItem('userInfo')) 
-        // console.log("유저데이터")
-        // console.log(userdata)
-        // let headers = {
-        // 'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        // 'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        // };
-        // const body = { no: userdata.no, mood: 7 }
-        // axios({
-        //   method: 'put',
-        //   url: 'http://13.125.47.126:8080/users/update',
-        //   data: body,
-        //   headers: headers,
-        // }).then(res => {
-        //   console.log("여기는 데이터 수정하는 부분")
-        //   console.log(res)
-        //   this.$store.dispatch('allTokenRefreshOnUserInfo', res)
-        //   this.$router.push({ name: 'Main' })
-        // }).catch(err => {
-        //   console.log(err)
-        //   console.log("무슨 에러?")
-        // })
+
         this.$router.push({ name: 'Main' })
       },
     },
@@ -251,13 +230,13 @@
 <style scoped>
   h1 {
     color: #5E39B3;
-    font-size: 2rem;
+    font-size: 2.3rem;
     font-weight: bold;
     margin-bottom: 2rem;
   }
 
   h3 {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: bold;
     letter-spacing: -1px;
     margin: 0;
@@ -277,7 +256,7 @@
     font-size: 1.125rem;
     font-weight: bold;
     border: 3px #5E39B3 solid;
-    border-radius: 20px;
+    border-radius: 30px;
     padding: 0.4rem 1.125rem;
     margin-bottom: 1.125rem;
     cursor: pointer;
@@ -286,7 +265,7 @@
 
   #test_container {
     background-color: white;
-    width: 80vh;
+    width: 30%;
     min-width: 800px;
     margin: 2rem auto;
     display: flex;

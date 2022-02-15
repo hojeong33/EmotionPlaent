@@ -21,7 +21,7 @@ export default {
   data: function(){
     return {
       selectedCategory: '운동',
-      act_categories: ['운동', '문화활동', '여가활동', '정리/휴식', '감정표현', '선물'],
+      act_categories: ['운동', '문화활동', '여가활동', '정리/휴식', '감정표현', '선물', ''],
       act_details: {
         '운동': ['했어요', '갔어요','뛰었어요', '움직였어요'], 
         '문화활동': ['봤어요', '했어요', '들었어요', '갔어요'],
@@ -72,6 +72,7 @@ export default {
     border: 2px #cccccc solid;
     border-radius: 10px;
     width: 80%;
+    height: 60%;
     margin: 0;
   }
 

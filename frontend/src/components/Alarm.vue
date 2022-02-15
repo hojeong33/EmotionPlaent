@@ -1,5 +1,6 @@
 <template>
   <div id="alarm_body">
+    <div id="triangle"></div>
     <section id="alarm_header">
       <div id="title">
         <p>알림</p>
@@ -50,7 +51,7 @@
       </div> 
     </section>
     <section id="alarm_footer">
-      <button @click="cancel">X</button>
+      <button @click="cancel">닫기</button>
     </section>
   </div>
 </template>
@@ -93,7 +94,16 @@ export default {
     background-color: white;
     /* overflow-y: scroll; */
   }
-
+  #triangle {
+    width: 0px;
+    height: 0px;
+    border-bottom: 18px solid gainsboro;
+    border-left: 30px solid transparent;
+    border-right: 30px solid transparent;
+    position: absolute;
+    top: -5.6%;
+    right: 41%; 
+  }
   #alarm_header {
     z-index: 10;
     display: flex;
@@ -108,6 +118,7 @@ export default {
     border-top: 0.15rem solid gainsboro;
     border-left: 0.15rem solid gainsboro;
     border-right: 0.15rem solid gainsboro;
+    position: relative; 
   }
   
   #alarm_content {
@@ -130,7 +141,7 @@ export default {
     width: 100%;
     min-width: 300px;
     height: 10%;
-    min-height: 60px;
+    min-height: 55px;
     border-bottom: 0.15rem solid gainsboro;
     border-left: 0.15rem solid gainsboro;
     border-right: 0.15rem solid gainsboro;
@@ -190,16 +201,14 @@ export default {
   }
 
   button {
-    background-color: #5E39B3;
-    color: white;
-    font-size: 1.125rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 20px;
-    padding: 0 2.7rem;
-    margin: 0.55rem;
-    cursor: pointer;
-    line-height: 2rem;
+  background-color: rgb(94, 57, 179);
+  color: white;
+  border-radius: 30px;
+  width: 3rem;
+  height: 2rem;
+  margin: auto 0.5rem auto auto;
+  border: none;
+
   }
 
   #title {

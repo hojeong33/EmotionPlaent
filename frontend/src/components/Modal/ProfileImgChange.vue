@@ -2,35 +2,28 @@
   <div id="profile_img_change_modal">
     <div id="modal">
       <div id="header">
-        <h3>프로필 사진 바꾸기</h3>
-
+        <img id="cancel" @click="cancel" src="@/assets/images/icons/return.png" alt="">
+        <h3 id="header_title">프로필 사진 바꾸기</h3>
+      </div>
+      <hr id="hr">
+      <div id="body">
         <div v-if="!images" id="thumbnail">
           <!-- 이미지 미리보기 만들어야 함 -->
-          <img
-            src="../../assets/images/icons/image.png"
-            alt=""
-            id="default-img"
-          />
-          <p id="img-text">이미지를 올려주세요</p>
+          <img :src="this.$store.state.userInfo.profileImg" alt="" id="default-img">
         </div>
-        <div v-else>
-          <img :src="images" alt="" />
+        <div v-else id="thumbnail">
+          <img id="user_profile_img" :src="images" alt="" />
         </div>
       </div>
-
-      <div id="uploading">
-        <label for="file">이미지 업로드</label>
-        <input
-          type="file"
-          id="file"
-          accept="image/*"
-          @change="imgUpload"
-          ref="feedImg"
-        />
-      </div>
-      <div id="footer_buttons">
-        <button @click="changeprofileImg">변경하기</button>
-        <button @click="cancel">취소</button>
+      <hr>
+      <div id="footer">
+        <div id="buttons">
+          <div class="imgUpload">
+            <label for="file">이미지 변경</label> 
+            <input type="file" id="file" accept="image/*" @change="imgUpload" ref="feedImg" multiple>
+          </div>
+          <button id="changeImg" @click="changeprofileImg">확인</button>
+        </div>
       </div>
     </div>
   </div>
@@ -87,9 +80,6 @@ export default {
 </script>
 
 <style scoped>
-#upload {
-  cursor: pointer;
-}
 
 #profile_img_change_modal {
   display: flex;
@@ -106,26 +96,40 @@ export default {
 #modal {
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
   background-color: white;
-  border-radius: 20px;
-  width: 20vw;
+  border-radius: 30px;
+  width: 30vw;
   height: 50vh;
   text-align: center;
-}
-
-h3 {
-  margin: 0rem 2rem 1rem;
-}
-p {
-  margin: auto;
-  font-weight: bold;
-  cursor: pointer;
+  padding: 0.4rem;
 }
 
 #header {
-  height: 45%;
+  width: 100%;
+  height: 10%;
+  display: flex;
+  flex-direction: row;
+}
+#cancel {
+  width: 2rem;
+  height: 2rem;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 0.4rem;
+  cursor: pointer;
+}
+#header_title{
+  margin: auto;
+  font-weight: bold;
+}
+#body {
+  width: 100%;
+  height: 75%
+}
+#thumbnail {
+  width: 100%;
+  height: 100%;
 }
 
 #uploading {
@@ -139,32 +143,66 @@ p {
   border-bottom: 0.2rem solid gainsboro;
 }
 
-#file {
-  width: 80%;
-}
-
 #default-img {
-  width: 5rem;
-  height: 5rem;
+  width: 100%;
+
 }
 
-button {
+#changeImg {
   background-color: #5E39B3;
   color: white;
-  font-size: 1rem;
+  font-size: 1.125rem;
   font-weight: bold;
-  border: 1px #5E39B3 solid;
-  border-radius: 20px;
-  padding: 0.6rem 1.5rem;
+  border: none;
+  border-radius: 30px;
+  padding: 0.3rem;
   margin-bottom: 1rem;
-  cursor: pointer;
-  line-height: 1rem;
+  width: 5rem;
+  height: 2.8rem;
+  margin: 1rem;
 }
-#footer_buttons {
+#footer {
+  width: 100%;
+  height: 10%;
+}
+#buttons {
   display: flex;
-  width: 80%;
-  justify-content: space-around;
-  padding-top: 2rem;
+  justify-content: space-evenly;
+}
+hr {
+  width: 100%;
+  height: 2px;
+  margin: 0rem;
+  color: black;
+}
+.imgUpload label {
+  background-color: #5E39B3;
+  color: white;
+  font-size: 1.125rem;
+  font-weight: bold;
+  border: 3px #5E39B3 solid;
+  border-radius: 30px;
+  padding: 0.2rem 1.5rem;
+  margin: 1rem;
+  cursor: pointer;
+  line-height: 2rem;
 }
 
+.imgUpload input[type="file"] {
+  position: absolute;
+  width: 0;
+  height: 0;
+  padding: 0;
+  overflow: hidden;
+  border: 0;
+}
+img {
+  width: 100%;
+  height: 100%;
+}
+#user_profile_img {
+  width: 100%;
+  height: 100%;
+
+}
 </style>

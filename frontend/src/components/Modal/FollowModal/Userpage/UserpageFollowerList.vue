@@ -38,8 +38,6 @@ export default {
 			// console.log('여기옴')
 			// console.log(this.$store.state.userInfo)
 			this.$store.commit('userpagefollowerListActivate')
-<<<<<<< HEAD
-=======
 		},
 		moveToUserPage (el) {
 			this.$store.state.searchUserNo = el
@@ -47,7 +45,6 @@ export default {
 			this.$store.dispatch('userfollowdate', el)
 			this.$store.commit('userpagefollowerListActivate')
 			this.$router.push({ path: `/userpage/feed` })
->>>>>>> feature/fe/follow
 		}
 	},
 	created () {

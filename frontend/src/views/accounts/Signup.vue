@@ -1,111 +1,113 @@
 <template>
   <div id="signup_container">
-    <section id="signup_header">
-      <h1>어서오세요!</h1>
-      <span id="signup_header_title">
-        <h1 style="color: #5E39B3">이모션 플래닛</h1>
-        <h1>에</h1>
-      </span>
-      <h1>시민권을 등록해볼까요?👽</h1>
-    </section>
-    <section id="signup_form">
-      <article id="email_form">
-        <label for="email">이메일</label>
-        <input type="email"
-        id="email"
-        v-model="credentials.email"
-        placeholder="사용중인 이메일을 입력해주세요."
-        autocomplete="off"
-        @input = "validateEmail">
-        <span v-if="credentials.email && !isValid.validateEmailcheck">
-          <p v-if="isValid.validateEmail" class="warn">
-            사용중인 이메일이에요.
-          </p>
-          <p v-if="!isValid.validateEmail" class="warn">
-            이메일 형식에 맞춰주세요. 
-          </p>
+    <div id="signup_innercontainer">
+      <section id="signup_header">
+        <h1 style="font-size: 2.5rem;">어서오세요!</h1>
+        <span id="signup_header_title">
+          <h1 style="color: #5E39B3; font-size: 2.5rem;">이모션 플래닛</h1>
+          <h1 style="font-size: 2.5rem;">에</h1>
         </span>
-        <span v-if="credentials.email && isValid.validateEmailcheck" class="collect">
-          <p>
-            사용가능한 이메일입니다.
-          </p>
-        </span>
-      </article>
-      <article id="nickname_form">
-        <label for="nickname">닉네임</label>
-        <input type="text"
-        id="nickname"
-        v-model="credentials.nickname"
-        placeholder="닉네임은 2자 이상, 10자 이하입니다."
-        autocomplete="off" maxlength="10"
-        @input= "checkNickname">
-        <span v-if="credentials.nickname">
-          <p v-if="!isValid.validateNicknamecheck" class="warn">
-            사용중인 닉네임이에요.
-          </p>
-          <p v-if="isValid.validateNicknamecheck" class="collect">
-           사용가능한 닉네임입니다.
-          </p>
-        </span>
-      </article>
-      <article id="pw_form">
-        <label for="pw">비밀번호</label>
-        <input type="password" 
-        id="pw" maxlength="20"
-        v-model="credentials.pw"
-        @input="pwCheck"
-        placeholder="비밀번호는 8자 이상, 20자 이하입니다.">
-        <span v-if="credentials.pw">
-          <p v-if="!isValid.validatePw" class="warn">
-            사용할 수 없는 비밀번호에요.
-          </p>
-          <p v-if="isValid.validatePw" class="collect">
-            사용할 수 있는 비밀번호입니다.
-          </p>
-        </span>
-      </article>
-      <article id="passwordConfirmation_form">
-        <label for="passwordConfirmation">비밀번호 확인</label>
-        <input type="password"
-        id="passwordConfirmation" maxlength="20"
-        v-model="credentials.passwordConfirmation"
-        @input="pwConfCheck"
-        placeholder="비밀번호를 다시 입력해주세요.">
-        <span v-if="credentials.passwordConfirmation">
-          <p v-if="!isValid.validatePwConf" class="warn">
-            비밀번호가 맞지 않아요.
-          </p>
-          <p v-if="isValid.validatePwConf" class="collect">
-            비밀번호가 일치합니다.
-          </p>
-        </span>
-      </article>
-      <article id="tel_form">
-        <label for="tel">휴대전화</label>
-        <input type="text"
-        id="tel"
-        v-model="credentials.tel"
-        placeholder="사용중인 전화번호를 입력해주세요."
-        autocomplete="off" maxlength="13"
-        @input= "tel_helper">
-        <span v-if="credentials.tel">
-          <p v-if="!isValid.validateTel" class="warn">
-            사용 불가능한 전화번호에요.
-          </p>
-          <p v-if="isValid.validateTel" class="collect">
-            사용가능한 전화번호입니다.
-          </p>
-        </span>
-      </article>
-      <article id="birth_form">
-        <label for="birth">생년월일</label>
-        <input type="date" id="birth" v-model="credentials.birth">
-      </article>
-      <article id="btn_container">
-        <button @click="signup" id="signup_btn">시민권 등록하기</button>
-        <button @click="go_to_back" id="back_to_btn">다음에 할게요</button>
-      </article>
-    </section>
+        <h1 style="font-size: 2.5rem;">시민권을 등록해볼까요?👽</h1>
+      </section>
+      <section id="signup_form">
+        <article id="email_form">
+          <label for="email">이메일</label>
+          <input type="email"
+          id="email"
+          v-model="credentials.email"
+          placeholder="사용중인 이메일을 입력해주세요."
+          autocomplete="off"
+          @input = "validateEmail">
+          <span v-if="credentials.email && !isValid.validateEmailcheck">
+            <p v-if="isValid.validateEmail" class="warn">
+              사용중인 이메일이에요.
+            </p>
+            <p v-if="!isValid.validateEmail" class="warn">
+              이메일 형식에 맞춰주세요. 
+            </p>
+          </span>
+          <span v-if="credentials.email && isValid.validateEmailcheck" class="collect">
+            <p>
+              사용가능한 이메일입니다.
+            </p>
+          </span>
+        </article>
+        <article id="nickname_form">
+          <label for="nickname">닉네임</label>
+          <input type="text"
+          id="nickname"
+          v-model="credentials.nickname"
+          placeholder="닉네임은 2자 이상, 10자 이하입니다."
+          autocomplete="off" maxlength="10"
+          @input= "checkNickname">
+          <span v-if="credentials.nickname">
+            <p v-if="!isValid.validateNicknamecheck" class="warn">
+              사용중인 닉네임이에요.
+            </p>
+            <p v-if="isValid.validateNicknamecheck" class="collect">
+            사용가능한 닉네임입니다.
+            </p>
+          </span>
+        </article>
+        <article id="pw_form">
+          <label for="pw">비밀번호</label>
+          <input type="password" 
+          id="pw" maxlength="20"
+          v-model="credentials.pw"
+          @input="pwCheck"
+          placeholder="비밀번호는 8자 이상, 20자 이하입니다.">
+          <span v-if="credentials.pw">
+            <p v-if="!isValid.validatePw" class="warn">
+              사용할 수 없는 비밀번호에요.
+            </p>
+            <p v-if="isValid.validatePw" class="collect">
+              사용할 수 있는 비밀번호입니다.
+            </p>
+          </span>
+        </article>
+        <article id="passwordConfirmation_form">
+          <label for="passwordConfirmation">비밀번호 확인</label>
+          <input type="password"
+          id="passwordConfirmation" maxlength="20"
+          v-model="credentials.passwordConfirmation"
+          @input="pwConfCheck"
+          placeholder="비밀번호를 다시 입력해주세요.">
+          <span v-if="credentials.passwordConfirmation">
+            <p v-if="!isValid.validatePwConf" class="warn">
+              비밀번호가 맞지 않아요.
+            </p>
+            <p v-if="isValid.validatePwConf" class="collect">
+              비밀번호가 일치합니다.
+            </p>
+          </span>
+        </article>
+        <article id="tel_form">
+          <label for="tel">휴대전화</label>
+          <input type="text"
+          id="tel"
+          v-model="credentials.tel"
+          placeholder="사용중인 전화번호를 입력해주세요."
+          autocomplete="off" maxlength="13"
+          @input= "tel_helper">
+          <span v-if="credentials.tel">
+            <p v-if="!isValid.validateTel" class="warn">
+              사용 불가능한 전화번호에요.
+            </p>
+            <p v-if="isValid.validateTel" class="collect">
+              사용가능한 전화번호입니다.
+            </p>
+          </span>
+        </article>
+        <article id="birth_form">
+          <label for="birth">생년월일</label>
+          <input type="date" id="birth" v-model="credentials.birth">
+        </article>
+        <article id="btn_container">
+          <button @click="signup" id="signup_btn">시민권 등록하기</button>
+          <button @click="go_to_back" id="back_to_btn">다음에 할게요</button>
+        </article>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -280,10 +282,10 @@
 
   input {
     border: 2px #5E39B3 solid;
-    border-radius: 20px;
-    width: 40vh;
+    border-radius: 30px;
+    width: 100%;
     min-width: 300px;
-    height: 4.5vh;
+    height: 5vh;
     min-height: 40px;
     padding: 0.75rem;
     font-size: 1.25rem;
@@ -302,7 +304,7 @@
   }
 
   input::placeholder {
-    font-size: 1rem !important;
+    font-size: 1.25rem !important;
     font-weight: initial;
     text-shadow: none;
     letter-spacing: -1px;
@@ -346,6 +348,19 @@
 
   #signup_container {
     background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: white;
+    width: 30%;
+    align-self: center;
+    min-width: 600px;
+    min-height: 92.5vh;
+    padding: 2rem;;
+    border-radius: 20px;
+    border: 2px  #5E39B3 solid;
+    /* background-color: white;
     width: 30%;
     min-width: 450px;
     display: flex;
@@ -354,12 +369,20 @@
     justify-content: flex-start;
     align-items: center;
     padding: 3rem 2rem 1.5rem;
-    /* border-left: 2px #cccccc solid;
-    border-right: 2px #cccccc solid; */
+    border-left: 2px #cccccc solid;
+    border-right: 2px #cccccc solid;
     border-radius: 20px;
-    border: 2px  #5E39B3 solid;
+    border: 2px  #5E39B3 solid;*/
   }
-
+  #signup_innercontainer {
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
   #signup_header {
     display: flex;
     flex-direction: column;
@@ -381,6 +404,7 @@
   }
 
   #signup_form {
+    width: 90%;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -391,6 +415,7 @@
   }
 
   #signup_form h1, article {
+    width: 100%;
     margin-bottom: 1rem;
     display: flex;
     flex-direction: column;
