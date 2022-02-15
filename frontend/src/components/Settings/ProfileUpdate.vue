@@ -6,7 +6,7 @@
     <section id="pu_body">
 			<article id="profile_head">
 				<img id="profile_img" :src="this.$store.state.userInfo.profileImg" alt="">
-        <p id="user_id">{{ this.credentials.beforeNick }}</p>
+        <p id="user_id">{{ this.$store.state.userInfo.nickname }}</p>
         <div id="profile_img_change">
           <button id="profile_img_change_button" @click="profileImgChangeModal">사진 변경</button>
         </div>
@@ -16,14 +16,17 @@
         <label for="username" style="margin-left:1rem;">닉네임</label>
         <input 
         id="nickname"
-        v-model="$store.state.userInfo.nickname"
-        @input= "checkNickname">
+        v-model="credentials.beforeNick"
+        @input= "checkNickname" autocomplete="off">
         <span v-if="credentials.beforeNick !== $store.state.userInfo.nickname">
-          <p v-if="!isValid.validateNicknamecheck" class="warn">
-            사용중인 닉네임이에요.
+          <p v-if="!isValid.validateNicknamelength" class="warn" style="margin-left:1.5rem;">
+            닉네임은 2자 이상, 10자 이하입니다.
           </p>
-          <p v-if="isValid.validateNicknamecheck" class="collect">
-           사용가능한 닉네임입니다.
+          <p v-if="!isValid.validateNicknamecheck && isValid.validateNicknamelength" class="warn" style="margin-left:1.5rem;">
+            사용 중인 닉네임이에요.
+          </p>
+          <p v-if="isValid.validateNicknamecheck && isValid.validateNicknamelength" class="collect" style="margin-left:1.5rem;">
+           사용 가능한 닉네임입니다.
           </p>
         </span>
 			</article>
@@ -138,6 +141,7 @@ export default {
         pwConf: null,
       },
       isValid: {
+        validateNicknamelength : true, // 닉네임 길이 체크
         validateNicknamecheck : false, // 중복 닉네임 여부
         validateNextPw: false,
         validatePwConf: false,
@@ -170,9 +174,11 @@ export default {
       this.$store.commit('profileImgChangeModalActivate')
 		},
     checkNickname: function(el){
-      this.$store.state.userInfo.nickname = el.target.value
+      this.credentials.beforeNick = el.target.value
       if (this.credentials.beforeNick !== this.$store.state.userInfo.nickname) {
-        if (this.$store.state.userInfo.nickname.length >= 2 && this.$store.state.userInfo.nickname.length <= 10) {
+        if (this.credentials.beforeNick.length >= 2 && this.credentials.beforeNick.length <= 10) {
+          this.isValid.validateNicknamelength = true
+          console.log('길이는 맞아~')
           // this.$store.state.userInfo.nickname = el.target.value // 한글 입력 이슈 해결하기 위해 사용. 한박자 느린거?
           axios({
             method: 'get',
@@ -188,8 +194,8 @@ export default {
           })
         }
         else {
-          // p태그 만들어서 보여주고, 밑에 else에서 지우기
-          console.log('닉네임 길이는 2자 이상 10자 이하로 만들어주세요')
+          this.isValid.validateNicknamelength = false
+          console.log('길이가 안맞다~')
         }
       }
     },
@@ -238,8 +244,8 @@ export default {
       })
     },
     user_change() {
-      //비번 둘다 값있고 같은지 체크해야됨
-      console.log(this.credentials.pwConf)
+      //이전 비번, 바꿀 비번 둘 다 값이 있고 두 개의 값이 같을 때만
+      if (this.credentials.beforePw && this.credentials.nextPw && this.credentials.beforePw == this.credentials.nextPw)
       if (this.credentials.pwConf !== null) {
         this.$store.dispatch('updateuser', this.credentials.pwConf)
         const authInst = window.gapi.auth2.getAuthInstance();
