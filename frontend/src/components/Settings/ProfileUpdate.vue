@@ -17,7 +17,7 @@
         <input 
         id="nickname"
         v-model="credentials.beforeNick"
-        @input= "checkNickname" autocomplete="off">
+        @input= "checkNickname" autocomplete="off" maxlength="10">
         <span v-if="credentials.beforeNick !== $store.state.userInfo.nickname">
           <p v-if="!isValid.validateNicknamelength" class="warn" style="margin-left:1.5rem;">
             닉네임은 2자 이상, 10자 이하입니다.
