@@ -33,7 +33,7 @@ public class CommentController {
     public ResponseEntity<Integer> write(@RequestBody CommentDto commentDto) {
         int result = commentService.write(commentDto);
         if(result == SUCCESS) {
-            return new ResponseEntity<Integer>(result, HttpStatus.OK);
+            return new ResponseEntity<Integer>(commentDto.getNo(), HttpStatus.OK);
         }else {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "글 양식이 올바르지 않습니다.");
         }

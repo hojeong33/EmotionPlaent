@@ -14,7 +14,7 @@ export default {
 		goLogin: function () {
 		// console.log(this.$store.state.userInfo)
 		this.$store.commit('moreInfoConfirmModalActivate')
-		this.$router.push({name: 'Login'})
+		this.$router.push({name: 'EmotionTest'})
 		}
 	}
 }
