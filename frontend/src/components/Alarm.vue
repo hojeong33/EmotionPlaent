@@ -19,7 +19,7 @@
             </div>
           </div>
           <!-- 댓글 -->
-          <div id="type_comment" v-if="result.type == 2">
+          <div id="type_comment" v-if="result.type == 2" @click="feed(result.feedno)">
             <img :src="result.senderImg" alt="" id="user">
             <div id="search">
               <span id="title">{{ result.senderNickname }}님이 회원님의</span>
@@ -27,7 +27,7 @@
             </div>
           </div>
           <!-- 피드 좋아요 -->
-          <div id="type_feedlike" v-if="result.type == 3">
+          <div id="type_feedlike" v-if="result.type == 3" @click="feed(result.feedno)">
             <img :src="result.senderImg" alt="" id="user">
             <div id="search">
               <span id="title">{{ result.senderNickname }}님이 회원님의</span>
@@ -79,6 +79,10 @@ export default {
       await this.$store.dispatch('userfollowdate', el)
       await this.$store.dispatch("searchUserFeed", this.$store.state.searchUserNo)
       this.$router.push({ path: `/userpage/feed` })
+    },
+    feed(el){
+      console.log(el)
+       this.$router.push({name:'FeedDetail', params:{feedNo:el}})
     }
   }
 }

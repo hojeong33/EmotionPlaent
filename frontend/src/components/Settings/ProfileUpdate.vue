@@ -6,7 +6,7 @@
     <section id="pu_body">
 			<article id="profile_head">
 				<img id="profile_img" :src="this.$store.state.userInfo.profileImg" alt="">
-        <p id="user_id">{{ this.credentials.beforeNick }}</p>
+        <p id="user_id">{{ this.$store.state.userInfo.nickname }}</p>
         <div id="profile_img_change">
           <button id="profile_img_change_button" @click="profileImgChangeModal">사진 변경</button>
         </div>
@@ -16,14 +16,17 @@
         <label for="username" style="margin-left:1rem;">닉네임</label>
         <input 
         id="nickname"
-        v-model="$store.state.userInfo.nickname"
-        @input= "checkNickname">
+        v-model="credentials.beforeNick"
+        @input= "checkNickname" autocomplete="off" maxlength="10">
         <span v-if="credentials.beforeNick !== $store.state.userInfo.nickname">
-          <p v-if="!isValid.validateNicknamecheck" class="warn">
-            사용중인 닉네임이에요.
+          <p v-if="!isValid.validateNicknamelength" class="warn" style="margin-left:1.5rem;">
+            닉네임은 2자 이상, 10자 이하입니다.
           </p>
-          <p v-if="isValid.validateNicknamecheck" class="collect">
-           사용가능한 닉네임입니다.
+          <p v-if="!isValid.validateNicknamecheck && isValid.validateNicknamelength" class="warn" style="margin-left:1.5rem;">
+            사용 중인 닉네임이에요.
+          </p>
+          <p v-if="isValid.validateNicknamecheck && isValid.validateNicknamelength" class="collect" style="margin-left:1.5rem;">
+           사용 가능한 닉네임입니다.
           </p>
         </span>
 			</article>
@@ -134,13 +137,14 @@ export default {
         beforeNick: null,
         beforeIntro: null,
         beforePw: null,
-        nextPw: null,
-        pwConf: null,
+        nextPw: null, //변경할 비밀번호
+        pwConf: null, //비밀번호 확인
       },
       isValid: {
+        validateNicknamelength : true, // 닉네임 길이 체크
         validateNicknamecheck : false, // 중복 닉네임 여부
-        validateNextPw: false,
-        validatePwConf: false,
+        validateNextPw: false, //변경할 비번 체크
+        validatePwConf: false, //비밀번호 확인 체크
       },
       help: false, 
       pwActivate: false,
@@ -170,13 +174,15 @@ export default {
       this.$store.commit('profileImgChangeModalActivate')
 		},
     checkNickname: function(el){
-      this.$store.state.userInfo.nickname = el.target.value
+      this.credentials.beforeNick = el.target.value
       if (this.credentials.beforeNick !== this.$store.state.userInfo.nickname) {
-        if (this.$store.state.userInfo.nickname.length >= 2 && this.$store.state.userInfo.nickname.length <= 10) {
+        if (this.credentials.beforeNick.length >= 2 && this.credentials.beforeNick.length <= 10) {
+          this.isValid.validateNicknamelength = true
+          console.log('길이는 맞아~')
           // this.$store.state.userInfo.nickname = el.target.value // 한글 입력 이슈 해결하기 위해 사용. 한박자 느린거?
           axios({
             method: 'get',
-            url: 'http://13.125.47.126:8080/register/checkByNickname/' + this.$store.state.userInfo.nickname,
+            url: 'http://13.125.47.126:8080/register/checkByNickname/' + this.credentials.beforeNick,
             })
             .then(() => { //중복 닉네임 없는 경우
               this.isValid.validateNicknamecheck = true
@@ -188,8 +194,8 @@ export default {
           })
         }
         else {
-          // p태그 만들어서 보여주고, 밑에 else에서 지우기
-          console.log('닉네임 길이는 2자 이상 10자 이하로 만들어주세요')
+          this.isValid.validateNicknamelength = false
+          console.log('길이가 안맞다~')
         }
       }
     },
@@ -238,24 +244,40 @@ export default {
       })
     },
     user_change() {
-      //비번 둘다 값있고 같은지 체크해야됨
-      console.log(this.credentials.pwConf)
+      //낙넴 변경하려 했을 경우
+      if (this.credentials.beforeNick !== this.$store.state.userInfo.nickname) {
+        console.log(this.isValid.validateNicknamecheck)
+        console.log(this.isValid.validateNicknamelength)
+        if (this.isValid.validateNicknamecheck == true && this.isValid.validateNicknamelength == true) {
+          this.$store.state.userInfo.nickname = this.credentials.beforeNick
+        }
+        else {
+          alert('닉네임을 다시 확인해주세요')
+        }
+      }
+      
+      // 비번 변경하려 했을 경우
       if (this.credentials.pwConf !== null) {
-        this.$store.dispatch('updateuser', this.credentials.pwConf)
-        const authInst = window.gapi.auth2.getAuthInstance();
-            console.log('signout called', authInst)
-            authInst.signOut()
-            .then(() => {
-              // eslint-disable-next-line
-              console.log('User Signed Out!!!');
-              authInst.disconnect();
-              session.clear();
-            })
-            .then(() => {
-              window.location.reload()
-            })
-            .catch(() => alert('fail'))
-            alert("비밀번호 변경 완료 다시 로그인 해주세요")
+        if (this.isValid.validateNextPw == true) {
+          this.$store.dispatch('updateuser', this.credentials.pwConf)
+          const authInst = window.gapi.auth2.getAuthInstance();
+          console.log('signout called', authInst)
+          authInst.signOut()
+          .then(() => {
+            // eslint-disable-next-line
+            console.log('User Signed Out!!!');
+            authInst.disconnect();
+            session.clear();
+          })
+          .then(() => {
+            window.location.reload()
+          })
+          .catch(() => alert('fail'))
+          alert("비밀번호 변경 완료 다시 로그인 해주세요")
+          }
+        else {
+          alert('비밀번호를 다시 확인해주세요')
+        }
       }
       else {
         this.$store.dispatch('updateuser', null)

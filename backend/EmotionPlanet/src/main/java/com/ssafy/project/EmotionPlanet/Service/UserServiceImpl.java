@@ -12,6 +12,10 @@ public class UserServiceImpl implements UserService {
 	@Autowired
 	UserDao userDao;
 	
+	private BCryptPasswordEncoder bCryptPasswordEncoder;
+	
+	
+	
 	private static final int SUCCESS = 1;
 	private static final int FAIL = -1;
 

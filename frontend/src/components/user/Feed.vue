@@ -26,8 +26,8 @@
       <div id="heart">
         <i class="far fa-heart fa-lg" :class="{'fas': this.feed.like}" @click="like"></i>
       </div>
-       <p id="feed_likes" v-for="(like, idx) in feed.likes" :key="idx">{{like["nickname"]}}</p>
-      <p class="likes" >{{feed.likes}} likes</p>
+       <p id="feed_likes" v-for="(like, idx) in feed.likes" :key="idx"></p>
+      <p class="likes" v-if="feed.likes" >{{feed.likes.length}} likes</p>
     </div>
     <div id="content">
       <div id="tag">
@@ -117,13 +117,13 @@ export default {
     };
     axios({
         method: 'get',
-        url:`http://13.125.47.126:8080/feed/${this.post}`,
+        url:`http://13.125.47.126:8080/feed/${this.feed.no}`,
         headers: headers,  // 넣는거 까먹지 마세요
       }).then((res) => {
       this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
       console.log('!!!!!!!!!!!!!!!!!!!')
       console.log(res.data)
-      this.feed=res.data
+      // this.feed=res.data
       this.isMine=res.data.owner
       }).catch((error) => {
         console.log(error);

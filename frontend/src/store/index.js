@@ -13,6 +13,7 @@ export default new Vuex.Store({
   state: {
     // feedActive: false,
     //검색부분
+    searching: false, //검색창 활성화
     words: null, //검색창
     tagSearch: [],
     userSearch: [],
@@ -325,7 +326,56 @@ export default new Vuex.Store({
     }
   },
   actions: {
-      
+
+    //피드 좋아요 취소 부분
+    deletefeedlike(state, el) { // 좋아요 취소는 피드 번호만 넘겨주기
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+    };
+    let data = {
+      userNo : this.state.userInfo.no,
+      targetNo : el,
+    };
+    axios({
+        method: 'delete',
+        url: 'http://13.125.47.126:8080/feeds/like',
+        data: data, // post 나 put에 데이터 넣어 줄때
+        headers: headers,  // 넣는거 까먹지 마세요
+      }).then((res) => {
+      console.log("피드 좋아요 삭제 성공")
+      this.dispatch('accessTokenRefresh', res) // store에서
+      }).catch((error) => {
+        console.log("피드 좋아요 삭제 실패")
+        console.log(error);
+      })
+    },
+
+    //피드 좋아요 부분 el = { feedno : feedno , receiver : receiver}
+    addfeedlike(state, el) { // 피드 번호만 넘겨주기
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+    };
+    let data = {
+      userNo : this.state.userInfo.no,
+      targetNo : el.feedno,
+    };
+    axios({
+        method: 'post',
+        url: 'http://13.125.47.126:8080/feeds/like',
+        data: data, // post 나 put에 데이터 넣어 줄때
+        headers: headers,  // 넣는거 까먹지 마세요
+      }).then((res) => {
+      console.log("피드 좋아요 추가 성공")
+      this.dispatch('feedlike',el)
+      this.dispatch('accessTokenRefresh', res) // store에서
+      }).catch((error) => {
+        console.log("피드 좋아요 실패")
+        console.log(error);
+      })
+    },
+
       //알림 읽기 + 7일 이후 읽은 알림 삭제
       readAlarm(state, el){
           axios({
@@ -335,9 +385,8 @@ export default new Vuex.Store({
             console.log("알림 읽기 성공")
             console.log(res.data)
             this.state.alarm = []
-          }).catch((error) => {
-            console.log('알림 읽기 실패');
-            console.log(error)
+          }).catch(() => {
+            console.log('알림 읽기 실패 ');
           })
         },
 
@@ -359,12 +408,11 @@ export default new Vuex.Store({
     },
 
     // let el = {
-    //   receiver: 00,
-    //   feedno: 00,
-    //   pickno: 00,
-    //   commentno: 00,
+      // receiver: 00,
+      // feedno: 00,
+      // pickno: 00,
+      // commentno: 00,
     // }
-
     comment(state, el) { // 댓글달면 누가 댓글달았는지 알려주는 부분
       console.log("댓글 알림");
       if (this.stompClient && this.stompClient.connected) {
@@ -430,16 +478,8 @@ export default new Vuex.Store({
           console.log("소켓 연결 성공",frame);
           // 서버의 메시지 전송 endpoint를 구독합니다.
           // 이런형태를 pub sub 구조라고 합니다.
-          this.stompClient.subscribe(`/alarm/receive/${this.state.userInfo.no}`, (res) => {
+          this.stompClient.subscribe(`/alarm/receive/${this.state.userInfo.no}`, () => {
             console.log("---------------------------------")
-            const obj = JSON.parse(res.body);
-            console.log("보낸사람 아이디 " + obj.sender)
-            console.log("보낸사람 닉네임 " + obj.senderNickname)
-            console.log("보낸사람 프로필 " + obj.senderImg)
-            console.log("피드 번호 " + obj.feedno)
-            console.log("댓글 번호 " + obj.commentno)
-            console.log("알림 날짜 " + obj.date)
-            console.log("알림 타입 " + obj.type)
             // alert(obj.message)
             // this.state.alarm.unshift(obj);
             this.dispatch('alarmselect')

@@ -26,8 +26,8 @@
       <div id="heart">
         <i class="far fa-heart fa-lg" :class="{'fas': this.feed.like}" @click="like"></i>
       </div>
-       <p id="feed_likes" v-for="(like, idx) in feed.likes" :key="idx">{{like["nickname"]}}</p>
-      <p class="likes" >{{feed.likes}} likes</p>
+       <p id="feed_likes" v-for="(like, idx) in feed.likes" :key="idx"></p>
+      <p class="likes" v-if="feed.likes">{{feed.likes.length}} likes</p>
     </div>
     <div id="content">
       <div id="tag">
@@ -82,8 +82,19 @@ export default {
       }
     },
     like() {
-      this.feed.like ? this.feed.likes-- : this.feed.likes++;
+      this.feed.like ? this.cancelLike(): this.doLike();
       this.feed.like= !this.feed.like;
+    },
+    doLike:function(){
+      let el = {
+        receiver : this.feed.author,
+        feedno : this.feed.no,
+      }
+      console.log(this.feed)
+      this.$store.dispatch('addfeedlike',el)
+    },
+    cancelLike:function(){
+      this.$store.dispatch('deletefeedlike',this.feed.no)
     },
     
     // getComments:function(){
@@ -117,7 +128,7 @@ export default {
     };
     axios({
         method: 'get',
-        url:`http://13.125.47.126:8080/feed/${this.feed}`,
+        url:`http://13.125.47.126:8080/feed/${this.feed.no}`,
         headers: headers,  // 넣는거 까먹지 마세요
       }).then((res) => {
       this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
