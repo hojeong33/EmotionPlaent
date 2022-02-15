@@ -30,6 +30,8 @@ export default new Vuex.Store({
     recommendMovie: [],
     recommendActivity: [],
     recommendReload: 0,
+    //플레이리스트 만들기
+    type:0, // 음악:0 영화:1 활동:2
 
     // 내정보
     userInfo: null,
@@ -41,7 +43,8 @@ export default new Vuex.Store({
     },
     userFeedInfo: [], //내 피드 정보
     userPickInfo: [], //내 찜목록 정보
-
+    //피드 좋아요 목록
+    feedLikesInfo:[],
     // 다른유저 정보
     searchUserNo: null, //검색할 유저 번호 저장
     searchUserInfo: null, // 검색한 유저 정보 저장
@@ -103,6 +106,8 @@ export default new Vuex.Store({
     mypagefollowerListActive: false,
     userpagefollowingListActive: false,
     userpagefollowerListActive: false,
+    likesListActive:false,
+    addPlayListActive:false,
   
     // 모달의 에러 메시지
     serverErrorMessage: '',
@@ -303,6 +308,16 @@ export default new Vuex.Store({
     userpagefollowerListActivate: function (state) {
       state.userpagefollowerListActive = !state.userpagefollowerListActive
       console.log(state.userpagefollowerListActive)
+    },
+    likesListActive:function(state,likesList){
+      state.likesListActive=!state.likesListActive
+      state.feedLikesInfo=likesList
+      console.log(state.likesListActive)
+    },
+    addPlayListActive:function(state,type){
+      state.addPlayListActive=!state.addPlayListActive
+      state.type=type
+      console.log(state.addPlayListActive)
     },
     // 댓글
     isDelete: function (state) {

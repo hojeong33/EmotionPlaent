@@ -34,10 +34,10 @@
     </div>
     <div id="like">
       <div id="heart">
-        <i class="far fa-heart fa-lg" :class="{'fas': this.feed.like}"  @click="like"></i>
+        <i class="far fa-heart fa-lg" style="cursor: pointer;"  :class="{'fas': this.feed.like}"  @click="like"></i>
       </div>
        <p id="feed_likes" v-for="(like, idx) in feed.likes" :key="idx"></p>
-      <p class="likes" >{{feed.likes.length}} likes</p>
+      <p class="likes" style="cursor: pointer;"  @click="likesList"  >{{feed.likes.length}} likes</p>
     </div>
     <div id="content">
       <div id="tag">
@@ -134,17 +134,30 @@ export default {
       this.feed.like= !this.feed.like;
     },
     doLike:function(){
-      let el = {
-        receiver : this.feed.author,
-        feedno : this.post,
+      const userdata = JSON.parse(session.getItem('userInfo')) ;
+      const likeItem={
+        targetNo:this.post,
+        userNo:userdata.no,
       }
-      this.$store.dispatch('addfeedlike',el)
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+        axios({
+            method: 'post',
+            url:`http://13.125.47.126:8080/feeds/like`,
+            data:likeItem,
+            headers: headers,  // 넣는거 까먹지 마세요
+          }).then((res) => {
+          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+          this.getFeed()
+          console.log(res.data)
+          }).catch((error) => {
+            console.log(error);
+          }).then(() => {
+            console.log('좋아요 누름');
+          });
     },
-    cancelLike:function(){
-      this.$store.dispatch('deletefeedlike',this.post)
-    },
-
-
     getFeed:function(){
        let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
@@ -166,31 +179,35 @@ export default {
             console.log('피드 하나 가져오기');
           });
     },
-    
-    
-    // getComments:function(){
-    //   let headers = {
-    //     'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-    //     'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-    // };
-    // axios({
-    //     method: 'get',
-    //     url:`http://13.125.47.126:8080/comments/returnNo/${this.post}`,
-    //     headers: headers,  // 넣는거 까먹지 마세요
-    //   }).then((res) => {
-    //   this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-    //   console.log('!!!!!!!!!!!!!!!!!!!')
-    //   console.log(res.data)
-    //   this.comments=res.data
-    //   this.commentsList=res.data.slice(0,2)
-    //   this.getComments()
-    //   }).catch((error) => {
-    //     console.log(error);
-    //   }).then(() => {
-    //     console.log('댓글 목록 가져오기');
-    //   });
-    // }
-    
+    cancelLike:function(){
+      const userdata = JSON.parse(session.getItem('userInfo')) ;
+      const likeItem={
+        targetNo:this.post,
+        userNo:userdata.no,
+      }
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+        axios({
+            method: 'delete',
+            url:`http://13.125.47.126:8080/feeds/like`,
+            data:likeItem,
+            headers: headers,  // 넣는거 까먹지 마세요
+          }).then((res) => {
+          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+          this.getFeed()
+          console.log(res.data)
+          }).catch((error) => {
+            console.log(error);
+          }).then(() => {
+            console.log('좋아요 해제');
+          });
+    },
+    likesList:function(){
+       this.$store.commit('likesListActive',this.feed.likes)
+       console.log(this.feed.likes)
+    }
   },
   created(){
    this.getFeed()

@@ -40,7 +40,7 @@ export default {
   },
   props:{
       feedNo:Number,
-      feedAuthor:Number
+      feedAuthor:Number,
   },
  
   methods:{

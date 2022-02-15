@@ -32,6 +32,8 @@
     <!-- 팔로우 -->
     <userpage-follower-list v-if="userpagefollowerListActive" />
     <userpage-following-list v-if="userpagefollowingListActive" />
+    <likes-list v-if="likesListActive"/>
+    <add-play-list v-if="addPlayListActive"/>
   </div>
 </template>
 
@@ -73,6 +75,9 @@ import MypageFollowingList from '@/components/Modal/FollowModal/Mypage/MypageFol
 import MypageFollowerList from '@/components/Modal/FollowModal/Mypage/MypageFollowerList.vue'
 import UserpageFollowingList from '@/components/Modal/FollowModal/Userpage/UserpageFollowingList.vue'
 import UserpageFollowerList from '@/components/Modal/FollowModal/Userpage/UserpageFollowerList.vue'
+//좋아요
+import LikesList from '@/components/Modal/LikesList.vue'
+import AddPlayList from '@/components/Modal/AddPlayList.vue'
 
 import { mapState } from 'vuex'
 
@@ -110,6 +115,8 @@ export default {
     MypageFollowerList,
     UserpageFollowingList,
     UserpageFollowerList,
+    LikesList,
+    AddPlayList,
     
 
   },
@@ -119,7 +126,7 @@ export default {
       'signupConfirmModalActive', 'emotionTestTooMuchPickModalActive', 'firstEmotionTestConfirmModalActive', 'emotionTestErrorActive', 'emotionTestPickMoreModalActive', 
       'emotionTestResultModalActive', 'loginFailModalActive', 'signupFailModalActive1', 'signupFailModalActive2', 'ReturnToLoginModalActive', 'commentNeedContentModalActive',
       'moreInfoConfirmModalActive', 'feedUpdateActive', 'pickYourImageModalActive', 'tooMuchImagesModalActive', 'pickYourTagModalActive', 'mypagefollowingListActive', 'mypagefollowerListActive',
-      'userpagefollowingListActive', 'userpagefollowerListActive', 'userFeedSettingModalActive2',
+      'userpagefollowingListActive', 'userpagefollowerListActive', 'userFeedSettingModalActive2','likesListActive','addPlayListActive'
     ]),
 }
 
