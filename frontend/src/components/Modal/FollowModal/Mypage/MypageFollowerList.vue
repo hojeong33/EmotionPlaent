@@ -108,6 +108,7 @@ export default {
 	font-weight: bold;
 }
 #my_follower_list{
+	height: 80%;
 	margin-left: 1rem;
 	overflow-y: scroll;
 }
