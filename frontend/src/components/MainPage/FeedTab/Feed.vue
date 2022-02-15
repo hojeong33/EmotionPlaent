@@ -8,12 +8,27 @@
         <section id="username" style="font-size:2rem;">{{feed.authorDetail.nickname}}</section>
         <section style="font-size:1.2rem;">{{feed.date}}</section>
       </div>
-      <div id="setting" style="z-index: 2;" v-if="isMine">
+      <div id="setting" v-if="isMine">
         <i @click="onCommentSetting" class="fas fa-ellipsis-v" style="color:black"></i>
       </div>
     </div>
-    <div id="post_image" style="z-index: 1;">
-      <div id="my_img" v-for="(img, idx) in feed.imgs" :key="idx"><div><img :src="img.imgLink" alt=""></div></div>
+    <div id="post_image">
+      <article id="img-box">
+      <div id="uploaded-box">
+          <transition-group id="carousel" :name="page > beforePage ? 'slide':'slide-reverse'">
+            <img id="my_img" v-for="(image, index) in feed.imgs" :key="index"
+            class="uploadedImg" :src="image.imgLink" alt=""
+            v-show="index+1 == page">
+          </transition-group>
+          <div id="pages">
+            <span v-for="idx in feed.imgs.length" :key="idx" 
+            :class="['page-num', {'here':idx==page}]" @click="paginationByDot(idx)" />
+          </div>
+          <span id="left" class="carousel-btn" @click="pagination(false)"/>
+          <span id="right" class="carousel-btn" @click="pagination(true)"/>
+        </div>
+      </article>
+      <!-- <div id="my_img" v-for="(img, idx) in feed.imgs" :key="idx"><div><img :src="img.imgLink" alt=""></div></div> -->
       <!-- <img :src="post.postImage" alt="" v> -->
       <!-- <p class="overlay_content" >{{post.author}}님은 {{post.tag[0]}} <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p> -->
     </div>
@@ -48,6 +63,8 @@ export default {
   data(){
     return{
       // date:this.post.date.toLocaleDateString(),
+      page:1,
+      beforePage:1,
       isCommentSettingOpened:false,
       isUserFeedSettingOpened: false,
       isMine:false,
@@ -71,6 +88,30 @@ export default {
     }
   },
   methods: {
+    pagination(payload){
+      this.beforePage = this.page
+      if (this.page < this.feed.imgs.length && payload){
+        this.page ++
+      }
+      else if (this.page > 1 && !payload){
+        this.page --
+      }
+    },
+    paginationByDot(target){
+      let d
+      if (target > this.page){
+        d = true
+      }
+      else {
+        d = false
+      }
+      for (let i=0;i<Math.abs(target-this.page);i++){
+        setTimeout(() => {
+          console.log(this.page, target, d)
+          this.pagination(d)
+        }, 1000 * i);
+      }
+    },
     onCommentSetting:function(){
       this.$store.commit('commentSettingModalActivate')
       // if(this.isCommentSettingOpened){
@@ -196,6 +237,7 @@ export default {
 </script>
 
 <style scoped>
+  
   .fas{
     color: crimson;
   }
@@ -256,14 +298,9 @@ export default {
     height: 4rem;
 
   }
-  .level-left{
-    
-    /* background-color: antiquewhite; */
+  #my_img{
+    height: 100%;
   }
-  /* #post_image img{
-    width: 90vh;
-    height: 90vh;
-  } */
   #post_image{
     position: relative;
     overflow: hidden;
@@ -289,6 +326,102 @@ export default {
     position: absolute;
     /* transform: translate(34rem,-10px); */
     background-color: white;
+  }
+  #uploaded-box {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+  
+  .uploadedImg {
+    width: 100%;
+    /* aspect-ratio: 1/1;
+    position: absolute; */
+  }
+  @keyframes slide-in {
+    from { right: -100% }
+    to { right: 0 }
+  }
+
+  @keyframes slide-out {
+    from { right: 0 }
+    to { right: 100% }
+  }
+  .slide-enter-active {
+    animation: slide-in 1s ease;
+  }
+
+  .slide-leave-active {
+    animation: slide-out 1s ease;
+  }
+
+  .slide-reverse-enter-active {
+    animation: slide-out 1s ease reverse;
+  }
+
+  .slide-reverse-leave-active {
+    animation: slide-in 1s ease reverse;
+  }
+  #pages {
+    display: flex;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+    margin: 1rem;
+  }
+
+  .page-num {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: #cccccc;
+    margin: 0.75rem;
+    cursor: pointer;
+  }
+   #img-box {
+    display: flex;
+    flex-direction: column;
+    width: 85%;
+    height: 65%;
+    background-color: lightgray;
+    border-radius: 20px;
+    margin: auto;
+    justify-content: center;
+    align-items: center;
+    margin: 2rem;
+  }
+  .here {
+    background-color: #777777;
+  }
+  #left {
+    background-image: url('../../../assets/images/icons/left.png');
+    left: -2%;
+  }
+
+  #right {
+    background-image: url('../../../assets/images/icons/right.png');
+    right: -2%;
+  }
+
+  #carousel {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+    border-radius: 20px;
+  }
+  .carousel-btn {
+    background-size: cover;
+    border: none;
+    border-radius: 50%;
+    opacity: 0.75;
+    position: absolute;
+    width: 2rem;
+    height: 2rem;
+    top: 45%;
+    cursor: pointer;
   }
 
 </style>
