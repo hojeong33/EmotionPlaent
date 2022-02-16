@@ -127,7 +127,7 @@ const routes = [
     name: 'Userpage',
     redirect: '/:userId/feed',
     component: Userpage,
-    props: (route) => ({ userId: Number(route.params.userId) }),
+    props: true,
     meta: {
       loginRequired: true,
       testRequired:  true,
@@ -308,17 +308,10 @@ router.beforeEach((to, from, next) => {
     userUpdate.then(() => next())
   }
   // 감정 테스트가 필요한 경우 테스트페이지로 redirect
-<<<<<<< HEAD
-  // if (to.meta.testRequired && store.state.userInfo != null &&!store.state.userInfo.mood ){
-  //   console.log(store.state.userInfo.mood)
-  //   next({ name:'EmotionTest' })
-  // }
-=======
   if (to.meta.testRequired && store.state.userInfo != null && !store.state.userInfo.mood){
     console.log(store.state.userInfo.mood)
     next({ name:'EmotionTest' })
   }
->>>>>>> 4e7e5809a649d7e702b1008e996a16a851ad1c2d
   //로그인 된 사용자가 로그인 or 회원가입 페이지로 가려고 할 경우
   if (!to.meta.loginRequired && store.state.userInfo && token){
     console.log('메인')

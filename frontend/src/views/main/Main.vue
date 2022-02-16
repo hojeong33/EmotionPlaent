@@ -72,10 +72,7 @@ export default {
         this.$store.dispatch("userfollowdate", this.$store.state.userInfo.no);
         this.$store.dispatch("alarmselect")
         this.$store.dispatch("connect")
-<<<<<<< HEAD
-=======
         // this.$store.dispatch("searchUserFeed", this.$store.state.userInfo.no)
->>>>>>> 4e7e5809a649d7e702b1008e996a16a851ad1c2d
         this.$store.state.recommendReload = 1;
     }
     console.log("유저인포");

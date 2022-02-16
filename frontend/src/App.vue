@@ -135,16 +135,8 @@ export default {
       'signupConfirmModalActive', 'emotionTestTooMuchPickModalActive', 'firstEmotionTestConfirmModalActive', 'emotionTestErrorActive', 'emotionTestPickMoreModalActive', 
       'emotionTestResultModalActive', 'loginFailModalActive', 'signupFailModalActive1', 'signupFailModalActive2', 'ReturnToLoginModalActive', 'commentNeedContentModalActive',
       'moreInfoConfirmModalActive', 'feedUpdateActive', 'pickYourImageModalActive', 'tooMuchImagesModalActive', 'pickYourTagModalActive', 'mypagefollowingListActive', 'mypagefollowerListActive',
-<<<<<<< HEAD
-      'userpagefollowingListActive', 'userpagefollowerListActive', 'userFeedSettingModalActive2',
-  ]),
-  created(){
-    console.log('나다!!',this)
-  }
-=======
       'userpagefollowingListActive', 'userpagefollowerListActive', 'userFeedSettingModalActive2','likesListActive','addPlayListActive', 'nicknameErrModalActive', 'pwchangeConfirmModalActive', 'pwchangeErrModalActive',
     ]),
->>>>>>> 4e7e5809a649d7e702b1008e996a16a851ad1c2d
 }
 
 </script>

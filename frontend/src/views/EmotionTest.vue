@@ -192,10 +192,6 @@
         }
       },
       go_to_back: function(){
-<<<<<<< HEAD
-=======
-
->>>>>>> 4e7e5809a649d7e702b1008e996a16a851ad1c2d
         this.$router.push({ name: 'Main' })
       },
     },

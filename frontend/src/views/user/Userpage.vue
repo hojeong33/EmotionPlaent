@@ -1,24 +1,21 @@
 <template>
   <section id="mypage-container" v-if="userInfo">
     <article id="profile-container">
-      <img id="profile-img" :src="$store.state.searchUserInfo.profileImg">
+      <img id="profile-img" :src="userInfo.profileImg">
       <div id="profile-card">
         <div id="name-card">
-          <h1>{{ this.$store.state.searchUserInfo.nickname }}</h1>
-          <div v-if="$store.state.searchUserInfo.no !== $store.state.userInfo.no">
-            <button v-if="$store.state.searchUserFollowInfo.followcheck == 0" id="follow"
-          @click="follow">팔로우 하기</button>
-          <button v-if="$store.state.searchUserFollowInfo.followcheck == 1" id="unfollow"
-          @click="unfollow">언팔로우</button>
-          </div>
-          <div v-else>
-            <button @click="$router.push({name: 'Setting'})">프로필 수정</button>
+          <h1>{{ userInfo.nickname }}</h1>
+          <div>
+            <button v-if="!isFollow" id="follow"
+            @click="follow">팔로우</button>
+            <button v-else id="unfollow"
+            @click="unfollow">언팔로우</button>
           </div>
         </div>
-        <div id="info-card">
-          <h3>이야기 {{ this.$store.state.searchUserFeedInfo.length }}개</h3>
-          <h3 @click="showFollowerList" style="cursor: pointer;">팔로워 {{ this.$store.state.searchUserFollowInfo.userFollow.length }}</h3>
-          <h3 @click="showFollowingList" style="cursor: pointer;">팔로우 {{ this.$store.state.searchUserFollowInfo.userFollowing.length }}</h3>
+        <div id="info-card" v-if="feeds && followers && followings">
+          <h3>이야기 {{ feeds.length }}개</h3>
+          <h3 style="cursor: pointer;">팔로워 {{ followers.length }}</h3>
+          <h3 style="cursor: pointer;">팔로우 {{ followings.length }}</h3>
         </div>
       </div>
     </article>
@@ -37,6 +34,10 @@
 import axios from 'axios'
 
 const session = window.sessionStorage;
+const headers = {
+  'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+  'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+};
 
 export default {
   name: 'Userpage',
@@ -51,12 +52,12 @@ export default {
     }
   },
   props: {
-    userId: Number
+    userId: String
   },
   methods: {
     changeTab(tab){
       this.tab = tab
-      this.$router.push({ path: `/userpage/${tab}` })
+      this.$router.push({ path: `/${this.userId}/${tab}` })
     },
     follow() {
       this.$store.dispatch('sendfollow', this.$store.state.searchUserNo)
@@ -64,21 +65,52 @@ export default {
     unfollow() {
       this.$store.dispatch('deletefollow', this.$store.state.searchUserNo)
     },
-    showFollowerList: function () {
-      this.$store.commit('userpagefollowerListActivate')
+
+    getFollowData: function () {
+      axios({
+        method: 'get',
+        url: `/api/follows/${this.$store.state.userInfo.no}/${this.userId}`,
+        headers: headers,  // 넣는거 까먹지 마세요
+      })
+      .then(res => {
+        console.log("팔로우 정보 가져오기 성공")
+        console.log(res.data)
+        this.followers = res.data.follower
+        this.followings = res.data.following
+        this.$store.dispatch('accessTokenRefresh', res) // store에서
+      })
     },
-    showFollowingList: function () {
-      this.$store.commit('userpagefollowingListActivate')
+    getFeedData: function(){
+      axios({
+        method: 'get',
+        url: `/api/feeds/my/${this.userId}`,
+        headers: headers,  // 넣는거 까먹지 마세요
+      })
+      .then(res => {
+        console.log("피드 가져오기 성공")
+        console.log(res.data)
+        this.feeds = res.data
+        this.$store.dispatch('accessTokenRefresh', res)
+      })
+    }
+  },
+  computed: {
+    isFollow(){
+      if (this.followers){
+        this.followers.forEach(ele => {
+          if (ele.no == this.$store.state.userInfo.no){
+            return true
+          }
+        })
+      }
+      return false
     }
   },
   created(){
-		let headers = {
-			'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-			'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-		};
+    console.log(this.$route)
 		axios({
 			method:'get',
-			url:`http://13.125.47.126:8080/users/${this.userId}`,
+			url:`/api/users/${this.userId}`,
 			headers:headers,
 		})
 		.then(res => {
@@ -87,38 +119,16 @@ export default {
 				session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
 				console.log("Access Token을 교체합니다!!!")
 			}
-			this.userInfo=res.data
+			this.userInfo = res.data
+      console.log('유저정보는?', this.userInfo)
 		})
-    //팔로우 정보 가져오기
     .then(() => {
-      axios({
-        method: 'get',
-        url: `http://13.125.47.126:8080/follows/${this.$store.state.userInfo.no}/${this.userId}`,
-        headers: headers,  // 넣는거 까먹지 마세요
-      })
-      .then(res => {
-        console.log("팔로우 정보 가져오기 성공")
-        console.log(res.data)
-        this.followers = res.data.follower
-        this.followings = res.data.following
-        this.dispatch('accessTokenRefresh', res) // store에서
-      })
+      this.getFollowData() // 팔로우 데이터
     })
-    //작성 피드 정보 가져오기
     .then(() => {
-      axios({
-        method: 'get',
-        url: `http://13.125.47.126:8080/feeds/my/${this.userId}`,
-        headers: headers,  // 넣는거 까먹지 마세요
-      })
-      .then(res => {
-        console.log("피드 가져오기 성공")
-        console.log(res.data)
-        this.feeds = res.data
-        this.dispatch('accessTokenRefresh', res)
-      })
+      this.getFeedData() // 피드 데이터
     })
-		.catch(error => console.log('안되네',error))
+		.catch(error => console.log('안되네', error))
   }
 }
 </script>

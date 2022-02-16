@@ -64,12 +64,9 @@ export default {
       return this.$router.app._route.path
     }
   },
-<<<<<<< HEAD
-=======
   created() {
     this.$store.dispatch('userfollowdate', this.state.userInfo.no);
   },
->>>>>>> 4e7e5809a649d7e702b1008e996a16a851ad1c2d
   mounted(){
     if (this.to.includes('item')){
       this.myPageTab = 'pick'

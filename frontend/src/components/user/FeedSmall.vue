@@ -1,17 +1,9 @@
 <template>
-<<<<<<< HEAD
   <div class="feed-s" v-if="feed">
     <img class="feed-s-thumbnail" :src="feed.imgs[0].imgLink" :alt="this.$store.state.userInfo.username"
     @mouseover="hover = true">
     <img class="feed-planet" :src="require(`@/assets/images/emotions/${planet}`)" id="planet">
     <span class="feed-s-info" v-show="hover" @mouseleave="hover = false">
-=======
-  <div class="feed-s">
-    <img class="feed-s-thumbnail" :src="post.imgs[0].imgLink" :alt="this.$store.state.userInfo.username"
-    @mouseover="hover = true" >
-    <img class="feed-planet" :src="require(`@/assets/images/emotions/${planet}`)" id="planet" >
-    <span class="feed-s-info" v-show="hover" @mouseleave="hover = false" @click="feeddetail()">
->>>>>>> 4e7e5809a649d7e702b1008e996a16a851ad1c2d
       <span class="info">
         <img src="@/assets/images/icons/heart.png" alt="heart">
         <p>{{ feed.likes.length }}</p>
@@ -68,7 +60,7 @@ export default {
     };
     axios({
       method: 'get',
-      url:`http://13.125.47.126:8080/feed/${this.idx}`,
+      url:`/api/feed/${this.idx}`,
       headers: headers,  // 넣는거 까먹지 마세요
     })
     .then((res) => {

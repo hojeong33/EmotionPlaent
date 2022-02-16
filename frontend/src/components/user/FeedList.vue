@@ -43,8 +43,8 @@ export default {
     filteredFeeds(){
       if (this.rawFeeds && this.filter){
         const temp = []
-        this.rawFeeds.filter(feed => {
-          if (feed.tags[0] == this.filter){
+        this.rawFeeds.forEach(feed => {
+          if (feed.tags[0].no == this.filter){
             temp.push(feed.no)
           }
         })
@@ -64,7 +64,7 @@ export default {
     };
     axios({
       method:'get',
-      url:`http://13.125.47.126:8080/feeds/my/${userdata.no}`,
+      url:`/api/feeds/my/${userdata.no}`,
       headers:headers,
     })
     .then((res) => {

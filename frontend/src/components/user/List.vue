@@ -8,9 +8,9 @@
 
 		<div id="pick-container" v-if="tab == 'pick'">
 			<div id="pick-tab">
-				<h3 @click="pickTap = 1" :class="pickTap == 1 ? 'active': ''">음악</h3>
-				<h3 @click="pickTap = 2" :class="pickTap == 2 ? 'active': ''">영화</h3>
-				<h3 @click="pickTap = 3" :class="pickTap == 3 ? 'active': ''">활동</h3>
+				<h3 @click="pickTab = 1" :class="pickTab == 1 ? 'active': ''">음악</h3>
+				<h3 @click="pickTab = 2" :class="pickTab == 2 ? 'active': ''">영화</h3>
+				<h3 @click="pickTab = 3" :class="pickTab == 3 ? 'active': ''">활동</h3>
 			</div>
 			<div id="picks"> 
 				<pick-list v-for="(pick, idx) in filteredPicks" :key="idx" :pick="pick"  />
@@ -49,7 +49,7 @@ export default {
         { id: 6, name: '분노행성', img: "rage.png", color: '#2A61F0' },
       ],
 			filter: 0,
-			pickTap: 1,
+			pickTab: 1,
 			feeds: null,
 			picks: null
 		}
@@ -71,7 +71,8 @@ export default {
 	computed: {
 		userMood(){
 			return this.$store.state.userInfo.mood
-		}
+		},
+		
 	},
 	created(){
 		let user = JSON.parse(session.getItem('userInfo')).no
@@ -86,7 +87,7 @@ export default {
 		};
 		axios({
 			method:'get',
-			url:`http://13.125.47.126:8080/feeds/my/returnNo/${user}`,
+			url:`/api/feeds/my/returnNo/${user}`,
 			headers:headers,
 		})
 		.then((res) => {
