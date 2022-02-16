@@ -12,7 +12,7 @@
           <h4 id="intro" style="color: #777777; font-size: 1.2rem; font-weight: bold;">{{ this.$store.state.userInfo.intro }}</h4>
           <br>
           <div id="info-card">
-            <h3>이야기 {{ this.$store.state.userFeedInfo.length }}</h3>
+            <h3>이야기 {{this.$store.state.userInfo.feedCount }}</h3>
             <h3 @click="showFollowerList" style="cursor: pointer;">팔로워 {{ this.$store.state.userFollowInfo.userFollow.length }}</h3>
             <h3 @click="showFollowingList" style="cursor: pointer;">팔로우 {{ this.$store.state.userFollowInfo.userFollowing.length }}</h3>
           </div>
@@ -44,7 +44,8 @@ export default {
       posts: 0,
       },
       myPageTab: 'feed',
-      filter: 0
+      filter: 0,
+
     }
   },
   methods: {
