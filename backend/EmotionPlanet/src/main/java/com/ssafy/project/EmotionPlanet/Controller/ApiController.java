@@ -16,7 +16,7 @@ import com.ssafy.project.EmotionPlanet.Dto.MovieDto;
 import com.ssafy.project.EmotionPlanet.Dto.MusicDto;
 import com.ssafy.project.EmotionPlanet.Service.ApiServiceImpl;
 
-@CrossOrigin(origins = "http://localhost:5500, https://i6e203.p.ssafy.io", allowCredentials = "true", allowedHeaders = "*", methods = {
+@CrossOrigin(origins = {"http://localhost:5500", "https://i6e203.p.ssafy.io"}, allowCredentials = "true", allowedHeaders = "*", methods = {
 		RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.HEAD,
 		RequestMethod.OPTIONS })
 
