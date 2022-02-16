@@ -3,7 +3,7 @@
 		<filter-tab :user-mood="userMood" @filtering="filtering" />
 
 		<search-feed-list v-if="tab == 'feed'" :feeds="filteredFeeds" />
-		<search-pick-list v-if="tab == 'pick'" :picks="filteredPicks" />
+		<search-pick-list v-if="tab == 'pick'" :picks="this.filteredPick" />
 		<div id="no-result" 
 			v-if="(tab == 'feed' && this.filteredFeed.length === 0)||(tab == 'pick' && this.filteredPick.length === 0)">
 			<img id="nothing" src="@/assets/images/etc/alien.png" alt="no result">
@@ -25,7 +25,7 @@ export default {
 			pickData: null,
 			filter: 0,
 			filteredFeed: [],
-			filteredPick: []
+			filteredPick: [],
 		}
 	},
 	props: {
@@ -45,17 +45,18 @@ export default {
     }
 	},
 	created: function() {
-		this.$bus.$on('pickBus', (searchPicks) => {
-		this.filteredPick = searchPicks
+		this.feedData = this.$store.state.tagSearchResult
+		if(this.$store.state.searchPickList !== null){
+			this.filteredPick = this.$store.state.searchPickList
+		}
 		console.log(this.filteredPick)
-		})
 	},
 	computed: {
 		filteredFeeds(){
 			if (this.filter){
 				const temp = []
 				this.feedData.forEach(feed => {
-					if (feed.planet == this.filter){
+					if (feed.tagno == this.filter){
 						temp.push(feed)
 					}
 				});
@@ -63,17 +64,6 @@ export default {
 			}
 			return this.feedData
 		},
-		filteredPicks(){
-			if (this.filter){
-				this.filteredPick.forEach(pick => {
-					if (pick.tagno == this.filter){
-						this.filteredPick.push(pick)
-					}
-				});
-				return this.filteredPick
-			}
-			return this.filteredPick
-    },
 	},
 }
 </script>
