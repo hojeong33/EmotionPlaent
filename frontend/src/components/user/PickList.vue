@@ -30,12 +30,14 @@ export default {
   },
   methods: {
     go_to_detail(){
-      this.$router.push({path: `/mypage/item/${this.pick.userNo}/${this.pick.tagNo}/${this.pick.no}`})
+      // console.log('디테일로감')
+      this.$router.push({path:`${this.$route.matched[0].path}/item/${this.pick.no}`})
+      // this.$router.push({path: `/mypage/item/${this.pick.userNo}/${this.pick.tagNo}/${this.pick.no}`})
     }
   },
   computed: {
     thumbNail(){
-      return this.pick.contentsList[0].postImgLink
+      return this.pick.contentsListData[0].imgLink
     },
     title(){
       return this.pick.name

@@ -12,8 +12,6 @@
 export default {
 	methods: {
 		goLogin: function () {
-			// console.log('여기옴')
-			// console.log(this.$store.state.userInfo)
 			this.$store.commit('ReturnToLoginModalActivate')
 			this.$router.push({name: 'Login'})
 		}

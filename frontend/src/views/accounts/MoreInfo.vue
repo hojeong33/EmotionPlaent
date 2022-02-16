@@ -67,6 +67,11 @@
 
 
 <script>
+const clear = function(){
+  window.sessionStorage.clear()
+  return new Promise(resolve => resolve(true))
+}
+
 // 소셜로그인 최초로 했을 때 추가 정보(전화번호, 닉네임, 생년월일) 받는 페이지
   import axios from 'axios'
   const session = window.sessionStorage
@@ -169,8 +174,10 @@
           }
         })
       },
-      go_to_back: function(){
-        this.$router.push('Login')
+      go_to_back: async function(){
+        await clear()
+        console.log(window.sessionStorage)
+        this.$router.go(-1)
       }
     },
     created(){
