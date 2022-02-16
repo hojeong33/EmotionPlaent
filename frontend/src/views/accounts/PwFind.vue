@@ -268,11 +268,16 @@ export default {
   }
 
   #pf-container {
+    background-color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 80%;
-    margin: 0 auto;
+    min-width: 600px;
+    min-height: 92.5vh;
+    /* height: 100%; */
+    padding: 2rem;;
+    border-radius: 20px;
+    border: 2px  #5E39B3 solid;
     /* border-radius: 20px;
     border: 2px  #5E39B3 solid; */
   }

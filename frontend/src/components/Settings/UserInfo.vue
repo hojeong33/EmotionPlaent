@@ -8,7 +8,7 @@
       </div>
       <div id="us_header_info">
         <span>
-          <h2>{{ this.$store.state.userInfo.nickname }}</h2>
+          <h2 id="nickname">{{ this.$store.state.userInfo.nickname }}</h2>
         </span>
         <span id="change_btn">
           <!-- <button>프로필사진 변경</button> -->
@@ -261,5 +261,9 @@ export default {
     width: 200px;
     height: 200px;
     border-radius: 50%;
+    border: 5px black;
   } 
+  #nickname {
+    font-size: 3.5rem;
+  }
 </style>

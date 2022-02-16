@@ -38,14 +38,15 @@ export default {
 	flex-direction: column;
 	justify-content: center;
 	background-color: white;
-	border-radius: 20px;
-	width: 20vw;
-	height: 15vh;
+	border-radius: 30px;
+	width: 18vw;
+	height: 20vh;
 }
 p {
 	margin: auto;
 	font-weight: bold;
 	cursor: pointer;
+	font-size: 1.25rem;
 }
 hr {
 	margin: 0;

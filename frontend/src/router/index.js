@@ -4,6 +4,8 @@ import Login from '@/views/accounts/Login'
 import MoreInfo from '@/views/accounts/MoreInfo'
 import Signup from '@/views/accounts/Signup'
 import KaKaoLogin from '@/views/accounts/KaKaoLogin'
+import EmailFind from '@/views/accounts/EmailFind'
+import PwFind from '@/views/accounts/PwFind'
 import EmotionTest from '@/views/EmotionTest'
 
 import Mypage from '@/views/user/Mypage.vue'
@@ -19,8 +21,6 @@ import UserInfo from '@/components/Settings/UserInfo'
 import PwChange from '@/components/Settings/PwChange'
 import Withdrawal from '@/components/Settings/Withdrawal'
 import FeedDetail from '@/components/FeedDetail'
-import PwFind from '@/components/Settings/PwFind'
-import EmailFind from '@/components/Settings/EmailFind' 
 import ProfileUpdate from '@/components/Settings/ProfileUpdate'
 import SearchResult from '@/components/Search/SearchResult/SearchResult'
 import SearchList from '@/components/Search/SearchResult/SearchList'
@@ -68,6 +68,26 @@ const routes = [
       testRequired: false,
       showingNav: false,
     }
+  },
+  {
+    path: '/password-find',
+    name: 'Password-find',
+    component: PwFind,
+    meta: {
+      loginRequired: false,
+      testRequired: false,
+      showingNav: false,
+    },
+  },
+  {
+    path: '/email-find',
+    name: 'EmailFind',
+    component: EmailFind,
+    meta: {
+      loginRequired: false,
+      testRequired: false,
+      showingNav: false,
+    },
   },
   {
     path: '/mypage',
@@ -191,26 +211,6 @@ const routes = [
           loginRequired: true,
           testRequired: true,
           showingNav: true,
-        },
-      },
-      {
-        path: 'password-find',
-        name: 'Password-find',
-        component: PwFind,
-        meta: {
-          loginRequired: false,
-          testRequired: false,
-          showingNav: false,
-        },
-      },
-      {
-        path: 'email-find',
-        name: 'EmailFind',
-        component: EmailFind,
-        meta: {
-          loginRequired: false,
-          testRequired: false,
-          showingNav: false,
         },
       },
       {
