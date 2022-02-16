@@ -37,6 +37,11 @@ public class PickContentController {
 
     @PostMapping(value ="/pickContent") // 컨텐츠 추가
     public ResponseEntity<?> create(@RequestBody PickContentDto pickContentDto) {
+        String year = pickContentDto.getYear();
+        if(year != null)pickContentDto.setYear(year.substring(0, 4));
+
+        System.out.println(pickContentDto.toString());
+
         int result = pickContentService.create(pickContentDto);
         if(result != 0) {
             return new ResponseEntity<Integer>(result, HttpStatus.OK);

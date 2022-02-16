@@ -154,7 +154,7 @@ export default {
         };
         axios({
           method: 'get',
-          url: `http://13.125.47.126:8080/pick/${this.pickNo}`,
+          url: `http://localhost:8080/pick/${this.pickNo}`,
           headers: headers,  // 넣는거 까먹지 마세요
         }).then((res) => {
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
@@ -212,7 +212,7 @@ export default {
 
         axios({
           method: 'post',
-          url: 'http://13.125.47.126:8080/picks',
+          url: 'http://localhost:8080/picks',
           data: formData2, // post 나 put에 데이터 넣어 줄때
           headers: headers,  // 넣는거 까먹지 마세요
         }).then((res) => {

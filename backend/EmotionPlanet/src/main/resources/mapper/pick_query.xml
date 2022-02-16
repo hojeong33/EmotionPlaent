@@ -3,22 +3,29 @@
 <mapper namespace="com.ssafy.project.EmotionPlanet.Dao.PickDao">
 
     <select id="list" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.PickDto">
-        select no, userNo, name, date, tagNo
+        select no, userNo, name, date, tagNo, type, imgLink
         from pick
         where userNo = #{no}
         order by date desc
     </select>
 
+    <select id="listByType" parameterType="map" resultType="com.ssafy.project.EmotionPlanet.Dto.PickDto">
+        select no, userNo, name, date, tagNo, type, imgLink
+        from pick
+        where userNo = #{userNo} and type = #{type}
+        order by date desc
+    </select>
+
     <select id="select" parameterType="int" resultType="com.ssafy.project.EmotionPlanet.Dto.PickDto">
-        select no, userNo, name, date, tagNo
+        select no, userNo, name, date, tagNo, type, imgLink
         from pick
         where no = #{no}
     </select>
 
 
     <insert id="create" parameterType="com.ssafy.project.EmotionPlanet.Dto.PickDto">
-        insert into pick(userNo, name, tagNo)
-        values (  #{userNo}, #{name}, #{tagNo})
+        insert into pick(userNo, name, tagNo, type, imgLink)
+        values (  #{userNo}, #{name}, #{tagNo}, #{type}, #{imgLink})
         <selectKey keyProperty="no" resultType="int" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
@@ -30,6 +37,8 @@
         userNo = #{userNo}
         name = #{name}
         tagNo = #{tagNo}
+        type = #{type}
+        imgLink = #{imgLink}
         where no = #{no}
     </update>
 
@@ -48,7 +57,7 @@
         where pickNo = #{pickNo} and userNo = #{userNo}
     </select>
 
-    <select id="likes" parameterType="int">
+    <select id="likes" parameterType="int" resultType="int">
         select count(*)
         from pick_like
         where pickNo = #{pickNo}

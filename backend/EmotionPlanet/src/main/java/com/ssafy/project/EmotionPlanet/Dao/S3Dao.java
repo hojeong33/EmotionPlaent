@@ -1,5 +1,6 @@
 package com.ssafy.project.EmotionPlanet.Dao;
 
+import com.ssafy.project.EmotionPlanet.Dto.ImgDto;
 import com.ssafy.project.EmotionPlanet.Dto.S3Dto;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -13,5 +14,6 @@ public interface S3Dao {
     public int updateimg(@Param(value = "no") int no,@Param(value = "imgLink") String imgLink);
     public void deleteFile(String imgName);
     public void deleteByNo(int imgName);
-    public void select(String imgName);
+    public int select(String imgName);
+    public ImgDto selectByLink(String imgLink);
 }

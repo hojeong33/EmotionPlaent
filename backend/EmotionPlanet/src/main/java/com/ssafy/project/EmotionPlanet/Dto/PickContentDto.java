@@ -5,11 +5,13 @@ public class PickContentDto {
     private int no;
     private int pickNo;
     private String title;
+    private String apiId;
     private String imgLink;
     private String descr;
     private String year;
     private String genre;
     private int type;
+    private int targetNo;
     private String author;
 
     public PickContentDto() {
@@ -97,5 +99,38 @@ public class PickContentDto {
 
     public void setPickNo(int pickNo) {
         this.pickNo = pickNo;
+    }
+
+    public String getApiId() {
+        return apiId;
+    }
+
+    public void setApiId(String apiId) {
+        this.apiId = apiId;
+    }
+
+    public int getTargetNo() {
+        return targetNo;
+    }
+
+    public void setTargetNo(int targetNo) {
+        this.targetNo = targetNo;
+    }
+
+    @Override
+    public String toString() {
+        return "PickContentDto{" +
+                "no=" + no +
+                ", pickNo=" + pickNo +
+                ", title='" + title + '\'' +
+                ", apiId='" + apiId + '\'' +
+                ", imgLink='" + imgLink + '\'' +
+                ", descr='" + descr + '\'' +
+                ", year='" + year + '\'' +
+                ", genre='" + genre + '\'' +
+                ", type=" + type +
+                ", targetNo=" + targetNo +
+                ", author='" + author + '\'' +
+                '}';
     }
 }
