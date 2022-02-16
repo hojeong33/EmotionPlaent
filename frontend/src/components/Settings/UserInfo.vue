@@ -1,269 +1,683 @@
 <template>
-  <section id="us_container">
-    <h1>계정 정보</h1>
-    <article id="us_header">
-      <div id="us_header_img">
-        <img :src="this.$store.state.userInfo.profileImg" alt="" id="profileImg">
-        <span id="opacity"></span>
-      </div>
-      <div id="us_header_info">
-        <span>
-          <h2 id="nickname">{{ this.$store.state.userInfo.nickname }}</h2>
+  <div id="pu_container">
+    <section id="pu_header">
+      <h1>프로필 변경</h1>
+    </section>
+    <section id="pu_body">
+			<article id="profile_head">
+				<img id="profile_img" :src="this.$store.state.userInfo.profileImg" alt="">
+        <p id="user_id">{{ this.$store.state.userInfo.nickname }}</p>
+        <div id="profile_img_change">
+          <button id="profile_img_change_button" @click="profileImgChangeModal">사진 변경</button>
+        </div>
+			</article>
+			<br>
+      <br>
+      <article id="pu_form" style="display: flex; flex-direction: row; justify-content: space-between">
+        <label style="margin-left:1rem;">이메일</label>
+        <p id="user_email">{{ this.$store.state.userInfo.email }}</p>
+      </article>
+      <br>
+			<article id="pu_form">
+        <label for="username" style="margin-left:1rem;">닉네임</label>
+        <input 
+        id="nickname"
+        v-model="credentials.beforeNick"
+        @input= "checkNickname" autocomplete="off" maxlength="10">
+        <span v-if="credentials.beforeNick !== $store.state.userInfo.nickname">
+          <p v-if="!isValid.validateNicknamelength" class="warn" style="margin-left:1.5rem;">
+            닉네임은 2자 이상, 10자 이하입니다.
+          </p>
+          <p v-if="!isValid.validateNicknamecheck && isValid.validateNicknamelength" class="warn" style="margin-left:1.5rem;">
+            사용 중인 닉네임이에요.
+          </p>
+          <p v-if="isValid.validateNicknamecheck && isValid.validateNicknamelength" class="collect" style="margin-left:1.5rem;">
+           사용 가능한 닉네임입니다.
+          </p>
         </span>
-        <span id="change_btn">
-          <!-- <button>프로필사진 변경</button> -->
-          <button @click="go_to_profilupdate">시민권 변경</button>
+			</article>
+      <br>
+      <article id="pu_form" style="display: flex; flex-direction: row; justify-content: space-between">
+        <label for="user_birth" style="margin-left:1rem;">생년월일</label>
+        <p id="user_birth">{{ this.$store.state.userInfo.birth }}</p>
+      </article>
+			<br>
+			<article id="pu_form">
+				<label id="introduce" style="margin-left:1rem;">소개</label>
+        <textarea  
+        id="short_comment"
+        v-model="$store.state.userInfo.intro"
+        ></textarea>
+			</article>
+			<br>
+      <article id="pu_form">
+        <div id="pwactive">
+          <label for="next_pw" style="margin-bottom:0.5rem; margin-left:1rem;">변경할 비밀번호</label>
+          <article id="pwchange">
+            <input style="margin-top:auto;margin-bottom:0.9rem" 
+            type="checkbox" @click="pw_change"
+            >
+            <h5 style="margin-top:auto;margin-bottom:0.5rem;margin-left:0.3rem;">비밀번호 변경하기</h5>
+          </article>
+        </div>
+        <input type="password" 
+        :id="pwActivate == true ? 'change' : 'still'"
+        :disabled="pwActivate == false"
+        v-model="credentials.nextPw"
+        @input="pwCheck"
+        placeholder="비밀번호는 8자 이상, 20자 이하입니다." style="margin-top:0.2rem;"
+        >
+        <span v-if="credentials.nextPw">
+          <p v-if="!isValid.validateNextPw" class="warn">
+            사용할 수 없는 비밀번호에요.
+          </p>
+          <p v-if="isValid.validateNextPw" class="collect">
+            사용할 수 있는 비밀번호입니다.
+          </p>
         </span>
-      </div>
-    </article>
-    <article id="us_body">
-      <div id="us_email">
-        <h2>이메일</h2>
-        <span>
-          <p>{{ this.$store.state.userInfo.email }}</p>
+      </article>
+			<br>
+      <article id="pu_form">
+        <label for="pw_conf" style="margin-left:1rem;">비밀번호 확인</label>
+        <input type="password"
+        :id="pwActivate == true ? 'change' : 'still'"
+        :disabled="pwActivate == false"
+        v-model="credentials.pwConf"
+        @input="pwConfCheck"
+        placeholder="비밀번호를 다시 입력해주세요." style="margin-top:0.2rem;"
+        >
+        <span v-if="credentials.pwConf">
+          <p v-if="!isValid.validatePwConf" class="warn">
+            비밀번호가 맞지 않아요.
+          </p>
+          <p v-if="isValid.validatePwConf" class="collect">
+            비밀번호가 일치합니다.
+          </p>
         </span>
-      </div>
-      <!-- <div id="us_password">
-        <h3>비밀번호</h3>
-        <a href="" @click="go_to_passwordchange">비밀번호 변경...</a>
-      </div> -->
-      <div id="short_comment">
-        <h2>소개</h2>
-        <span>
-          <p>{{ this.$store.state.userInfo.intro }}</p>
-        </span>
-      </div>
-      <div id="us_birth">
-        <h2>생년월일</h2>
-        <span>
-          <p>{{ this.$store.state.userInfo.birth }}</p>
-        </span>
-      </div>
-    </article>
-    <button id="withdrawal" @click="go_to_withdrawal">회원 탈퇴</button>
-  </section>
+      </article>
+      <br>
+      <!-- <article id="pu_form_radio">
+        <label for="" style="margin-left:1rem;">계정 공개 여부</label>
+        <div id="check_radio">
+          <div id="on">
+            <input type="radio" id="show_all" style="width:20px;height:20px;border:1px;" name="group"
+            @change="$store.state.userInfo.publish = 1"
+            :checked="$store.state.userInfo.publish == 1 ? 'checked': false">
+            <h5>모두에게 공개</h5>
+          </div>
+          <div id="off">
+            <input type="radio" id="show_followers" style="width:20px;height:20px;border:1px;" name="group"
+            @change="$store.state.userInfo.publish = 2"
+            :checked="$store.state.userInfo.publish == 2 ? 'checked': false">
+            <h5>팔로워에게 공개</h5>
+          </div>
+        </div>
+        <br>
+      </article> -->
+      <article id="pu_buttons">
+        <button id="withdrawal" @click="go_to_withdrawal">회원 탈퇴</button>
+        <button id="pu_button" @click="user_change">변경하기</button>
+      </article>
+    </section>
+  </div>
 </template>
 
 <script>
-// import LogoutModal from '@/components/Modal/LogoutModal.vue'
-const session = window.sessionStorage
+import axios from 'axios'
 
 export default {
   data: function(){
     return {
-      birthShow: false,
-      publish: 1,
-      // modalActive: false,
+      credentials : {
+        beforeNick: null,
+        beforeIntro: null,
+        beforePw: null,
+        nextPw: null, //변경할 비밀번호
+        pwConf: null, //비밀번호 확인
+      },
+      isValid: {
+        validateNicknamelength : true, // 닉네임 길이 체크
+        validateNicknamecheck : false, // 중복 닉네임 여부
+        validateNextPw: false, //변경할 비번 체크
+        validatePwConf: false, //비밀번호 확인 체크
+      },
+      help: false, 
+      pwActivate: false,
     }
   },
-  // components: {
-  //   LogoutModal,
-  // },
   methods: {
-    go_to_passwordchange: function(){
-      this.$router.push('/setting/password')
+    pwCheck: function(){
+      if (this.credentials.nextPw && this.credentials.nextPw.length >= 8 && this.credentials.nextPw.length <= 20){
+        this.isValid.validateNextPw = true
+      }
+      else {
+        this.isValid.validateNextPw = false
+      }
+    },
+    pwConfCheck: function(){
+      if (this.credentials.pwConf && this.credentials.nextPw === this.credentials.pwConf){
+        this.isValid.validatePwConf = true
+      }
+      else {
+        this.isValid.validatePwConf = false
+      }
     },
     go_to_withdrawal: function(){
       this.$router.push('/setting/withdrawal')
     },
-    go_to_profilupdate: function () {
-      this.$router.push('/setting/profile-update')
-    },
-    logoutModal:function(){
-      this.$store.commit('logoutModalActivate')
+    profileImgChangeModal:function(){
+      this.$store.commit('profileImgChangeModalActivate')
 		},
-    signOut() {
-      const authInst = window.gapi.auth2.getAuthInstance();
-      console.log('signout called', authInst)
-      authInst.signOut()
-      .then(() => {
-        // eslint-disable-next-line
-        console.log('User Signed Out!!!');
-        authInst.disconnect();
-        session.clear();
-      })
-      .then(() => {
-        window.location.reload()
-      })
-      .catch(() => alert('fail'))
+    checkNickname: function(el){
+      this.credentials.beforeNick = el.target.value
+      if (this.credentials.beforeNick !== this.$store.state.userInfo.nickname) {
+        if (this.credentials.beforeNick.length >= 2 && this.credentials.beforeNick.length <= 10) {
+          this.isValid.validateNicknamelength = true
+          console.log('길이는 맞아~')
+          // this.$store.state.userInfo.nickname = el.target.value // 한글 입력 이슈 해결하기 위해 사용. 한박자 느린거?
+          axios({
+            method: 'get',
+            url: '/api/register/checkByNickname/' + this.credentials.beforeNick,
+            })
+            .then(() => { //중복 닉네임 없는 경우
+              this.isValid.validateNicknamecheck = true
+              console.log('중복없다~')
+            })
+            .catch(() => { //중복 닉네임 있는 경우
+              this.isValid.validateNicknamecheck = false
+              console.log('중복있어')
+          })
+        }
+        else {
+          this.isValid.validateNicknamelength = false
+          console.log('길이가 안맞다~')
+        }
+      }
     },
-    // onPublish() {
-    //   this.showAll
-    // }
+    // tel_helper: function(event){
+    //   const nums = this.credentials.tel.length
+    //   const n = this.credentials.tel.charCodeAt(nums-1)
+    //   const poss = ['010', '011', '012', '013', '014',
+    //                 '015', '016', '017', '018', '019']
+    //   console.log(nums)
+    //   if (event.inputType == 'deleteContentBackward'){
+    //     if (nums == 3 || nums == 8){
+    //       this.credentials.tel = this.credentials.tel.slice(0, nums - 1)
+    //     }
+    //     return
+    //   }
+    //   if (n > 47 && n < 58){
+    //     if (nums == 3 || nums == 8){
+    //       this.credentials.tel += '-'
+    //     }
+    //   }
+    //   else {
+    //     this.credentials.tel = this.credentials.tel.slice(0, nums - 1)
+    //   }
+    //   if (nums == 13 && poss.indexOf(this.credentials.tel.slice(0,3)) > -1){
+    //     console.log(poss.indexOf(this.credentials.tel.slice(0,3)))
+    //     console.log(nums)
+    //     this.telCheck()
+    //   }
+    //   else {
+    //     this.isValid.validateTel = false
+    //   }
+    // },
+    // telCheck: function(){
+    //   axios({
+    //     method: 'get',
+    //     url: '/api/register/checkByTel/' + this.credentials.tel
+    //   })
+    //   .then(res => {
+    //     console.log(res)
+    //     if (res.data){
+    //       this.isValid.validateTel = true
+    //     }
+    //     else {
+    //       this.isValid.validateTel = false
+    //     }
+    //   })
+    // },
+    async user_change() {
+      //낙넴 변경하려 했을 경우
+      if (this.credentials.beforeNick !== this.$store.state.userInfo.nickname) {
+        console.log(this.isValid.validateNicknamecheck)
+        console.log(this.isValid.validateNicknamelength)
+        if (this.isValid.validateNicknamecheck == true && this.isValid.validateNicknamelength == true) {
+          this.$store.state.userInfo.nickname = this.credentials.beforeNick
+          this.$router.push({name: 'Mypage'})
+        }
+        else {
+          this.$store.commit('nicknameErrModalActivate')
+        }
+      }
+      
+      // 비번 변경하려 했을 경우
+      else if (this.credentials.pwConf !== null) {
+        if (this.isValid.validateNextPw == true) {
+          await this.$store.dispatch('updateuser', this.credentials.pwConf)
+          .then(() => {
+            this.$store.commit('pwchangeConfirmModalActivate')
+          })
+          .catch(() => alert('fail'))
+          }
+        else {
+          this.$store.commit('pwchangeErrModalActivate')
+        }
+      }
+      // 소개 or 공개비공개 설정 변경
+      else {
+        this.$store.dispatch('updateuser', null)
+        this.$router.push({name: 'Mypage'})
+      }
+    },
+    pw_change() {
+      if (this.pwActivate === false) {
+        this.pwActivate = true
+        console.log(this.pwActivate)
+      }
+      else {
+        this.pwActivate = false
+        this.credentials.nextPw = null
+        this.credentials.pwConf = null
+        console.log(this.pwActivate)
+      }
+    },
   },
   created() {
-    if (this.$store.state.userInfo.publish === 1) {
-      this.showAll = true
-      this.showFollow = false
-    }
-    else {
-      this.showAll = false
-      this.showFollow = true
-    }
+    console.log(this.$store.state.userInfo)
+    this.credentials.beforeNick = this.$store.state.userInfo.nickname
   }
 }
 </script>
 
 <style scoped>
-  h1 {
-    margin: 0 1rem 1rem;
-    font-size: 2rem;
+  label {
+    color: black;
     font-weight: bold;
+    margin-left: 0.5rem;
+    font-size: 1.5rem;
+		margin-right: auto;
+		margin-bottom: 0.5rem;
+  }
+	#introduce {
+		color: black;
+    font-weight: bold;
+    margin-left: 0.5rem;
+    font-size: 1.5rem;
+		margin-right: auto;
+		margin-bottom: 0.5rem;
+	}
+
+  #nickname {
+    border: 2px #5E39B3 solid;
+    border-radius: 30px;
+    width: 95%;
+    min-width: 300px;
+    height: 5vh;
+    min-height: 40px;
+    padding: 0.75rem;
+    font-size: 3.5rem;
+    letter-spacing: -1px;
+    font-weight: bold;
+		margin-left: 1rem;
   }
 
-  h2 {
-    margin: 0 1rem;
-    font-size: 2.3rem;
+  #intro {
+    border: 2px #5E39B3 solid;
+    border-radius: 30px;
+    width: 95%;
+    min-width: 300px;
+    height: 5vh;
+    min-height: 40px;
+    padding: 0.75rem;
+    font-size: 3.5rem;
+    letter-spacing: -1px;
     font-weight: bold;
-    letter-spacing: 1px;
+		margin-left: 1rem;
+  }
+
+  #password {
+    border: 2px #5E39B3 solid;
+    border-radius: 30px;
+    width: 95%;
+    min-width: 300px;
+    height: 5vh;
+    min-height: 40px;
+    padding: 0.75rem;
+    font-size: 3.5rem;
+    letter-spacing: -1px;
+    font-weight: bold;
+		margin-left: 1rem;
+  }
+
+  #still {
+    border: 2px gainsboro solid;
+    border-radius: 30px;
+    width: 95%;
+    min-width: 300px;
+    height: 5vh;
+    min-height: 40px;
+    padding: 0.75rem;
+    font-size: 1.2rem;
+    letter-spacing: -1px;
+		margin-left: 1rem;
+    cursor: not-allowed;
+  }
+  
+  #change {
+    border: 2px #5E39B3 solid;
+    border-radius: 30px;
+    width: 95%;
+    min-width: 300px;
+    height: 5vh;
+    min-height: 40px;
+    padding: 0.75rem;
+    font-size: 1.2rem;
+    letter-spacing: -1px;
+		margin-left: 1rem;
+  }
+
+  #nickname:focus {
+    outline: none;
+    background-color: #afa0d6;
+    color: white;
+    text-shadow: 0 1px 2px rgb(0, 0, 0, 0.5);
+  }
+  #intro:focus {
+    outline: none;
+    background-color: #afa0d6;
+    color: white;
+    text-shadow: 0 1px 2px rgb(0, 0, 0, 0.5);
+  }
+  #password:focus {
+    outline: none;
+    background-color: #afa0d6;
+    color: white;
+    text-shadow: 0 1px 2px rgb(0, 0, 0, 0.5);
+  }
+  #change:focus {
+    outline: none;
+    background-color: #afa0d6;
+    color: white;
+    text-shadow: 0 1px 2px rgb(0, 0, 0, 0.5);
+  }
+  #still:focus {
+    outline: none;
+    background-color: #afa0d6;
+    color: white;
+    text-shadow: 0 1px 2px rgb(0, 0, 0, 0.5);
+  }
+
+  #nickname::placeholder {
+    font-size: 1.1rem !important;
+    font-weight: initial;
+    text-shadow: none;
+    position: absolute;
+    top: 18%;
+  }
+  #nickname:focus::placeholder {
+    color: transparent;
+  }
+
+  #intro::placeholder {
+    font-size: 1.1rem !important;
+    font-weight: initial;
+    text-shadow: none;
+    position: absolute;
+    top: 18%;
+  }
+  #intro:focus::placeholder {
+    color: transparent;
+  }
+
+  #password::placeholder {
+    font-size: 1.1rem !important;
+    font-weight: initial;
+    text-shadow: none;
+    position: absolute;
+    top: 18%;
+  }
+  #password:focus::placeholder {
+    color: transparent;
+  }
+
+  #still::placeholder {
+    font-size: 1.1rem !important;
+    font-weight: initial;
+    text-shadow: none;
+    position: absolute;
+    top: 18%;
+  }
+  #still:focus::placeholder {
+    color: transparent;
+  }
+
+  #change::placeholder {
+    font-size: 1.1rem !important;
+    font-weight: initial;
+    text-shadow: none;
+    position: absolute;
+    top: 18%;
+  }
+  #change:focus::placeholder {
+    color: transparent;
+  }
+	
+	textarea {
+		border: 2px #5E39B3 solid;
+    border-radius: 20px;
+    width: 95%;
+    min-width: 300px;
+    min-height: 40px;
+    padding: 0.75rem;
+    font-size: 1rem;
+    letter-spacing: -1px;
+    font-weight: bold;
+		margin-left: 1rem;
+	}
+	textarea:focus {
+    outline: none;
+    background-color: #afa0d6;
+    color: white;
+    text-shadow: 0 1px 2px rgb(0, 0, 0, 0.5);
+  }
+	textarea::placeholder {
+    font-size: 1.1rem !important;
+    font-weight: initial;
+    text-shadow: none;
+    position: absolute;
+    top: 18%;
+  }
+
+  textarea:focus::placeholder {
+    color: transparent;
+  }
+	#nickname {
+		font-size: 1rem;
+		letter-spacing: -1px;
+    font-weight: bold;
+	}
+  h1 {
+    font-size: 2.8rem;
+    font-weight: bold;
+    margin-bottom: 3rem;
+  }
+	#profile_head{
+		display: flex;
+		flex-direction: row;
+	}
+
+	#profile_img {
+		width:130px;
+		height: 130px;
+		border-radius: 130px;
+    margin-left: 0.5rem;		
+	}
+
+	#user_id {
+		text-align: right;
+		font-size: 1.8rem;
+		font-weight: bold;
+		margin-top: auto;
+		margin-bottom: auto;
+		margin-left: 1rem;
+	}
+	#profile_img_change {
+		margin-left:auto;
+		margin-top: auto;
+
+	}
+
+	#profile_img_change_button {
+		background-color: #5E39B3;
+    color: white;
+		width: 6.9rem;
+		height: 2rem;
+		font-size: 1rem;
+		font-weight: bold;
+		border-radius: 30px;
+		border: none;
+	}
+
+  #pu_form {
+    text-align: left;
+  }
+  
+  #pu_form_radio {
+    text-align: left;
+  }
+
+  #check_radio {
+    display: flex;
+    justify-content: left;
+    align-items: flex-start;
+    width: 100%;
+    min-width: 300px;
+    height: 5vh;
+    min-height: 40px;
+    padding: 0.75rem;
+    font-size: 3.5rem;
+    letter-spacing: -1px;
+    font-weight: bold;
+    margin-top: 1rem;
+    margin-left: 1rem;
+  }
+
+  #on {
+    display: flex;
+    width: 39%;
+  }
+
+  #off {
+    display: flex;
+    width: 39%;
   }
 
   h3 {
-    margin: 0 1rem;
-    font-size: 1.75rem;
+    font-size: 1.5rem;
     font-weight: bold;
-    letter-spacing: 1px;
+    margin: 0;
   }
 
-  h4 {
-    font-size: 1.25rem;
-    margin: 0 1rem;
-    letter-spacing: 1px;
-  }
-
-  a {
-    text-decoration: none;
-    color: rgb(85, 85, 255);
-    font-size: 1.25rem;
-    font-weight: bold;
+  h5 {
+    font-size: 1.2rem;
   }
 
   p {
-    margin: 0;
-    font-size: 1.5rem;
-    font-weight: bold;
+    margin: 0 0.5rem;
   }
 
-  label {
-    font-size: 1.25rem;
-    font-weight: bold;
-  }
-
-  button {
+  #pu_button {
     background-color: #5E39B3;
     color: white;
     font-size: 1.125rem;
     font-weight: bold;
     border: none;
-    border-radius: 20px;
-    padding: 0.4rem 1.125rem;
+    border-radius: 30px;
+    width: 7rem;
+    height: 3rem;
+    margin: 1rem;
+  }
+
+  .warn {
+    color: rgb(240, 90, 90);
+  }
+
+  .collect {
+    color: green;
+  }
+
+  #pu_container {
+    width: 85%;
+    margin: 0 auto;
+  }
+
+  #pu_header {
+		text-align: left;
+    margin: 3rem 1rem;
+  }
+
+  #pu_body {
+    width: 80%;
+    margin: auto;
+  }
+
+  #pu_body a {
+		display:flex;
+		justify-content: right;
+		margin-right: 0.5rem;
+    text-decoration: none;
+    color: rgb(85, 85, 255);
+    font-size: 1.125rem;
+    font-weight: bold;
     cursor: pointer;
   }
 
-  #us_container {
+  #pu_buttons {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    flex-direction: row !important;
+    justify-content: space-evenly;
+    margin-bottom: 2rem;
+    /* margin: auto; */
+    /* margin: 1rem 4rem 1rem; */
   }
 
-  #us_header {
+  #pwchange {
     display: flex;
-    flex-wrap: wrap;
-    width: 100%;
-    height: 35vh;
-    position: relative;
-  }
-
-  #opacity {
-    width: 100%;
-    height: 100%;
-    background-color: rgb(0, 0, 0, 0.2);
-    position: absolute;
-    left: 0;
-  }
-
-  #us_header_img {
-    display: flex;
-    align-items: center;
     justify-content: center;
-    width: 100%;
-    height: 100%;
-    background-image: url('../../assets/images/emotions/cover.png');
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-    position: absolute;
+    width: 40%;
   }
 
-  #us_header_info {
-    display: flex;
-    /* flex-direction: column; */
-    justify-content: space-between;
-    align-items: flex-end;
-    width: 100%;
-    color: white;
-    z-index: 12;
-    padding: 1rem 1.5rem;
-  }
-
-  #us_header_info > *:first-child {
-    z-index:10;
-    display: flex;
-    align-items: center;
-  }
-
-  #us_header_info *:last-child {
-    z-index: 10;
-    display: flex;
-    /* justify-content: space-between; */
-    /* align-items: center; */
-  }
-
-  #us_body {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    width: 100%;
-    padding: 3rem 4rem;
-  }
-
-  #us_body div {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    width: 100%;
-    padding: 1rem 2rem;
-  }
-
-  #us_body div *:last-child {
-    padding: 0.5rem 2rem;
-  }
-
-  #us_body div > span {
+  #pwactive {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: 100%;
   }
+  #user_email {
+    font-weight: bold;
+    font-size: 1.25rem;
+    color: #504f4f;
+    margin-top: auto;
+    margin-bottom: auto;
 
+  }
+  #user_birth {
+    font-weight: bold;
+    font-size: 1.25rem;
+    color: #504f4f;
+    margin-top: auto;
+    margin-bottom: auto;
+  }
   #withdrawal {
-    background-color: rgb(240, 90, 90);
-    align-self: center;
-  }
-
-  #change_btn {
-    display: flex;
-    justify-self: right;
-  }
-
-  #profileImg {
-    z-index: 10;
-    width: 200px;
-    height: 200px;
-    border-radius: 50%;
-    border: 5px black;
-  } 
-  #nickname {
-    font-size: 3.5rem;
+    background-color: crimson;
+    color: white;
+    font-size: 1.125rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 30px;
+    width: 7rem;
+    height: 3rem;
+    margin: 1rem;
   }
 </style>

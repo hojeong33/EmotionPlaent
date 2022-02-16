@@ -106,7 +106,7 @@ export default {
     border-left: 30px solid transparent;
     border-right: 30px solid transparent;
     position: absolute;
-    top: -5.6%;
+    top: -5.2%;
     right: 41%; 
   }
   #alarm_header {

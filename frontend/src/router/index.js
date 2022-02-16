@@ -291,7 +291,7 @@ router.beforeEach((to, from, next) => {
   }
   //네비게이션 랜더 유무
   store.commit('navActivate2', to.meta.showingNav)
-
+  
   // 네비게이션 바 Active와 매칭
   if (to.name == 'Main'){store.commit('navActivate', 1)}
   else if (to.matched.length && to.matched[0].path == '/mypage'){store.commit('navActivate', 2)}
