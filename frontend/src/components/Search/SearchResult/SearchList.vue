@@ -21,17 +21,11 @@ import SearchPickList from '@/components/Search/SearchResult/SearchPickList'
 export default {
 	data(){
 		return {
-<<<<<<< HEAD
 			feedData: null,
 			pickData: null,
 			filter: 0,
 			filteredFeed: [],
-			filteredPick: []
-=======
-			feedData,
-			pickData,
-			filter: 0
->>>>>>> 9e4b87cce402ed41cd24a0c2f93d24d726590b64
+			filteredPick: [],
 		}
 	},
 	props: {
@@ -46,11 +40,8 @@ export default {
 	methods: {
 		filtering(payload){
       this.filter = payload
-<<<<<<< HEAD
 			this.filteredFeed = []
 			this.filteredPick = []
-=======
->>>>>>> 9e4b87cce402ed41cd24a0c2f93d24d726590b64
     }
 	},
 	created: function() {
