@@ -255,9 +255,9 @@
     justify-content: flex-start;
     align-items: center;
     background-color: white;
-    width: 30%;
+    width: 25%;
     align-self: center;
-    min-width: 700px;
+    min-width: 600px;
     min-height: 92.5vh;
     padding: 2rem;;
     border-radius: 20px;

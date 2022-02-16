@@ -7,7 +7,7 @@
           <h1 style="color: #5E39B3; font-size: 2.5rem;">이모션 플래닛</h1>
           <h1 style="font-size: 2.5rem;">에</h1>
         </span>
-        <h1 style="font-size: 2.5rem;">시민권을 등록해볼까요?👽</h1>
+        <h1 style="font-size: 2.5rem;">여행할 수 있는 티켓을 발급해볼까요?👽</h1>
       </section>
       <section id="signup_form">
         <article id="email_form">
@@ -353,7 +353,7 @@
     justify-content: flex-start;
     align-items: center;
     background-color: white;
-    width: 30%;
+    width: 25%;
     align-self: center;
     min-width: 600px;
     min-height: 92.5vh;
