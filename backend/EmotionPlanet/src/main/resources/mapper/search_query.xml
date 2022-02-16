@@ -49,7 +49,7 @@
 
 	<select id="pickSelect" parameterType="String"
 			resultType="hashmap">
-		select p.no, p.userNo, p.name, p.date, t.name as tagname, t.no as tagno , p.type, p.imgLink, (select count(*) from pick_like where pickNo = p.no) as count
+	select p.no, p.userNo, p.name, p.date, t.name as tagname, t.no as tagno , p.type, p.imgLink, (select count(*) from pick_like where pickNo = p.no) as count
 	from tag t, pick p
 	where t.no = p.tagNo and t.name = #{name} and p.date between date_add(now(),interval -1 MONTH) and now()
     group by p.no
