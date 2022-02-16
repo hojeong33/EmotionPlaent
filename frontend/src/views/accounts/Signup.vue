@@ -33,14 +33,6 @@
           </span>
         </article>
         <article id="nickname_form">
-          <label for="nickname">닉네임</label>
-          <input type="text"
-          id="nickname"
-          v-model="credentials.nickname"
-          placeholder="닉네임은 2자 이상, 10자 이하입니다."
-          autocomplete="off" maxlength="10"
-          @input= "checkNickname">
-          <article id="nickname_form">
         <label for="nickname">닉네임</label>
         <input type="text"
         id="nickname"
@@ -174,7 +166,7 @@
         if (this.credentials.pw === this.credentials.passwordConfirmation){ // 입력 비밀번호가 일치하면 회원가입 (나중에 여기다 벨류체크)
           axios({
             method: 'post',
-            url: 'http://13.125.47.126:8080/register',
+            url: '/api/register',
             data: this.credentials
           })
           .then( () => {
@@ -203,7 +195,7 @@
       checkEmail: function(){
         axios({
           method: 'get',
-          url: 'http://13.125.47.126:8080/register/checkByEmail/' + this.credentials.email,
+          url: '/api/register/checkByEmail/' + this.credentials.email,
         })
         .then(() => { //중복 이메일 없는 경우
           this.isValid.validateEmailcheck = true
@@ -220,7 +212,7 @@
           // this.$store.state.userInfo.nickname = el.target.value // 한글 입력 이슈 해결하기 위해 사용. 한박자 느린거?
           axios({
             method: 'get',
-            url: 'http://13.125.47.126:8080/register/checkByNickname/' + this.credentials.nickname,
+            url: '/api/register/checkByNickname/' + this.credentials.nickname,
             })
             .then(() => { //중복 닉네임 없는 경우
               this.isValid.validateNicknamecheck = true
@@ -285,7 +277,7 @@
       telCheck: function(){
         axios({
           method: 'get',
-          url: 'http://13.125.47.126:8080/register/checkByTel/' + this.credentials.tel
+          url: '/api/register/checkByTel/' + this.credentials.tel
         })
         .then(res => {
           console.log(res)
