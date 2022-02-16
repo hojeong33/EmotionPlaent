@@ -1,9 +1,16 @@
 package com.ssafy.project.EmotionPlanet.Dto;
 
 public class ActivityDto {
+	private int no;
 	private String title;
 	private String imgLink;
 	private int type;
+	public int getNo() {
+		return no;
+	}
+	public void setNo(int no) {
+		this.no = no;
+	}
 	public String getTitle() {
 		return title;
 	}
@@ -23,15 +30,15 @@ public class ActivityDto {
 		this.type = type;
 	}
 	public ActivityDto() {}
-	public ActivityDto(String title, String imgLink, int type) {
+	public ActivityDto(int no, String title, String imgLink, int type) {
 		super();
+		this.no = no;
 		this.title = title;
 		this.imgLink = imgLink;
 		this.type = type;
 	}
 	@Override
 	public String toString() {
-		return "ActivityDto [title=" + title + ", imgLink=" + imgLink + ", type=" + type + "]";
+		return "ActivityDto [no=" + no + ", title=" + title + ", imgLink=" + imgLink + ", type=" + type + "]";
 	}
-	
 }

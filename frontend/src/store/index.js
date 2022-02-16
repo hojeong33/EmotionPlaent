@@ -585,6 +585,7 @@ export default new Vuex.Store({
         this.state.searchUserFollowInfo.followcheck = 0
         this.dispatch('accessTokenRefresh', res) // store에서
         this.dispatch('userfollowdate', el);
+        this.dispatch('userfollowdate', this.state.userInfo.no);
         }).catch((error) => {
           console.log("언팔로우 실패")
           console.log(error);
@@ -614,6 +615,7 @@ export default new Vuex.Store({
         this.dispatch('accessTokenRefresh', res) // store에서
         this.dispatch('follow',el)
         this.dispatch('userfollowdate', el);
+        this.dispatch('userfollowdate', this.state.userInfo.no);
         }).catch((error) => {
           console.log("팔로우 실패")
           console.log(error);
@@ -705,6 +707,44 @@ export default new Vuex.Store({
 
     //여기 검색부분입니다
     // 글자가 포함된 태그리스트와 태그별 피드 개수를 가져옴
+    searchsPickTag(state, el){
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+      axios({
+        method: 'get',
+        url:'http://13.125.47.126:8080/searchs/byPickTag/' + el,
+        headers: headers,
+      }).then(res => {
+        this.dispatch('accessTokenRefresh', res)
+        console.log('찜목록 있음', res)
+      })
+      .catch(()=> {
+        console.log('찜목록 없음')
+        
+      })
+    },
+
+    searchPickTagList(){
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+      axios({
+        method: 'get',
+        url:'http://13.125.47.126:8080/searchs/byPickTagList',
+        headers: headers,
+      }).then(res => {
+        this.dispatch('accessTokenRefresh', res)
+        console.log('태그 있음', res)
+      })
+      .catch(()=> {
+        console.log('태그 없음')
+        
+      })
+    },
+
     searchTag() {
       let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
@@ -806,7 +846,7 @@ export default new Vuex.Store({
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
-			axios.get('http://13.125.47.126:8080/recommend/activity/', {
+			axios.get('http://13.125.47.126:8080/recommend/activity', {
           headers: headers,
         }).then((res) => {
           this.state.recommendActivity = res.data

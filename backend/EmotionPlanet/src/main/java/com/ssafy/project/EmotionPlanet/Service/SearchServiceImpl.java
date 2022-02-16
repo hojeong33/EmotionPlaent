@@ -2,6 +2,7 @@ package com.ssafy.project.EmotionPlanet.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import com.ssafy.project.EmotionPlanet.Dto.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -82,6 +83,28 @@ public class SearchServiceImpl implements SearchService {
 		return null;
 		}
 	}
+
+	@Override
+	public List<Map<String, Object>> pickSelect(String name) {
+		List<Map<String, Object>> list = searchDao.pickSelect(name);
+		if (list.size() == 0) {
+			return null;
+		} else {
+			return list;
+		}
+	}
+
+	@Override
+	public List<TagDto> picktagSelect() {
+		List<TagDto> list = searchDao.picktagSelect();
+		if (list.size() == 0) {
+			return null;
+		} else {
+			return list;
+		}
+	}
+
+
 
 //	@Override
 //	public List<PickDto> recommendSelect(String name) {
