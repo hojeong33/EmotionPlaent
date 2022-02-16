@@ -9,7 +9,7 @@
           <button @click="$router.push({name: 'Setting'})">프로필 수정</button>
         </div>
         <div id="info">
-          <p>{{ this.$store.state.userInfo.intro }}</p>
+          <h4 id="intro" style="color: #777777; font-size: 1.2rem; font-weight: bold;">{{ this.$store.state.userInfo.intro }}</h4>
           <br>
           <div id="info-card">
             <h3>이야기 {{ this.$store.state.userFeedInfo.length }}</h3>
@@ -21,8 +21,8 @@
     </article>
     <article id="tab">
       <span id="dot1" :class="myPageTab == 'feed' ? 'slide-out':'slide-in'" />
-      <p @click="changeTab('feed')" :class="myPageTab == 'feed' ? 'activate': ''">이야기</p>
-      <p @click="changeTab('pick')" :class="myPageTab == 'pick' ? 'activate': ''">찜 목록</p>
+      <p id="tab_dot" @click="changeTab('feed')" :class="myPageTab == 'feed' ? 'activate': ''">이야기</p>
+      <p id="tab_dot" @click="changeTab('pick')" :class="myPageTab == 'pick' ? 'activate': ''">찜 목록</p>
     </article>
     <article id="list-container">
       <router-view/>
@@ -65,7 +65,7 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch("searchUserFeed", this.$store.state.userInfo.no)
+    this.$store.dispatch('userfollowdate', this.state.userInfo.no);
   },
   mounted(){
     if (this.to.includes('item')){
@@ -98,7 +98,6 @@ export default {
     margin: 0 1rem;
     cursor: pointer;
   }
-
   label {
     color: #5E39B3;
     font-size: 1.125rem;

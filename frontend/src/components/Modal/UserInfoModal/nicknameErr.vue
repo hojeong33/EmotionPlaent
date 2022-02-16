@@ -1,27 +1,28 @@
 <template>
-	<div id="emotiontest_pick_more">
+	<div id="login_fail">
     <div id="modal">
-			<h4>조금만 더 골라주세요🤣</h4>
+			<h4>닉네임을 다시 확인해주세요</h4>
 			<hr>
-			<p @click="goBack">확인</p>
+			<p @click="tryAgain">확인</p>
     </div>
 	</div>
 </template>
 
 <script>
+
 export default {
 	methods: {
-		goBack: function () {
+		tryAgain: function () {
 			// console.log('여기옴')
 			// console.log(this.$store.state.userInfo)
-			this.$store.commit('emotionTestPickMoreModalActivate')
+			this.$store.commit('nicknameErrModalActivate')
 		}
-	}
+	},
 }
 </script>
 
 <style scoped>
-#emotiontest_pick_more {
+#login_fail {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -38,15 +39,14 @@ export default {
 	flex-direction: column;
 	justify-content: center;
 	background-color: white;
-	border-radius: 30px;
-	width: 19rem;
-	height: 11rem;
+	border-radius: 20px;
+	width: 20vw;
+	height: 15vh;
 }
 p {
 	margin: auto;
 	font-weight: bold;
 	cursor: pointer;
-	font-size: 1.25rem;
 }
 hr {
 	margin: 0;
@@ -54,6 +54,5 @@ hr {
 h4 {
 	margin: auto;
 	text-align: center;
-	font-weight: bold;
 }
 </style>

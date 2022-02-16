@@ -2,9 +2,9 @@
   <div id="login_container">
     <div id="login_innercontainer">
       <div id="login_header">
-        <h1>어서오세요!</h1>
-        <h1>오늘은 어떤 이야기를</h1>
-        <h1>들려주실건가요? 😉</h1>
+        <h1 style="font-size: 2.5rem;">어서오세요!</h1>
+        <h1 style="font-size: 2.5rem;">오늘은 어떤 이야기를</h1>
+        <h1 style="font-size: 2.5rem;">들려주실건가요? 😉</h1>
       </div>
       <br>
       <form @submit.prevent="login" id="login_body">
@@ -24,9 +24,9 @@
           placeholder="비밀번호를 입력해주세요">
         </article>
         <div id="link">
-          <router-link :to="{ name: 'EmailFind' }">이메일 찾기</router-link>
-          <router-link :to="{ name: 'Password-find' }">비밀번호 찾기</router-link>
-          <router-link :to="{ name: 'Signup' }" class="gosignup">회원가입</router-link>
+          <router-link :to="{ name: 'EmailFind' }" style="font-size: 1rem;">이메일 찾기</router-link>
+          <router-link :to="{ name: 'Password-find' }" style="font-size: 1rem;">비밀번호 찾기</router-link>
+          <router-link :to="{ name: 'Signup' }" class="gosignup" style="font-size: 1rem;">회원가입</router-link>
         </div>
         <br>
         <button id="login_btn">로그인</button>
@@ -100,7 +100,7 @@ export default {
   login: function() {
     axios({
       method: 'post',
-      url:'http://13.125.47.126:8080/login',
+      url:'/api/login',
       data: this.credentials
     })
     .then((res)=>{
@@ -118,7 +118,8 @@ export default {
       this.$store.commit('loginConfirmModalActivate')
     })
     .catch(err=> {
-      console.log('나는 에러야!', err)
+      console.log(err)
+      console.log('나는 에러야!', err.response.data.message)
       this.$store.commit('loginFailModalActivate', err.response.data.message)
       // alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
     })
@@ -127,7 +128,7 @@ export default {
   },
 
   tokenVerify() {
-    const url = 'http://13.125.47.126:8080/login/auth';
+    const url = '/api/login/auth';
     const params = new URLSearchParams();
     params.append('idToken', this.googleUser.wc.id_token);
     console.log(params)
@@ -182,7 +183,7 @@ export default {
     console.log("카카오로그인 시작")
     axios({
         method: 'post',
-        url: 'http://13.125.47.126:8080/login/oauth_kakao',
+        url: '/api/login/oauth_kakao',
         data: code
       }).then((res) => {
         console.log('카카오 데이터 받아오기 : ' + res.data)
@@ -211,7 +212,7 @@ export default {
     };
     axios({
         method: 'get',
-        url: 'http://13.125.47.126:8080/qss/list',
+        url: '/api/qss/list',
         data: data, // post 나 put에 데이터 넣어 줄때
         headers: headers,  // 넣는거 까먹지 마세요
       }).then((res) => {
@@ -240,13 +241,13 @@ export default {
   }
   input {
     border: 2px #5E39B3 solid;
-    border-radius: 20px;
+    border-radius: 30px;
     width: 100%;
     min-width: 300px;
     height: 5vh;
     min-height: 40px;
     padding: 0.75rem;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: bold;
   }
 
@@ -262,7 +263,7 @@ export default {
   }
 
   input::placeholder {
-    font-size: 1rem !important;
+    font-size: 1.25rem !important;
     font-weight: initial;
     text-shadow: none;
     position: absolute;
@@ -309,14 +310,15 @@ export default {
   }
 
   #login_container{
+    background-color: white;
     display: flex;
     flex-direction: column;
     justify-content: flex-start;
     align-items: center;
     background-color: white;
-    width: 30%;
+    width: 25%;
     align-self: center;
-    min-width: 700px;
+    min-width: 600px;
     min-height: 92.5vh;
     /* height: 100%; */
     padding: 2rem;;
@@ -326,8 +328,10 @@ export default {
     border-right: 2px #cccccc solid; */
   }
   #login_innercontainer{
-    width: 80%;
-    margin: 0 auto;
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1rem;
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -347,10 +351,11 @@ export default {
   }
 
   #login_body{
+    width:90%;
     display: flex;
     flex-direction: column;
     align-items: center;
-    padding: 1.5rem;
+    padding: 1rem;
   }
 
   #login_body article {
@@ -372,6 +377,7 @@ export default {
   }
 
   #login_btn{
+    font-size: 1.25rem;
     padding: 0.5rem 2rem;
     width: 15vh;
     min-width: 150px;

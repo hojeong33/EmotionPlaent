@@ -1,10 +1,13 @@
 <template>
   <div id="search_body">
+    <div id="triangle"></div>
     <section id="search_header">
-      <div id="tabs">
-        <p @mousedown="toggleTag" :class="onTag ? 'active': 'inactive'">이야기</p>
-        <p @mousedown="toggleUser" :class="onUser ? 'active': 'inactive'">여행자</p>
-        <p @mousedown="togglePick" :class="onPick ? 'active': 'inactive'">보물상자</p>
+      <div id="tab_head">
+        <div id="tabs">
+          <p @mousedown="toggleTag" :class="onTag ? 'active': 'inactive'">이야기</p>
+          <p @mousedown="toggleUser" :class="onUser ? 'active': 'inactive'">여행자</p>
+          <p @mousedown="togglePick" :class="onPick ? 'active': 'inactive'">보물상자</p>
+        </div>
       </div>
     </section>
     <section id="search_content">
@@ -12,8 +15,8 @@
       <search-user v-if="onUser"></search-user>
       <search-pick v-if="onPick"></search-pick>
     </section>
-    <section id="search_footer">
-      <button @click="cancel">X</button>
+    <section id="footer">
+      <button id="cancel" @click="cancel">닫기</button>
     </section>
   </div>
 </template>
@@ -64,7 +67,16 @@ export default {
     align-items: center;
     background-color: white;
   }
-
+  #triangle {
+  width: 0px;
+  height: 0px;
+  border-bottom: 20px solid gainsboro;
+  border-left: 30px solid transparent;
+  border-right: 30px solid transparent;
+  position: absolute;
+  top: -250%;
+  right: 57%;  
+  }
   #search_header {
     z-index: 22;
     display: flex;
@@ -79,6 +91,7 @@ export default {
     border-top: 0.15rem solid gainsboro;
     border-left: 0.15rem solid gainsboro;
     border-right: 0.15rem solid gainsboro;
+    position: relative;
   }
   
   #search_content {
@@ -89,21 +102,8 @@ export default {
     min-width: 300px;
     height: 80%;
     min-height: 300px;
-    border: 0.15rem solid gainsboro;
-  }
-  
-  #search_footer {
-    display: flex;
-    justify-content: center;
-    background-color: white;
-    width: 100%;
-    min-width: 300px;
-    height: 10%;
-    min-height: 60px;
-    border-bottom: 0.15rem solid gainsboro;
     border-left: 0.15rem solid gainsboro;
     border-right: 0.15rem solid gainsboro;
-    border-radius: 0 0 10px 10px;
   }
 
   h3 {
@@ -127,25 +127,36 @@ export default {
   .active {
     border-bottom: 0.2rem solid #5E39B3;
   }
-
-  button {
-    background-color: #5E39B3;
-    color: white;
-    font-size: 1.125rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 20px;
-    padding: 0 2.7rem;
-    margin: 0.55rem;
-    cursor: pointer;
-    line-height: 2rem;
-  }
-
-  #tabs {
+  #tab_head {
     z-index: inherit;
     width: 100%;
     display: flex;
-    justify-content: space-evenly;
+    flex-direction: row;
   }
-
+  #tabs {
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+  }
+  #footer {
+    background-color: white;
+    width: 100%;
+    min-width: 300px;
+    height: 10%;
+    min-height: 55px;
+    border-radius: 0 0 10px 10px;
+    border: 0.15rem solid gainsboro;
+    text-align: right;
+  }
+  #cancel {
+  background-color: rgb(94, 57, 179);
+  color: white;
+  border-radius: 30px;
+  width: 3rem;
+  height: 2rem;
+  margin-top: 0.5rem;
+  margin-right: 0.5rem;
+  border: none;
+}
 </style>

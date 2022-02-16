@@ -31,7 +31,7 @@ export default {
 			};
 			axios({
 					method: 'delete',
-					url: `http://13.125.47.126:8080/comments/${this.commentNumber}`,
+					url: `/api/comments/${this.commentNumber}`,
 					headers: headers,  // 넣는거 까먹지 마세요
 				}).then((res) => {
 

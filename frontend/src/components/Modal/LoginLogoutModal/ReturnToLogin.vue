@@ -40,8 +40,8 @@ export default {
 	justify-content: center;
 	background-color: white;
 	border-radius: 20px;
-	width: 20vw;
-	height: 15vh;
+	width: 19rem;
+	height: 11rem;
 }
 p {
 	margin: auto;

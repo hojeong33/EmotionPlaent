@@ -32,6 +32,7 @@
         <input type="text" id="tel"
         v-model="credentials.tel"
         @input="tel_helper" maxlength="13"
+        @keyup.enter="send_mail"
         placeholder="등록하신 휴대전화를 입력해주세요.">
         <span v-if="credentials.tel">
           <p v-if="!isValid.validateTel" class="warn">
@@ -94,7 +95,7 @@ export default {
     };
     axios({
         method: 'post',
-        url: 'http://13.125.47.126:8080/register/findPw',
+        url: '/api/register/findPw',
         data: data, 
       }).then((res) => {
        console.log("메일 전송 성공" , res)
@@ -267,11 +268,16 @@ export default {
   }
 
   #pf-container {
+    background-color: white;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 80%;
-    margin: 0 auto;
+    min-width: 600px;
+    min-height: 92.5vh;
+    /* height: 100%; */
+    padding: 2rem;;
+    border-radius: 20px;
+    border: 2px  #5E39B3 solid;
     /* border-radius: 20px;
     border: 2px  #5E39B3 solid; */
   }

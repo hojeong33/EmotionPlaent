@@ -27,7 +27,7 @@
     </select>
 	
 	<select id="ActivitySelect" parameterType="INT" resultType="com.ssafy.project.EmotionPlanet.Dto.ActivityDto">
-        select title, imgLink
+        select no, title, imgLink, type
         from activity
         where type = #{type}
         ORDER BY RAND() LIMIT 10;

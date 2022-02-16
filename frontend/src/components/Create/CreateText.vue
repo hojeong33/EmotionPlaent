@@ -21,15 +21,16 @@
       </div>
       <div id="freeTag" v-else>
         <div id="freeTag" v-for="(tag, idx) in feedData.tags.slice(2)" :key="idx"> 
-            <p id="pickTag" style="margin:auto 0.2rem; color: blue; font-weight: bold;">
+            <p v-if="tag.name" id="pickTag" style="margin:auto 0.2rem; color: blue; font-weight: bold;">
               # {{tag.name}}
-            </p>         
+            </p> 
+            <p v-else></p>        
         </div>
       </div>
     </div>
     <div id="freeTag_write">
       <input type="text" id="tag_input" @keyup.enter="keyPress" placeholder="작성 후 엔터키를 눌러 주세요">
-      <img id="write" @click="freeTagCreate" src="@/assets/images/icons/write.png" alt="" style="width:1.4rem;height:1.4rem; cursor: pointer;">
+      <img id="write" @click="freeTagCreate" src="@/assets/images/icons/write.png" alt="" style="width:1.6rem;height:1.6rem; cursor: pointer;">
     </div>
     <textarea id="text-input" placeholder="" v-model="feedData.descr" />
     <footer>
@@ -99,7 +100,7 @@ export default {
 
       axios({
           method: 'post',
-          url: 'http://13.125.47.126:8080/feeds',
+          url: '/api/feeds',
           data: this.feedData, // post 나 put에 데이터 넣어 줄때
           headers: headers,  // 넣는거 까먹지 마세요
         }).then((res) => {
@@ -109,7 +110,7 @@ export default {
 
           axios({
             method: 'post',
-            url: 'http://13.125.47.126:8080/s3/file/' + res.data,
+            url: '/api/s3/file/' + res.data,
             data: formData, // post 나 put에 데이터 넣어 줄때
             headers: headers,  // 넣는거 까먹지 마세요
           }).then((res) => {
@@ -149,7 +150,7 @@ export default {
 
       axios({
         method: 'put',
-        url: 'http://13.125.47.126:8080/feeds',
+        url: '/api/feeds',
         data: formData2, // post 나 put에 데이터 넣어 줄때
         headers: headers,  // 넣는거 까먹지 마세요
       }).then((res) => {
@@ -181,7 +182,7 @@ export default {
 
 <style scoped>
   h1 {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: bold;
     margin: 0;
   }
@@ -194,6 +195,7 @@ export default {
 
   h3 {
     font-size: 1.5rem;
+    font-weight: bold;
     margin: 0;
   }
   
@@ -203,7 +205,7 @@ export default {
     font-size: 1.125rem;
     font-weight: bold;
     border: 3px #5E39B3 solid;
-    border-radius: 20px;
+    border-radius: 30px;
     padding: 0.2rem 2rem;
     margin: 1rem;
     cursor: pointer;
@@ -212,6 +214,11 @@ export default {
 
   input:focus, textarea:focus {
     outline-color: #5E39B3;
+  }
+  input::placeholder {
+    font-weight: initial;
+    text-shadow: none;
+    position: absolute;
   }
 
   label {
@@ -241,8 +248,8 @@ export default {
   }
 
   #back {
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
     position: absolute;
     left: 2%;
     cursor: pointer;
@@ -253,7 +260,7 @@ export default {
     flex-direction: column;
     align-items: flex-start;
     width: 80%;
-    margin: 2rem 1rem 1rem;
+    margin: 1.5rem 1rem 1rem;
   }
 
   #tag_input {
@@ -261,12 +268,13 @@ export default {
     border-style:none;
     outline: none;
     padding-left:0.3rem;
+    margin-top: 0.3rem;
   }
 
   #text-input{
     width: 80%;
     height: 50%;
-    border: 1px #cccccc solid;
+    border: 2px #cccccc solid;
     border-radius: 10px;
     padding: 1rem;
     resize: none;
@@ -323,6 +331,8 @@ export default {
   margin-right: 0.3rem;
 }
 #freeTag_write{
+  display: flex;
+  flex-direction: row;
   width:80%;
   border:0.2rem solid gainsboro;
   border-radius: 10px;

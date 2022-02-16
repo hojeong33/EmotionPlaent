@@ -4,10 +4,9 @@
       <div v-for="result in this.$store.state.userSearch"
       :key="result.no"
       id="result">
-        <img :src="result.profileImg" alt="" id="user">
-        <div id="search">
-          <span id="title">@{{ result.nickname }}</span>
-          <!-- <span id="content">{{ result.email }}</span> -->
+        <div id="user_info">
+          <img :src="result.profileImg" alt="" id="user">
+          <p id="title">@{{ result.nickname }}</p>
         </div>
         <img src="../../assets/images/icons/search_dark.png" 
         @click="getInfo(result.no)" alt="" id="go">
@@ -28,7 +27,7 @@ export default {
       this.$store.state.searchUserNo = el
       await this.$store.dispatch('userSelect', el)
       await this.$store.dispatch('userfollowdate', el)
-      await this.$store.dispatch("searchUserFeed", this.$store.state.searchUserNo)
+      // await this.$store.dispatch("searchUserFeed", this.$store.state.searchUserNo)
       this.$router.push({ path: `/userpage/feed` })
       this.$store.state.searching = false
     }
@@ -53,19 +52,18 @@ export default {
 
   #results {
     width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: left;
     background-color: white;
-    overflow: auto;
+    overflow-y: scroll;
   }
 
   #result {
     display: flex;
     width: 85%;
     align-items: center;
-    padding-left: 1rem;
     margin: 1rem 1rem;
     background-color: white;
     border-bottom: 0.1rem gainsboro;
@@ -84,31 +82,40 @@ export default {
   #title {
     font-size: 1.2rem;
     font-weight: bold;
+    margin-top: auto;
+    margin-bottom: auto;
+    margin-right: 0.4rem;
   }
 
   #go {
-    width: 3vh;
-    height: 3vh;
+    width: 1.5rem;
+    height: 1.5rem;
+    margin-left: auto;
     cursor: pointer;
   }
-
-  #user {
-    width: 4vh;
-    height: 4vh;
-    border-radius: 40%;
+  #user_info {
+    display: flex;
+    flex-direction: row;
   }
-
+  #user {
+    width: 2.3rem;
+    height: 2.3rem;
+    border-radius: 50%;
+    margin-right: 0.4rem;
+  }
+  #title {
+    font-size: 1.2rem;
+  }
   #no_result {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    padding-top: 11.5vh;
+    padding-top: 20%;
   }
 
   #nothing {
-    width: 4vh;
-    height: 4vh;
-    margin-bottom: 2vh;
+    width: 5rem;
+    height: 5rem;
+    margin-bottom: 1rem;
   }
 </style>

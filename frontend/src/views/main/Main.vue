@@ -72,7 +72,7 @@ export default {
         this.$store.dispatch("userfollowdate", this.$store.state.userInfo.no);
         this.$store.dispatch("alarmselect")
         this.$store.dispatch("connect")
-        this.$store.dispatch("searchUserFeed", this.$store.state.userInfo.no)
+        // this.$store.dispatch("searchUserFeed", this.$store.state.userInfo.no)
         this.$store.state.recommendReload = 1;
     }
     console.log("유저인포");
@@ -94,7 +94,7 @@ export default {
         this.$store.state.loading = false
       }, 2500)
     } 
-  }
+  },
 };
 </script>
 

@@ -132,7 +132,7 @@ export default {
 
       axios({
         method: 'put',
-        url: 'http://13.125.47.126:8080/feeds',
+        url: '/api/feeds',
         data: formData2, // post 나 put에 데이터 넣어 줄때
         headers: headers,  // 넣는거 까먹지 마세요
       }).then((res) => {
@@ -185,7 +185,7 @@ export default {
 
     axios({
       method: 'get',
-      url: 'http://13.125.47.126:8080/feed/' + this.feedData.no,
+      url: '/api/feed/' + this.feedData.no,
       headers: headers,  // 넣는거 까먹지 마세요
     }).then((res) => {
       console.log("피드 가져오기 : " + res.data)
