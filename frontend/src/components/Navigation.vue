@@ -84,11 +84,13 @@ export default {
       this.$store.state.words = null
       this.$store.state.tagSearch = []
       this.$store.state.userSearch = []
+      this.$store.state.pickSearch = []
     },
     search( searchWords ) {
       this.$store.commit('updateSearch', searchWords.target.value)
       this.$store.dispatch('searchTag')
       this.$store.dispatch('searchUser')
+      this.$store.dispatch('searchPick')
     },
     // 검색 끝
     signout() {
