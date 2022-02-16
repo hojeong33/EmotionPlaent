@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 @CrossOrigin(
-        origins = "http://localhost:5500, https://i6e203.p.ssafy.io",
+        origins = {"http://localhost:5500", "https://i6e203.p.ssafy.io"},
         allowCredentials = "true",
         allowedHeaders ="*",
         methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
