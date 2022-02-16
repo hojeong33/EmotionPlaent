@@ -112,7 +112,6 @@ export default {
         });
     },
     deleteForder:function(forderNo){
-      this.choicedForder=forderNo
       let headers = {
           // 'Content-Type': 'multipart/form-data',
           'at-jwt-access-token': session.getItem('at-jwt-access-token'),
@@ -180,7 +179,7 @@ export default {
         }).then((res) => {
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
             this.forderlistsNo=res.data
-            this.forderlist=[]
+            this.forderlists=[]
             // console.log(this.forderlists)
             for(let i=0; i<this.forderlistsNo.length; i++){
               this.pickNo=this.forderlistsNo[i]

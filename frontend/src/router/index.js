@@ -111,7 +111,7 @@ const routes = [
         },
       },
       {
-        path: 'item/:id/:tag/:index',
+        path: 'item/:pickNo',
         component: PickItem,
         props: true,
         meta: {
@@ -123,9 +123,9 @@ const routes = [
     ]
   },
   {
-    path: '/:userId',
+    path: '/user/:userId',
     name: 'Userpage',
-    redirect: '/:userId/feed',
+    redirect: '/user/:userId/feed',
     component: Userpage,
     props: true,
     meta: {
@@ -145,7 +145,7 @@ const routes = [
         },
       },
       {
-        path: ':tag/:index',
+        path: 'item/:pickNo',
         component: PickItem,
         props: true,
         meta: {

@@ -5,10 +5,10 @@
 		<search-feed-list v-if="tab == 'feed'" :feeds="filteredFeeds" />
 		<search-pick-list v-if="tab == 'pick'" :picks="filteredPicks" />
 		<div id="no-result" 
-		v-if="(tab == 'feed' && !filteredFeeds.length)||(tab == 'pick' && !filteredPicks.length)">
+			v-if="(tab == 'feed' && this.filteredFeed.length === 0)||(tab == 'pick' && this.filteredPick.length === 0)">
 			<img id="nothing" src="@/assets/images/etc/alien.png" alt="no result">
-			<p v-if="tab == 'feed' && !filteredFeeds.length">게시글이 없어요...</p>
-			<p v-if="tab == 'pick' && !filteredPicks.length">찜목록이 없어요...</p>
+			<p v-if="tab == 'feed' && this.filteredFeed.length === 0">게시글이 없어요...</p>
+			<p v-if="tab == 'pick' && this.filteredPick.length === 0">찜목록이 없어요...</p>
 		</div>
 	</article>
 </template>
@@ -17,15 +17,15 @@
 import FilterTab from '@/components/user/FilterTab'
 import SearchFeedList from '@/components/Search/SearchResult/SearchFeedList'
 import SearchPickList from '@/components/Search/SearchResult/SearchPickList'
-import feedData from '@/assets/data/userFeed'
-import pickData from '@/assets/data/pickData'
 
 export default {
 	data(){
 		return {
-			feedData,
-			pickData,
-			filter: 0
+			feedData: null,
+			pickData: null,
+			filter: 0,
+			filteredFeed: [],
+			filteredPick: []
 		}
 	},
 	props: {
@@ -40,7 +40,15 @@ export default {
 	methods: {
 		filtering(payload){
       this.filter = payload
+			this.filteredFeed = []
+			this.filteredPick = []
     }
+	},
+	created: function() {
+		this.$bus.$on('pickBus', (searchPicks) => {
+		this.filteredPick = searchPicks
+		console.log(this.filteredPick)
+		})
 	},
 	computed: {
 		filteredFeeds(){
@@ -57,15 +65,14 @@ export default {
 		},
 		filteredPicks(){
 			if (this.filter){
-				const temp = []
-				this.pickData.forEach(pick => {
-					if (pick.planet == this.filter){
-						temp.push(pick)
+				this.filteredPick.forEach(pick => {
+					if (pick.tagno == this.filter){
+						this.filteredPick.push(pick)
 					}
 				});
-				return temp
+				return this.filteredPick
 			}
-			return this.pickData
+			return this.filteredPick
     },
 	},
 }

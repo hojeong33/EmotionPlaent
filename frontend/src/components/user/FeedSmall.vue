@@ -1,5 +1,5 @@
 <template>
-  <div class="feed-s" v-if="feed">
+  <div class="feed-s" v-if="feed" @click="feeddetail">
     <img class="feed-s-thumbnail" :src="feed.imgs[0].imgLink" :alt="this.$store.state.userInfo.username"
     @mouseover="hover = true">
     <img class="feed-planet" :src="require(`@/assets/images/emotions/${planet}`)" id="planet">
@@ -40,7 +40,7 @@ export default {
   },
     methods:{
     feeddetail() {
-      this.$router.push({name:'FeedDetail', params:{feedNo:this.post.no}})
+      this.$router.push({name:'FeedDetail', params:{feedNo:this.feed.no}})
     },
   },
   computed: {
