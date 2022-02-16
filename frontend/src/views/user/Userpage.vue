@@ -57,7 +57,7 @@ export default {
   methods: {
     changeTab(tab){
       this.tab = tab
-      this.$router.push({ path: `/${this.userId}/${tab}` })
+      this.$router.push({ path: `/user/${this.userId}/${tab}` })
     },
     follow() {
       this.$store.dispatch('sendfollow', this.$store.state.searchUserNo)
