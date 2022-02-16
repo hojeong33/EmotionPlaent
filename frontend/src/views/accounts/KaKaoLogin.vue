@@ -48,7 +48,6 @@ export default {
             }
             else{
                 this.$store.commit('loginConfirmModalActivate')
-
             }
         }).catch((error) => {
             console.log(error);

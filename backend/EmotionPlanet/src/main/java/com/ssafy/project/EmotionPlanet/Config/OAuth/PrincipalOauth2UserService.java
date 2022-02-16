@@ -117,7 +117,7 @@ public class PrincipalOauth2UserService {
             StringBuilder sb = new StringBuilder();
             sb.append("grant_type=authorization_code");
             sb.append("&client_id=54115c9fc805ecfb96348d18733e6e4a");  //본인이 발급받은 key
-            sb.append("&redirect_uri=http://localhost:5500/login/KaKaoLogin");     // 본인이 설정해 놓은 경로
+            sb.append("&redirect_uri=https://i6e203.p.ssafy.io/login/KaKaoLogin");     // 본인이 설정해 놓은 경로
             sb.append("&code=" + authorize_code);
             bw.write(sb.toString());
             bw.flush();
