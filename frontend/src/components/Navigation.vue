@@ -9,9 +9,9 @@
           <div class="search_menu" v-on:cancel="searchOff">
             <i id="find_icon" class="fa-solid fa-magnifying-glass"></i>
             <input id="search_bar" class="form-control" autocomplete="off"
-            type="search"  aria-label="Search" placeholder="Search"
-            @focus="searchOn" :value="searchWords" @input="search" >
-            <search v-if="searching" v-on:cancel="searchOff" id="dropdown" ></search>
+            type="search" placeholder="Search" aria-label="Search"
+            @focus="searchOn" :value="searchWords" @input="search">
+            <search v-if="this.$store.state.searching" v-on:cancel="searchOff" id="dropdown"></search>
           </div>
           <!-- <button class="btn btn-outline-success" type="submit" id="search"><img src="@/assets/images/search.png" id="search"></button> -->
           <!-- <img src="@/assets/images/icons/search.png" id="search" type="submit"> -->
@@ -58,10 +58,11 @@ export default {
   data: function (){
     return {
       //검색입니둥
-      searching: false,
+      
       searchWords: null,
       //알람입니둥
       alarming: false,
+      alarmwatch: 0,
     }
   },
   components: { Search, Alarm },
@@ -76,10 +77,10 @@ export default {
     },
     //검색 부분입니둥
     searchOn() {
-      this.searching = true
+      this.$store.state.searching = true
     },
     searchOff() {
-      this.searching = false
+      this.$store.state.searching = false
       this.$store.state.words = null
       this.$store.state.tagSearch = []
       this.$store.state.userSearch = []
@@ -137,7 +138,7 @@ export default {
       console.log(count)
       return count
     }
-  }
+  },
 }
 </script>
 

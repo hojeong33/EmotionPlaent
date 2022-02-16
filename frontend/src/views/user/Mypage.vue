@@ -65,7 +65,7 @@ export default {
     }
   },
   created() {
-    this.$store.dispatch("searchUserFeed", this.$store.state.userInfo.no)
+    this.$store.dispatch('userfollowdate', this.state.userInfo.no);
   },
   mounted(){
     if (this.to.includes('item')){

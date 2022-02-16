@@ -1,7 +1,22 @@
 <template>
-	<div id="feed_detail">
+	<div id="feed_detail" v-if="feed">
 		<div id="img_box">
-      <div v-for="(img, idx) in feed.imgs" :key="idx"><img  id="feedImg" :src="img.imgLink" alt=""></div>
+      <article id="img-box">
+        <div id="uploaded-box">
+          <transition-group id="carousel" :name="page > beforePage ? 'slide':'slide-reverse'">
+            <img id="feedImg" v-for="(image, index) in feed.imgs" :key="index"
+            class="uploadedImg" :src="image.imgLink" alt=""
+            v-show="index+1 == page">
+          </transition-group>
+          <div id="pages">
+            <span v-for="idx in feed.imgs.length" :key="idx" 
+            :class="['page-num', {'here':idx==page}]" @click="paginationByDot(idx)" />
+          </div>
+          <span id="left" class="carousel-btn" @click="pagination(false)"/>
+          <span id="right" class="carousel-btn" @click="pagination(true)"/>
+        </div>
+      </article>
+      <!-- <div v-for="(img, idx) in feed.imgs" :key="idx"><img  id="feedImg" :src="img.imgLink" alt=""></div> -->
 			<p class="overlay_content" >{{feed.authorDetail.nickname}} <img id="planet_img" :src="require('@/assets/images/emotions/happy.png')" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p>
 		</div>
 		<div id="feed_text">
@@ -45,8 +60,8 @@
         <div id="heart">
           <i class="far fa-heart fa-lg" :class="{'fas': this.feed.like}"  @click="like"></i>
         </div>
-        <p id="feed_likes" v-for="(like, idx) in feed.likes" :key="idx">{{like["nickname"]}}</p>
-        <p class="likes">{{feed.likes}} likes</p>
+        <p id="feed_likes" v-for="(like, idx) in feed.likes" :key="idx"></p>
+        <p class="likes">{{feed.likes.length}} likes</p>
       </div>
 			<hr>
 			<div id="comment_write">
@@ -64,6 +79,8 @@ const session = window.sessionStorage;
 export default {
 	data: function () {
 		return {
+      page:1,
+      beforePage:1,
       isMineFeed:false,
       isMineComment:false,
 			feed:null,
@@ -78,6 +95,30 @@ export default {
 		feedNo:Number,
 	},
 	methods: {
+    pagination(payload){
+      this.beforePage = this.page
+      if (this.page < this.feed.imgs.length && payload){
+        this.page ++
+      }
+      else if (this.page > 1 && !payload){
+        this.page --
+      }
+    },
+    paginationByDot(target){
+      let d
+      if (target > this.page){
+        d = true
+      }
+      else {
+        d = false
+      }
+      for (let i=0;i<Math.abs(target-this.page);i++){
+        setTimeout(() => {
+          console.log(this.page, target, d)
+          this.pagination(d)
+        }, 1000 * i);
+      }
+    },
     getComment:function(commentNo){
       let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
@@ -145,6 +186,12 @@ export default {
             //  console.log(res.data)
             //  console.log('댓글 다시 가져옴!!!!!!!!!!!!!!!!!!!!!!')
              this.getComments()
+             let body = {
+               receiver: this.feed.author,
+               feedno: this.feedNo,
+               commentno: res.data, // 이부분 백 수정하고 테스트해야함
+             }
+             this.$store.dispatch('comment',body)
           })
           .catch((error) => {
             console.log(error);
@@ -185,52 +232,15 @@ export default {
       this.feed.like= !this.feed.like;
     },
     doLike:function(){
-      const userdata = JSON.parse(session.getItem('userInfo')) ;
-      const likeItem={
-        targetNo:this.feedNo,
-        userNo:userdata.no,
+		console.log(this.feedNo)
+      let el = {
+        receiver : this.feed.author,
+        feedno : this.feedNo,
       }
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        };
-        axios({
-            method: 'post',
-            url:`http://13.125.47.126:8080/feeds/like`,
-            data:likeItem,
-            headers: headers,  // 넣는거 까먹지 마세요
-          }).then((res) => {
-          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-          this.getFeed()
-          }).catch((error) => {
-            console.log(error);
-          }).then(() => {
-            console.log('피드 좋아요');
-          });
+      this.$store.dispatch('addfeedlike',el)
     },
     cancelLike:function(){
-      const userdata = JSON.parse(session.getItem('userInfo')) ;
-      const likeItem={
-        targetNo:this.feedNo,
-        userNo:userdata.no,
-      }
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        };
-        axios({
-            method: 'delete',
-            url:`http://13.125.47.126:8080/feeds/like`,
-            data:likeItem,
-            headers: headers,  // 넣는거 까먹지 마세요
-          }).then((res) => {
-          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-          this.getFeed()
-          }).catch((error) => {
-            console.log(error);
-          }).then(() => {
-            console.log('피드 좋아요');
-          });
+      this.$store.dispatch('deletefeedlike',this.feedNo)
     },
     onModalFeed:function(){
       if(this.isMineFeed){
@@ -291,8 +301,8 @@ export default {
 }
 #feedImg{
 	position: relative;
-	width: 79.55vh;
-	height: 79.55vh;
+	width: 69.55vh;
+	height: 69.55vh;
 	border-right: 1.5px solid;
 	border-left: none;
 	border-top: none;
@@ -436,5 +446,101 @@ hr{
 #comment_setting {
 	margin-left: auto;
 	margin-right: 1rem;
+}
+#uploaded-box {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+  
+.uploadedImg {
+  width: 100%;
+  /* aspect-ratio: 1/1;
+  position: absolute; */
+}
+@keyframes slide-in {
+  from { right: -100% }
+  to { right: 0 }
+}
+
+@keyframes slide-out {
+  from { right: 0 }
+  to { right: 100% }
+}
+.slide-enter-active {
+  animation: slide-in 1s ease;
+}
+
+.slide-leave-active {
+  animation: slide-out 1s ease;
+}
+
+.slide-reverse-enter-active {
+  animation: slide-out 1s ease reverse;
+}
+
+.slide-reverse-leave-active {
+  animation: slide-in 1s ease reverse;
+}
+#pages {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem;
+}
+
+.page-num {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #cccccc;
+  margin: 0.75rem;
+  cursor: pointer;
+}
+  #img-box {
+  display: flex;
+  flex-direction: column;
+  width: 85%;
+  height: 65%;
+  background-color: lightgray;
+  border-radius: 20px;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem;
+}
+.here {
+  background-color: #777777;
+}
+#left {
+  background-image: url('../assets/images/icons/left.png');
+  left: -2%;
+}
+
+#right {
+  background-image: url('../assets/images/icons/right.png');
+  right: -2%;
+}
+
+#carousel {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+}
+.carousel-btn {
+  background-size: cover;
+  border: none;
+  border-radius: 50%;
+  opacity: 0.75;
+  position: absolute;
+  width: 2rem;
+  height: 2rem;
+  top: 45%;
+  cursor: pointer;
 }
 </style>

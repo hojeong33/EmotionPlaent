@@ -17,7 +17,7 @@
         <input 
         id="nickname"
         v-model="credentials.beforeNick"
-        @input= "checkNickname" autocomplete="off">
+        @input= "checkNickname" autocomplete="off" maxlength="10">
         <span v-if="credentials.beforeNick !== $store.state.userInfo.nickname">
           <p v-if="!isValid.validateNicknamelength" class="warn" style="margin-left:1.5rem;">
             닉네임은 2자 이상, 10자 이하입니다.
@@ -129,7 +129,7 @@
 
 <script>
 import axios from 'axios'
-const session = window.sessionStorage;
+
 export default {
   data: function(){
     return {
@@ -137,14 +137,14 @@ export default {
         beforeNick: null,
         beforeIntro: null,
         beforePw: null,
-        nextPw: null,
-        pwConf: null,
+        nextPw: null, //변경할 비밀번호
+        pwConf: null, //비밀번호 확인
       },
       isValid: {
         validateNicknamelength : true, // 닉네임 길이 체크
         validateNicknamecheck : false, // 중복 닉네임 여부
-        validateNextPw: false,
-        validatePwConf: false,
+        validateNextPw: false, //변경할 비번 체크
+        validatePwConf: false, //비밀번호 확인 체크
       },
       help: false, 
       pwActivate: false,
@@ -182,7 +182,7 @@ export default {
           // this.$store.state.userInfo.nickname = el.target.value // 한글 입력 이슈 해결하기 위해 사용. 한박자 느린거?
           axios({
             method: 'get',
-            url: 'http://13.125.47.126:8080/register/checkByNickname/' + this.$store.state.userInfo.nickname,
+            url: 'http://13.125.47.126:8080/register/checkByNickname/' + this.credentials.beforeNick,
             })
             .then(() => { //중복 닉네임 없는 경우
               this.isValid.validateNicknamecheck = true
@@ -243,25 +243,34 @@ export default {
         }
       })
     },
-    user_change() {
-      //이전 비번, 바꿀 비번 둘 다 값이 있고 두 개의 값이 같을 때만
-      if (this.credentials.pwConf !== null) {
-        this.$store.dispatch('updateuser', this.credentials.pwConf)
-        const authInst = window.gapi.auth2.getAuthInstance();
-            console.log('signout called', authInst)
-            authInst.signOut()
-            .then(() => {
-              // eslint-disable-next-line
-              console.log('User Signed Out!!!');
-              authInst.disconnect();
-              session.clear();
-            })
-            .then(() => {
-              window.location.reload()
-            })
-            .catch(() => alert('fail'))
-            alert("비밀번호 변경 완료 다시 로그인 해주세요")
+    async user_change() {
+      //낙넴 변경하려 했을 경우
+      if (this.credentials.beforeNick !== this.$store.state.userInfo.nickname) {
+        console.log(this.isValid.validateNicknamecheck)
+        console.log(this.isValid.validateNicknamelength)
+        if (this.isValid.validateNicknamecheck == true && this.isValid.validateNicknamelength == true) {
+          this.$store.state.userInfo.nickname = this.credentials.beforeNick
+          this.$router.go(-1)
+        }
+        else {
+          this.$store.commit('nicknameErrModalActivate')
+        }
       }
+      
+      // 비번 변경하려 했을 경우
+      else if (this.credentials.pwConf !== null) {
+        if (this.isValid.validateNextPw == true) {
+          await this.$store.dispatch('updateuser', this.credentials.pwConf)
+          .then(() => {
+            this.$store.commit('pwchangeConfirmModalActivate')
+          })
+          .catch(() => alert('fail'))
+          }
+        else {
+          this.$store.commit('pwchangeErrModalActivate')
+        }
+      }
+      // 소개 or 공개비공개 설정 변경
       else {
         this.$store.dispatch('updateuser', null)
         this.$router.go(-1)

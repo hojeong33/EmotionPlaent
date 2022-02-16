@@ -118,7 +118,8 @@ export default {
       this.$store.commit('loginConfirmModalActivate')
     })
     .catch(err=> {
-      console.log('나는 에러야!', err)
+      console.log(err)
+      console.log('나는 에러야!', err.response.data.message)
       this.$store.commit('loginFailModalActivate', err.response.data.message)
       // alert(err.response.data.message) // 서버측에서 넘어온 오류 메시지 출력.
     })
@@ -182,7 +183,7 @@ export default {
     console.log("카카오로그인 시작")
     axios({
         method: 'post',
-        url: 'http://localhost:8080/login/oauth_kakao',
+        url: 'http://13.125.47.126:8080/login/oauth_kakao',
         data: code
       }).then((res) => {
         console.log('카카오 데이터 받아오기 : ' + res.data)

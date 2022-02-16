@@ -307,7 +307,7 @@ router.beforeEach((to, from, next) => {
     userUpdate.then(() => next())
   }
   // 감정 테스트가 필요한 경우 테스트페이지로 redirect
-  if (to.meta.testRequired && store.state.userInfo != null &&!store.state.userInfo.mood ){
+  if (to.meta.testRequired && store.state.userInfo != null && !store.state.userInfo.mood){
     console.log(store.state.userInfo.mood)
     next({ name:'EmotionTest' })
   }

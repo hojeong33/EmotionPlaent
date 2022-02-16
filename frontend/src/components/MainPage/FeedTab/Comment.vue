@@ -30,12 +30,7 @@ export default {
   },
   methods:{
     onCommentSetting:function(){
-      this.$store.commit('commentSettingModalActivate')
-      // if(this.isCommentSettingOpened){
-      // 	this.isCommentSettingOpened=false
-      // }else{
-      // 	this.isCommentSettingOpened=true
-      // }
+      this.$store.commit('commentSettingModalActivate',this.comment)
     },
   },
   created(){

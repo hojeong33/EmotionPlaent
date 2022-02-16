@@ -4,7 +4,7 @@
       <div id="container">
         <div>
           <img
-            id="planet_img"
+            id="planet"
             :src="require('@/assets/images/emotions/' + tmp.img)"
           />
         </div>
@@ -79,6 +79,7 @@ export default {
       this.$store.dispatch('recommendMusic')
 			this.$store.dispatch('recommendMovie')
 			this.$store.dispatch('recommendActivity')
+      this.$store.state.loading = true
     },
   },
 };
@@ -89,7 +90,7 @@ p {
   margin: 5px;
   text-align: center;
 }
-.planet {
+#planet {
   width: 6rem;
   height: 6rem;
 }

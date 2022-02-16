@@ -1,24 +1,25 @@
 <template>
-	<div id="following_list">
+	<div id="likes_list">
 		<div id="modal">
-			<div id="following_list_header">
+		<div id="likes_list_header">
 				<div id="title_container">
-					<p id="title">팔로잉</p>
+					<p id="title">좋아요 </p>
 				</div>
 				<div id="cancel">
 					<i @click="goBack" class="fa-solid fa-x" style="font-size: 1.3rem; cursor: pointer;"></i>
 				</div>
 			</div>
-			<hr>	
-			<div id="no_result" v-if="myFollowingInfo.length === 0">
+			<hr>
+			<div id="no_result" v-if="feedLikesList.length === 0">
 				<img id="nothing" src="@/assets/images/etc/alien.png" alt="no result">
-				<p id="no_following">팔로잉 목록이 없습니다...</p>
+				<p id="no_likes">좋아요 목록이 없습니다...</p>
 			</div>
-			<div id="my_following_list" v-else>
-				<div v-for="followingInfo in myFollowingInfo" :key="followingInfo.no">
+			<div id="feed_likes_list" v-else>
+				<div v-for="(liker, index) in feedLikesList" :key="index">
 					<div id="userInfo">
-						<img id="profile_img" :src="followingInfo.profileImg" alt="" @click="moveToUserPage(followingInfo.no)">
-						<p id="username" @click="moveToUserPage(followingInfo.no)">{{followingInfo.nickname}}</p>
+						<img id="profile_img" :src="liker.profileImg" alt="">
+						<p id="username">{{liker.nickname}}</p>
+						<!-- <button id="follow_cancel">취소</button> -->
 					</div>
 				</div>
 			</div>
@@ -30,31 +31,27 @@
 export default {
 	data () {
 		return {
-			myFollowingInfo: []
+			feedLikesList: [],//좋아요 누른 사람 목록
+			// userFollowingList:[],//내가 팔로워한 리스트
 		}
 	},
 	methods: {
 		goBack: function () {
 			// console.log('여기옴')
 			// console.log(this.$store.state.userInfo)
-			this.$store.commit('userpagefollowingListActivate')
-		},
-		moveToUserPage (el) {
-			this.$store.state.searchUserNo = el
-			this.$store.dispatch('userSelect', el)
-			this.$store.dispatch('userfollowdate', el)
-			this.$store.commit('userpagefollowingListActivate')
-			this.$router.push({ path: `/userpage/feed` })
+			this.$store.commit('likesListActive')
 		}
 	},
 	created () {
-		this.myFollowingInfo = this.$store.state.searchUserFollowInfo.userFollowing
+		this.feedLikesList = this.$store.state.feedLikesInfo
+		// this.userFollowingList=this.$store.state.userFollowing
+		// console.log(this.userFollowingList)
 	}
 }
 </script>
 
 <style scoped>
-#following_list {
+#likes_list {
 	display: flex;
 	justify-content: center;
 	align-items: center;
@@ -74,7 +71,7 @@ export default {
 	height: 45vh;
 	min-height: 450px;
 }
-#following_list_header {
+#likes_list_header {
 	display: flex;
 	flex-direction: row;
 	justify-content: center;
@@ -110,13 +107,13 @@ export default {
 	height: 5rem;
 	margin-bottom: 0.5rem;
 }
-#no_following {
+#no_likes {
 	font-weight: bold;
 }
-#my_following_list{
+#feed_likes_list{
 	margin-left: 1rem;
 	overflow-y: scroll;
-	height: 40vh;
+	height: 82%;
 }
 #userInfo{
 	display: flex;
@@ -124,6 +121,7 @@ export default {
 	margin-bottom:1rem;
 	margin-top: 1rem;
 }
+
 #profile_img {
 	width: 2rem;
 	height: 2rem;
@@ -131,14 +129,18 @@ export default {
 	margin-right: 0.5rem;
 	margin-top: auto;
 	margin-bottom: auto;
-	cursor: pointer;
 }
 #username {
 	font-weight: bold;
 	margin-right: 0.5rem;
 	margin-top: auto;
 	margin-bottom: auto;
-	cursor: pointer;
+}
+#following_check{
+	color: blue;
+	font-size: 0.8rem;
+	margin-top: auto;
+	margin-bottom: auto;
 }
 #follow_cancel{
 	margin-right: 0.5rem;
@@ -154,5 +156,4 @@ export default {
 hr {
 	margin: 0;
 }
-
 </style>

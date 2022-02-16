@@ -33,7 +33,7 @@ import java.util.Map;
 
 
 @CrossOrigin(
-        origins = "http://localhost:5500",
+        origins = "https://i6e203.p.ssafy.io",
         allowCredentials = "true",
         allowedHeaders = "*",
         methods = { RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
@@ -75,6 +75,9 @@ public class LoginController {
 
     @PostMapping(value = "/login")  // post 방식으로 들어옴
     public ResponseEntity<?> login(@RequestBody UserDto dto) { // 로그인
+
+        System.out.println("로그인 접근완료");
+
         UserDto user = loginService.login(dto);
         UserSecretDto userDto = new UserSecretDto();
         if(user != null) userDto = new UserSecretDto(user.getNo(), user.getEmail(),

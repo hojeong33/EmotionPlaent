@@ -40,68 +40,79 @@
           placeholder="닉네임은 2자 이상, 10자 이하입니다."
           autocomplete="off" maxlength="10"
           @input= "checkNickname">
-          <span v-if="credentials.nickname">
-            <p v-if="!isValid.validateNicknamecheck" class="warn">
-              사용중인 닉네임이에요.
-            </p>
-            <p v-if="isValid.validateNicknamecheck" class="collect">
-            사용가능한 닉네임입니다.
-            </p>
-          </span>
-        </article>
-        <article id="pw_form">
-          <label for="pw">비밀번호</label>
-          <input type="password" 
-          id="pw" maxlength="20"
-          v-model="credentials.pw"
-          @input="pwCheck"
-          placeholder="비밀번호는 8자 이상, 20자 이하입니다.">
-          <span v-if="credentials.pw">
-            <p v-if="!isValid.validatePw" class="warn">
-              사용할 수 없는 비밀번호에요.
-            </p>
-            <p v-if="isValid.validatePw" class="collect">
-              사용할 수 있는 비밀번호입니다.
-            </p>
-          </span>
-        </article>
-        <article id="passwordConfirmation_form">
-          <label for="passwordConfirmation">비밀번호 확인</label>
-          <input type="password"
-          id="passwordConfirmation" maxlength="20"
-          v-model="credentials.passwordConfirmation"
-          @input="pwConfCheck"
-          placeholder="비밀번호를 다시 입력해주세요.">
-          <span v-if="credentials.passwordConfirmation">
-            <p v-if="!isValid.validatePwConf" class="warn">
-              비밀번호가 맞지 않아요.
-            </p>
-            <p v-if="isValid.validatePwConf" class="collect">
-              비밀번호가 일치합니다.
-            </p>
-          </span>
-        </article>
-        <article id="tel_form">
-          <label for="tel">휴대전화</label>
-          <input type="text"
-          id="tel"
-          v-model="credentials.tel"
-          placeholder="사용중인 전화번호를 입력해주세요."
-          autocomplete="off" maxlength="13"
-          @input= "tel_helper">
-          <span v-if="credentials.tel">
-            <p v-if="!isValid.validateTel" class="warn">
-              사용 불가능한 전화번호에요.
-            </p>
-            <p v-if="isValid.validateTel" class="collect">
-              사용가능한 전화번호입니다.
-            </p>
-          </span>
-        </article>
-        <article id="birth_form">
-          <label for="birth">생년월일</label>
-          <input type="date" id="birth" v-model="credentials.birth">
-        </article>
+          <article id="nickname_form">
+        <label for="nickname">닉네임</label>
+        <input type="text"
+        id="nickname"
+        v-model="credentials.nickname"
+        placeholder="닉네임은 2자 이상, 10자 이하입니다."
+        autocomplete="off" maxlength="10"
+        @input= "checkNickname">
+        <span v-if="credentials.nickname">
+          <p v-if="!isValid.validateNicknamelength" class="warn">
+            닉네임은 2자 이상, 10자 이하입니다.
+          </p>
+          <p v-if="!isValid.validateNicknamecheck && isValid.validateNicknamelength" class="warn">
+            사용중인 닉네임이에요.
+          </p>
+          <p v-if="isValid.validateNicknamecheck && isValid.validateNicknamelength" class="collect">
+           사용가능한 닉네임입니다.
+          </p>
+        </span>
+      </article>
+      <article id="pw_form">
+        <label for="pw">비밀번호</label>
+        <input type="password" 
+        id="pw" maxlength="20"
+        v-model="credentials.pw"
+        @input="pwCheck"
+        placeholder="비밀번호는 8자 이상, 20자 이하입니다.">
+        <span v-if="credentials.pw">
+          <p v-if="!isValid.validatePw" class="warn">
+            사용할 수 없는 비밀번호에요.
+          </p>
+          <p v-if="isValid.validatePw" class="collect">
+            사용할 수 있는 비밀번호입니다.
+          </p>
+        </span>
+      </article>
+      <article id="passwordConfirmation_form">
+        <label for="passwordConfirmation">비밀번호 확인</label>
+        <input type="password"
+        id="passwordConfirmation" maxlength="20"
+        v-model="credentials.passwordConfirmation"
+        @input="pwConfCheck"
+        placeholder="비밀번호를 다시 입력해주세요.">
+        <span v-if="credentials.passwordConfirmation">
+          <p v-if="!isValid.validatePwConf" class="warn">
+            비밀번호가 맞지 않아요.
+          </p>
+          <p v-if="isValid.validatePwConf" class="collect">
+            비밀번호가 일치합니다.
+          </p>
+        </span>
+      </article>
+      <article id="tel_form">
+        <label for="tel">휴대전화</label>
+        <input type="text"
+        id="tel"
+        v-model="credentials.tel"
+        placeholder="사용중인 전화번호를 입력해주세요."
+        autocomplete="off" maxlength="13"
+        @input= "tel_helper">
+        <span v-if="credentials.tel">
+          <p v-if="!isValid.validateTel" class="warn">
+            사용 불가능한 전화번호에요.
+          </p>
+          <p v-if="isValid.validateTel" class="collect">
+            사용가능한 전화번호입니다.
+          </p>
+        </span>
+      </article>
+      <article id="birth_form">
+        <label for="birth">생년월일</label>
+        <input type="date" id="birth" v-model="credentials.birth" :max="this.maxdate">
+      </article>
         <article id="btn_container">
           <button @click="signup" id="signup_btn">여행티켓 발급하기</button>
           <button @click="go_to_back" id="back_to_btn">다음에 할게요</button>
@@ -120,6 +131,7 @@
     name: 'Signup',
     data: function () {
       return {
+        maxdate: null,
         credentials: {
           email: null,
           nickname: null,
@@ -132,11 +144,19 @@
           validateEmail: false, // 이메일 형식 체크
           validateEmailcheck : false, // 중복 이메일 여부
           validateNicknamecheck : false, // 중복 닉네임 여부
+          validateNicknamelength: false, // 닉네임 길이 체크
           validatePw: false, // 비밀번호 길이 체크
           validatePwConf: false, // 비밀번호와 비밀번호 확인 일치 여부
           validateTel: false // 휴대전화 중복 여부
         },
       }
+    },
+    created(){
+      var today = new Date();
+      var year = today.getFullYear();
+      var month = ('0' + (today.getMonth() + 1)).slice(-2);
+      var day = ('0' + today.getDate()).slice(-2);
+      this.maxdate = year + '-' + month  + '-' + day;
     },
     methods: {
        validateEmail: function(){
@@ -194,16 +214,27 @@
       },
       checkNickname: function(el){
         this.credentials.nickname = el.target.value // 한글 입력 이슈 해결하기 위해 사용. 한박자 느린거?
-        axios({
-          method: 'get',
-          url: 'http://13.125.47.126:8080/register/checkByNickname/' + this.credentials.nickname,
+        if (this.credentials.nickname.length >= 2 && this.credentials.nickname.length <= 10) {
+          this.isValid.validateNicknamelength = true
+          console.log('길이는 맞아~')
+          // this.$store.state.userInfo.nickname = el.target.value // 한글 입력 이슈 해결하기 위해 사용. 한박자 느린거?
+          axios({
+            method: 'get',
+            url: 'http://13.125.47.126:8080/register/checkByNickname/' + this.credentials.nickname,
+            })
+            .then(() => { //중복 닉네임 없는 경우
+              this.isValid.validateNicknamecheck = true
+              console.log('중복없다~')
+            })
+            .catch(() => { //중복 닉네임 있는 경우
+              this.isValid.validateNicknamecheck = false
+              console.log('중복있어')
           })
-          .then(() => { //중복 닉네임 없는 경우
-            this.isValid.validateNicknamecheck = true
-          })
-          .catch(() => { //중복 닉네임 있는 경우
-            this.isValid.validateNicknamecheck = false
-        })
+        }
+        else {
+          this.isValid.validateNicknamelength = false
+          console.log('길이가 안맞다~')
+        }
       },
       pwCheck: function(){
         if (this.credentials.pw && this.credentials.pw.length >= 8 && this.credentials.pw.length <= 20){

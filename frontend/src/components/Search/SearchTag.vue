@@ -27,6 +27,7 @@ export default {
       this.$store.state.tagSearchResult = []
       await this.$store.dispatch('searchTagSearch', el)
       this.$router.push({ path: `/search/` })
+      this.$store.state.searching = false
     }
   },
   created() {

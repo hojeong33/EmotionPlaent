@@ -1,37 +1,38 @@
 <template>
-	<div id="moreinfo_confirm_modal">
+	<div id="login_fail">
     <div id="modal">
-			<h4>갱신이 완료되었습니다.</h4>
+			<h4>닉네임을 다시 확인해주세요</h4>
 			<hr>
-			<p @click="goLogin">확인</p>
+			<p @click="tryAgain">확인</p>
     </div>
 	</div>
 </template>
 
 <script>
+
 export default {
 	methods: {
-		goLogin: function () {
-		// console.log(this.$store.state.userInfo)
-		this.$store.commit('moreInfoConfirmModalActivate')
-		this.$router.push({name: 'EmotionTest'})
+		tryAgain: function () {
+			// console.log('여기옴')
+			// console.log(this.$store.state.userInfo)
+			this.$store.commit('nicknameErrModalActivate')
 		}
-	}
+	},
 }
 </script>
 
 <style scoped>
-#moreinfo_confirm_modal {
+#login_fail {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-	width: 100%;
-	height: 100%;
+	width: 100vw;
+	height: 100vh;
 	background-color: rgb(0, 0, 0, 0.5);
 	position: fixed;
 	top: 0;
 	left: 0;
-	z-index: 999;
+	z-index: 9999;
 }
 #modal {
 	display: flex;
@@ -39,8 +40,8 @@ export default {
 	justify-content: center;
 	background-color: white;
 	border-radius: 20px;
-	width: 18rem;
-	height: 11rem;
+	width: 20vw;
+	height: 15vh;
 }
 p {
 	margin: auto;
@@ -53,6 +54,5 @@ hr {
 h4 {
 	margin: auto;
 	text-align: center;
-	font-weight: bold;
 }
 </style>

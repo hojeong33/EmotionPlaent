@@ -22,6 +22,12 @@
         from img
         where imgName = #{imgName}
     </select>
+
+    <select id="selectByLink" parameterType="string" resultType="com.ssafy.project.EmotionPlanet.Dto.S3Dto">
+        select no, imgLink, imgName
+        from img
+        where imgLink = #{imgLink}
+    </select>
     
     <update id="updateimg">
 		update user

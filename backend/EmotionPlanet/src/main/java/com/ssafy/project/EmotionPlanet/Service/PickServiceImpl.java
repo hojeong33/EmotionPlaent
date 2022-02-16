@@ -2,6 +2,7 @@ package com.ssafy.project.EmotionPlanet.Service;
 
 import com.ssafy.project.EmotionPlanet.Dao.PickContentDao;
 import com.ssafy.project.EmotionPlanet.Dao.PickDao;
+import com.ssafy.project.EmotionPlanet.Dao.S3Dao;
 import com.ssafy.project.EmotionPlanet.Dto.PickContentDto;
 import com.ssafy.project.EmotionPlanet.Dto.PickDto;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,8 +21,13 @@ public class PickServiceImpl implements PickService{
     @Autowired
     PickContentDao pickContentDao;
 
+    @Autowired
+    S3Dao s3Dao;
+
     @Override
     public int create(PickDto pickDto) {
+
+
         return pickDao.create(pickDto);
     }
 
@@ -36,6 +42,17 @@ public class PickServiceImpl implements PickService{
     public List<Integer> listOnNo(int userNo) {
 
         List<PickDto> pickDtos = pickDao.list(userNo);
+        List<Integer> picksNo = new ArrayList<>();
+
+        for (PickDto pickDto : pickDtos) {
+            picksNo.add(pickDto.getNo());
+        }
+        return picksNo;
+    }
+
+    @Override
+    public List<Integer> listByType(int userNo, int type) {
+        List<PickDto> pickDtos = pickDao.listByType(userNo, type);
         List<Integer> picksNo = new ArrayList<>();
 
         for (PickDto pickDto : pickDtos) {
@@ -84,12 +101,14 @@ public class PickServiceImpl implements PickService{
 
     @Override
     public int update(PickDto pickDto) {
+        s3Dao.deleteByNo(s3Dao.selectByLink(pickDto.getImgLink()).getNo());
         return pickDao.update(pickDto);
     }
 
     @Override
     public int delete(int no) {
-
+        PickDto pickDto = pickDao.select(no);
+        if(!("".equals(pickDto.getImgLink()) || pickDto.getImgLink() == null)) s3Dao.deleteByNo(s3Dao.selectByLink(pickDto.getImgLink()).getNo());
         return pickDao.delete(no);
     }
 
