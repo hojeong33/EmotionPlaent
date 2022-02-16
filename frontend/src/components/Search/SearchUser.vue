@@ -30,6 +30,7 @@ export default {
       // await this.$store.dispatch("searchUserFeed", this.$store.state.searchUserNo)
       this.$router.push({ path: `/userpage/feed` })
       this.$store.state.searching = false
+      this.$store.state.userSearch = []
     }
   },
   created() {
