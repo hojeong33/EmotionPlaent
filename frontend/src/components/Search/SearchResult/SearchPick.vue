@@ -2,7 +2,7 @@
   <article class="picks" @click="go_to_detail" @mouseover="isHover = true">
     <img :class="['planet', {'movie-planet':pick.no == 2}]" :src="require(`@/assets/images/emotions/${planet}`)" alt="">
     <img :class="['thumbnail', {'movie-thumb':pick.no == 2}]" :src="thumbNail" alt="thumbnail">
-    <h3>{{ title }}</h3>
+    <h3>{{ pick.name }}</h3>
     <span v-show="isHover" @mouseleave="isHover = false" class="picks-info">
       <p>Go to Detail</p>
     </span>
@@ -30,18 +30,18 @@ export default {
   },
   methods: {
     go_to_detail(){
-      this.$router.push({path: `/mypage/item/${this.pick.userNo}/${this.pick.tagNo}/${this.pick.no}`})
+      this.$router.push({path: `${this.$route.matched[0].path}/item/${this.pick.no}`})
     }
   },
   computed: {
     thumbNail(){
-      return this.pick.contentsList[0].postImgLink
+      return this.pick.imgLink
     },
     title(){
       return this.pick.name
     },
     planet(){
-      return this.planetStyles[this.pick.tagNo].img
+      return this.planetStyles[this.pick.tagno].img
     }
   }
 }

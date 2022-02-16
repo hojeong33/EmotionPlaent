@@ -3,12 +3,12 @@
 		<filter-tab :user-mood="userMood" @filtering="filtering" />
 
 		<search-feed-list v-if="tab == 'feed'" :feeds="filteredFeeds" />
-		<search-pick-list v-if="tab == 'pick'" :picks="filteredPicks" />
+		<search-pick-list v-if="tab == 'pick'" :picks="this.pickData" />
 		<div id="no-result" 
-			v-if="(tab == 'feed' && this.filteredFeed.length === 0)||(tab == 'pick' && this.filteredPick.length === 0)">
+			v-if="(tab == 'feed' && this.filteredFeed.length === 0)||(tab == 'pick' && this.pickData.length === 0)">
 			<img id="nothing" src="@/assets/images/etc/alien.png" alt="no result">
 			<p v-if="tab == 'feed' && this.filteredFeed.length === 0">게시글이 없어요...</p>
-			<p v-if="tab == 'pick' && this.filteredPick.length === 0">찜목록이 없어요...</p>
+			<p v-if="tab == 'pick' && this.pickData.length === 0">찜목록이 없어요...</p>
 		</div>
 	</article>
 </template>
@@ -25,7 +25,6 @@ export default {
 			pickData: null,
 			filter: 0,
 			filteredFeed: [],
-			filteredPick: [],
 		}
 	},
 	props: {
@@ -41,14 +40,13 @@ export default {
 		filtering(payload){
       this.filter = payload
 			this.filteredFeed = []
-			this.filteredPick = []
     }
 	},
-	created: function() {
+	mounted: function() {
 		this.feedData = this.$store.state.tagSearchResult
 		this.$bus.$on('pickBus', (searchPicks) => {
-		this.filteredPick = searchPicks
-		console.log(this.filteredPick)
+		this.pickData = searchPicks
+		console.log(this.pickData)
 		})
 	},
 	computed: {
@@ -64,17 +62,6 @@ export default {
 			}
 			return this.feedData
 		},
-		filteredPicks(){
-			if (this.filter){
-				this.filteredPick.forEach(pick => {
-					if (pick.tagno == this.filter){
-						this.filteredPick.push(pick)
-					}
-				});
-				return this.filteredPick
-			}
-			return this.filteredPick
-    },
 	},
 }
 </script>

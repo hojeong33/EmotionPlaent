@@ -6,7 +6,7 @@
       <h3 @click="pickTab = 3" :class="pickTab == 3 ? 'active': ''">활동</h3>
     </div>
     <div id="picks"> 
-      <search-pick v-for="(pick, idx) in filteredPicks" :key="idx" :pick="pick" />
+      <search-pick v-for="(pick, idx) in picks" :key="idx" :pick="pick" />
     </div>
   </div>
 </template>
