@@ -77,7 +77,6 @@ export default {
       this.$store.state.searchUserNo = el
       await this.$store.dispatch('userSelect', el)
       await this.$store.dispatch('userfollowdate', el)
-      await this.$store.dispatch("searchUserFeed", this.$store.state.searchUserNo)
       this.$router.push({ path: `/userpage/feed` })
     }
   }

@@ -118,6 +118,7 @@ export default new Vuex.Store({
   },
   mutations: {
     navActivate: function({ navActive }, payload){
+      console.log('지금 나는?', payload)
       if (payload == -1){
         navActive.forEach((ele, idx) => {
           Vue.set(navActive, idx, false)
@@ -126,12 +127,13 @@ export default new Vuex.Store({
       }
       if (payload == 0 || payload == 3){
         Vue.set(navActive, payload, !navActive[payload])
-        return 0
+        return 
       }
       navActive.forEach((ele, idx) => {
         navActive[idx] = false
       })
       Vue.set(navActive, payload, true)
+      console.log(navActive)
     },
     navActivate2: function(state, payload) {
         state.showingNav = payload

@@ -103,9 +103,9 @@ const routes = [
     ]
   },
   {
-    path: '/userpage',
+    path: '/:userId',
     name: 'Userpage',
-    redirect: '/userpage/feed',
+    redirect: '/:userId/feed',
     component: Userpage,
     meta: {
       loginRequired: true,
@@ -124,7 +124,7 @@ const routes = [
         },
       },
       {
-        path: 'item/:id/:tag/:index',
+        path: ':tag/:index',
         component: UserPickItem,
         props: true,
         meta: {
@@ -293,8 +293,8 @@ router.beforeEach((to, from, next) => {
 
   // 네비게이션 바 Active와 매칭
   if (to.name == 'Main'){store.commit('navActivate', 1)}
-  else if (to.matched.langth && to.matched[0].path == '/mypage'){store.commit('navActivate', 2)}
-  else if (to.matched.langth && to.matched[0].path == '/setting'){store.commit('navActivate', 4)}
+  else if (to.matched.length && to.matched[0].path == '/mypage'){store.commit('navActivate', 2)}
+  else if (to.matched.length && to.matched[0].path == '/setting'){store.commit('navActivate', 4)}
   else {store.commit('navActivate', -1)}
 
   //로그인이 필요한 서비스의 경우 로그인 페이지로 redirect
@@ -307,12 +307,12 @@ router.beforeEach((to, from, next) => {
     userUpdate.then(() => next())
   }
   // 감정 테스트가 필요한 경우 테스트페이지로 redirect
-  if (to.meta.testRequired && store.state.userInfo != null &&!store.state.userInfo.mood ){
-    console.log(store.state.userInfo.mood)
-    next({ name:'EmotionTest' })
-  }
+  // if (to.meta.testRequired && store.state.userInfo != null &&!store.state.userInfo.mood ){
+  //   console.log(store.state.userInfo.mood)
+  //   next({ name:'EmotionTest' })
+  // }
   //로그인 된 사용자가 로그인 or 회원가입 페이지로 가려고 할 경우
-  if (!to.meta.loginRequired && store.state.userInfo){
+  if (!to.meta.loginRequired && store.state.userInfo && token){
     console.log('메인')
     next({ name:'Main' })
   }

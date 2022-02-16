@@ -64,9 +64,6 @@ export default {
       return this.$router.app._route.path
     }
   },
-  created() {
-    this.$store.dispatch("searchUserFeed", this.$store.state.userInfo.no)
-  },
   mounted(){
     if (this.to.includes('item')){
       this.myPageTab = 'pick'

@@ -1,19 +1,20 @@
 <template>
   <article id="list-container">
 		<filter-tab :user-mood="userMood" @filtering="filtering" />
+
 		<search-feed-list v-if="tab == 'feed'" :feeds="filteredFeeds" />
 		<search-pick-list v-if="tab == 'pick'" :picks="filteredPicks" />
 		<div id="no-result" 
-			v-if="(tab == 'feed' && this.filteredFeeds.length === 0)||(tab == 'pick' && !filteredPicks.length)">
+		v-if="(tab == 'feed' && !filteredFeeds.length)||(tab == 'pick' && !filteredPicks.length)">
 			<img id="nothing" src="@/assets/images/etc/alien.png" alt="no result">
-			<p v-if="tab == 'feed' && this.filteredFeeds.length === 0">게시글이 없어요...</p>
+			<p v-if="tab == 'feed' && !filteredFeeds.length">게시글이 없어요...</p>
 			<p v-if="tab == 'pick' && !filteredPicks.length">찜목록이 없어요...</p>
 		</div>
 	</article>
 </template>
 
 <script>
-import FilterTab from '@/components/Search/SearchResult/FilterTab'
+import FilterTab from '@/components/user/FilterTab'
 import SearchFeedList from '@/components/Search/SearchResult/SearchFeedList'
 import SearchPickList from '@/components/Search/SearchResult/SearchPickList'
 import feedData from '@/assets/data/userFeed'
@@ -24,8 +25,7 @@ export default {
 		return {
 			feedData,
 			pickData,
-			filter: 0,
-			filteredFeed: []
+			filter: 0
 		}
 	},
 	props: {
@@ -40,20 +40,20 @@ export default {
 	methods: {
 		filtering(payload){
       this.filter = payload
-			this.filteredFeed = []
     }
 	},
 	computed: {
 		filteredFeeds(){
 			if (this.filter){
-				this.$store.state.tagSearchResult.forEach(feed => {
-					if (feed.tags[0].no == this.filter){
-						this.filteredFeed.push(feed)
+				const temp = []
+				this.feedData.forEach(feed => {
+					if (feed.planet == this.filter){
+						temp.push(feed)
 					}
 				});
-				return this.filteredFeed
+				return temp
 			}
-			return this.$store.state.tagSearchResult
+			return this.feedData
 		},
 		filteredPicks(){
 			if (this.filter){
@@ -112,12 +112,4 @@ export default {
 	#filter {
 		display: flex;
 	}
-
-	.active {
-    color: black;
-    font-size: 1.4rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-  }
-
 </style>
