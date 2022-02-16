@@ -3,35 +3,37 @@
 		<filter-tab :user-mood="userMood" @filtering="filtering" />
 
 		<div id="feed-container" v-if="tab == 'feed'"> 
-			<feed-list :feeds="filteredFeeds"/>
+			<feed-list :feeds="feeds" :filter="filter" />
 		</div>
 
 		<div id="pick-container" v-if="tab == 'pick'">
 			<div id="pick-tab">
-				<h3 @click="pickTap = 1" :class="pickTap == 1 ? 'active': ''">음악</h3>
-				<h3 @click="pickTap = 2" :class="pickTap == 2 ? 'active': ''">영화</h3>
-				<h3 @click="pickTap = 3" :class="pickTap == 3 ? 'active': ''">활동</h3>
+				<h3 @click="pickTab = 1" :class="pickTab == 1 ? 'active': ''">음악</h3>
+				<h3 @click="pickTab = 2" :class="pickTab == 2 ? 'active': ''">영화</h3>
+				<h3 @click="pickTab = 3" :class="pickTab == 3 ? 'active': ''">활동</h3>
 			</div>
 			<div id="picks"> 
-				<pick-list v-for="(pick, idx) in filteredPicks" :key="idx" :pick="pick" />
+				<pick-list v-for="(pick, idx) in filteredPicks" :key="idx" :pick="pick"  />
 			</div>
 		</div>
 
-		<div id="no-result" 
+		<!-- <div id="no-result" 
 		v-if="(tab == 'feed' && !filteredFeeds.length)||(tab == 'pick' && !filteredPicks.length)">
 			<img id="nothing" src="@/assets/images/etc/alien.png" alt="no result">
 			<p v-if="tab == 'feed' && !filteredFeeds.length">게시글이 없어요...</p>
 			<p v-if="tab == 'pick' && !filteredPicks.length">찜목록이 없어요...</p>
-		</div>
+		</div> -->
 		
 	</article>
 </template>
 
 <script>
 import FilterTab from '@/components/user/FilterTab'
-// import FeedItem from '@/components/user/FeedItem'
 import FeedList from '@/components/user/FeedList'
 import PickList from '@/components/user/PickList'
+import axios from 'axios'
+
+const session = window.sessionStorage;
 
 export default {
 	name: 'UserFeed',
@@ -47,12 +49,14 @@ export default {
         { id: 6, name: '분노행성', img: "rage.png", color: '#2A61F0' },
       ],
 			filter: 0,
-			pickTap: 1,
-			filteredFeed: []
+			pickTab: 1,
+			feeds: null,
+			picks: null
 		}
 	},
 	props: {
-		tab: String
+		tab: String,
+		userId: Number
 	},
 	components: {
 		FilterTab,
@@ -62,40 +66,44 @@ export default {
 	methods: {
 		filtering(payload){
       this.filter = payload
-			this.filteredFeed = []
     }
 	},
 	computed: {
-		filteredFeeds(){
-			if (this.filter){
-				this.$store.state.userFeedInfo.forEach(feed => {
-					if (feed.tags[0].no == this.filter){
-						this.filteredFeed.push(feed)
-					}
-				});
-				console.log(this.filteredFeed)
-				return this.filteredFeed
-			}
-			return this.$store.state.userFeedInfo
-		},
-		filteredPicks(){
-      const temp = []
-      this.pickData.forEach(ele => {
-        if (!this.filter && ele.no == this.pickTap){
-          temp.push(ele)
-        }
-        else if (ele.no == this.pickTap && ele.tagNo == this.filter){
-          temp.push(ele)
-        }
-      })
-      return temp
-    },
 		userMood(){
 			return this.$store.state.userInfo.mood
-		}
+		},
+		
 	},
 	created(){
-		console.log(this.$route)
+		let user = JSON.parse(session.getItem('userInfo')).no
+
+		if (this.$route.matched[0].path !== '/mypage'){
+			user = this.userId
+		}
+
+		let headers = {
+			'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+			'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+		};
+		axios({
+			method:'get',
+			url:`/api/feeds/my/returnNo/${user}`,
+			headers:headers,
+		})
+		.then((res) => {
+			if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
+				session.setItem('at-jwt-access-token', "");
+				session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+				console.log("Access Token을 교체합니다!!!")
+			}
+			this.feeds=res.data
+		})
+		.catch((error) => {
+			console.log(error);
+		})
+		.finally(() => {
+			console.log('피드 가져오기 클리어');
+		});
 	}
 }
 </script>

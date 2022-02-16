@@ -1,25 +1,28 @@
 <template>
-  <div class="feed-s">
-    <img class="feed-s-thumbnail" :src="post.imgs[0].imgLink" :alt="this.$store.state.userInfo.username"
-    @mouseover="hover = true" >
-    <img class="feed-planet" :src="require(`@/assets/images/emotions/${planet}`)" id="planet" >
-    <span class="feed-s-info" v-show="hover" @mouseleave="hover = false" @click="feeddetail()">
+  <div class="feed-s" v-if="feed">
+    <img class="feed-s-thumbnail" :src="feed.imgs[0].imgLink" :alt="this.$store.state.userInfo.username"
+    @mouseover="hover = true">
+    <img class="feed-planet" :src="require(`@/assets/images/emotions/${planet}`)" id="planet">
+    <span class="feed-s-info" v-show="hover" @mouseleave="hover = false">
       <span class="info">
         <img src="@/assets/images/icons/heart.png" alt="heart">
-        <p>{{ post.likes }}</p>
+        <p>{{ feed.likes.length }}</p>
       </span>
       <span class="info">
         <img src="@/assets/images/icons/chat.png" alt="comment">
-        <p>{{ post.comments.length }}</p>
+        <p>{{ feed.comments.length }}</p>
       </span>
     </span>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
   data(){
     return {
+      feed:null,
       hover: false,
       planetStyles: [
 				{ id: 0, name: 'default'},
@@ -33,7 +36,7 @@ export default {
     }
   },
   props: {
-    post: Object,
+    idx: Number,
   },
     methods:{
     feeddetail() {
@@ -42,15 +45,33 @@ export default {
   },
   computed: {
     planet() {
-			const idx = this.post.tags[0].no
+			const idx = this.feed.tags[0].no
 			if (idx){
 				return this.planetStyles[idx].img
 			}
 			return "neutral.png"
 		}
   },
-  created () {
-    console.log('이건 피드스몰', this.post)
+  created(){
+    const session = window.sessionStorage
+    let headers = {
+      'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+      'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+    };
+    axios({
+      method: 'get',
+      url:`/api/feed/${this.idx}`,
+      headers: headers,  // 넣는거 까먹지 마세요
+    })
+    .then((res) => {
+      this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+      console.log('!!!!!!!!!!!!!!!!!!!')
+      console.log(res.data)
+      this.feed=res.data
+    })
+    .catch((error) => {
+      console.log(error);
+    })
   }
 }
 </script>
@@ -58,6 +79,7 @@ export default {
 <style scoped>
   img {
     width: 20px;
+    height: inherit;
     aspect-ratio: 1/1;
   }
 
@@ -70,10 +92,10 @@ export default {
   .feed-s {
     position: relative;
     cursor: pointer;
-    border: 1px solid;
+    border: 1px #cccccc solid;
     border-radius: 20px;
-    width: 12rem;
-    height: 12rem;
+    width: 100%;
+    aspect-ratio: 1/1;
   }
 
   .feed-s-thumbnail {
