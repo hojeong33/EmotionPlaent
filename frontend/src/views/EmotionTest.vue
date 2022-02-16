@@ -111,7 +111,7 @@
           if (this.selected.length >= 2){
             axios({
               method: 'post',
-              url: 'http://13.125.47.126:8080/detailtest',
+              url: '/api/detailtest',
               data: this.selected,
               headers: headers,
             }).then((res) => {
@@ -140,7 +140,7 @@
           if (this.selected.length > 0) {
             axios({
                 method: 'post',
-                url: 'http://13.125.47.126:8080/resulttest',
+                url: '/api/resulttest',
                 data: this.selected,
                 headers: headers,
               }).then(res => {
@@ -162,7 +162,7 @@
               console.log('2번째 감정 테스트 post')
               axios({
                 method: 'put',
-                url: 'http://13.125.47.126:8080/users/update',
+                url: '/api/users/update',
                 data: body,
                 headers: headers,
               }).then(res => {
@@ -208,7 +208,7 @@
       'at-jwt-access-token': session.getItem('at-jwt-access-token'),
       'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
-			axios.get('http://13.125.47.126:8080/test', {
+			axios.get('/api/test', {
           headers: headers,
         }).then((res) => {
           this.keywords = res.data

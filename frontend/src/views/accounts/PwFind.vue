@@ -95,7 +95,7 @@ export default {
     };
     axios({
         method: 'post',
-        url: 'http://13.125.47.126:8080/register/findPw',
+        url: '/api/register/findPw',
         data: data, 
       }).then((res) => {
        console.log("메일 전송 성공" , res)

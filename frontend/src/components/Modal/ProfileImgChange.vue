@@ -58,7 +58,7 @@ export default {
       axios({
         method: "post",
         url:
-          "http://13.125.47.126:8080/s3/users/img/" + this.$store.state.userInfo.no,
+          "/api/s3/users/img/" + this.$store.state.userInfo.no,
         data: formData, // post 나 put에 데이터 넣어 줄때
         headers: headers, // 넣는거 까먹지 마세요
       })

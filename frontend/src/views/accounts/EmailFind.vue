@@ -58,7 +58,7 @@ export default {
     if(this.tel){
       axios({
         method: 'get',
-        url: 'http://13.125.47.126:8080/register/findEmail/' + this.tel,
+        url: '/api/register/findEmail/' + this.tel,
       }).then((res) => {
        alert("찾은 이메일은 " +res.data+ " 입니다.")
        this.$router.push("/login")

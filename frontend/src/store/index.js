@@ -358,7 +358,7 @@ export default new Vuex.Store({
     };
     axios({
         method: 'delete',
-        url: 'http://13.125.47.126:8080/feeds/like',
+        url: '/api/feeds/like',
         data: data, // post 나 put에 데이터 넣어 줄때
         headers: headers,  // 넣는거 까먹지 마세요
       }).then((res) => {
@@ -382,7 +382,7 @@ export default new Vuex.Store({
     };
     axios({
         method: 'post',
-        url: 'http://13.125.47.126:8080/feeds/like',
+        url: '/api/feeds/like',
         data: data, // post 나 put에 데이터 넣어 줄때
         headers: headers,  // 넣는거 까먹지 마세요
       }).then((res) => {
@@ -399,7 +399,7 @@ export default new Vuex.Store({
       readAlarm(state, el){
           axios({
             method: 'get',
-            url: 'http://13.125.47.126:8080/alarm/read/'+ el,
+            url: '/api/alarm/read/'+ el,
           }).then((res) => {
             console.log("알림 읽기 성공")
             console.log(res.data)
@@ -485,7 +485,7 @@ export default new Vuex.Store({
     },
 
     connect() { // 웹 소켓 연결하는 부분.
-      const serverURL = "http://13.125.47.126:8080";
+      const serverURL = "/api";
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket);
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
@@ -535,7 +535,7 @@ export default new Vuex.Store({
     alarmselect(){ // 디비에 있는 알림 가져오기
       axios({
         method: 'get',
-        url:'http://13.125.47.126:8080/alarm/' + this.state.userInfo.no,
+        url:'/api/alarm/' + this.state.userInfo.no,
       })
       .then((res)=>{
         console.log('알림 가져오기 성공')
@@ -550,7 +550,7 @@ export default new Vuex.Store({
     alarmdelete(state ,el){ // 읽은 알림 지우기=> 알림번호 넘겨주는거 생각해야함
       axios({
         method: 'delete',
-        url:'http://13.125.47.126:8080/alarm/' + el, // 여기 알림번호 넘겨줘야한다.
+        url:'/api/alarm/' + el, // 여기 알림번호 넘겨줘야한다.
       })
       .then((res)=>{
         console.log('알림 삭제 성공')
@@ -577,7 +577,7 @@ export default new Vuex.Store({
       };
       axios({
           method: 'delete',
-          url: 'http://13.125.47.126:8080/follows',
+          url: '/api/follows',
           data: data, // post 나 put에 데이터 넣어 줄때
           headers: headers,  // 넣는거 까먹지 마세요
         }).then((res) => {
@@ -606,7 +606,7 @@ export default new Vuex.Store({
       };
       axios({
           method: 'post',
-          url: 'http://13.125.47.126:8080/follows',
+          url: '/api/follows',
           data: data, // post 나 put에 데이터 넣어 줄때
           headers: headers,  // 넣는거 까먹지 마세요
         }).then((res) => {
@@ -632,7 +632,7 @@ export default new Vuex.Store({
         };
         axios({
           method: 'get',
-          url: 'http://13.125.47.126:8080/users/'+ el,
+          url: '/api/users/'+ el,
           headers: headers,  // 넣는거 까먹지 마세요
         }).then((res) => {
           console.log("유저 정보 갱신 성공")
@@ -654,7 +654,7 @@ export default new Vuex.Store({
         };
         axios({
           method: 'get',
-          url: 'http://13.125.47.126:8080/follows/'+this.state.userInfo.no+"/"+el,
+          url: '/api/follows/'+this.state.userInfo.no+"/"+el,
           headers: headers,  // 넣는거 까먹지 마세요
         }).then((res) => {
           if(this.state.userInfo.no === el){
@@ -687,7 +687,7 @@ export default new Vuex.Store({
       };
       axios({
         method: 'get',
-        url: 'http://13.125.47.126:8080/feeds/my/' + el,
+        url: '/api/feeds/my/' + el,
         headers: headers,  // 넣는거 까먹지 마세요
       }).then((res) => {
         if (el === this.state.userInfo.no) {
@@ -714,7 +714,7 @@ export default new Vuex.Store({
       };
       axios({
         method: 'get',
-        url:'http://13.125.47.126:8080/searchs/byPickTag/' + el,
+        url:'/api/searchs/byPickTag/' + el,
         headers: headers,
       }).then(res => {
         this.dispatch('accessTokenRefresh', res)
@@ -733,7 +733,7 @@ export default new Vuex.Store({
       };
       axios({
         method: 'get',
-        url:'http://13.125.47.126:8080/searchs/byPickTagList',
+        url:'/api/searchs/byPickTagList',
         headers: headers,
       }).then(res => {
         this.dispatch('accessTokenRefresh', res)
@@ -752,7 +752,7 @@ export default new Vuex.Store({
       };
       axios({
         method: 'get',
-        url:'http://13.125.47.126:8080/searchs/byTag/' + this.state.words,
+        url:'/api/searchs/byTag/' + this.state.words,
         headers: headers,
       }).then(res => {
         this.dispatch('accessTokenRefresh', res)
@@ -772,7 +772,7 @@ export default new Vuex.Store({
       };
       axios({
         method: 'get',
-        url: 'http://13.125.47.126:8080/searchs/byTag/feed/'+this.state.userInfo.no + '/' + el,
+        url: '/api/searchs/byTag/feed/'+this.state.userInfo.no + '/' + el,
         headers: headers,  // 넣는거 까먹지 마세요
       }).then((res) => {
         console.log("태그 피드 검색 성공")
@@ -792,7 +792,7 @@ export default new Vuex.Store({
       };
       axios({
         method: 'get',
-        url:'http://13.125.47.126:8080/searchs/byNickName/' + this.state.words,
+        url:'/api/searchs/byNickName/' + this.state.words,
         headers: headers,
       })
       .then((res)=>{
@@ -812,7 +812,7 @@ export default new Vuex.Store({
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
-        axios.get('http://13.125.47.126:8080/recommend/music/' + this.state.userInfo.mood, {
+        axios.get('/api/recommend/music/' + this.state.userInfo.mood, {
           headers: headers,
         }).then((res) => {
           this.state.recommendMusic = res.data
@@ -829,7 +829,7 @@ export default new Vuex.Store({
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
-			axios.get('http://13.125.47.126:8080/recommend/movie/' + this.state.userInfo.mood, {
+			axios.get('/api/recommend/movie/' + this.state.userInfo.mood, {
           headers: headers,
         }).then((res) => {
           this.state.recommendMovie = res.data
@@ -846,7 +846,7 @@ export default new Vuex.Store({
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
-			axios.get('http://13.125.47.126:8080/recommend/activity', {
+			axios.get('/api/recommend/activity', {
           headers: headers,
         }).then((res) => {
           this.state.recommendActivity = res.data
@@ -906,7 +906,7 @@ export default new Vuex.Store({
         };
       axios({
         method: "put",
-        url: "http://13.125.47.126:8080/users/update",
+        url: "/api/users/update",
         data: body,
         headers: headers,
       })
