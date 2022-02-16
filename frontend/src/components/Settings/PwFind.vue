@@ -35,10 +35,10 @@
         placeholder="등록하신 휴대전화를 입력해주세요.">
         <span v-if="credentials.tel">
           <p v-if="!isValid.validateTel" class="warn">
-            전화번호가 이상해요.
+            번호가 이상해요...
           </p>
           <p v-if="isValid.validateTel" class="collect">
-            가능한 전화번호예요.
+            가능한 번호예요!
           </p>
         </span>
       </article>
@@ -98,10 +98,11 @@ export default {
         data: data, 
       }).then((res) => {
        console.log("메일 전송 성공" , res)
-       alert("매일 전송 성공")
+       alert("매일을 확인해 주세요.")
       }).then(()=>{
         this.$router.push("/login")
       }).catch((error) => {
+        alert("일치하는 정보가 없습니다.")
         console.log(error);
       })
     },
@@ -271,6 +272,8 @@ export default {
     align-items: center;
     width: 80%;
     margin: 0 auto;
+    /* border-radius: 20px;
+    border: 2px  #5E39B3 solid; */
   }
 
   #pf-header {

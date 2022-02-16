@@ -7,7 +7,7 @@
     </div>
     <div v-if="showOption == 'grid'" id="grid-container">
       <search-feed-small v-for="feed in feeds"
-        :post="feed"
+        :feed="feed"
         :key="feeds.indexOf(feed)" />
     </div>
     <div v-if="showOption == 'card'" id="card-container">

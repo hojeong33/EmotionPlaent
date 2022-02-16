@@ -1,18 +1,33 @@
 <template>
 	<div id="feed_detail">
 		<div id="img_box">
-			<img id="feedImg" :src="`${postImage}`" alt="">
-			<p class="overlay_content" >조은누리님은 행복행성 <img id="planet_img" :src="require('@/assets/images/emotions/happy.png')" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p>
+      <article id="img-box">
+        <div id="uploaded-box">
+          <transition-group id="carousel" :name="page > beforePage ? 'slide':'slide-reverse'">
+            <img id="feedImg" v-for="(image, index) in feed.imgs" :key="index"
+            class="uploadedImg" :src="image.imgLink" alt=""
+            v-show="index+1 == page">
+          </transition-group>
+          <div id="pages">
+            <span v-for="idx in feed.imgs.length" :key="idx" 
+            :class="['page-num', {'here':idx==page}]" @click="paginationByDot(idx)" />
+          </div>
+          <span id="left" class="carousel-btn" @click="pagination(false)"/>
+          <span id="right" class="carousel-btn" @click="pagination(true)"/>
+        </div>
+      </article>
+      <!-- <div v-for="(img, idx) in feed.imgs" :key="idx"><img  id="feedImg" :src="img.imgLink" alt=""></div> -->
+			<p class="overlay_content" >{{feed.authorDetail.nickname}} <img id="planet_img" :src="require('@/assets/images/emotions/happy.png')" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p>
 		</div>
 		<div id="feed_text">
 			<div id="text_head">
-				<img id="profile_image" :src="`${userImage}`" alt="">
+				<img id="profile_image" :src="feed.authorDetail.profileImg" alt="">
 				<div id="profile_info">
-					<p id="username">{{ username }}</p>
-					<p id="upload_date">date</p>
+					<p id="username">{{feed.authorDetail.nickname }}</p>
+					<p id="upload_date">{{feed.date}}</p>
 				</div>
 				<div id="setting">
-					<i @click="onUserFeedSetting2" class="fas fa-ellipsis-v"></i>
+					<i @click="onModalFeed" class="fas fa-ellipsis-v" style="color:black"></i>
 					<user-feed-setting v-if="isUserFeedSettingOpened" @cancel="isUserFeedSettingOpened=false"></user-feed-setting>
 				</div>
 				<!-- 만약 다른 유저의 피드 디테일이라면 팔로우 버튼이 나타나게 -->
@@ -20,20 +35,20 @@
 			<hr>
 			<div id="text_body">
 				<div>
-					<p id="caption">{{caption}}</p>
+					<p id="caption">{{feed.descr}}</p>
 				</div>
 				<br>
 				<div id="tags">
-					<p id="tag" v-for="(t, idx) in tag" :key="idx">#{{ t }}</p>
+					<p id="tag" v-for="(t, idx) in feed.tags" :key="idx">#{{ t['name'] }}</p>
 				</div>
 				<br>
 				<div id="comments">
-					<div id="comment" v-for="(comment, idx) in comments" :key="idx">
-						<img id="profile_image" :src="`${comment.userImage}`" alt="">
-						<p id="username">{{comment.username}}</p>
-						<p id="user_comment">{{comment.comment}}</p>
+					<div id="comment" v-for="(comment, idx) in commentsData" :key="idx">
+						<img id="profile_image" :src="comment.userRequestDto.profileImg" alt="">
+						<p id="username">{{comment.userRequestDto.nickname}}</p>
+						<p id="user_comment">{{comment.descr}}</p>
 						<div id="comment_setting">
-							<i @click="onCommentSetting" class="fas fa-ellipsis-v"></i>
+              <i @click="onModalComment" class="fas fa-ellipsis-v" style="color:black"></i>
 							<!-- 댓글 하나하나에 유저데이터가 들어가서 해당 유저의 댓글이 지워져야 함-->							
 							<!-- <comment-setting v-if="isCommentSettingOpened" @cancel="isCommentSettingOpened=false"></comment-setting> -->
 						</div>
@@ -42,15 +57,12 @@
 			</div>
 			<hr>
 			<div id="likes">
-				<div v-if="liked">
-					<i id="heart" class="fas fa-heart fa-lg" style="color: crimson;" @click="like"></i>
-				</div>
-				<div v-else>
-					<i id="heart" class="far fa-heart fa-lg" @click="like"></i>
-				</div>
-				&nbsp;
-				<p id="like_count">{{ likes }} likes</p>
-			</div>
+        <div id="heart">
+          <i class="far fa-heart fa-lg" :class="{'fas': this.feed.like}"  @click="like"></i>
+        </div>
+        <p id="feed_likes" v-for="(like, idx) in feed.likes" :key="idx"></p>
+        <p class="likes">{{feed.likes.length}} likes</p>
+      </div>
 			<hr>
 			<div id="comment_write">
         <input id="comment-input" @keyup.enter="createComment" v-model.trim="commentContent" placeholder="댓글을 입력해 주세요."> 
@@ -61,62 +73,191 @@
 </template>
 
 <script>
-
+import axios from 'axios';
+const session = window.sessionStorage;
 
 export default {
 	data: function () {
 		return {
-			username: "조은누리",
-			date:"2022-01-01",
-			userImage: "https://newspenguin.com/news/photo/202006/1837_5156_215.jpg",
-			postImage:
-				"http://cdn.catholicnews.co.kr/news/photo/202001/22135_43951_5525.jpg",
-			tag:["우울행성","보았어요","밤하늘"],
-			likes: 36,
-			hasBeenLiked: false,
-			caption: "안녕하세요~~~~~ 오늘 내 기분은 ☀️!!! 랄라라라라라라라라라라라라라",
-			comment_cnt:"2",
-			comments:[
-				{
-					userImage: "https://s3.ap-northeast-2.amazonaws.com/elasticbeanstalk-ap-northeast-2-176213403491/media/magazine_img/magazine_280/5-3-%EC%8D%B8%EB%84%A4%EC%9D%BC.jpg",
-					username: '최강상후',
-					comment: "반가워요",
-				},
-				{
-					userImage: "https://i0.wp.com/dailypetcare.net/wp-content/uploads/2020/11/Screen-Shot-2020-11-24-at-9.10.35-PM-edited-e1606302091776.png?fit=1236%2C694&ssl=1",
-					username: 'soonil',
-					comment: "안녕하세요"
-				}
-				],
-			planet:"행복행성",
-			// commentContent: null
-			liked: false,
+      page:1,
+      beforePage:1,
+      isMineFeed:false,
+      isMineComment:false,
+			feed:null,
+      comments:[],
+      commentsData:[],
 			commentContent:null,
 			isCommentSettingOpened:false,
 			isUserFeedSettingOpened: false,
 		}
 	},
+	props:{
+		feedNo:Number,
+	},
 	methods: {
-		like: function () {
-			this.liked = !this.liked
-			console.log(this.liked)
-		},
-		createComment:function(){
-      const commentItem={
-        comment:this.commentContent,
-        username:'default',
-        userImage:'https://cdn.indiepost.co.kr/uploads/images/2018/12/11/VDbIX3-600x338.png'
+    pagination(payload){
+      this.beforePage = this.page
+      if (this.page < this.feed.imgs.length && payload){
+        this.page ++
       }
-      if(commentItem.comment){
-        this.comments.push(commentItem)
+      else if (this.page > 1 && !payload){
+        this.page --
+      }
+    },
+    paginationByDot(target){
+      let d
+      if (target > this.page){
+        d = true
+      }
+      else {
+        d = false
+      }
+      for (let i=0;i<Math.abs(target-this.page);i++){
+        setTimeout(() => {
+          console.log(this.page, target, d)
+          this.pagination(d)
+        }, 1000 * i);
+      }
+    },
+    getComment:function(commentNo){
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+        axios({
+          method: 'get',
+          url:`http://13.125.47.126:8080/comment/${commentNo}`,
+          headers: headers,  // 넣는거 까먹지 마세요
+          }).then((res) => {
+            this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+            this.commentsData.push(res.data)
+            this.isMineComment=res.data.owner
+            // this.getComments()
+          }).catch((error) => {
+            console.log(error);
+          }).then(() => {
+            console.log('댓글 하나 가져오기');
+          });
+        },
+    getComments:function(){
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+      axios({
+          method: 'get',
+          url:`http://13.125.47.126:8080/comments/returnNo/${this.feedNo}`,
+          headers: headers,  // 넣는거 까먹지 마세요
+          }).then((res) => {
+          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+          this.comments=res.data.reverse()
+          this.commentsData=[]
+          for (let i=0; i<this.comments.length; i++){
+            const commentNo=this.comments[i]
+            this.getComment(commentNo)
+          }
+          }).catch((error) => {
+            console.log(error);
+          }).then(() => {
+            console.log('댓글 목록 가져오기');
+          });
+        },
+    createComment:function(){
+      const userdata = JSON.parse(session.getItem('userInfo')) 
+      const commentItem={
+          descr:this.commentContent,
+          author:userdata.no,
+          feedNo:this.feedNo
+        }
+      if(commentItem.descr){
         this.commentContent=null
+        let headers = {
+          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+        axios({
+            method: 'post',
+            url:'http://13.125.47.126:8080/comments',
+            data: commentItem, // post 나 put에 데이터 넣어 줄때
+            headers: headers,  // 넣는거 까먹지 마세요
+          })
+          .then((res) => {
+             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+            //  console.log(res.data)
+            //  console.log('댓글 다시 가져옴!!!!!!!!!!!!!!!!!!!!!!')
+             this.getComments()
+             let body = {
+               receiver: this.feed.author,
+               feedno: this.feedNo,
+               commentno: res.data, // 이부분 백 수정하고 테스트해야함
+             }
+             this.$store.dispatch('comment',body)
+          })
+          .catch((error) => {
+            console.log(error);
+          })
+          .then(() => {
+            console.log('댓글 작성 완료');
+          });
 
+        
       }
       else{
-        // alert('내용을 채워주세요')
-		this.$store.commit('commentNeedContentModalActivate')
+        this.$store.commit('commentNeedContentModalActivate')
       }
+    },
+		getFeed:function(){
+		let headers = {
+			'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+			'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+			};
+			axios({
+				method: 'get',
+				url:`http://13.125.47.126:8080/feed/${this.feedNo}`,
+				headers: headers,  // 넣는거 까먹지 마세요
+			}).then((res) => {
+			this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+			this.feed=res.data
+			console.log(this.feed)
+      this.getComments()
+			this.isMineFeed=res.data.owner
+			}).catch((error) => {
+				console.log(error);
+			}).then(() => {
+				console.log('피드 하나 가져오기');
+			});
 		},
+    like:function(){
+      this.feed.like ? this.cancelLike(): this.doLike();
+      this.feed.like= !this.feed.like;
+    },
+    doLike:function(){
+		console.log(this.feedNo)
+      let el = {
+        receiver : this.feed.author,
+        feedno : this.feedNo,
+      }
+      this.$store.dispatch('addfeedlike',el)
+    },
+    cancelLike:function(){
+      this.$store.dispatch('deletefeedlike',this.feedNo)
+    },
+    onModalFeed:function(){
+      if(this.isMineFeed){
+        this.onCommentSetting()
+      }
+      else{
+        this.onUserFeedSetting2
+      }
+    },
+    onModalComment:function(){
+      if(this.isMineComment){
+        this.onCommentSetting()
+      }
+      else{
+        this.onUserFeedSetting2
+      }
+    },
 		onCommentSetting:function(){
 			this.$store.commit('commentSettingModalActivate')
 			// if(this.isCommentSettingOpened){
@@ -133,11 +274,18 @@ export default {
 			// 	this.isUserFeedSettingOpened=true
 			// }
 		}
+	},
+	created(){
+		this.getFeed()
+		
 	}
 }
 </script>
 
 <style scoped>
+.fas{
+    color: crimson;
+  }
 #feed_detail {
 	width: 110vh;
 	height: 80vh;
@@ -153,8 +301,8 @@ export default {
 }
 #feedImg{
 	position: relative;
-	width: 79.55vh;
-	height: 79.55vh;
+	width: 69.55vh;
+	height: 69.55vh;
 	border-right: 1.5px solid;
 	border-left: none;
 	border-top: none;
@@ -298,5 +446,101 @@ hr{
 #comment_setting {
 	margin-left: auto;
 	margin-right: 1rem;
+}
+#uploaded-box {
+    width: 100%;
+    height: 100%;
+    position: relative;
+  }
+  
+.uploadedImg {
+  width: 100%;
+  /* aspect-ratio: 1/1;
+  position: absolute; */
+}
+@keyframes slide-in {
+  from { right: -100% }
+  to { right: 0 }
+}
+
+@keyframes slide-out {
+  from { right: 0 }
+  to { right: 100% }
+}
+.slide-enter-active {
+  animation: slide-in 1s ease;
+}
+
+.slide-leave-active {
+  animation: slide-out 1s ease;
+}
+
+.slide-reverse-enter-active {
+  animation: slide-out 1s ease reverse;
+}
+
+.slide-reverse-leave-active {
+  animation: slide-in 1s ease reverse;
+}
+#pages {
+  display: flex;
+  flex-wrap: nowrap;
+  justify-content: center;
+  align-items: center;
+  margin: 1rem;
+}
+
+.page-num {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background-color: #cccccc;
+  margin: 0.75rem;
+  cursor: pointer;
+}
+  #img-box {
+  display: flex;
+  flex-direction: column;
+  width: 85%;
+  height: 65%;
+  background-color: lightgray;
+  border-radius: 20px;
+  margin: auto;
+  justify-content: center;
+  align-items: center;
+  margin: 2rem;
+}
+.here {
+  background-color: #777777;
+}
+#left {
+  background-image: url('../assets/images/icons/left.png');
+  left: -2%;
+}
+
+#right {
+  background-image: url('../assets/images/icons/right.png');
+  right: -2%;
+}
+
+#carousel {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  overflow: hidden;
+  border-radius: 20px;
+}
+.carousel-btn {
+  background-size: cover;
+  border: none;
+  border-radius: 50%;
+  opacity: 0.75;
+  position: absolute;
+  width: 2rem;
+  height: 2rem;
+  top: 45%;
+  cursor: pointer;
 }
 </style>

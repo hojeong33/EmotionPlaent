@@ -114,6 +114,8 @@ public class FeedController {
         }
 
         FeedDto feed = feedService.read(feedNo, Integer.parseInt(userNo));
+        List<UserRequestDto> likeList = feedService.likeList(feedNo);
+        feed.setLikes(likeList);
         if(feed != null) {
             return new ResponseEntity<FeedDto>(feed, HttpStatus.OK);
         } else {

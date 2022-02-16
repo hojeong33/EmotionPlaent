@@ -40,10 +40,13 @@
         autocomplete="off" maxlength="10"
         @input= "checkNickname">
         <span v-if="credentials.nickname">
-          <p v-if="!isValid.validateNicknamecheck" class="warn">
+          <p v-if="!isValid.validateNicknamelength" class="warn">
+            닉네임은 2자 이상, 10자 이하입니다.
+          </p>
+          <p v-if="!isValid.validateNicknamecheck && isValid.validateNicknamelength" class="warn">
             사용중인 닉네임이에요.
           </p>
-          <p v-if="isValid.validateNicknamecheck" class="collect">
+          <p v-if="isValid.validateNicknamecheck && isValid.validateNicknamelength" class="collect">
            사용가능한 닉네임입니다.
           </p>
         </span>
@@ -99,7 +102,7 @@
       </article>
       <article id="birth_form">
         <label for="birth">생년월일</label>
-        <input type="date" id="birth" v-model="credentials.birth">
+        <input type="date" id="birth" v-model="credentials.birth" :max="this.maxdate">
       </article>
       <article id="btn_container">
         <button @click="signup" id="signup_btn">시민권 등록하기</button>
@@ -118,6 +121,7 @@
     name: 'Signup',
     data: function () {
       return {
+        maxdate: null,
         credentials: {
           email: null,
           nickname: null,
@@ -130,11 +134,19 @@
           validateEmail: false, // 이메일 형식 체크
           validateEmailcheck : false, // 중복 이메일 여부
           validateNicknamecheck : false, // 중복 닉네임 여부
+          validateNicknamelength: false, // 닉네임 길이 체크
           validatePw: false, // 비밀번호 길이 체크
           validatePwConf: false, // 비밀번호와 비밀번호 확인 일치 여부
           validateTel: false // 휴대전화 중복 여부
         },
       }
+    },
+    created(){
+      var today = new Date();
+      var year = today.getFullYear();
+      var month = ('0' + (today.getMonth() + 1)).slice(-2);
+      var day = ('0' + today.getDate()).slice(-2);
+      this.maxdate = year + '-' + month  + '-' + day;
     },
     methods: {
        validateEmail: function(){
@@ -192,16 +204,27 @@
       },
       checkNickname: function(el){
         this.credentials.nickname = el.target.value // 한글 입력 이슈 해결하기 위해 사용. 한박자 느린거?
-        axios({
-          method: 'get',
-          url: 'http://13.125.47.126:8080/register/checkByNickname/' + this.credentials.nickname,
+        if (this.credentials.nickname.length >= 2 && this.credentials.nickname.length <= 10) {
+          this.isValid.validateNicknamelength = true
+          console.log('길이는 맞아~')
+          // this.$store.state.userInfo.nickname = el.target.value // 한글 입력 이슈 해결하기 위해 사용. 한박자 느린거?
+          axios({
+            method: 'get',
+            url: 'http://13.125.47.126:8080/register/checkByNickname/' + this.credentials.nickname,
+            })
+            .then(() => { //중복 닉네임 없는 경우
+              this.isValid.validateNicknamecheck = true
+              console.log('중복없다~')
+            })
+            .catch(() => { //중복 닉네임 있는 경우
+              this.isValid.validateNicknamecheck = false
+              console.log('중복있어')
           })
-          .then(() => { //중복 닉네임 없는 경우
-            this.isValid.validateNicknamecheck = true
-          })
-          .catch(() => { //중복 닉네임 있는 경우
-            this.isValid.validateNicknamecheck = false
-        })
+        }
+        else {
+          this.isValid.validateNicknamelength = false
+          console.log('길이가 안맞다~')
+        }
       },
       pwCheck: function(){
         if (this.credentials.pw && this.credentials.pw.length >= 8 && this.credentials.pw.length <= 20){
@@ -354,8 +377,10 @@
     justify-content: flex-start;
     align-items: center;
     padding: 3rem 2rem 1.5rem;
-    border-left: 2px #cccccc solid;
-    border-right: 2px #cccccc solid;
+    /* border-left: 2px #cccccc solid;
+    border-right: 2px #cccccc solid; */
+    border-radius: 20px;
+    border: 2px  #5E39B3 solid;
   }
 
   #signup_header {

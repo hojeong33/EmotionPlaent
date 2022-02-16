@@ -8,10 +8,13 @@ import java.util.List;
 
 @Mapper
 public interface PickDao {
-
     public int create(PickDto pickDto);
 
     public List<PickDto> list(int userNo);
+
+    public List<PickDto> listByType(
+            @Param("userNo") int userNo,
+            @Param("type") int type);
 
     public PickDto select(int no);
 

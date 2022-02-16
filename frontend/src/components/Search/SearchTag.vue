@@ -9,7 +9,7 @@
           <span id="title">#{{ result.name }}</span>
           <span id="content">이야기: {{ result.count }}개</span>
         </div>
-        <img src="../../assets/images/icons/search_dark.png" alt="" id="go">
+        <img src="../../assets/images/icons/search_dark.png" alt="" id="go" @click="searchTag(result.name)">
       </div>
     </div>
     <div v-else id="no_result">
@@ -23,7 +23,12 @@
 export default {
   name: 'SearchTag',
   methods: {
-    
+    async searchTag(el) {
+      this.$store.state.tagSearchResult = []
+      await this.$store.dispatch('searchTagSearch', el)
+      this.$router.push({ path: `/search/` })
+      this.$store.state.searching = false
+    }
   },
   created() {
     console.log(this.$store.state.words)

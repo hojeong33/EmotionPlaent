@@ -88,6 +88,7 @@ export default {
     padding: 0.5rem;
     width: 80%;
     overflow: auto;
+    text-align: center;
   }
 
   .categories {

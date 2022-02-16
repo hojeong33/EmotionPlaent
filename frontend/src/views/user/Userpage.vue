@@ -6,13 +6,18 @@
       <div id="profile-card">
         <div id="name-card">
           <h1>{{ this.$store.state.searchUserInfo.nickname }}</h1>
-          <button v-if="$store.state.searchUserFollowInfo.followcheck == 0" id="follow"
+          <div v-if="$store.state.searchUserInfo.no !== $store.state.userInfo.no">
+            <button v-if="$store.state.searchUserFollowInfo.followcheck == 0" id="follow"
           @click="follow">팔로우 하기</button>
           <button v-if="$store.state.searchUserFollowInfo.followcheck == 1" id="unfollow"
           @click="unfollow">언팔로우</button>
+          </div>
+          <div v-else>
+            <button @click="$router.push({name: 'Setting'})">프로필 수정</button>
+          </div>
         </div>
         <div id="info-card">
-          <h3>이야기 0개</h3>
+          <h3>이야기 {{ this.$store.state.searchUserFeedInfo.length }}개</h3>
           <h3 @click="showFollowerList">팔로우 {{ this.$store.state.searchUserFollowInfo.userFollow.length }}</h3>
           <h3 @click="showFollowingList">팔로잉 {{ this.$store.state.searchUserFollowInfo.userFollowing.length }}</h3>
         </div>

@@ -11,32 +11,30 @@
     <div v-if="feedData.tags.length" id="pickTags">
       <div id="moodTag">
         <img id="planet_img" :src="require('@/assets/images/emotions/' + planetImg)" alt="">
-        <p style="margin:auto 0.2rem; color: #5E39B3; font-weight: bold;">{{feedData.tags[0].name}}</p>
+        <p style="margin:auto 0.2rem; color: #5E39B3; font-weight: bold;">{{feedData.tags[0].name}}행성</p>
       </div>
       <div id="actTag">
         <p style="margin:auto 0.2rem; color: #5E39B3; font-weight: bold;">{{feedData.tags[1].name}}</p>
       </div>
-      <div id="freeTag" v-for="(tag, idx) in feedData.tags.slice(2)" :key="idx"> 
-          <p id="pickTag" style="margin:auto 0.2rem; color: blue; font-weight: bold;">
-            # {{tag.name}}
-          </p>         
+      <div id="freeTag" v-if="feedData.tags.slice(2).length === 0">
+        <p id="freeTag" style="margin:auto 0.2rem; color: blue; font-weight: bold;"># 자유태그를 #입력해주세요</p>
+      </div>
+      <div id="freeTag" v-else>
+        <div id="freeTag" v-for="(tag, idx) in feedData.tags.slice(2)" :key="idx"> 
+            <p id="pickTag" style="margin:auto 0.2rem; color: blue; font-weight: bold;">
+              # {{tag.name}}
+            </p>         
+        </div>
       </div>
     </div>
     <div id="freeTag_write">
-      <input type="text" id="tag_input" @keyup.enter="keyPress">
+      <input type="text" id="tag_input" @keyup.enter="keyPress" placeholder="작성 후 엔터키를 눌러 주세요">
       <img id="write" @click="freeTagCreate" src="@/assets/images/icons/write.png" alt="" style="width:1.4rem;height:1.4rem; cursor: pointer;">
     </div>
-    <textarea id="text-input" v-model="feedData.descr" />
+    <textarea id="text-input" placeholder="" v-model="feedData.descr" />
     <footer>
-      <span id="secret">
-        <input type="checkbox" id="secret-check" v-model="isChecked">
-        <label for="secret-check">비밀글</label>
-      </span>
-      <span>
-        <button id="btn-before" @click="beforePage">이전</button>
-        <button id="btn-before" @click="feedUpdate">수정테스트</button>
-        <button id="btn-next" @click="feedWrite">작성</button>
-      </span>
+      <button id="btn-before" @click="beforePage">이전</button>
+      <button id="btn-next" @click="feedWrite">작성</button>
     </footer>
   </section>
 </template>
@@ -259,9 +257,10 @@ export default {
   }
 
   #tag_input {
-    width: 90%;
+    width: 95%;
     border-style:none;
     outline: none;
+    padding-left:0.3rem;
   }
 
   #text-input{
@@ -270,11 +269,12 @@ export default {
     border: 1px #cccccc solid;
     border-radius: 10px;
     padding: 1rem;
+    resize: none;
   }
 
   footer {
     display:flex;
-    justify-content: space-between;
+    justify-content: right;
     width: 80%;
     margin: 1rem;
   }

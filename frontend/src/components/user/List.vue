@@ -30,28 +30,25 @@
 <script>
 import FilterTab from '@/components/user/FilterTab'
 // import FeedItem from '@/components/user/FeedItem'
-import FeedList from '@/components/MainPage/FeedTab/FeedList'
+import FeedList from '@/components/user/FeedList'
 import PickList from '@/components/user/PickList'
-import feedData from '@/assets/data/userFeed'
-import pickData from '../../assets/data/pickData'
 
 export default {
 	name: 'UserFeed',
 	data: function () {
 		return {
-			feedData,
-			pickData,
 			planetStyles: [
 				{ id: 0, name: 'default'},
         { id: 1, name: '행복행성', img: "happy.png", color: '#ED5A8E' },
         { id: 2, name: '우울행성', img: "depressed.png", color: '#6BD9E8' },
-        { id: 3, name: '중립행성', img: "neutral.png", color: '#C5D3DC' },
+        { id: 3, name: '심심행성', img: "neutral.png", color: '#C5D3DC' },
         { id: 4, name: '공포행성', img: "fear.png", color: '#FEA95C' },
         { id: 5, name: '깜짝행성', img: "suprised.png", color: '#FB5D38' },
         { id: 6, name: '분노행성', img: "rage.png", color: '#2A61F0' },
       ],
 			filter: 0,
 			pickTap: 1,
+			filteredFeed: []
 		}
 	},
 	props: {
@@ -65,20 +62,21 @@ export default {
 	methods: {
 		filtering(payload){
       this.filter = payload
+			this.filteredFeed = []
     }
 	},
 	computed: {
 		filteredFeeds(){
 			if (this.filter){
-				const temp = []
-				this.feedData.forEach(feed => {
-					if (feed.planet == this.filter){
-						temp.push(feed)
+				this.$store.state.userFeedInfo.forEach(feed => {
+					if (feed.tags[0].no == this.filter){
+						this.filteredFeed.push(feed)
 					}
 				});
-				return temp
+				console.log(this.filteredFeed)
+				return this.filteredFeed
 			}
-			return this.feedData
+			return this.$store.state.userFeedInfo
 		},
 		filteredPicks(){
       const temp = []
@@ -113,9 +111,9 @@ export default {
   
   p {
     color: #777777;
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: bold;
-    margin: 3rem;
+    margin: 2.5rem;
   }
 
 	#list-container {
@@ -166,11 +164,12 @@ export default {
 		flex-direction: column;
 		justify-content: center;
 		align-items: center;
-		padding-top: 20vh;
+		padding-top: 1rem;
 	}
 
 	#nothing {
-    width: 10%;
+    width: 30%;
+	height: 30%;
     height: inherit;
     aspect-ratio: 1/1;
   }
