@@ -20,7 +20,7 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     // connection을 맺을때 CORS 허용합니다.
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/")
-                .setAllowedOrigins("*")
+                .setAllowedOrigins("http://localhost:5500, https://i6e203.p.ssafy.io")
                 .withSockJS();
     }
 }
