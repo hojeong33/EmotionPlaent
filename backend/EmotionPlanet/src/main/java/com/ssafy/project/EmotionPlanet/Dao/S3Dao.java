@@ -15,5 +15,5 @@ public interface S3Dao {
     public void deleteFile(String imgName);
     public void deleteByNo(int imgName);
     public int select(String imgName);
-    public ImgDto selectByLink(String imgLink);
+    public S3Dto selectByLink(String imgLink);
 }
