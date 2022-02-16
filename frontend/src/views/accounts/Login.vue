@@ -174,7 +174,7 @@ export default {
 
   handleClickKaKaoSignin() {
     const params = {
-        redirectUri: "http://localhost:5500/login/KaKaoLogin",
+        redirectUri: "https://i6e203.p.ssafy.io/login/KaKaoLogin",
     };
     window.Kakao.Auth.authorize(params);
   },
