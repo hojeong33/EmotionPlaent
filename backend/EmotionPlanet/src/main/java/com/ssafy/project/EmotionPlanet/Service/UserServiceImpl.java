@@ -1,19 +1,28 @@
 package com.ssafy.project.EmotionPlanet.Service;
 
+import com.ssafy.project.EmotionPlanet.Dao.FeedDao;
+import com.ssafy.project.EmotionPlanet.Dao.PickDao;
 import com.ssafy.project.EmotionPlanet.Dao.UserDao;
+import com.ssafy.project.EmotionPlanet.Dto.FeedDto;
 import com.ssafy.project.EmotionPlanet.Dto.FindEmailDto;
+import com.ssafy.project.EmotionPlanet.Dto.PickDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class UserServiceImpl implements UserService {
 	
 	@Autowired
 	UserDao userDao;
-	
+
+	@Autowired
+	FeedDao feedDao;
+
 	private final BCryptPasswordEncoder bCryptPasswordEncoder;
 
 	UserServiceImpl(@Lazy BCryptPasswordEncoder bCryptPasswordEncoder){
@@ -33,12 +42,22 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDto userSelect(int no) { // 회원 검색
-		return userDao.userSelect(no);
+
+		UserDto userDto = userDao.userSelect(no);
+		List<FeedDto> feedDtos = feedDao.myList(no);
+		if(feedDtos == null) userDto.setFeedCount(0);
+		else userDto.setFeedCount(feedDtos.size());
+		return userDto;
 	}
 
 	@Override
 	public UserDto userSelectByEmail(String email) {
-		return userDao.userSelectByEmail(email);
+		UserDto userDto = userDao.userSelectByEmail(email);
+		List<FeedDto> feedDtos = feedDao.myList(userDto.getNo());
+		if(feedDtos == null) userDto.setFeedCount(0);
+		else userDto.setFeedCount(feedDtos.size());
+
+		return userDto;
 	}
 
 	@Override
