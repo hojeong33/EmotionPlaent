@@ -39,9 +39,9 @@ export default {
 	flex-direction: column;
 	justify-content: center;
 	background-color: white;
-	border-radius: 20px;
-	width: 20vw;
-	height: 15vh;
+	border-radius: 30px;
+	width: 18rem;
+	height: 11rem;
 }
 p {
 	margin: auto;

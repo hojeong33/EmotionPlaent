@@ -134,8 +134,9 @@ export default new Vuex.Store({
       if (payload == -1){
         navActive.forEach((ele, idx) => {
           Vue.set(navActive, idx, false)
+          console.log('1차', navActive)
         })
-        return
+        return 
       }
       if (payload == 0 || payload == 3){
         Vue.set(navActive, payload, !navActive[payload])
@@ -144,7 +145,9 @@ export default new Vuex.Store({
       navActive.forEach((ele, idx) => {
         navActive[idx] = false
       })
+
       Vue.set(navActive, payload, true)
+   
     },
     navActivate2: function(state, payload) {
         state.showingNav = payload

@@ -21,7 +21,7 @@ export default {
   data: function(){
     return {
       selectedCategory: '운동',
-      act_categories: ['운동', '취미', '휴식/여가', '일상', '감정표현', ''],
+      act_categories: ['운동', '취미', '휴식/여가', '일상', '감정표현'],
       act_details: {
         '운동': ['했어요', '갔어요','뛰었어요', '움직였어요','탔어요', '찼어요', '쳤어요', '걸었어요', '들었어요', '올라갔다'], 
         '취미': ['봤어요', '했어요', '들었어요', '갔어요', '만들었어요', '읽었어요', '배웠어요', '춤췄어요', '노래 불렀어요', '그렸어요', '썼어요'],
@@ -71,7 +71,7 @@ export default {
     border: 2px #cccccc solid;
     border-radius: 10px;
     width: 80%;
-    height: 60%;
+    height: 14.5rem;
     margin: 0;
   }
 
@@ -80,14 +80,14 @@ export default {
     flex-direction: column;
     align-items: flex-start;
     border-right: 1px #cccccc solid;
-    width: 20%;
-    overflow: auto;
+    width: 25%;
+    overflow-y: scroll;
   }
 
   #tag_container {
     padding: 0.5rem;
     width: 80%;
-    overflow: auto;
+    overflow-y: scroll;
     text-align: center;
   }
 
@@ -97,7 +97,7 @@ export default {
     width: 100%;
     margin: 0;
     padding: 0.25rem;
-    text-align: start;
+    text-align: center;
     cursor: pointer;
   }
 

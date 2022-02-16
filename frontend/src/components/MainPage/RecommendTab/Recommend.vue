@@ -9,11 +9,11 @@
           />
         </div>
         <div id="header">
-          <h1 style="font-size: 2.5rem">어서오세요</h1>
+          <h1 style="font-size: 2.5rem; font-weight: bold; margin: auto;">어서오세요!</h1>
           <span id="planet_name" :style="{ color: tmp.color }">{{
             tmp.name
           }}</span>
-          <span style="font-size: 2.5rem">입니다</span>
+          <span style="font-size: 2.5rem; font-weight: bold">입니다</span>
         </div>
       </div>
     </div>
@@ -23,13 +23,15 @@
         <p @click="Feel" :class="onFeel ? 'active' : 'inactive'" style="margin-left:1rem;">탐험하기</p>
       </div>
       <div id="refresh">
-        <p>좀 더 놀기</p>
-        <img src="@/assets/images/icons/refresh.png" @click="reload" id="refresh_btn">
+        <p style="font-weight: bold; font-size: 1.5rem;">좀 더 놀기</p>
+        <img src="@/assets/images/icons/refresh.png" @click="reload"  id="refresh_btn">
       </div>
     </div>
-    <music-list></music-list>
-    <movie-list></movie-list>
-    <active-list></active-list>
+    <div id="recommend_list">
+      <music-list></music-list>
+      <movie-list></movie-list>
+      <active-list></active-list>
+    </div>
   </div>
 </template>
 
@@ -91,8 +93,8 @@ p {
   text-align: center;
 }
 #planet {
-  width: 6rem;
-  height: 6rem;
+  width: 8rem;
+  height: 8rem;
 }
 #planet_name {
   font-size: 3rem;
@@ -103,7 +105,7 @@ p {
   display: flex;
   width: 100%;
   padding-top: 1rem;
-  background-color: rgb(216, 216, 216, 0.2);
+  background-color: white;
   padding: 2rem;
   justify-content: center;
   border-bottom: 0.15rem solid gainsboro;
@@ -111,6 +113,8 @@ p {
 #header {
   text-align: left;
   margin-left: 5px;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 .tab {
   display: flex;
@@ -123,7 +127,7 @@ p {
 #tab_names {
   display: flex;
   justify-content: center;
-  margin-top: 2rem;
+  margin-top: 0.5rem;
   font-size: 1.5rem;
   font-weight: bold;
   color: #777777;
@@ -137,11 +141,12 @@ p {
   width: 90%;
   justify-content: right;
   align-items: center;
-  margin: 1rem 1rem 3rem 4rem;
+  margin: 0rem 1rem 2rem 4rem;
 }
 #refresh_btn {
-  width: 3rem;
-  height: 3rem;
+  width: 2.5rem;
+  height: 2.5rem;
   cursor: pointer;
 }
+
 </style>

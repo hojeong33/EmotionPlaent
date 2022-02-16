@@ -290,11 +290,11 @@ router.beforeEach((to, from, next) => {
   }
   //네비게이션 랜더 유무
   store.commit('navActivate2', to.meta.showingNav)
-
+  
   // 네비게이션 바 Active와 매칭
   if (to.name == 'Main'){store.commit('navActivate', 1)}
-  else if (to.matched.langth && to.matched[0].path == '/mypage'){store.commit('navActivate', 2)}
-  else if (to.matched.langth && to.matched[0].path == '/setting'){store.commit('navActivate', 4)}
+  else if (to.matched.length && to.matched[0].path == '/mypage'){store.commit('navActivate', 2)}
+  else if (to.matched.length && to.matched[0].path == '/setting'){store.commit('navActivate', 4)}
   else {store.commit('navActivate', -1)}
 
   //로그인이 필요한 서비스의 경우 로그인 페이지로 redirect

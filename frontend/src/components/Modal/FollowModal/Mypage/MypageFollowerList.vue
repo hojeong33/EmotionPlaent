@@ -69,9 +69,9 @@ export default {
 #modal {
 	background-color: white;
 	border-radius: 20px;
-	width: 25vw;
+	width: 20rem;
 	min-width: 350px;
-	height: 45vh;
+	height: 25rem;
 	min-height: 450px;
 }
 #follower_list_header {
@@ -127,8 +127,8 @@ export default {
 }
 
 #profile_img {
-	width: 2rem;
-	height: 2rem;
+	width: 3rem;
+	height: 3rem;
 	border-radius: 50%;
 	margin-right: 0.5rem;
 	margin-top: auto;
@@ -141,6 +141,7 @@ export default {
 	margin-top: auto;
 	margin-bottom: auto;
 	cursor: pointer;
+	font-size: 1.3rem;
 }
 #following_check{
 	color: blue;
