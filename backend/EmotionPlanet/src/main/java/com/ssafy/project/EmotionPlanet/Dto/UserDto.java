@@ -5,6 +5,7 @@ import lombok.Builder;
 public class UserDto {
 
     private int no;
+	private int feedCount;
     private String email;
     private String pw;
     private String nickname;
@@ -77,6 +78,14 @@ public class UserDto {
 	}
 	public void setTel(String tel) {
 		this.tel = tel;
+	}
+
+	public int getFeedCount() {
+		return feedCount;
+	}
+
+	public void setFeedCount(int feedCount) {
+		this.feedCount = feedCount;
 	}
 
 	public String getRefreshToken() {

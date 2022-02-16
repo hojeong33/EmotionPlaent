@@ -12,8 +12,8 @@ import Mypage from '@/views/user/Mypage.vue'
 import Userpage from '@/views/user/Userpage.vue'
 import List from '@/components/user/List'
 import PickItem from '@/components/user/PickItem'
-import UserList from '@/components/SearchUser/UserList'
-import UserPickItem from '@/components/SearchUser/UserPickItem'
+// import UserList from '@/components/SearchUser/UserList'
+// import UserPickItem from '@/components/SearchUser/UserPickItem'
 
 import Main from '@/views/main/Main.vue'
 import Setting from '@/views/Setting'
@@ -123,10 +123,11 @@ const routes = [
     ]
   },
   {
-    path: '/userpage',
+    path: '/:userId',
     name: 'Userpage',
-    redirect: '/userpage/feed',
+    redirect: '/:userId/feed',
     component: Userpage,
+    props: true,
     meta: {
       loginRequired: true,
       testRequired:  true,
@@ -135,7 +136,7 @@ const routes = [
     children: [
       {
         path: ':tab',
-        component: UserList,
+        component: List,
         props: true,
         meta: {
           loginRequired: true,
@@ -144,8 +145,8 @@ const routes = [
         },
       },
       {
-        path: 'item/:id/:tag/:index',
-        component: UserPickItem,
+        path: ':tag/:index',
+        component: PickItem,
         props: true,
         meta: {
           loginRequired: true,
@@ -293,8 +294,8 @@ router.beforeEach((to, from, next) => {
 
   // 네비게이션 바 Active와 매칭
   if (to.name == 'Main'){store.commit('navActivate', 1)}
-  else if (to.matched.langth && to.matched[0].path == '/mypage'){store.commit('navActivate', 2)}
-  else if (to.matched.langth && to.matched[0].path == '/setting'){store.commit('navActivate', 4)}
+  else if (to.matched.length && to.matched[0].path == '/mypage'){store.commit('navActivate', 2)}
+  else if (to.matched.length && to.matched[0].path == '/setting'){store.commit('navActivate', 4)}
   else {store.commit('navActivate', -1)}
 
   //로그인이 필요한 서비스의 경우 로그인 페이지로 redirect
@@ -312,7 +313,7 @@ router.beforeEach((to, from, next) => {
     next({ name:'EmotionTest' })
   }
   //로그인 된 사용자가 로그인 or 회원가입 페이지로 가려고 할 경우
-  if (!to.meta.loginRequired && store.state.userInfo){
+  if (!to.meta.loginRequired && store.state.userInfo && token){
     console.log('메인')
     next({ name:'Main' })
   }

@@ -3,8 +3,10 @@ package com.ssafy.project.EmotionPlanet.Service;
 import com.ssafy.project.EmotionPlanet.Dao.PickContentDao;
 import com.ssafy.project.EmotionPlanet.Dao.PickDao;
 import com.ssafy.project.EmotionPlanet.Dao.S3Dao;
+import com.ssafy.project.EmotionPlanet.Dto.ImgDto;
 import com.ssafy.project.EmotionPlanet.Dto.PickContentDto;
 import com.ssafy.project.EmotionPlanet.Dto.PickDto;
+import com.ssafy.project.EmotionPlanet.Dto.S3Dto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,20 @@ public class PickServiceImpl implements PickService{
     public List<PickDto> list(int userNo) {
 
         List<PickDto> pickDtos = pickDao.list(userNo);
+        List<PickContentDto> pickContentDtos = new ArrayList<>();
+        for (PickDto pickDto : pickDtos) {
+            int pickNo = pickDto.getNo();
+            int type = pickDto.getType();
+            if (type == 0) {
+                pickContentDtos = pickContentDao.listOnMusic(pickNo);
+            } else if (type == 1) {
+                pickContentDtos = pickContentDao.listOnMovie(pickNo);
+            } else {
+                pickContentDtos = pickContentDao.listOnActivity(pickNo);
+            }
+            pickDto.setContentsListData(pickContentDtos);
+        }
+
         return pickDtos;
     }
 
@@ -101,14 +117,18 @@ public class PickServiceImpl implements PickService{
 
     @Override
     public int update(PickDto pickDto) {
-        s3Dao.deleteByNo(s3Dao.selectByLink(pickDto.getImgLink()).getNo());
+        S3Dto imgDto = s3Dao.selectByLink(pickDto.getImgLink());
+        s3Dao.deleteByNo(imgDto.getNo());
         return pickDao.update(pickDto);
     }
 
     @Override
     public int delete(int no) {
         PickDto pickDto = pickDao.select(no);
-        if(!("".equals(pickDto.getImgLink()) || pickDto.getImgLink() == null)) s3Dao.deleteByNo(s3Dao.selectByLink(pickDto.getImgLink()).getNo());
+        if(!("".equals(pickDto.getImgLink()) || pickDto.getImgLink() == null)) {
+            S3Dto imgDto = s3Dao.selectByLink(pickDto.getImgLink());
+            s3Dao.deleteByNo(imgDto.getNo());
+        }
         return pickDao.delete(no);
     }
 
