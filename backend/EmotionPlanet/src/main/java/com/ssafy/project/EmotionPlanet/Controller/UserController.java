@@ -57,7 +57,7 @@ public class UserController {
 		UserDto userDto = userService.userSelect(userNo);
 		UserSecretDto userSecretDto = new UserSecretDto(userDto.getNo(), userDto.getEmail(), userDto.getNickname(),
 				userDto.getBirth(), userDto.getProfileImg(), userDto.getTel(), userDto.getIntro()
-				, userDto.getPublish(), userDto.getMood());
+				, userDto.getPublish(), userDto.getMood(), userDto.getFeedCount());
 		if (userSecretDto.getEmail() != null) {
 			System.out.println("회원 번호 검색 성공");
 			System.out.println(userSecretDto);

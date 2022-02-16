@@ -192,7 +192,6 @@
         }
       },
       go_to_back: function(){
-
         this.$router.push({ name: 'Main' })
       },
     },
@@ -210,19 +209,20 @@
       };
 			axios.get('/api/test', {
           headers: headers,
-        }).then((res) => {
+        })
+        .then((res) => {
           this.keywords = res.data
           this.keywords = this.keywords.sort(() => Math.random() - 0.5)
           console.log(res);
           this.$store.dispatch('accessTokenRefresh', res)
-          }).catch((error) => {
-            console.log(error);
-            // alert('잘못된 요청입니다.')
-            // this.$router.go(0)
-            this.$store.commit('ReturnToLoginModalActivate')
-          }).then(() => {
-            console.log('getQSSList End!!');
-          });
+        })
+        .catch((error) => {
+          console.log(error);
+          this.$store.commit('ReturnToLoginModalActivate')
+        })
+        .then(() => {
+          console.log('getQSSList End!!');
+        });
       },
   }
 </script>

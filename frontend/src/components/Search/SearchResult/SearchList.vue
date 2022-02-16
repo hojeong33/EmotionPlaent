@@ -1,6 +1,7 @@
 <template>
   <article id="list-container">
 		<filter-tab :user-mood="userMood" @filtering="filtering" />
+
 		<search-feed-list v-if="tab == 'feed'" :feeds="filteredFeeds" />
 		<search-pick-list v-if="tab == 'pick'" :picks="filteredPicks" />
 		<div id="no-result" 
@@ -13,18 +14,24 @@
 </template>
 
 <script>
-import FilterTab from '@/components/Search/SearchResult/FilterTab'
+import FilterTab from '@/components/user/FilterTab'
 import SearchFeedList from '@/components/Search/SearchResult/SearchFeedList'
 import SearchPickList from '@/components/Search/SearchResult/SearchPickList'
 
 export default {
 	data(){
 		return {
+<<<<<<< HEAD
 			feedData: null,
 			pickData: null,
 			filter: 0,
 			filteredFeed: [],
 			filteredPick: []
+=======
+			feedData,
+			pickData,
+			filter: 0
+>>>>>>> 9e4b87cce402ed41cd24a0c2f93d24d726590b64
 		}
 	},
 	props: {
@@ -39,8 +46,11 @@ export default {
 	methods: {
 		filtering(payload){
       this.filter = payload
+<<<<<<< HEAD
 			this.filteredFeed = []
 			this.filteredPick = []
+=======
+>>>>>>> 9e4b87cce402ed41cd24a0c2f93d24d726590b64
     }
 	},
 	created: function() {
@@ -52,14 +62,15 @@ export default {
 	computed: {
 		filteredFeeds(){
 			if (this.filter){
-				this.$store.state.tagSearchResult.forEach(feed => {
-					if (feed.tags[0].no == this.filter){
-						this.filteredFeed.push(feed)
+				const temp = []
+				this.feedData.forEach(feed => {
+					if (feed.planet == this.filter){
+						temp.push(feed)
 					}
 				});
-				return this.filteredFeed
+				return temp
 			}
-			return this.$store.state.tagSearchResult
+			return this.feedData
 		},
 		filteredPicks(){
 			if (this.filter){
@@ -117,12 +128,4 @@ export default {
 	#filter {
 		display: flex;
 	}
-
-	.active {
-    color: black;
-    font-size: 1.4rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-  }
-
 </style>
