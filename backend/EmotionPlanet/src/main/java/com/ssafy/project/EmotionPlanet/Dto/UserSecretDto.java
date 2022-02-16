@@ -11,6 +11,7 @@ public class UserSecretDto {
     private String intro;
     private int publish;
     private int mood;
+    private int feedCount;
 
 
     @Override
@@ -32,7 +33,7 @@ public class UserSecretDto {
 
     }
 
-    public UserSecretDto(int no, String email, String nickname, String birth, String profileImg, String tel, String intro, int publish, int mood) {
+    public UserSecretDto(int no, String email, String nickname, String birth, String profileImg, String tel, String intro, int publish, int mood, int feedCount) {
         this.no = no;
         this.email = email;
         this.nickname = nickname;
@@ -42,6 +43,7 @@ public class UserSecretDto {
         this.intro = intro;
         this.publish = publish;
         this.mood = mood;
+        this.feedCount = feedCount;
     }
 
     public int getNo() {
@@ -116,5 +118,11 @@ public class UserSecretDto {
         this.publish = publish;
     }
 
+    public int getFeedCount() {
+        return feedCount;
+    }
 
+    public void setFeedCount(int feedCount) {
+        this.feedCount = feedCount;
+    }
 }

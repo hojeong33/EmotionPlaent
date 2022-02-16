@@ -57,7 +57,7 @@ public class JwtService {
 
         UserSecretDto userDto = new UserSecretDto(user.getNo(), user.getEmail(),
                 user.getNickname(), user.getBirth(), user.getProfileImg(), user.getTel(), user.getIntro() ,
-                user.getPublish(), user.getMood());
+                user.getPublish(), user.getMood(), user.getFeedCount());
         System.out.println("==== create Access === " + "\n" + userDto.toString());
         return createJws(accessExpMin, userDto);
     }

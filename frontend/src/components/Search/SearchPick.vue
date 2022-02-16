@@ -1,37 +1,104 @@
 <template>
   <div id="container">
-    <div id="results" v-if="this.pickSearch.length !== 0">
-      <div v-for="result in this.pickSearch"
-        :key="result.no"
+    <div id="results" v-if="this.searchPick !== null">
+      <div v-for="(result, idx) in this.searchPick"
+        :key="idx"
         id="result">
         <img src="../../assets/images/icons/treasure-chest.png" alt="" id="treasure">
         <div id="search">
-          <span id="title">#{{ result.mood }}</span>
-          <span id="content">보물상자: {{ result.count }}개</span>
+          <span class="info">
+            <span id="title">#{{ result.name }}행성</span>
+            <img class="feed-planet" :src="require(`@/assets/images/emotions/${planet}`)" id="planet">
+          </span>
+          <span id="content">찜목록: {{ result.count }}개</span>
         </div>
-        <img src="../../assets/images/icons/search_dark.png" alt="" id="go">
+        <img src="../../assets/images/icons/search_dark.png" alt="" id="go" @click="searchPickDetail(result.name)">
       </div>
     </div>
     <div v-else id="no_result">
       <img id="nothing" src="@/assets/images/etc/alien.png" alt="">
-      <p>찾는 보물상자가 없어요...</p>
+      <p>찾는 찜목록이 없어요...</p>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+
+const session = window.sessionStorage
+
 export default {
   name: 'SearchPick',
   data() {
     return {
-      pickSearch: [
-        { no: 1, mood: '우울', count: 3 },
-        { no: 2, mood: '행복', count: 3 },
-      ]
+      searchPick: null,
+      searchPickResult: null,
+      planetStyles: [
+				{ id: 0, name: 'default'},
+        { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
+        { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
+        { id: 3, name: '심심행성', img: "neutral.png", color: '#ABBECA' },
+        { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
+        { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
+        { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
+      ],
     }
+  },
+  methods: {
+    // 글자가 포함된 태그 찜목록과 태그별 찜목록 개수를 가져옴
+    searchPickDetail(el){
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+      axios({
+        method: 'get',
+        url:'/api/searchs/byPickTag/' + el,
+        headers: headers,
+      }).then(res => {
+        this.$store.dispatch('accessTokenRefresh', res)
+        console.log('찜목록 있음', res)
+        this.pickSearchResult = res.data
+        this.$store.state.tagSearchResult = []
+        this.$bus.$emit('pickBus', this.pickSearchResult)
+        this.$router.push({ path: `/search/pick` })
+        this.$store.state.searching = false
+      })
+      .catch(()=> {
+        console.log('찜목록 없음')
+        this.pickSearchResult = []
+      })
+    },
+  },
+  computed: {
+    planet() {
+			const idx = this.$store.state.userInfo.mood
+			if (idx){
+				return this.planetStyles[idx].img
+			}
+			return "neutral.png"
+		}
   },
   created() {
     console.log(this.$store.state.words)
+    // 클릭하는 태그의 찜목록 정보 전체를 가져옴
+    let headers = {
+      'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+      'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+    };
+    axios({
+      method: 'get',
+      url:'/api/searchs/byPickTagList',
+      headers: headers,
+    }).then(res => {
+      this.$store.dispatch('accessTokenRefresh', res)
+      console.log('찜목록 검색 성공', res.data)
+      this.searchPick = res.data
+    })
+    .catch((err)=> {
+      console.log('찜목록 검색 실패')
+      console.log(err)
+    })
   }
 }
 </script>
@@ -75,6 +142,7 @@ export default {
     align-items: flex-start;
     padding-left: 1rem;
     padding-right: 2rem;
+    position: relative;
   }
 
   #title {
@@ -107,4 +175,22 @@ export default {
     height: 5rem;
     margin-bottom: 1rem;
   }
+
+  .info {
+    /* width: 100%; */
+    /* aspect-ratio: 1/1; */
+    /* border-radius: 20px; */
+    position: relative;
+  }
+
+  .feed-planet {
+		position: absolute;
+		width: 1.7rem;
+		height: 1.7rem;
+		bottom: -95%;
+    left: -35%;
+		border-radius: 50%;
+		border: 3px solid;
+		border-color: white;
+	}
 </style>

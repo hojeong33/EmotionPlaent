@@ -18,6 +18,7 @@ public class PickDto {
     private boolean owner;
 
     List<Integer> contentsList;
+    List<PickContentDto> contentsListData;
 
     public PickDto() {
     }
@@ -117,6 +118,14 @@ public class PickDto {
 
     public void setImgLink(String imgLink) {
         this.imgLink = imgLink;
+    }
+
+    public List<PickContentDto> getContentsListData() {
+        return contentsListData;
+    }
+
+    public void setContentsListData(List<PickContentDto> contentsListData) {
+        this.contentsListData = contentsListData;
     }
 }
 //=======
