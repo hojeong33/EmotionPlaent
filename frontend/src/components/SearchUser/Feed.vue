@@ -104,7 +104,7 @@ export default {
     // };
     // axios({
     //     method: 'get',
-    //     url:`http://13.125.47.126:8080/comments/returnNo/${this.post}`,
+    //     url:`/api/comments/returnNo/${this.post}`,
     //     headers: headers,  // 넣는거 까먹지 마세요
     //   }).then((res) => {
     //   this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
@@ -128,7 +128,7 @@ export default {
     };
     axios({
         method: 'get',
-        url:`http://13.125.47.126:8080/feed/${this.feed.no}`,
+        url:`/api/feed/${this.feed.no}`,
         headers: headers,  // 넣는거 까먹지 마세요
       }).then((res) => {
       this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서

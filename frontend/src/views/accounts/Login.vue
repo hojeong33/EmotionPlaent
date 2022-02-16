@@ -100,7 +100,7 @@ export default {
   login: function() {
     axios({
       method: 'post',
-      url:'http://13.125.47.126:8080/login',
+      url:'/api/login',
       data: this.credentials
     })
     .then((res)=>{
@@ -128,7 +128,7 @@ export default {
   },
 
   tokenVerify() {
-    const url = 'http://13.125.47.126:8080/login/auth';
+    const url = '/api/login/auth';
     const params = new URLSearchParams();
     params.append('idToken', this.googleUser.wc.id_token);
     console.log(params)
@@ -183,7 +183,7 @@ export default {
     console.log("카카오로그인 시작")
     axios({
         method: 'post',
-        url: 'http://13.125.47.126:8080/login/oauth_kakao',
+        url: '/api/login/oauth_kakao',
         data: code
       }).then((res) => {
         console.log('카카오 데이터 받아오기 : ' + res.data)
@@ -212,7 +212,7 @@ export default {
     };
     axios({
         method: 'get',
-        url: 'http://13.125.47.126:8080/qss/list',
+        url: '/api/qss/list',
         data: data, // post 나 put에 데이터 넣어 줄때
         headers: headers,  // 넣는거 까먹지 마세요
       }).then((res) => {

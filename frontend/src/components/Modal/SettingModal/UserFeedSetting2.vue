@@ -39,7 +39,7 @@ export default {
 
 			axios({
 				method: 'delete',
-				url: 'http://13.125.47.126:8080/feeds/' + this.feedNum,
+				url: '/api/feeds/' + this.feedNum,
 				headers: headers,  // 넣는거 까먹지 마세요
 				}).then((res) => {
 

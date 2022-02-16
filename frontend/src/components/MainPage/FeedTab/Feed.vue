@@ -145,7 +145,7 @@ export default {
         };
         axios({
             method: 'post',
-            url:`http://13.125.47.126:8080/feeds/like`,
+            url:`/api/feeds/like`,
             data:likeItem,
             headers: headers,  // 넣는거 까먹지 마세요
           }).then((res) => {
@@ -165,7 +165,7 @@ export default {
         };
         axios({
             method: 'get',
-            url:`http://13.125.47.126:8080/feed/${this.post}`,
+            url:`/api/feed/${this.post}`,
             headers: headers,  // 넣는거 까먹지 마세요
           }).then((res) => {
           this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
@@ -191,7 +191,7 @@ export default {
         };
         axios({
             method: 'delete',
-            url:`http://13.125.47.126:8080/feeds/like`,
+            url:`/api/feeds/like`,
             data:likeItem,
             headers: headers,  // 넣는거 까먹지 마세요
           }).then((res) => {

@@ -99,7 +99,7 @@ export default {
         };
         axios({
           method: 'post',
-          url: `http://13.125.47.126:8080/pickContent`,
+          url: `/api/pickContent`,
           data:sendData,
           headers: headers,  // 넣는거 까먹지 마세요
         }).then((res) => {
@@ -120,7 +120,7 @@ export default {
         };
         axios({
           method: 'delete',
-          url: `http://13.125.47.126:8080/picks/${forderNo}`,
+          url: `/api/picks/${forderNo}`,
           headers: headers,  // 넣는거 까먹지 마세요
         }).then((res) => {
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
@@ -175,7 +175,7 @@ export default {
 
         axios({
           method: 'get',
-          url: `http://13.125.47.126:8080/picks/type/returnNo/${this.userdata.no}/${this.listData.type}`,
+          url: `/api/picks/type/returnNo/${this.userdata.no}/${this.listData.type}`,
           headers: headers,  // 넣는거 까먹지 마세요
         }).then((res) => {
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
