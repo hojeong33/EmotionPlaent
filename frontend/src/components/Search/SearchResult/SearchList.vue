@@ -25,7 +25,7 @@ export default {
 			pickData: null,
 			filter: 0,
 			filteredFeed: [],
-			filteredPick: []
+			filteredPick: [],
 		}
 	},
 	props: {
@@ -45,6 +45,7 @@ export default {
     }
 	},
 	created: function() {
+		this.feedData = this.$store.state.tagSearchResult
 		this.$bus.$on('pickBus', (searchPicks) => {
 		this.filteredPick = searchPicks
 		console.log(this.filteredPick)
@@ -55,7 +56,7 @@ export default {
 			if (this.filter){
 				const temp = []
 				this.feedData.forEach(feed => {
-					if (feed.planet == this.filter){
+					if (feed.tagno == this.filter){
 						temp.push(feed)
 					}
 				});

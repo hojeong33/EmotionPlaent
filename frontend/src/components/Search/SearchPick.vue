@@ -33,6 +33,15 @@ export default {
     return {
       searchPick: null,
       searchPickResult: null,
+      planetStyles: [
+				{ id: 0, name: 'default'},
+        { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
+        { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
+        { id: 3, name: '심심행성', img: "neutral.png", color: '#ABBECA' },
+        { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
+        { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
+        { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
+      ],
     }
   },
   methods: {
@@ -60,6 +69,15 @@ export default {
         this.pickSearchResult = []
       })
     },
+  },
+  computed: {
+    planet() {
+			const idx = this.$store.state.userInfo.mood
+			if (idx){
+				return this.planetStyles[idx].img
+			}
+			return "neutral.png"
+		}
   },
   created() {
     console.log(this.$store.state.words)
@@ -124,6 +142,7 @@ export default {
     align-items: flex-start;
     padding-left: 1rem;
     padding-right: 2rem;
+    position: relative;
   }
 
   #title {
@@ -157,24 +176,19 @@ export default {
     margin-bottom: 1rem;
   }
 
-  .feed-s {
-    position: relative;
-    cursor: pointer;
-  }
-
-  .feed-s-thumbnail {
-    width: 100%;
-    aspect-ratio: 1/1;
-    border-radius: 20px;
+  .info {
+    /* width: 100%; */
+    /* aspect-ratio: 1/1; */
+    /* border-radius: 20px; */
     position: relative;
   }
 
   .feed-planet {
 		position: absolute;
-		width: 25%;
-		height: 25%;
-		bottom: 5%;
-    left: 5%;
+		width: 1.7rem;
+		height: 1.7rem;
+		bottom: -95%;
+    left: -35%;
 		border-radius: 50%;
 		border: 3px solid;
 		border-color: white;
