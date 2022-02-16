@@ -94,7 +94,7 @@ export default {
         this.$store.state.loading = false
       }, 2500)
     } 
-  }
+  },
 };
 </script>
 
