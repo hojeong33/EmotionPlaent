@@ -61,7 +61,7 @@ export default {
         this.pickSearchResult = res.data
         this.$store.state.tagSearchResult = []
         this.$bus.$emit('pickBus', this.pickSearchResult)
-        this.$router.push({ path: `/search` })
+        this.$router.push({ path: `/search/pick` })
         this.$store.state.searching = false
       })
       .catch(()=> {
