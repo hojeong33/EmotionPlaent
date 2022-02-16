@@ -33,14 +33,6 @@
           </span>
         </article>
         <article id="nickname_form">
-          <label for="nickname">닉네임</label>
-          <input type="text"
-          id="nickname"
-          v-model="credentials.nickname"
-          placeholder="닉네임은 2자 이상, 10자 이하입니다."
-          autocomplete="off" maxlength="10"
-          @input= "checkNickname">
-          <article id="nickname_form">
         <label for="nickname">닉네임</label>
         <input type="text"
         id="nickname"
