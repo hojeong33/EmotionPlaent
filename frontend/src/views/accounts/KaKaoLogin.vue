@@ -47,8 +47,8 @@ export default {
                 this.$router.push('/moreInfo')
             }
             else{
-                //this.$store.commit('loginConfirmModalActivate')
-                this.$router.push('loginConfirmModalActivate')
+                this.$store.commit('loginConfirmModalActivate')
+
             }
         }).catch((error) => {
             console.log(error);

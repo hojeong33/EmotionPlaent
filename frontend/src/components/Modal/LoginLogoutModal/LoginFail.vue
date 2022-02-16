@@ -1,7 +1,7 @@
 <template>
 	<div id="login_fail">
     <div id="modal">
-			<h4> {{serverErrorMessage}}</h4>
+			<h4>이메일 또는 비밀번호를 다시 확인해주세요</h4>
 			<hr>
 			<p @click="loginAgain">확인</p>
     </div>
