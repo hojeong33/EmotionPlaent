@@ -90,7 +90,7 @@ export default {
       this.$store.commit('updateSearch', searchWords.target.value)
       this.$store.dispatch('searchTag')
       this.$store.dispatch('searchUser')
-      this.$store.dispatch('searchPick')
+      // this.$store.dispatch('searchPick')
     },
     // 검색 끝
     signout() {

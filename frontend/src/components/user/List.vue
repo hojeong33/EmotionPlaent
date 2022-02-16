@@ -8,9 +8,9 @@
 
 		<div id="pick-container" v-if="tab == 'pick'">
 			<div id="pick-tab">
-				<h3 @click="pickTab = 1" :class="pickTab == 1 ? 'active': ''">음악</h3>
-				<h3 @click="pickTab = 2" :class="pickTab == 2 ? 'active': ''">영화</h3>
-				<h3 @click="pickTab = 3" :class="pickTab == 3 ? 'active': ''">활동</h3>
+				<h3 @click="pickTab = 0" :class="pickTab == 0 ? 'active': ''">음악</h3>
+				<h3 @click="pickTab = 1" :class="pickTab == 1 ? 'active': ''">영화</h3>
+				<h3 @click="pickTab = 2" :class="pickTab == 2 ? 'active': ''">활동</h3>
 			</div>
 			<div id="picks"> 
 				<pick-list v-for="(pick, idx) in filteredPicks" :key="idx" :pick="pick"  />
@@ -49,9 +49,9 @@ export default {
         { id: 6, name: '분노행성', img: "rage.png", color: '#2A61F0' },
       ],
 			filter: 0,
-			pickTab: 1,
+			pickTab: 0,
 			feeds: null,
-			picks: null
+			picks: null,
 		}
 	},
 	props: {
@@ -65,26 +65,42 @@ export default {
 	},
 	methods: {
 		filtering(payload){
-      this.filter = payload
-    }
+			this.filter = payload
+		},
 	},
 	computed: {
 		userMood(){
 			return this.$store.state.userInfo.mood
 		},
+		filteredPicks(){
+            const temp = []
+            if (this.picks){
+                this.picks.forEach(ele => {
+					if(this.filter){
+						if(this.filter==ele.tagNo && this.pickTab==ele.type){
+							temp.push(ele)
+						}
+					}else{
+						if(this.pickTab==ele.type){
+							temp.push(ele)
+						}
+					}
+                })
+            }
+            return temp
+		}
 		
 	},
 	created(){
 		let user = JSON.parse(session.getItem('userInfo')).no
-
-		if (this.$route.matched[0].path !== '/mypage'){
-			user = this.userId
-		}
-
 		let headers = {
 			'at-jwt-access-token': session.getItem('at-jwt-access-token'),
 			'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
 		};
+
+		if (this.$route.matched[0].path !== '/mypage'){
+			user = this.userId
+		}
 		axios({
 			method:'get',
 			url:`/api/feeds/my/returnNo/${user}`,
@@ -104,6 +120,38 @@ export default {
 		.finally(() => {
 			console.log('피드 가져오기 클리어');
 		});
+	},mounted(){
+		let user = JSON.parse(session.getItem('userInfo')).no
+		let headers = {
+			'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+			'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+		};
+
+		if (this.$route.matched[0].path !== '/mypage'){
+			user = this.userId
+		}
+		axios({
+			method:'get',
+			url:`/api/picks/user/${user}`,
+			headers:headers,
+		})
+		.then((res) => {
+			if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
+				session.setItem('at-jwt-access-token', "");
+				session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+				console.log("Access Token을 교체합니다!!!")
+			}
+			this.picks=res.data
+			console.log('픽!!!!!!!!!!!!!!!!')
+			console.log(this.picks)
+		})
+		.catch((error) => {
+			console.log(error);
+		})
+		.finally(() => {
+			console.log('피드 가져오기 클리어');
+		});
+
 	}
 }
 </script>
