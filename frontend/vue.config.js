@@ -6,7 +6,8 @@ module.exports = {
           // 프록시 요청을 보낼 api의 시작 부분
           '/api': {
               // 프록시 요청을 보낼 서버의 주소
-              target: 'https://i6e203.p.ssafy.io:8443'
+              target: 'https://i6e203.p.ssafy.io:8443',
+              changeOrigin: true,
           }
       }
   }
