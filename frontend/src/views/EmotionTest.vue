@@ -111,7 +111,7 @@
           if (this.selected.length >= 2){
             axios({
               method: 'post',
-              url: 'http://13.125.47.126:8080/detailtest',
+              url: '/api/detailtest',
               data: this.selected,
               headers: headers,
             }).then((res) => {
@@ -140,7 +140,7 @@
           if (this.selected.length > 0) {
             axios({
                 method: 'post',
-                url: 'http://13.125.47.126:8080/resulttest',
+                url: '/api/resulttest',
                 data: this.selected,
                 headers: headers,
               }).then(res => {
@@ -162,7 +162,7 @@
               console.log('2번째 감정 테스트 post')
               axios({
                 method: 'put',
-                url: 'http://13.125.47.126:8080/users/update',
+                url: '/api/users/update',
                 data: body,
                 headers: headers,
               }).then(res => {
@@ -192,6 +192,10 @@
         }
       },
       go_to_back: function(){
+<<<<<<< HEAD
+=======
+
+>>>>>>> 4e7e5809a649d7e702b1008e996a16a851ad1c2d
         this.$router.push({ name: 'Main' })
       },
     },
@@ -207,7 +211,7 @@
       'at-jwt-access-token': session.getItem('at-jwt-access-token'),
       'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
-			axios.get('http://13.125.47.126:8080/test', {
+			axios.get('/api/test', {
           headers: headers,
         })
         .then((res) => {
@@ -230,13 +234,13 @@
 <style scoped>
   h1 {
     color: #5E39B3;
-    font-size: 2rem;
+    font-size: 2.3rem;
     font-weight: bold;
     margin-bottom: 2rem;
   }
 
   h3 {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: bold;
     letter-spacing: -1px;
     margin: 0;
@@ -256,7 +260,7 @@
     font-size: 1.125rem;
     font-weight: bold;
     border: 3px #5E39B3 solid;
-    border-radius: 20px;
+    border-radius: 30px;
     padding: 0.4rem 1.125rem;
     margin-bottom: 1.125rem;
     cursor: pointer;
@@ -265,7 +269,7 @@
 
   #test_container {
     background-color: white;
-    width: 80vh;
+    width: 30%;
     min-width: 800px;
     margin: 2rem auto;
     display: flex;

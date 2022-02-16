@@ -11,6 +11,7 @@ public class PickDto {
     private String name;
     private LocalDateTime date;
     private int type; //0 노래 1 영화 2 활동
+    private String imgLink;
 
     private int likes;
     private boolean like;
@@ -108,6 +109,14 @@ public class PickDto {
 
     public void setContentsList(List<Integer> contentsList) {
         this.contentsList = contentsList;
+    }
+
+    public String getImgLink() {
+        return imgLink;
+    }
+
+    public void setImgLink(String imgLink) {
+        this.imgLink = imgLink;
     }
 }
 //=======

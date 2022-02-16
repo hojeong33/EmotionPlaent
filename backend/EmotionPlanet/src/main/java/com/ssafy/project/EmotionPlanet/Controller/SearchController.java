@@ -1,6 +1,8 @@
 package com.ssafy.project.EmotionPlanet.Controller;
 
 import java.util.List;
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,7 +17,7 @@ import com.ssafy.project.EmotionPlanet.Dto.TagDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 import com.ssafy.project.EmotionPlanet.Service.SearchService;
 
-@CrossOrigin(origins = "http://localhost:5500", allowCredentials = "true", allowedHeaders = "*", methods = {
+@CrossOrigin(origins = {"http://localhost:5500", "https://i6e203.p.ssafy.io"}, allowCredentials = "true", allowedHeaders = "*", methods = {
 		RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE, RequestMethod.HEAD,
 		RequestMethod.OPTIONS })
 
@@ -63,6 +65,33 @@ public class SearchController {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하는 정보가 없습니다.");
 		}
 	}
+	
+	@GetMapping(value = "/searchs/byPickTagList")  // 픽 정보 가져오기
+	public ResponseEntity<List<TagDto>> picktagListSelect() {
+		List<TagDto> list = searchService.picktagSelect();
+		if (list != null) {
+			System.out.println("찜목록 태그 리스트 검색 성공");
+			System.out.println(list);
+			return new ResponseEntity<List<TagDto>>(list, HttpStatus.OK);
+		} else {
+			System.out.println("찜목록 태그 검색 실패");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하는 정보가 없습니다.");
+		}
+	}
+	
+	@GetMapping(value = "/searchs/byPickTag/{name}")  // 픽 정보 가져오기
+	public ResponseEntity<List<Map<String, Object>>> picktagSelect(@PathVariable String name) {
+		List<Map<String, Object>> list = searchService.pickSelect(name);
+		if (list != null) {
+			System.out.println("찜목록 태그 리스트 검색 성공");
+			System.out.println(list);
+			return new ResponseEntity<List<Map<String, Object>>>(list, HttpStatus.OK);
+		} else {
+			System.out.println("찜목록 태그 검색 실패");
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하는 정보가 없습니다.");
+		}
+	}
+	
 	
 //	@GetMapping(value = "/searchs/byRecommend/{name}")  //찜목록 태그 검색
 //	public ResponseEntity<List<PickDto>> recommendSelect(@PathVariable String name) {

@@ -1,10 +1,10 @@
 <template>
 	<div id="emotiontest_pick_more">
     <div id="modal">
-			<h4>당신은 
+			<h4>
 				{{planetName}}
 				<img id="planet_img" :src="require('@/assets/images/emotions/' + planetImg)" alt="">
-				입니다.
+				으로 향해볼까요?
 			</h4>
 			<hr>
 			<p @click="goMain">확인</p>
@@ -66,14 +66,15 @@ export default {
 	flex-direction: column;
 	justify-content: center;
 	background-color: white;
-	border-radius: 20px;
-	width: 20vw;
-	height: 15vh;
+	border-radius: 30px;
+	width: 20rem;
+	height: 11rem;
 }
 p {
 	margin: auto;
 	font-weight: bold;
 	cursor: pointer;
+	font-size: 1.25rem;
 }
 hr {
 	margin: 0;
@@ -81,6 +82,7 @@ hr {
 h4 {
 	margin: auto;
 	text-align: center;
+	font-weight: bold;
 }
 #planet_img {
 	width: 2rem;

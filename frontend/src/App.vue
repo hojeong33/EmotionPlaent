@@ -29,9 +29,14 @@
     <pick-your-tag v-if="pickYourTagModalActive" />
     <mypage-follower-list v-if="mypagefollowerListActive" />
     <mypage-following-list v-if="mypagefollowingListActive" />
+    <nickname-err v-if="nicknameErrModalActive"/>
+    <pwchange-confirm v-if="pwchangeConfirmModalActive"/>
+    <pwchange-err v-if="pwchangeErrModalActive"/>
     <!-- 팔로우 -->
     <userpage-follower-list v-if="userpagefollowerListActive" />
     <userpage-following-list v-if="userpagefollowingListActive" />
+    <likes-list v-if="likesListActive"/>
+    <add-play-list v-if="addPlayListActive"/>
   </div>
 </template>
 
@@ -73,6 +78,13 @@ import MypageFollowingList from '@/components/Modal/FollowModal/Mypage/MypageFol
 import MypageFollowerList from '@/components/Modal/FollowModal/Mypage/MypageFollowerList.vue'
 import UserpageFollowingList from '@/components/Modal/FollowModal/Userpage/UserpageFollowingList.vue'
 import UserpageFollowerList from '@/components/Modal/FollowModal/Userpage/UserpageFollowerList.vue'
+//좋아요
+import LikesList from '@/components/Modal/LikesList.vue'
+import AddPlayList from '@/components/Modal/AddPlayList.vue'
+//정보변경
+import nicknameErr from '@/components/Modal/UserInfoModal/nicknameErr.vue'
+import pwchangeConfirm from '@/components/Modal/UserInfoModal/pwchangeConfirm.vue'
+import pwchangeErr from '@/components/Modal/UserInfoModal/pwchangeErr.vue'
 
 import { mapState } from 'vuex'
 
@@ -110,8 +122,12 @@ export default {
     MypageFollowerList,
     UserpageFollowingList,
     UserpageFollowerList,
-    
-
+    LikesList,
+    AddPlayList,
+    //정보변경
+    nicknameErr,
+    pwchangeConfirm,
+    pwchangeErr
   },
   computed:
     mapState([
@@ -119,11 +135,16 @@ export default {
       'signupConfirmModalActive', 'emotionTestTooMuchPickModalActive', 'firstEmotionTestConfirmModalActive', 'emotionTestErrorActive', 'emotionTestPickMoreModalActive', 
       'emotionTestResultModalActive', 'loginFailModalActive', 'signupFailModalActive1', 'signupFailModalActive2', 'ReturnToLoginModalActive', 'commentNeedContentModalActive',
       'moreInfoConfirmModalActive', 'feedUpdateActive', 'pickYourImageModalActive', 'tooMuchImagesModalActive', 'pickYourTagModalActive', 'mypagefollowingListActive', 'mypagefollowerListActive',
+<<<<<<< HEAD
       'userpagefollowingListActive', 'userpagefollowerListActive', 'userFeedSettingModalActive2',
   ]),
   created(){
     console.log('나다!!',this)
   }
+=======
+      'userpagefollowingListActive', 'userpagefollowerListActive', 'userFeedSettingModalActive2','likesListActive','addPlayListActive', 'nicknameErrModalActive', 'pwchangeConfirmModalActive', 'pwchangeErrModalActive',
+    ]),
+>>>>>>> 4e7e5809a649d7e702b1008e996a16a851ad1c2d
 }
 
 </script>

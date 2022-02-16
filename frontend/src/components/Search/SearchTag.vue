@@ -27,6 +27,7 @@ export default {
       this.$store.state.tagSearchResult = []
       await this.$store.dispatch('searchTagSearch', el)
       this.$router.push({ path: `/search/` })
+      this.$store.state.searching = false
     }
   },
   created() {
@@ -49,12 +50,12 @@ export default {
 
   #results {
     width: 100%;
+    height: 100%;
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: left;
     background-color: white;
-    overflow: auto;
+    overflow-y: scroll;
   }
 
   #result {
@@ -97,14 +98,14 @@ export default {
   #no_result {
     display: flex;
     flex-direction: column;
-    justify-content: center;
     align-items: center;
-    padding-top: 11.5vh;
+    padding-top: 20%;
+    
   }
 
   #nothing {
-    width: 4vh;
-    height: 4vh;
-    margin-bottom: 2vh;
+    width: 5rem;
+    height: 5rem;
+    margin-bottom: 1rem;
   }
 </style>

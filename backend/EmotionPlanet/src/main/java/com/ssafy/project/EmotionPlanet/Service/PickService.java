@@ -12,6 +12,8 @@ public interface PickService {
     public List<PickDto> list(int userNo);
     public List<Integer> listOnNo(int userNo);
 
+    public List<Integer> listByType(int userNo, int type);
+
     public PickDto select(int no, int userNo);
 
     public int update(PickDto pickDto);

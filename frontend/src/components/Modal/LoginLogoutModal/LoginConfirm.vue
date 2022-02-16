@@ -1,9 +1,12 @@
 <template>
 	<div id="login_confirm_modal">
     <div id="modal">
+		<div id="modal_header">
 			<h4>여행을 시작하겠습니다</h4>
-			<hr>
-			<p @click="goEmotionTest">확인</p>
+			<img src="@/assets/images/etc/rocket2.png" alt="">
+		</div>			
+		<hr>
+		<p @click="goEmotionTest">확인</p>
     </div>
 	</div>
 </template>
@@ -11,19 +14,6 @@
 <script>
 export default {
 	methods: {
-		// goToTest: function () {
-		// 	this.$router.push({name: 'EmotionTest'})
-		// },
-		// userUpdate: function () {
-		// 	// const user = this.$store.commit('loginConfirmModalActivate')
-		// 	this.$store.commit('loginConfirmModalActivate')
-		// 	// console.log(user)
-		// 	return this.goToTest()
-		// },
-		// goEmotionTest: function () {
-		// 	console.log('여기옴')
-		// 	// console.log(this.$store.state.userInfo)
-		// 	this.userUpdate()
 		goEmotionTest: function () {
 			this.$store.commit('loginConfirmModalActivate')
 			console.log(this.$route.name)
@@ -51,21 +41,35 @@ export default {
 	flex-direction: column;
 	justify-content: center;
 	background-color: white;
-	border-radius: 20px;
-	width: 20vw;
-	height: 15vh;
+	border-radius: 30px;
+	width: 19rem;
+	height: 13rem;
 }
 p {
 	margin: auto;
 	font-weight: bold;
 	cursor: pointer;
+	font-size: 1.25rem;
 }
 hr {
 	margin: 0;
 }
 h4 {
-	margin: auto;
+	margin-top: auto;
+	margin-bottom: auto;
+	margin-right: 0.4rem;
 	text-align: center;
 	font-weight: bold;
+}
+#modal_header {
+	display: flex;
+	justify-content: center;
+	height: 50%;
+}
+img {
+	width: 1.9rem;
+	height: 1.9rem;
+	margin-top: auto;
+	margin-bottom: auto;
 }
 </style>

@@ -92,6 +92,7 @@ export default {
       this.feed.like ? this.feed.likes-- : this.feed.likes++;
       this.feed.like= !this.feed.like;
     },
+<<<<<<< HEAD
     pagination(payload){
       this.beforePage = this.page
       if (this.page < this.feed.imgs.length && payload){
@@ -140,6 +141,32 @@ export default {
 
       return `${Math.floor(betweenTimeDay / 365)}년전`;
     }
+=======
+    
+    // getComments:function(){
+    //   let headers = {
+    //     'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+    //     'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+    // };
+    // axios({
+    //     method: 'get',
+    //     url:`/api/comments/returnNo/${this.post}`,
+    //     headers: headers,  // 넣는거 까먹지 마세요
+    //   }).then((res) => {
+    //   this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+    //   console.log('!!!!!!!!!!!!!!!!!!!')
+    //   console.log(res.data)
+    //   this.comments=res.data
+    //   this.commentsList=res.data.slice(0,2)
+    //   this.getComments()
+    //   }).catch((error) => {
+    //     console.log(error);
+    //   }).then(() => {
+    //     console.log('댓글 목록 가져오기');
+    //   });
+    // }
+    
+>>>>>>> 4e7e5809a649d7e702b1008e996a16a851ad1c2d
   },
   created(){
     const session = window.sessionStorage
@@ -148,11 +175,18 @@ export default {
       'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
     };
     axios({
+<<<<<<< HEAD
       method: 'get',
       url:`http://13.125.47.126:8080/feed/${this.idx}`,
       headers: headers,  // 넣는거 까먹지 마세요
     })
     .then((res) => {
+=======
+        method: 'get',
+        url:`/api/feed/${this.feed.no}`,
+        headers: headers,  // 넣는거 까먹지 마세요
+      }).then((res) => {
+>>>>>>> 4e7e5809a649d7e702b1008e996a16a851ad1c2d
       this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
       console.log('!!!!!!!!!!!!!!!!!!!')
       console.log(res.data)

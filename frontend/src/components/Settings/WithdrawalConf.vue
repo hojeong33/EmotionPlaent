@@ -3,12 +3,12 @@
     <section id="wdc_modal">
       <article id="wdc_header">
         <span id="go_to_back" @click="go_to_back" />
-        <p>회원 탈퇴</p>
+        <h3>회원 탈퇴</h3>
       </article>
       <article v-if="!confirm" class="wdc_content">
         <div class="wdc_body">
-          <h3>정말 탈퇴하시겠습니까?</h3>
-          <h3>회원정보는 삭제되며 복구할 수 없습니다.</h3>
+          <h4>정말 떠나시는건 아니겠죠?😭</h4>
+          <h4><span style="color: red;">시민권</span>은 삭제되며 복구할 수 없습니다</h4>
         </div>
         <div class="wdc_buttons">
           <button @click="go_to_back">아니요</button>
@@ -17,8 +17,8 @@
       </article>
       <article v-if="confirm" class="wdc_content">
         <div class="wdc_body">
-          <h3>회원 탈퇴가 완료되었습니다.</h3>
-          <h3>다시 만날 수 있으면 좋겠어요.</h3>
+          <h4>회원 탈퇴가 완료되었습니다.</h4>
+          <h4>다시 만날 수 있으면 좋겠어요.</h4>
         </div>
         <div class="wdc_buttons">
           <button @click="go_to_back">확인</button>
@@ -45,11 +45,13 @@ export default {
 
 <style scoped>
   h3 {
-    font-size: 1.25rem;
     font-weight: bold;
     margin: 0;
   }
-
+  h4 {
+    font-size: 1.4rem;
+    font-weight: bold;
+  }
   p {
     font-size: 1.125rem;
     font-weight: bold;
@@ -86,28 +88,29 @@ export default {
     flex-direction: column;
     background-color: white;
     border-radius: 20px;
-    width: 30%;
+    width: 26rem;
     min-width: 300px;
-    height: 30%;
+    height: 20rem;
     min-height: 230px;
   }
 
   #wdc_header {
     display: flex;
     justify-content: center;
+    height: 3.5rem;
     border-bottom: 1px #cccccc solid;
     padding: 0.25rem;
     position: relative;
   }
 
   #wdc_header span {
-    width: 1.25rem;
-    height: 1.25rem;
+    width: 2rem;
+    height: 2rem;
     background-image: url('../../assets/images/icons/return.png');
     background-size: cover;
     background-repeat: no-repeat;
     position: absolute;
-    top: 20%;
+    top: 10%;
     left: 2%;
     cursor: pointer;
   }
@@ -121,7 +124,9 @@ export default {
   .wdc_body {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    /* align-items: flex-start; */
+    text-align: center;
+    justify-content: center;
     border-bottom: 1px #cccccc solid;
     padding: 1.5rem;
     height: 80%;

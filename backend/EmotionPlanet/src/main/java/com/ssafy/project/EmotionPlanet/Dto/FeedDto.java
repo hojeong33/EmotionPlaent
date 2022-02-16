@@ -14,7 +14,7 @@ public class FeedDto {
     private LocalDateTime date;
 
     private List<CommentDto> comments;
-    private List<LikeDto> likes;
+    private List<UserRequestDto> likes;
     private List<ImgDto> imgs;
     private List<MultipartFile> multipartFile;
 
@@ -59,12 +59,15 @@ public class FeedDto {
 	public void setComments(List<CommentDto> comments) {
 		this.comments = comments;
 	}
-	public List<LikeDto> getLikes() {
+
+	public List<UserRequestDto> getLikes() {
 		return likes;
 	}
-	public void setLikes(List<LikeDto> likes) {
+
+	public void setLikes(List<UserRequestDto> likes) {
 		this.likes = likes;
 	}
+
 	public List<ImgDto> getImgs() {
 		return imgs;
 	}
@@ -103,7 +106,7 @@ public class FeedDto {
 	        this.date = date;
 	    }
 	public FeedDto(int no, String descr, int author, List<TagDto> tags, LocalDateTime date,
-			List<CommentDto> comments, List<LikeDto> likes, List<ImgDto> imgs, List<MultipartFile> multipartFile,
+			List<CommentDto> comments, List<UserRequestDto> likes, List<ImgDto> imgs, List<MultipartFile> multipartFile,
 			UserRequestDto authorDetail, boolean like, boolean owner) {
 		super();
 		this.no = no;

@@ -1,6 +1,6 @@
 <template>
   <div id="mainpage-container">
-    <loading v-if="isLoading"></loading>
+    <loading v-if="$store.state.loading"></loading>
     <side-profile-card :user-info="userInfo"> </side-profile-card>
     <div class="container justify-content-center">
       <div class="example">
@@ -56,7 +56,6 @@ export default {
         followings: 0,
         followers: 20100,
       },
-      isLoading: true
     };
   },
   computed: {
@@ -73,6 +72,10 @@ export default {
         this.$store.dispatch("userfollowdate", this.$store.state.userInfo.no);
         this.$store.dispatch("alarmselect")
         this.$store.dispatch("connect")
+<<<<<<< HEAD
+=======
+        // this.$store.dispatch("searchUserFeed", this.$store.state.userInfo.no)
+>>>>>>> 4e7e5809a649d7e702b1008e996a16a851ad1c2d
         this.$store.state.recommendReload = 1;
     }
     console.log("유저인포");
@@ -82,10 +85,19 @@ export default {
     console.log(session.getItem('userInfo'))
   },
   mounted() {
-    setTimeout(() => {
-      this.isLoading = false
-    }, 2500)
-  }
+    if (this.$store.state.loading == true) {
+      setTimeout(() => {
+        this.$store.state.loading = false
+      }, 2500)
+    } 
+  },
+  updated() {
+    if (this.$store.state.loading == true) {
+      setTimeout(() => {
+        this.$store.state.loading = false
+      }, 2500)
+    } 
+  },
 };
 </script>
 

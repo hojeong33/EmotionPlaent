@@ -30,12 +30,7 @@ export default {
   },
   methods:{
     onCommentSetting:function(){
-      this.$store.commit('commentSettingModalActivate')
-      // if(this.isCommentSettingOpened){
-      // 	this.isCommentSettingOpened=false
-      // }else{
-      // 	this.isCommentSettingOpened=true
-      // }
+      this.$store.commit('commentSettingModalActivate',this.comment)
     },
   },
   created(){
@@ -45,7 +40,7 @@ export default {
   };
   axios({
       method: 'get',
-      url:`http://13.125.47.126:8080/comment/${this.comment}`,
+      url:`/api/comment/${this.comment}`,
       headers: headers,  // 넣는거 까먹지 마세요
     }).then((res) => {
     this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서

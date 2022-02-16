@@ -1,37 +1,38 @@
 <template>
   <div id="signup_container">
-    <section id="signup_header">
-      <h1>어서오세요!</h1>
-      <span id="signup_header_title">
-        <h1 style="color: #5E39B3">이모션 플래닛</h1>
-        <h1>에</h1>
-      </span>
-      <h1>시민권을 등록해볼까요?👽</h1>
-    </section>
-    <section id="signup_form">
-      <article id="email_form">
-        <label for="email">이메일</label>
-        <input type="email"
-        id="email"
-        v-model="credentials.email"
-        placeholder="사용중인 이메일을 입력해주세요."
-        autocomplete="off"
-        @input = "validateEmail">
-        <span v-if="credentials.email && !isValid.validateEmailcheck">
-          <p v-if="isValid.validateEmail" class="warn">
-            사용중인 이메일이에요.
-          </p>
-          <p v-if="!isValid.validateEmail" class="warn">
-            이메일 형식에 맞춰주세요. 
-          </p>
+    <div id="signup_innercontainer">
+      <section id="signup_header">
+        <h1 style="font-size: 2.5rem;">어서오세요!</h1>
+        <span id="signup_header_title">
+          <h1 style="color: #5E39B3; font-size: 2.5rem;">이모션 플래닛</h1>
+          <h1 style="font-size: 2.5rem;">에</h1>
         </span>
-        <span v-if="credentials.email && isValid.validateEmailcheck" class="collect">
-          <p>
-            사용가능한 이메일입니다.
-          </p>
-        </span>
-      </article>
-      <article id="nickname_form">
+        <h1 style="font-size: 2.5rem;">여행할 수 있는 티켓을 발급해볼까요?👽</h1>
+      </section>
+      <section id="signup_form">
+        <article id="email_form">
+          <label for="email">이메일</label>
+          <input type="email"
+          id="email"
+          v-model="credentials.email"
+          placeholder="사용중인 이메일을 입력해주세요."
+          autocomplete="off"
+          @input = "validateEmail">
+          <span v-if="credentials.email && !isValid.validateEmailcheck">
+            <p v-if="isValid.validateEmail" class="warn">
+              사용중인 이메일이에요.
+            </p>
+            <p v-if="!isValid.validateEmail" class="warn">
+              이메일 형식에 맞춰주세요. 
+            </p>
+          </span>
+          <span v-if="credentials.email && isValid.validateEmailcheck" class="collect">
+            <p>
+              사용가능한 이메일입니다.
+            </p>
+          </span>
+        </article>
+        <article id="nickname_form">
         <label for="nickname">닉네임</label>
         <input type="text"
         id="nickname"
@@ -40,10 +41,13 @@
         autocomplete="off" maxlength="10"
         @input= "checkNickname">
         <span v-if="credentials.nickname">
-          <p v-if="!isValid.validateNicknamecheck" class="warn">
+          <p v-if="!isValid.validateNicknamelength" class="warn">
+            닉네임은 2자 이상, 10자 이하입니다.
+          </p>
+          <p v-if="!isValid.validateNicknamecheck && isValid.validateNicknamelength" class="warn">
             사용중인 닉네임이에요.
           </p>
-          <p v-if="isValid.validateNicknamecheck" class="collect">
+          <p v-if="isValid.validateNicknamecheck && isValid.validateNicknamelength" class="collect">
            사용가능한 닉네임입니다.
           </p>
         </span>
@@ -101,11 +105,12 @@
         <label for="birth">생년월일</label>
         <input type="date" id="birth" v-model="credentials.birth" :max="this.maxdate">
       </article>
-      <article id="btn_container">
-        <button @click="signup" id="signup_btn">시민권 등록하기</button>
-        <button @click="go_to_back" id="back_to_btn">다음에 할게요</button>
-      </article>
-    </section>
+        <article id="btn_container">
+          <button @click="signup" id="signup_btn">시민권 등록하기</button>
+          <button @click="go_to_back" id="back_to_btn">다음에 할게요</button>
+        </article>
+      </section>
+    </div>
   </div>
 </template>
 
@@ -131,6 +136,7 @@
           validateEmail: false, // 이메일 형식 체크
           validateEmailcheck : false, // 중복 이메일 여부
           validateNicknamecheck : false, // 중복 닉네임 여부
+          validateNicknamelength: false, // 닉네임 길이 체크
           validatePw: false, // 비밀번호 길이 체크
           validatePwConf: false, // 비밀번호와 비밀번호 확인 일치 여부
           validateTel: false // 휴대전화 중복 여부
@@ -160,7 +166,7 @@
         if (this.credentials.pw === this.credentials.passwordConfirmation){ // 입력 비밀번호가 일치하면 회원가입 (나중에 여기다 벨류체크)
           axios({
             method: 'post',
-            url: 'http://13.125.47.126:8080/register',
+            url: '/api/register',
             data: this.credentials
           })
           .then( () => {
@@ -189,7 +195,7 @@
       checkEmail: function(){
         axios({
           method: 'get',
-          url: 'http://13.125.47.126:8080/register/checkByEmail/' + this.credentials.email,
+          url: '/api/register/checkByEmail/' + this.credentials.email,
         })
         .then(() => { //중복 이메일 없는 경우
           this.isValid.validateEmailcheck = true
@@ -200,16 +206,27 @@
       },
       checkNickname: function(el){
         this.credentials.nickname = el.target.value // 한글 입력 이슈 해결하기 위해 사용. 한박자 느린거?
-        axios({
-          method: 'get',
-          url: 'http://13.125.47.126:8080/register/checkByNickname/' + this.credentials.nickname,
+        if (this.credentials.nickname.length >= 2 && this.credentials.nickname.length <= 10) {
+          this.isValid.validateNicknamelength = true
+          console.log('길이는 맞아~')
+          // this.$store.state.userInfo.nickname = el.target.value // 한글 입력 이슈 해결하기 위해 사용. 한박자 느린거?
+          axios({
+            method: 'get',
+            url: '/api/register/checkByNickname/' + this.credentials.nickname,
+            })
+            .then(() => { //중복 닉네임 없는 경우
+              this.isValid.validateNicknamecheck = true
+              console.log('중복없다~')
+            })
+            .catch(() => { //중복 닉네임 있는 경우
+              this.isValid.validateNicknamecheck = false
+              console.log('중복있어')
           })
-          .then(() => { //중복 닉네임 없는 경우
-            this.isValid.validateNicknamecheck = true
-          })
-          .catch(() => { //중복 닉네임 있는 경우
-            this.isValid.validateNicknamecheck = false
-        })
+        }
+        else {
+          this.isValid.validateNicknamelength = false
+          console.log('길이가 안맞다~')
+        }
       },
       pwCheck: function(){
         if (this.credentials.pw && this.credentials.pw.length >= 8 && this.credentials.pw.length <= 20){
@@ -260,7 +277,7 @@
       telCheck: function(){
         axios({
           method: 'get',
-          url: 'http://13.125.47.126:8080/register/checkByTel/' + this.credentials.tel
+          url: '/api/register/checkByTel/' + this.credentials.tel
         })
         .then(res => {
           console.log(res)
@@ -288,10 +305,10 @@
 
   input {
     border: 2px #5E39B3 solid;
-    border-radius: 20px;
-    width: 40vh;
+    border-radius: 30px;
+    width: 100%;
     min-width: 300px;
-    height: 4.5vh;
+    height: 5vh;
     min-height: 40px;
     padding: 0.75rem;
     font-size: 1.25rem;
@@ -310,7 +327,7 @@
   }
 
   input::placeholder {
-    font-size: 1rem !important;
+    font-size: 1.25rem !important;
     font-weight: initial;
     text-shadow: none;
     letter-spacing: -1px;
@@ -354,6 +371,19 @@
 
   #signup_container {
     background-color: white;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    background-color: white;
+    width: 25%;
+    align-self: center;
+    min-width: 600px;
+    min-height: 92.5vh;
+    padding: 2rem;;
+    border-radius: 20px;
+    border: 2px  #5E39B3 solid;
+    /* background-color: white;
     width: 30%;
     min-width: 450px;
     display: flex;
@@ -362,12 +392,20 @@
     justify-content: flex-start;
     align-items: center;
     padding: 3rem 2rem 1.5rem;
-    /* border-left: 2px #cccccc solid;
-    border-right: 2px #cccccc solid; */
+    border-left: 2px #cccccc solid;
+    border-right: 2px #cccccc solid;
     border-radius: 20px;
-    border: 2px  #5E39B3 solid;
+    border: 2px  #5E39B3 solid;*/
   }
-
+  #signup_innercontainer {
+    width: 85%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
   #signup_header {
     display: flex;
     flex-direction: column;
@@ -389,6 +427,7 @@
   }
 
   #signup_form {
+    width: 90%;
     display: flex;
     flex-direction: column;
     flex-wrap: nowrap;
@@ -399,6 +438,7 @@
   }
 
   #signup_form h1, article {
+    width: 100%;
     margin-bottom: 1rem;
     display: flex;
     flex-direction: column;

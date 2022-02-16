@@ -5,13 +5,13 @@
       <span id="opacity"></span>
       <div class="overlay_content">
         <h2>{{ this.$store.state.userInfo.nickname }}</h2>
-        <button id="update" @click="$router.push({name: 'Setting'})">프로필 수정</button>
+        <!-- <button id="update" @click="$router.push({name: 'Setting'})">프로필 수정</button> -->
       </div>
     </div>
     <div class="card_body">
       <p>이야기 {{ this.$store.state.userFeedInfo.length }}개</p>
-      <p>팔로우 {{ this.$store.state.userFollowInfo.userFollow.length }}명</p>
-      <p>팔로워 {{ this.$store.state.userFollowInfo.userFollowing.length }}명</p>
+      <p>팔로워 {{ this.$store.state.userFollowInfo.userFollow.length }}명</p>
+      <p>팔로우 {{ this.$store.state.userFollowInfo.userFollowing.length }}명</p>
     </div>
     <div id="card_footer">
       <div id="where">
@@ -22,7 +22,7 @@
         </span>
       </div>
       <div id="footer_buttons">
-        <button @click="createFeed">이야기 들려주기</button>
+        <!-- <button @click="createFeed">이야기 들려주기</button> -->
         <button @click="$router.push({ name:'EmotionTest' })">테스트 다시하기</button>
       </div>
     </div>  
@@ -177,7 +177,8 @@ export default {
 
   #footer_buttons {
     display: flex;
-    justify-content: space-around;
+    justify-content: right;
+    margin-right: 1.2rem;
   }
 
   #where {

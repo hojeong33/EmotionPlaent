@@ -13,6 +13,7 @@ export default new Vuex.Store({
   state: {
     // feedActive: false,
     //검색부분
+    searching: false, //검색창 활성화
     words: null, //검색창
     tagSearch: [],
     userSearch: [],
@@ -20,6 +21,8 @@ export default new Vuex.Store({
     tagSearchResult: [], //검색 결과
     userSearchResult: [],
     pickSearchResult: [],
+    //로딩페이지
+    loading: true,
     //메인 추천탭 부분
     userEmotion: null,
     recommendType: 1,
@@ -27,6 +30,10 @@ export default new Vuex.Store({
     recommendMovie: [],
     recommendActivity: [],
     recommendReload: 0,
+    //플레이리스트 만들기
+    type:0, // 음악:0 영화:1 활동:2
+    //내가 선택한 아이템
+    item:null,
 
     // 내정보
     userInfo: null,
@@ -38,7 +45,8 @@ export default new Vuex.Store({
     },
     userFeedInfo: [], //내 피드 정보
     userPickInfo: [], //내 찜목록 정보
-
+    //피드 좋아요 목록
+    feedLikesInfo:[],
     // 다른유저 정보
     searchUserNo: null, //검색할 유저 번호 저장
     searchUserInfo: null, // 검색한 유저 정보 저장
@@ -100,6 +108,11 @@ export default new Vuex.Store({
     mypagefollowerListActive: false,
     userpagefollowingListActive: false,
     userpagefollowerListActive: false,
+    likesListActive:false,
+    addPlayListActive:false,
+    nicknameErrModalActive:false,
+    pwchangeErrModalActive:false,
+    pwchangeConfirmModalActive:false,
   
     // 모달의 에러 메시지
     serverErrorMessage: '',
@@ -271,6 +284,17 @@ export default new Vuex.Store({
       state.moreInfoConfirmModalActive = !state.moreInfoConfirmModalActive
       console.log(state.moreInfoConfirmModalActive)
     },
+    //정보변경페이지 모달 3개
+    nicknameErrModalActivate: function (state) {
+      state.nicknameErrModalActive = !state.nicknameErrModalActive
+    },
+    pwchangeConfirmModalActivate: function (state) {
+      state.pwchangeConfirmModalActive = !state.pwchangeConfirmModalActive
+    },
+    pwchangeErrModalActivate: function (state) {
+      state.pwchangeErrModalActive = !state.pwchangeErrModalActive
+    },
+    //
     feedUpdateActivate: function (state) {
       state.feedUpdateActive = !state.feedUpdateActive
       console.log(state.feedUpdateActive)
@@ -303,6 +327,17 @@ export default new Vuex.Store({
       state.userpagefollowerListActive = !state.userpagefollowerListActive
       console.log(state.userpagefollowerListActive)
     },
+    likesListActive:function(state,likesList){
+      state.likesListActive=!state.likesListActive
+      state.feedLikesInfo=likesList
+      console.log(state.likesListActive)
+    },
+    addPlayListActive:function(state,sendData){
+      state.addPlayListActive=!state.addPlayListActive
+      state.type=sendData[0]
+      state.item=sendData[1]
+      console.log(state.addPlayListActive)
+    },
     // 댓글
     isDelete: function (state) {
       if (state.commentNum) {
@@ -325,7 +360,7 @@ export default new Vuex.Store({
     };
     axios({
         method: 'delete',
-        url: 'http://13.125.47.126:8080/feeds/like',
+        url: '/api/feeds/like',
         data: data, // post 나 put에 데이터 넣어 줄때
         headers: headers,  // 넣는거 까먹지 마세요
       }).then((res) => {
@@ -349,7 +384,7 @@ export default new Vuex.Store({
     };
     axios({
         method: 'post',
-        url: 'http://13.125.47.126:8080/feeds/like',
+        url: '/api/feeds/like',
         data: data, // post 나 put에 데이터 넣어 줄때
         headers: headers,  // 넣는거 까먹지 마세요
       }).then((res) => {
@@ -366,14 +401,13 @@ export default new Vuex.Store({
       readAlarm(state, el){
           axios({
             method: 'get',
-            url: 'http://13.125.47.126:8080/alarm/read/'+ el,
+            url: '/api/alarm/read/'+ el,
           }).then((res) => {
             console.log("알림 읽기 성공")
             console.log(res.data)
             this.state.alarm = []
-          }).catch((error) => {
-            console.log('알림 읽기 실패');
-            console.log(error)
+          }).catch(() => {
+            console.log('알림 읽기 실패 ');
           })
         },
 
@@ -453,7 +487,7 @@ export default new Vuex.Store({
     },
 
     connect() { // 웹 소켓 연결하는 부분.
-      const serverURL = "http://13.125.47.126:8080";
+      const serverURL = "/api";
       let socket = new SockJS(serverURL);
       this.stompClient = Stomp.over(socket);
       console.log(`소켓 연결을 시도합니다. 서버 주소: ${serverURL}`);
@@ -466,19 +500,11 @@ export default new Vuex.Store({
           // 서버의 메시지 전송 endpoint를 구독합니다.
           // 이런형태를 pub sub 구조라고 합니다.
           this.stompClient.subscribe(`/alarm/receive/${this.state.userInfo.no}`, (res) => {
-            console.log("---------------------------------")
-            const obj = JSON.parse(res.body);
-            console.log("보낸사람 아이디 " + obj.sender)
-            console.log("보낸사람 닉네임 " + obj.senderNickname)
-            console.log("보낸사람 프로필 " + obj.senderImg)
-            console.log("피드 번호 " + obj.feedno)
-            console.log("댓글 번호 " + obj.commentno)
-            console.log("알림 날짜 " + obj.date)
-            console.log("알림 타입 " + obj.type)
-            // alert(obj.message)
-            // this.state.alarm.unshift(obj);
             this.dispatch('alarmselect')
-            console.log("---------------------------------")
+            const obj = JSON.parse(res.body);
+            if(obj.type === 1){
+              this.dispatch('userfollowdate', this.state.userInfo.no);
+            }
           });
         },
         (error) => {
@@ -511,7 +537,7 @@ export default new Vuex.Store({
     alarmselect(){ // 디비에 있는 알림 가져오기
       axios({
         method: 'get',
-        url:'http://13.125.47.126:8080/alarm/' + this.state.userInfo.no,
+        url:'/api/alarm/' + this.state.userInfo.no,
       })
       .then((res)=>{
         console.log('알림 가져오기 성공')
@@ -526,7 +552,7 @@ export default new Vuex.Store({
     alarmdelete(state ,el){ // 읽은 알림 지우기=> 알림번호 넘겨주는거 생각해야함
       axios({
         method: 'delete',
-        url:'http://13.125.47.126:8080/alarm/' + el, // 여기 알림번호 넘겨줘야한다.
+        url:'/api/alarm/' + el, // 여기 알림번호 넘겨줘야한다.
       })
       .then((res)=>{
         console.log('알림 삭제 성공')
@@ -553,13 +579,15 @@ export default new Vuex.Store({
       };
       axios({
           method: 'delete',
-          url: 'http://13.125.47.126:8080/follows',
+          url: '/api/follows',
           data: data, // post 나 put에 데이터 넣어 줄때
           headers: headers,  // 넣는거 까먹지 마세요
         }).then((res) => {
         console.log("언팔로우 성공")
         this.state.searchUserFollowInfo.followcheck = 0
         this.dispatch('accessTokenRefresh', res) // store에서
+        this.dispatch('userfollowdate', el);
+        this.dispatch('userfollowdate', this.state.userInfo.no);
         }).catch((error) => {
           console.log("언팔로우 실패")
           console.log(error);
@@ -580,7 +608,7 @@ export default new Vuex.Store({
       };
       axios({
           method: 'post',
-          url: 'http://13.125.47.126:8080/follows',
+          url: '/api/follows',
           data: data, // post 나 put에 데이터 넣어 줄때
           headers: headers,  // 넣는거 까먹지 마세요
         }).then((res) => {
@@ -588,6 +616,8 @@ export default new Vuex.Store({
         this.state.searchUserFollowInfo.followcheck = 1
         this.dispatch('accessTokenRefresh', res) // store에서
         this.dispatch('follow',el)
+        this.dispatch('userfollowdate', el);
+        this.dispatch('userfollowdate', this.state.userInfo.no);
         }).catch((error) => {
           console.log("팔로우 실패")
           console.log(error);
@@ -604,7 +634,7 @@ export default new Vuex.Store({
         };
         axios({
           method: 'get',
-          url: 'http://13.125.47.126:8080/users/'+ el,
+          url: '/api/users/'+ el,
           headers: headers,  // 넣는거 까먹지 마세요
         }).then((res) => {
           console.log("유저 정보 갱신 성공")
@@ -626,7 +656,7 @@ export default new Vuex.Store({
         };
         axios({
           method: 'get',
-          url: 'http://13.125.47.126:8080/follows/'+this.state.userInfo.no+"/"+el,
+          url: '/api/follows/'+this.state.userInfo.no+"/"+el,
           headers: headers,  // 넣는거 까먹지 마세요
         }).then((res) => {
           if(this.state.userInfo.no === el){
@@ -659,7 +689,7 @@ export default new Vuex.Store({
       };
       axios({
         method: 'get',
-        url: 'http://13.125.47.126:8080/feeds/my/' + el,
+        url: '/api/feeds/my/' + el,
         headers: headers,  // 넣는거 까먹지 마세요
       }).then((res) => {
         if (el === this.state.userInfo.no) {
@@ -679,6 +709,44 @@ export default new Vuex.Store({
 
     //여기 검색부분입니다
     // 글자가 포함된 태그리스트와 태그별 피드 개수를 가져옴
+    searchsPickTag(state, el){
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+      axios({
+        method: 'get',
+        url:'/api/searchs/byPickTag/' + el,
+        headers: headers,
+      }).then(res => {
+        this.dispatch('accessTokenRefresh', res)
+        console.log('찜목록 있음', res)
+      })
+      .catch(()=> {
+        console.log('찜목록 없음')
+        
+      })
+    },
+
+    searchPickTagList(){
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+      axios({
+        method: 'get',
+        url:'/api/searchs/byPickTagList',
+        headers: headers,
+      }).then(res => {
+        this.dispatch('accessTokenRefresh', res)
+        console.log('태그 있음', res)
+      })
+      .catch(()=> {
+        console.log('태그 없음')
+        
+      })
+    },
+
     searchTag() {
       let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
@@ -686,7 +754,7 @@ export default new Vuex.Store({
       };
       axios({
         method: 'get',
-        url:'http://13.125.47.126:8080/searchs/byTag/' + this.state.words,
+        url:'/api/searchs/byTag/' + this.state.words,
         headers: headers,
       }).then(res => {
         this.dispatch('accessTokenRefresh', res)
@@ -706,7 +774,7 @@ export default new Vuex.Store({
       };
       axios({
         method: 'get',
-        url: 'http://13.125.47.126:8080/searchs/byTag/feed/'+this.state.userInfo.no + '/' + el,
+        url: '/api/searchs/byTag/feed/'+this.state.userInfo.no + '/' + el,
         headers: headers,  // 넣는거 까먹지 마세요
       }).then((res) => {
         console.log("태그 피드 검색 성공")
@@ -726,7 +794,7 @@ export default new Vuex.Store({
       };
       axios({
         method: 'get',
-        url:'http://13.125.47.126:8080/searchs/byNickName/' + this.state.words,
+        url:'/api/searchs/byNickName/' + this.state.words,
         headers: headers,
       })
       .then((res)=>{
@@ -746,9 +814,7 @@ export default new Vuex.Store({
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
-      
-			setTimeout(() => {
-        axios.get('http://13.125.47.126:8080/recommend/music/' + this.state.userInfo.mood, {
+        axios.get('/api/recommend/music/' + this.state.userInfo.mood, {
           headers: headers,
         }).then((res) => {
           this.state.recommendMusic = res.data
@@ -759,15 +825,13 @@ export default new Vuex.Store({
         }).then(() => {
           console.log('getQSSList End!!');
         });
-      }, 1000);
     },
     recommendMovie() {
       let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
-      setTimeout(() => {
-			axios.get('http://13.125.47.126:8080/recommend/movie/' + this.state.userInfo.mood, {
+			axios.get('/api/recommend/movie/' + this.state.userInfo.mood, {
           headers: headers,
         }).then((res) => {
           this.state.recommendMovie = res.data
@@ -778,15 +842,13 @@ export default new Vuex.Store({
         }).then(() => {
           console.log('getQSSList End!!');
         });
-      }, 2000);
     },
     recommendActivity() {
       let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
-      setTimeout(() => {
-			axios.get('http://13.125.47.126:8080/recommend/activity/', {
+			axios.get('/api/recommend/activity', {
           headers: headers,
         }).then((res) => {
           this.state.recommendActivity = res.data
@@ -797,7 +859,6 @@ export default new Vuex.Store({
       }).then(() => {
         console.log('getQSSList End!!');
       });
-    }, 3000);
   },
 
     accessTokenRefresh({commit}, res) {
@@ -847,7 +908,7 @@ export default new Vuex.Store({
         };
       axios({
         method: "put",
-        url: "http://13.125.47.126:8080/users/update",
+        url: "/api/users/update",
         data: body,
         headers: headers,
       })
@@ -857,7 +918,7 @@ export default new Vuex.Store({
           console.log(res);
           this.dispatch('allTokenRefreshOnUserInfo', res)
           // console.log(this.state.userInfo)
-          location.reload()
+          // location.reload()
         })
         .catch((err) => {
           console.log("업데이트 실패")

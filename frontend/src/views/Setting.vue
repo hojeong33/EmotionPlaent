@@ -26,8 +26,8 @@ export default {
     min-height: 92.5vh;
     /* border-left: 2px #cccccc solid;
     border-right: 2px #cccccc solid; */
-    border-radius: 20px;
-    border: 2px  #5E39B3 solid;
+    border-left: 2px  #5E39B3 solid;
+    border-right: 2px  #5E39B3 solid;
     padding: 1.5rem 0;
     margin: 0 auto;
     background-color: white;

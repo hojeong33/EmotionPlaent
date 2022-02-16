@@ -7,13 +7,14 @@
         </div>
         <form class="d-flex" id="searches">
           <div class="search_menu" v-on:cancel="searchOff">
+            <i id="find_icon" class="fa-solid fa-magnifying-glass"></i>
             <input id="search_bar" class="form-control" autocomplete="off"
             type="search" placeholder="Search" aria-label="Search"
             @focus="searchOn" :value="searchWords" @input="search">
-            <search v-if="searching" v-on:cancel="searchOff" id="dropdown"></search>
+            <search v-if="this.$store.state.searching" v-on:cancel="searchOff" id="dropdown"></search>
           </div>
           <!-- <button class="btn btn-outline-success" type="submit" id="search"><img src="@/assets/images/search.png" id="search"></button> -->
-          <img src="@/assets/images/icons/search.png" id="search" type="submit">
+          <!-- <img src="@/assets/images/icons/search.png" id="search" type="submit"> -->
         </form>
         <div id="icons">
           <img @click="navClick"  id="write"
@@ -50,17 +51,18 @@
 import Search from '@/components/Search/Search'
 import Alarm from '@/components/Alarm'
 
-const session = window.sessionStorage
+// const session = window.sessionStorage
 
 export default {
   name: 'App',
   data: function (){
     return {
       //검색입니둥
-      searching: false,
+      
       searchWords: null,
       //알람입니둥
       alarming: false,
+      alarmwatch: 0,
     }
   },
   components: { Search, Alarm },
@@ -75,10 +77,10 @@ export default {
     },
     //검색 부분입니둥
     searchOn() {
-      this.searching = true
+      this.$store.state.searching = true
     },
     searchOff() {
-      this.searching = false
+      this.$store.state.searching = false
       this.$store.state.words = null
       this.$store.state.tagSearch = []
       this.$store.state.userSearch = []
@@ -90,19 +92,7 @@ export default {
     },
     // 검색 끝
     signout() {
-      const authInst = window.gapi.auth2.getAuthInstance();
-      console.log('signout called', authInst)
-      authInst.signOut()
-      .then(() => {
-        // eslint-disable-next-line
-        console.log('User Signed Out!!!');
-        authInst.disconnect();
-        session.clear();
-      })
-      .then(() => {
-        window.location.reload()
-      })
-      .catch(() => alert('fail'))
+      this.$store.commit('logoutModalActivate')
     },
     alarmClick() {
       this.$store.commit('navActivate', 3)
@@ -148,7 +138,7 @@ export default {
       console.log(count)
       return count
     }
-  }
+  },
 }
 </script>
 
@@ -192,13 +182,12 @@ export default {
   height: 35px;
   margin-top:auto;
   margin-bottom: auto;
+  padding-left: 2rem;
 }
-
 #search{
   width: 25px;
   height: 25px;
 }
-
 #icons {
   display: flex;
   flex-direction: row;
@@ -310,10 +299,17 @@ export default {
 img{
   cursor: pointer;
 }
-
+#find_icon{
+  font-size: 1.2rem;
+  position: absolute;
+  color: gray;
+  top: 20%;
+  left: 2%;
+}
 .search_menu {
   display: flex;
-  flex-direction: column;
+  flex-direction: row;
+  position: relative;
 }
 
 #dropdown {
@@ -323,7 +319,7 @@ img{
   height: 15%;
   position: absolute;
   background-color: white;
-  margin-top: 3.5rem;
+  margin-top: 3rem;
 }
 </style>
 

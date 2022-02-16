@@ -4,13 +4,21 @@ import com.ssafy.project.EmotionPlanet.Dao.UserDao;
 import com.ssafy.project.EmotionPlanet.Dto.FindEmailDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserServiceImpl implements UserService {
+	
 	@Autowired
 	UserDao userDao;
+	
+	private final BCryptPasswordEncoder bCryptPasswordEncoder;
+
+	UserServiceImpl(@Lazy BCryptPasswordEncoder bCryptPasswordEncoder){
+        this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+    }
 	
 	private static final int SUCCESS = 1;
 	private static final int FAIL = -1;
@@ -122,9 +130,11 @@ public class UserServiceImpl implements UserService {
 		UserDto userDto = userDao.findPw(findEmailDto);
 		if(userDto != null) {
 			String Pw = randomPassword(); //랜덤 비밀번호 생성
-			userDto.setPw(Pw); // dto에 생성된 비밀번호 저장
+			String encodimgPW = bCryptPasswordEncoder.encode(Pw);
+			userDto.setPw(encodimgPW); // dto에 생성된 비밀번호 저장
+			System.out.println("여기는 유저 정보"+userDto);
 			if(userDao.userUpdate(userDto) == SUCCESS) { // 변경된 비밀번호로 회원 정보 갱신
-				return userDto.getPw(); // 생성된 비밀번호 리턴
+				return Pw; // 생성된 비밀번호 리턴
 			}else {
 				return null;
 			}   

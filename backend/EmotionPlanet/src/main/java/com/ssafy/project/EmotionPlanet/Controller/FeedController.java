@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin(
-        origins = "http://localhost:5500",
+        origins = {"http://localhost:5500", "https://i6e203.p.ssafy.io"},
         allowCredentials = "true",
         allowedHeaders ="*",
         methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.PUT,
@@ -52,6 +52,8 @@ public class FeedController {
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "글 양식이 올바르지 않습니다.");
         }
     }
+    
+    
 
     @GetMapping(value ="/feeds/{no}") // 최신 피드 목록
     public ResponseEntity<List<FeedDto>> list(@PathVariable String no) {
@@ -114,6 +116,8 @@ public class FeedController {
         }
 
         FeedDto feed = feedService.read(feedNo, Integer.parseInt(userNo));
+        List<UserRequestDto> likeList = feedService.likeList(feedNo);
+        feed.setLikes(likeList);
         if(feed != null) {
             return new ResponseEntity<FeedDto>(feed, HttpStatus.OK);
         } else {

@@ -3,7 +3,7 @@
     <img class="feed-s-thumbnail" :src="feed.imgs[0].imgLink" :alt="$store.state.searchUserInfo.nickname"
     @mouseover="hover = true">
     <img class="feed-planet" :src="require(`@/assets/images/emotions/${planet}`)" id="planet">
-    <span class="feed-s-info" v-show="hover" @mouseleave="hover = false">
+    <span class="feed-s-info" v-show="hover" @mouseleave="hover = false" @click="feeddetail()">
       <span class="info">
         <img src="@/assets/images/icons/heart.png" alt="heart">
         <p v-if="feed.likes !== null">{{ feed.likes.length }}</p>
@@ -35,6 +35,11 @@ export default {
   },
   props: {
     feed: Object,
+  },
+  methods:{
+    feeddetail() {
+      this.$router.push({name:'FeedDetail', params:{feedNo:this.feed.no}})
+    },
   },
   computed: {
     planet() {

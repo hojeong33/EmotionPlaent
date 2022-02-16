@@ -1,7 +1,7 @@
 <template>
 	<div id="emotiontest_too_mush_pick">
     <div id="modal">
-			<h4>너무 많이 골랐어요...</h4>
+			<h4>너무 많이 골랐어요...😢</h4>
 			<hr>
 			<p @click="goBack">확인</p>
     </div>
@@ -38,14 +38,15 @@ export default {
 	flex-direction: column;
 	justify-content: center;
 	background-color: white;
-	border-radius: 20px;
-	width: 20vw;
-	height: 15vh;
+	border-radius: 30px;
+	width: 19rem;
+	height: 11rem;
 }
 p {
 	margin: auto;
 	font-weight: bold;
 	cursor: pointer;
+	font-size: 1.25rem;
 }
 hr {
 	margin: 0;
@@ -53,5 +54,6 @@ hr {
 h4 {
 	margin: auto;
 	text-align: center;
+	font-weight: bold;
 }
 </style>

@@ -141,7 +141,7 @@ export default {
 
 <style scoped>
   h1 {
-    font-size: 1.25rem;
+    font-size: 1.5rem;
     font-weight: bold;
     margin: 0;
   }
@@ -163,7 +163,7 @@ export default {
     font-size: 1.125rem;
     font-weight: bold;
     border: 3px #5E39B3 solid;
-    border-radius: 20px;
+    border-radius: 30px;
     padding: 0.2rem 1.5rem;
     margin: 1rem;
     cursor: pointer;
@@ -183,14 +183,15 @@ export default {
     display:flex;
     justify-content: center;
     width: 100%;
+    height: 8%;
     position: relative;
     border-bottom: 2px #cccccc solid;
     padding: 0.5rem;
   }
 
   #back {
-    width: 20px;
-    height: 20px;
+    width: 25px;
+    height: 25px;
     position: absolute;
     left: 2%;
     cursor: pointer;
@@ -200,13 +201,13 @@ export default {
     display: flex;
     flex-direction: column;
     width: 85%;
-    height: 70%;
+    height: 85%;
     background-color: lightgray;
     border-radius: 20px;
     margin: auto;
     justify-content: center;
     align-items: center;
-    margin: 1rem;
+    margin: 1rem 1rem 0rem 1rem;
   }
   #default-box{
     text-align: center;
@@ -236,6 +237,7 @@ export default {
   .uploadedImg {
     width: 100%;
     height: 100%;
+    margin: auto;
     aspect-ratio: 1/1;
     position: absolute;
   }
