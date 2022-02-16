@@ -10,8 +10,8 @@ import Mypage from '@/views/user/Mypage.vue'
 import Userpage from '@/views/user/Userpage.vue'
 import List from '@/components/user/List'
 import PickItem from '@/components/user/PickItem'
-import UserList from '@/components/SearchUser/UserList'
-import UserPickItem from '@/components/SearchUser/UserPickItem'
+// import UserList from '@/components/SearchUser/UserList'
+// import UserPickItem from '@/components/SearchUser/UserPickItem'
 
 import Main from '@/views/main/Main.vue'
 import Setting from '@/views/Setting'
@@ -107,6 +107,7 @@ const routes = [
     name: 'Userpage',
     redirect: '/:userId/feed',
     component: Userpage,
+    props: (route) => ({ userId: Number(route.params.userId) }),
     meta: {
       loginRequired: true,
       testRequired:  true,
@@ -115,7 +116,7 @@ const routes = [
     children: [
       {
         path: ':tab',
-        component: UserList,
+        component: List,
         props: true,
         meta: {
           loginRequired: true,
@@ -125,7 +126,7 @@ const routes = [
       },
       {
         path: ':tag/:index',
-        component: UserPickItem,
+        component: PickItem,
         props: true,
         meta: {
           loginRequired: true,

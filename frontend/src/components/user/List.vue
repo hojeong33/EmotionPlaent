@@ -55,7 +55,8 @@ export default {
 		}
 	},
 	props: {
-		tab: String
+		tab: String,
+		userId: Number
 	},
 	components: {
 		FilterTab,
@@ -73,31 +74,35 @@ export default {
 		}
 	},
 	created(){
-		const userdata = JSON.parse(session.getItem('userInfo'))
-    let headers = {
-      'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-      'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-    };
-    axios({
-      method:'get',
-      url:`http://13.125.47.126:8080/feeds/my/returnNo/${userdata.no}`,
-      headers:headers,
-    })
-    .then((res) => {
-      if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
-        session.setItem('at-jwt-access-token', "");
-        session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-        console.log("Access Token을 교체합니다!!!")
-      }
-      this.feeds=res.data
-      console.log('내는 최상단이여', this.feeds)
-    })
-    .catch((error) => {
-      console.log(error);
-    })
-    .finally(() => {
-      console.log('피드 가져오기 클리어');
-    });
+		let user = JSON.parse(session.getItem('userInfo')).no
+
+		if (this.$route.matched[0].path !== '/mypage'){
+			user = this.userId
+		}
+
+		let headers = {
+			'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+			'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+		};
+		axios({
+			method:'get',
+			url:`http://13.125.47.126:8080/feeds/my/returnNo/${user}`,
+			headers:headers,
+		})
+		.then((res) => {
+			if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
+				session.setItem('at-jwt-access-token', "");
+				session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+				console.log("Access Token을 교체합니다!!!")
+			}
+			this.feeds=res.data
+		})
+		.catch((error) => {
+			console.log(error);
+		})
+		.finally(() => {
+			console.log('피드 가져오기 클리어');
+		});
 	}
 }
 </script>

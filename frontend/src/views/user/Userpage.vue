@@ -1,6 +1,5 @@
 <template>
-  <section id="mypage-container" v-if="$store.state.searchUserInfo !== null">
-    <side-profile-card :user-info="userInfo" />
+  <section id="mypage-container" v-if="userInfo">
     <article id="profile-container">
       <img id="profile-img" :src="$store.state.searchUserInfo.profileImg">
       <div id="profile-card">
@@ -24,9 +23,9 @@
       </div>
     </article>
     <article id="tab">
-      <span id="dot1" :class="userPageTab == 'feed' ? 'slide-out':'slide-in'" />
-      <p @click="changeTab('feed')" :class="userPageTab == 'feed' ? 'activate': ''">이야기</p>
-      <p @click="changeTab('pick')" :class="userPageTab == 'pick' ? 'activate': ''">찜 목록</p>
+      <span id="dot1" :class="tab == 'feed' ? 'slide-out':'slide-in'" />
+      <p @click="changeTab('feed')" :class="tab == 'feed' ? 'activate': ''">이야기</p>
+      <p @click="changeTab('pick')" :class="tab == 'pick' ? 'activate': ''">찜 목록</p>
     </article>
     <article id="list-container">
       <router-view/>
@@ -35,26 +34,29 @@
 </template>
 
 <script>
-import SideProfileCard from '@/components/SideProfileCard.vue'
+import axios from 'axios'
+
+const session = window.sessionStorage;
 
 export default {
   name: 'Userpage',
-  components: {SideProfileCard},
   data() {
     return {
-      userInfo: {
-      username: '최강상후',
-      mood: 3,
-      posts: 0,
-      },
-      userPageTab: 'feed',
+      userInfo: null,
+      followers: null,
+      followings: null,
+      feeds: null,
+      tab: 'feed',
       filter: 0
     }
   },
+  props: {
+    userId: Number
+  },
   methods: {
-    changeTab(tap){
-      this.userPageTab = tap
-      this.$router.push({ path: `/userpage/${tap}` })
+    changeTab(tab){
+      this.tab = tab
+      this.$router.push({ path: `/userpage/${tab}` })
     },
     follow() {
       this.$store.dispatch('sendfollow', this.$store.state.searchUserNo)
@@ -69,15 +71,54 @@ export default {
       this.$store.commit('userpagefollowingListActivate')
     }
   },
-  mounted(){
-
-  },
   created(){
-    window.addEventListener('load', () => {
-      if (this.$route.params.tap != 'feed'){
-        this.userPageTab = 'pick'
-      }
+		let headers = {
+			'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+			'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+		};
+		axios({
+			method:'get',
+			url:`http://13.125.47.126:8080/users/${this.userId}`,
+			headers:headers,
+		})
+		.then(res => {
+			if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
+				session.setItem('at-jwt-access-token', "");
+				session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+				console.log("Access Token을 교체합니다!!!")
+			}
+			this.userInfo=res.data
+		})
+    //팔로우 정보 가져오기
+    .then(() => {
+      axios({
+        method: 'get',
+        url: `http://13.125.47.126:8080/follows/${this.$store.state.userInfo.no}/${this.userId}`,
+        headers: headers,  // 넣는거 까먹지 마세요
+      })
+      .then(res => {
+        console.log("팔로우 정보 가져오기 성공")
+        console.log(res.data)
+        this.followers = res.data.follower
+        this.followings = res.data.following
+        this.dispatch('accessTokenRefresh', res) // store에서
+      })
     })
+    //작성 피드 정보 가져오기
+    .then(() => {
+      axios({
+        method: 'get',
+        url: `http://13.125.47.126:8080/feeds/my/${this.userId}`,
+        headers: headers,  // 넣는거 까먹지 마세요
+      })
+      .then(res => {
+        console.log("피드 가져오기 성공")
+        console.log(res.data)
+        this.feeds = res.data
+        this.dispatch('accessTokenRefresh', res)
+      })
+    })
+		.catch(error => console.log('안되네',error))
   }
 }
 </script>
