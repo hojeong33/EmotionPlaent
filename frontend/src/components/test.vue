@@ -114,7 +114,7 @@ export default {
   
         axios({
           method: 'put',
-          url: 'http://13.125.47.126:8080/picks',
+          url: '/api/picks',
           data: formData2, // post 나 put에 데이터 넣어 줄때
           headers: headers,  // 넣는거 까먹지 마세요
         }).then((res) => {
