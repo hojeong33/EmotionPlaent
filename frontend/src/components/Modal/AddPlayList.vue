@@ -20,6 +20,7 @@
           <!-- <img id="profile_img" :src="liker.profileImg" alt=""> -->
           <p id="username">{{forder.name}}</p>
           <button id="follow_cancel" @click="choiceForder(forder.no)">선택</button>
+          <img id="trash"  @click="deleteForder(forder.no)" src="@/assets/images/icons/trash.png" alt="">
         </div>
       </div>
     </div>
@@ -69,26 +70,26 @@ export default {
     choiceForder:function(forderNo){
       this.choicedForder=forderNo
       let sendData=null
-      if (this.type==0){
+      if (this.listData.type==0){
          sendData={
           pickNo:this.choicedForder,
           author:this.item.artist,
           title:this.item.title,
           year:this.item.year,
           imgLink:this.item.imgLink,
-          type:this.type
+          type:this.listData.type
         }
-      }else if(this.type==1){
+      }else if(this.listData.type==1){
         sendData={
           pickNo:this.choicedForder,
           targetNo:this.item.no,
-          type:this.type
+          type:this.listData.type
         }
       }else{
         sendData={
           pickNo:this.choicedForder,
           targetNo:this.item.no,
-          type:this.type
+          type:this.listData.type
         }
       }
       let headers = {
@@ -102,16 +103,34 @@ export default {
           data:sendData,
           headers: headers,  // 넣는거 까먹지 마세요
         }).then((res) => {
+            console.log(sendData)
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
         }).catch((error) => {
           console.log(error);
         }).then(() => {
           console.log('플레이리스트에 담기');
         });
+    },
+    deleteForder:function(forderNo){
+      this.choicedForder=forderNo
+      let headers = {
+          // 'Content-Type': 'multipart/form-data',
+          'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+          'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+        axios({
+          method: 'delete',
+          url: `http://13.125.47.126:8080/picks/${forderNo}`,
+          headers: headers,  // 넣는거 까먹지 마세요
+        }).then((res) => {
+            this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+            this.getPlayLists()
+        }).catch((error) => {
+          console.log(error);
+        }).then(() => {
+          console.log('플레이리스트 삭제');
+        });
 
-      // console.log('데이터 가져오기')
-      // console.log(this.choicedForder)
-      // console.log(this.item)
     },
 		goBack: function () {
 			this.$store.commit('addPlayListActive',this.type)
@@ -219,14 +238,16 @@ export default {
     this.item=this.$store.state.item
     this.listData['tagNo']=this.userdata.mood
     this.listData['userNo']=this.userdata.no
-    // console.log(userdata)
     this.getPlayLists()
 	}
 }
 </script>
 
 <style scoped>
-
+#trash{
+  width: 25px;
+  height: 25px;
+}
 #likes_list {
 	display: flex;
 	justify-content: center;
