@@ -312,10 +312,10 @@ router.beforeEach((to, from, next) => {
     userUpdate.then(() => next())
   }
   // 감정 테스트가 필요한 경우 테스트페이지로 redirect
-  // if (to.meta.testRequired && store.state.userInfo != null && !store.state.userInfo.mood){
-  //   console.log(store.state.userInfo.mood)
-  //   next({ name:'EmotionTest' })
-  // }
+  if (to.meta.testRequired && store.state.userInfo != null && !store.state.userInfo.mood){
+    console.log(store.state.userInfo.mood)
+    next({ name:'EmotionTest' })
+  }
   //로그인 된 사용자가 로그인 or 회원가입 페이지로 가려고 할 경우
   if (!to.meta.loginRequired && store.state.userInfo && token){
     console.log('메인')
