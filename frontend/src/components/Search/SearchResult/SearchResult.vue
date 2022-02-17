@@ -17,9 +17,6 @@ export default {
       pickTap: 1,
     }
   },
-  props:{
-    
-  },
   methods: {
     changeTab(payload){
       this.tab = payload
@@ -32,9 +29,7 @@ export default {
     }
   },
   mounted(){
-    console.log("태그 출력")
     console.log(this.$route.query.tag)
-    
     if (this.$route.path.includes('pick')){
       this.tab = 'pick'
     }
