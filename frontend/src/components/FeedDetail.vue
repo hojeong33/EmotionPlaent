@@ -63,7 +63,7 @@
           <i class="far fa-heart fa-lg" :class="{'fas': this.feed.like}"  @click="like" style="cursor: pointer;"></i>
         </div>
         <p id="feed_likes" v-for="(like, idx) in feed.likes" :key="idx"></p>
-        <p class="likes" style="margin-top: auto; margin-bottom: auto;">{{feed.likes.length}} likes</p>
+        <p class="likes" style="cursor: pointer;" @click="likesList">{{feed.likes.length}} likes</p>
       </div>
 			<hr>
 			<div id="comment_write">
@@ -247,8 +247,27 @@ export default {
 				console.log(error);
 			}).then(() => {
 				console.log('피드 하나 가져오기');
-			});
+			}); 
 		},
+    // getLike(){
+    //   let headers = {
+		// 	'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+		// 	'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+		// 	};
+		// 	axios({
+		// 		method: 'get',
+		// 		url:`/api/feeds/like/${this.feedNo}`,
+		// 		headers: headers,  // 넣는거 까먹지 마세요
+		// 	}).then((res) => {
+		// 	this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+		// 	console.log(res.data)
+    //   this.feed.likes = res.data
+		// 	}).catch((error) => {
+		// 		console.log('좋아요 실패해따',error);
+		// 	}).then(() => {
+		// 		console.log('좋아요 하나 가져오기');
+		// 	});
+    // },
     like:function(){
       this.feed.like ? this.cancelLike(): this.doLike();
       this.feed.like= !this.feed.like;
@@ -260,9 +279,13 @@ export default {
         feedno : this.feedNo,
       }
       this.$store.dispatch('addfeedlike',el)
+      // .then(() => this.getLike())
+      this.getFeed()
     },
     cancelLike:function(){
       this.$store.dispatch('deletefeedlike',this.feedNo)
+      // .then(() => this.getLike())
+      this.getFeed()
     },
     onModalFeed:function(){
       this.onUserFeedSetting()
@@ -272,10 +295,16 @@ export default {
     },
 		onCommentSetting:function(){
 			this.$store.commit('commentSettingModalActivate')
+
 		},
 		onUserFeedSetting:function(){
 			this.$store.commit('userFeedSettingModalActivate')
+	
 		},
+    likesList:function(){
+       this.$store.commit('likesListActive',this.feed.likes)
+       console.log(this.feed.likes)
+    }
 	},
   filters: {
     dateChanger(payload){

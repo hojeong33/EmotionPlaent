@@ -154,8 +154,18 @@ public class FeedController {
             imgs.add(imgService.select(no));
         }
 
-        feedDto.setImgs(imgs);
-        int result = feedService.update(feedDto);
+
+        int result = 0;
+        if(imgs.size() != 0) {
+            feedDto.setImgs(imgs);
+            result = feedService.update(feedDto, 0);
+        }
+        else {
+            FeedDto now = feedService.read(feedDto.getNo(), feedDto.getAuthor());
+            feedDto.setImgs(now.getImgs());
+            result = feedService.update(feedDto, 1);
+        }
+
 
         if(result == SUCCESS) {
             return new ResponseEntity<Integer>(result, HttpStatus.OK);

@@ -16,7 +16,7 @@
           <transition>
             <section class="item" :key="currentId">
               <div v-if="current.content == '1'">
-                <recommend :user-info="userInfo" />
+                <recommend :user-info="this.$store.state.userInfo" />
               </div>
               <div v-else>
                 <feed-list :posts="posts" />
@@ -100,7 +100,6 @@ export default {
   min-width: 700px;
   /* 메인 피드 크기 -> 100vh-> 센터 */
   min-height: 100vh;
-  border: 2px solid gainsboro;
 }
 .item {
   display: flex;

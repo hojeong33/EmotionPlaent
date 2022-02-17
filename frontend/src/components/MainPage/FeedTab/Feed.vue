@@ -36,7 +36,7 @@
       </div>
       <div id="content">
         <div id="tag" style="flex-wrap: wrap;">
-          <p id="my_tag">#{{feed.tags[0].name}}행성 <img :src="require('@/assets/images/emotions/' + tmp.img)" alt="" style="width: 1.2rem; height: 1.2rem;"> &nbsp;</p> 
+          <!-- <p id="my_tag">#{{feed.tags[0].name}}행성 <img :src="require('@/assets/images/emotions/' + tmp.img)" alt="" style="width: 1.2rem; height: 1.2rem;"> &nbsp;</p>  -->
           <p id="my_tag" v-for="(tag, idx) in feed.tags.slice(1)" :key="idx" style="flex-wrap: wrap;">#{{tag["name"]}} &nbsp;</p>
         </div> 
         <div v-if="isLong">
@@ -72,7 +72,6 @@ export default {
   },
   data(){
     return{
-      // date:this.post.date.toLocaleDateString(),
       page:1,
       beforePage:1,
       isCommentSettingOpened:false,
@@ -83,21 +82,24 @@ export default {
       isMore: false,
       posts:[],
       planetStyles: [
-        { id: 1, name: '행복', img: "happy.png", color: '#6BD9E8' },
-        { id: 2, name: '우울', img: "depressed.png", color: '#2A61F0' },
-        { id: 3, name: '심심', img: "neutral.png", color: '#C5D3DC' },
-        { id: 4, name: '공포', img: "fear.png", color: '#ED5A8E' },
-        { id: 5, name: '깜짝', img: "surprised.png", color: '#FEA95C' },
-        { id: 6, name: '분노', img: "rage.png", color: '#FB5D38' },
+        { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
+        { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
+        { id: 3, name: '떠돌이행성', img: "neutral.png", color: '#C5D3DC' },
+        { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
+        { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
+        { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
+        { id: 7, name: '떠돌이행성', img: "spaceship.png", color: '#FCBB74' }
       ],
       commentKey: 0,
-      style: null,
+      // style: null,
     }
   },
   computed: {
     tmp: function () {
-      let name = this.feed.tags[0].name
+      let name = this.feed.tags[0]
+      console.log(this.feed)
       let style = this.planetStyles.find(el => el.name === name) || {}
+      console.log('이것은 스타일', style)
       return style
     }
   },
@@ -130,9 +132,12 @@ export default {
       this.isMore=true
 
     },
+    onCommentSetting:function(){
+      this.$store.commit('commentSettingModalActivate')
+    },
 
-    onUserFeedSetting2:function(){
-      this.$store.commit('userFeedSettingModalActivate2')
+    onUserFeedSetting:function(){
+      this.$store.commit('userFeedSettingModalActivate')
     },
     like:function(){
       this.feed.like ? this.cancelLike(): this.doLike();
@@ -144,9 +149,11 @@ export default {
         feedno : this.post,
       }
       this.$store.dispatch('addfeedlike',el)
+      this.getFeed()
     },
     cancelLike:function(){
       this.$store.dispatch('deletefeedlike',this.post)
+      this.getFeed()
     },
     getFeed:function(){
        let headers = {
@@ -162,6 +169,7 @@ export default {
           console.log('!!!!!!!!!!!!!!!!!!!')
           console.log(res.data)
           this.feed=res.data
+        
           if (this.feed.descr.length > 30) {
             this.isLong = true
           }
@@ -202,6 +210,7 @@ export default {
   },
   created(){
    this.getFeed()
+   console.log('몰라 알수가 업없어', this.tmp)
     
   }
   
