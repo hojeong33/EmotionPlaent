@@ -12,12 +12,6 @@
         </div>
 			</article>
 			<br>
-      <br>
-      <article id="pu_form" style="display: flex; flex-direction: row; justify-content: space-between">
-        <label style="margin-left:1rem;">이메일</label>
-        <p id="user_email">{{ this.$store.state.userInfo.email }}</p>
-      </article>
-      <br>
 			<article id="pu_form">
         <label for="username" style="margin-left:1rem;">닉네임</label>
         <input 
@@ -36,20 +30,17 @@
           </p>
         </span>
 			</article>
-      <br>
-      <article id="pu_form" style="display: flex; flex-direction: row; justify-content: space-between">
-        <label for="user_birth" style="margin-left:1rem;">생년월일</label>
-        <p id="user_birth">{{ this.$store.state.userInfo.birth }}</p>
-      </article>
 			<br>
 			<article id="pu_form">
-				<label id="introduce" style="margin-left:1rem;">소개</label>
+				<p id="introduce" style="margin-left:1rem;">소개</p>
         <textarea  
         id="short_comment"
         v-model="$store.state.userInfo.intro"
         ></textarea>
 			</article>
+			
 			<br>
+
       <article id="pu_form">
         <div id="pwactive">
           <label for="next_pw" style="margin-bottom:0.5rem; margin-left:1rem;">변경할 비밀번호</label>
@@ -96,7 +87,7 @@
         </span>
       </article>
       <br>
-      <!-- <article id="pu_form_radio">
+      <article id="pu_form_radio">
         <label for="" style="margin-left:1rem;">계정 공개 여부</label>
         <div id="check_radio">
           <div id="on">
@@ -113,10 +104,10 @@
           </div>
         </div>
         <br>
-      </article> -->
+      </article>
       <article id="pu_buttons">
-        <button id="withdrawal" @click="go_to_withdrawal">회원 탈퇴</button>
         <button id="pu_button" @click="user_change">변경하기</button>
+        <button id="pu_button" @click="go_to_back">뒤로가기</button>
       </article>
     </section>
   </div>
@@ -162,8 +153,8 @@ export default {
         this.isValid.validatePwConf = false
       }
     },
-    go_to_withdrawal: function(){
-      this.$router.push('/setting/withdrawal')
+    go_to_back: function(){
+      this.$router.go(-1)
     },
     profileImgChangeModal:function(){
       this.$store.commit('profileImgChangeModalActivate')
@@ -194,23 +185,68 @@ export default {
         }
       }
     },
-    
-    async user_change() {
+    tel_helper: function(event){
+      const nums = this.credentials.tel.length
+      const n = this.credentials.tel.charCodeAt(nums-1)
+      const poss = ['010', '011', '012', '013', '014',
+                    '015', '016', '017', '018', '019']
+      console.log(nums)
+      if (event.inputType == 'deleteContentBackward'){
+        if (nums == 3 || nums == 8){
+          this.credentials.tel = this.credentials.tel.slice(0, nums - 1)
+        }
+        return
+      }
+      if (n > 47 && n < 58){
+        if (nums == 3 || nums == 8){
+          this.credentials.tel += '-'
+        }
+      }
+      else {
+        this.credentials.tel = this.credentials.tel.slice(0, nums - 1)
+      }
+      if (nums == 13 && poss.indexOf(this.credentials.tel.slice(0,3)) > -1){
+        console.log(poss.indexOf(this.credentials.tel.slice(0,3)))
+        console.log(nums)
+        this.telCheck()
+      }
+      else {
+        this.isValid.validateTel = false
+      }
+    },
+    telCheck: function(){
+      axios({
+        method: 'get',
+        url: '/api/register/checkByTel/' + this.credentials.tel
+      })
+      .then(res => {
+        console.log(res)
+        if (res.data){
+          this.isValid.validateTel = true
+        }
+        else {
+          this.isValid.validateTel = false
+        }
+      })
+    },
+    user_change() {
+      //낙넴 변경하려 했을 경우
       let nicknameChange = false
       if (this.credentials.beforeNick !== this.$store.state.userInfo.nickname) {
         console.log(this.isValid.validateNicknamecheck)
         console.log(this.isValid.validateNicknamelength)
         if (this.isValid.validateNicknamecheck == true && this.isValid.validateNicknamelength == true) {
-          nicknameChange = true
+          this.$store.state.userInfo.nickname = this.credentials.beforeNick
+          this.$router.go(-1)
         }
         else {
-          this.$store.commit('nicknameErrModalActivate')
+          nicknameChange = true
         }
       }
       
       // 비번 변경하려 했을 경우
       let pwChange = false
-      if (this.credentials.pwConf) {
+      if (this.credentials.pwConf === this.credentials.nextPw) {
         if (this.isValid.validateNextPw && this.isValid.validatePwConf) {
           pwChange = true
         }
@@ -218,19 +254,16 @@ export default {
           this.$store.commit('pwchangeErrModalActivate')
         }
       }
-
-      if (nicknameChange && pwChange){
-        this.$store.state.userInfo.nickname = this.credentials.beforeNick
-        this.$store.dispatch('updateuser', this.credentials.pwConf)
-        .then(() => {
-          this.$store.commit('pwchangeConfirmModalActivate')
-        })
+      // 소개 or 공개비공개 설정 변경
+      // else {
+      //   this.$store.dispatch('updateuser', null)
+      //   this.$router.go(-1)
+      // }
+      console.log('?????????????????????',nicknameChange, pwChange)
+      if (nicknameChange){
+        this.$store.commit('nicknameErrModalActivate')
       }
-      else if (nicknameChange){
-        this.$store.state.userInfo.nickname = this.credentials.beforeNick
-        this.$store.commit('pwchangeConfirmModalActivate')
-      }
-      else if (pwChange){
+      if (pwChange){
         this.$store.dispatch('updateuser', this.credentials.pwConf)
         .then(() => {
           this.$store.commit('pwchangeConfirmModalActivate')
@@ -254,7 +287,7 @@ export default {
     console.log(this.$store.state.userInfo)
     this.credentials.beforeNick = this.$store.state.userInfo.nickname
   },
-   mounted(){
+  mounted(){
     this.$store.commit('load', false)
   }
 }
@@ -468,9 +501,9 @@ export default {
     font-weight: bold;
 	}
   h1 {
-    font-size: 2.8rem;
+    font-size: 2.5rem;
     font-weight: bold;
-    margin-bottom: 3rem;
+    margin-bottom: 4rem;
   }
 	#profile_head{
 		display: flex;
@@ -495,7 +528,7 @@ export default {
 	#profile_img_change {
 		margin-left:auto;
 		margin-top: auto;
-
+		margin-bottom: auto;
 	}
 
 	#profile_img_change_button {
@@ -503,9 +536,10 @@ export default {
     color: white;
 		width: 6.9rem;
 		height: 2rem;
-		font-size: 1rem;
+    margin-right: 1rem;
+		font-size: 0.9rem;
 		font-weight: bold;
-		border-radius: 30px;
+		border-radius: 20px;
 		border: none;
 	}
 
@@ -563,10 +597,11 @@ export default {
     font-size: 1.125rem;
     font-weight: bold;
     border: none;
-    border-radius: 30px;
-    width: 7rem;
-    height: 3rem;
-    margin: 1rem;
+    border-radius: 20px;
+    padding: 0.4rem 1.5rem;
+    margin: 1rem 2rem 1rem 0;
+    cursor: pointer;
+    line-height: 2rem;
   }
 
   .warn {
@@ -578,13 +613,13 @@ export default {
   }
 
   #pu_container {
-    width: 85%;
+    width: 80%;
     margin: 0 auto;
   }
 
   #pu_header {
 		text-align: left;
-    margin: 3rem 1rem;
+    margin: 2rem 1rem;
   }
 
   #pu_body {
@@ -605,11 +640,19 @@ export default {
 
   #pu_buttons {
     display: flex;
+    width: 80%;
     flex-direction: row !important;
-    justify-content: space-evenly;
-    margin-bottom: 2rem;
+    justify-content: center;
     /* margin: auto; */
-    /* margin: 1rem 4rem 1rem; */
+    margin: 1rem 4rem 1rem;
+  }
+  #pu_button {
+    margin-left:auto;
+    margin-right: auto;
+  }
+
+  #pu_buttons > *:last-child {
+    background-color: #777777;
   }
 
   #pwchange {
@@ -623,30 +666,5 @@ export default {
     justify-content: space-between;
     align-items: center;
   }
-  #user_email {
-    font-weight: bold;
-    font-size: 1.25rem;
-    color: #504f4f;
-    margin-top: auto;
-    margin-bottom: auto;
-
-  }
-  #user_birth {
-    font-weight: bold;
-    font-size: 1.25rem;
-    color: #504f4f;
-    margin-top: auto;
-    margin-bottom: auto;
-  }
-  #withdrawal {
-    background-color: crimson;
-    color: white;
-    font-size: 1.125rem;
-    font-weight: bold;
-    border: none;
-    border-radius: 30px;
-    width: 7rem;
-    height: 3rem;
-    margin: 1rem;
-  }
+  
 </style>
