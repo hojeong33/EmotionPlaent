@@ -28,9 +28,6 @@
           <span id="right" class="carousel-btn" @click="pagination(true)"/>
         </div>
       </article>
-      <!-- <div id="my_img" v-for="(img, idx) in feed.imgs" :key="idx"><div><img :src="img.imgLink" alt=""></div></div> -->
-      <!-- <img :src="post.postImage" alt="" v> -->
-      <!-- <p class="overlay_content" >{{post.author}}님은 {{post.tag[0]}} <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p> -->
     </div>
     <div id="like">
       <div id="heart">
@@ -62,7 +59,6 @@ export default {
   },
   data(){
     return{
-      // date:this.post.date.toLocaleDateString(),
       page:1,
       beforePage:1,
       isCommentSettingOpened:false,
@@ -115,19 +111,9 @@ export default {
     },
     onCommentSetting:function(){
       this.$store.commit('commentSettingModalActivate')
-      // if(this.isCommentSettingOpened){
-      // 	this.isCommentSettingOpened=false
-      // }else{
-      // 	this.isCommentSettingOpened=true
-      // }
     },
     onUserFeedSetting2:function(){
       this.$store.commit('userFeedSettingModalActivate2')
-      // if(this.isUserFeedSettingOpened){
-      // 	this.isUserFeedSettingOpened=false
-      // }else{
-      // 	this.isUserFeedSettingOpened=true
-      // }
     },
     like:function(){
       this.feed.like ? this.cancelLike(): this.doLike();
