@@ -44,20 +44,19 @@ public class PickController {
 
     @PostMapping(value ="/picks") // 목록 생성
     public ResponseEntity<Integer> create(
-            @RequestPart(value="data") PickDto pickDto,
-            @RequestPart(value="multipartFile", required = false) List<MultipartFile> multipartFile) {
+            @RequestPart(value="data") PickDto pickDto) {
 
-        List<Integer> imgNo = new ArrayList<>();
-        if(multipartFile != null){
-            imgNo = s3Service.uploadFile(multipartFile);
-        }
-
-        List<ImgDto> imgs = new ArrayList<>();
-        for (int no : imgNo) {
-            imgs.add(imgService.select(no));
-        }
-
-        pickDto.setImgLink(imgs.get(0).getImgLink());
+//        List<Integer> imgNo = new ArrayList<>();
+//        if(multipartFile != null){
+//            imgNo = s3Service.uploadFile(multipartFile);
+//        }
+//
+//        List<ImgDto> imgs = new ArrayList<>();
+//        for (int no : imgNo) {
+//            imgs.add(imgService.select(no));
+//        }
+//
+//        pickDto.setImgLink(imgs.get(0).getImgLink());
 
         int result = pickService.create(pickDto);
         if(result == SUCCESS) {
@@ -127,20 +126,19 @@ public class PickController {
 
     @PutMapping(value ="/picks") // 목록 수정
     public ResponseEntity<Integer> update(
-            @RequestPart(value="data") PickDto pickDto,
-            @RequestPart(value="multipartFile", required = false) List<MultipartFile> multipartFile) {
+            @RequestPart(value="data") PickDto pickDto) {
 
-        List<Integer> imgNo = new ArrayList<>();
-        if(multipartFile != null){
-            imgNo = s3Service.uploadFile(multipartFile);
-        }
-
-        List<ImgDto> imgs = new ArrayList<>();
-        for (int no : imgNo) {
-            imgs.add(imgService.select(no));
-        }
-
-        pickDto.setImgLink(imgs.get(0).getImgLink());
+//        List<Integer> imgNo = new ArrayList<>();
+//        if(multipartFile != null){
+//            imgNo = s3Service.uploadFile(multipartFile);
+//        }
+//
+//        List<ImgDto> imgs = new ArrayList<>();
+//        for (int no : imgNo) {
+//            imgs.add(imgService.select(no));
+//        }
+//
+//        pickDto.setImgLink(imgs.get(0).getImgLink());
 
         int result = pickService.update(pickDto);
         if(result == SUCCESS) {

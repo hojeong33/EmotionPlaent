@@ -94,41 +94,46 @@ public class PickServiceImpl implements PickService{
         int type = pickDto.getType();
 
         List<Integer> contentListNo = new ArrayList<>();
+        List<PickContentDto> list = new ArrayList<>();
         if (type == 0) {
             List<PickContentDto> pickContentDtos = pickContentDao.listOnMusic(no);
+            list = pickContentDtos;
             for (PickContentDto pickContentDto : pickContentDtos) {
                 contentListNo.add(pickContentDto.getNo());
             }
         } else if (type == 1) {
             List<PickContentDto> pickContentDtos = pickContentDao.listOnMovie(no);
+            list = pickContentDtos;
             for (PickContentDto pickContentDto : pickContentDtos) {
                 contentListNo.add(pickContentDto.getNo());
             }
         } else {
             List<PickContentDto> pickContentDtos = pickContentDao.listOnActivity(no);
+            list = pickContentDtos;
             for (PickContentDto pickContentDto : pickContentDtos) {
                 contentListNo.add(pickContentDto.getNo());
             }
         }
 
-        pickDto.setContentsList(contentListNo);
+        //pickDto.setContentsList(contentListNo);
+        pickDto.setContentsListData(list);
         return pickDto;
     }
 
     @Override
     public int update(PickDto pickDto) {
-        S3Dto imgDto = s3Dao.selectByLink(pickDto.getImgLink());
-        s3Dao.deleteByNo(imgDto.getNo());
+//        S3Dto imgDto = s3Dao.selectByLink(pickDto.getImgLink());
+//        s3Dao.deleteByNo(imgDto.getNo());
         return pickDao.update(pickDto);
     }
 
     @Override
     public int delete(int no) {
         PickDto pickDto = pickDao.select(no);
-        if(!("".equals(pickDto.getImgLink()) || pickDto.getImgLink() == null)) {
-            S3Dto imgDto = s3Dao.selectByLink(pickDto.getImgLink());
-            s3Dao.deleteByNo(imgDto.getNo());
-        }
+//        if(!("".equals(pickDto.getImgLink()) || pickDto.getImgLink() == null)) {
+//            S3Dto imgDto = s3Dao.selectByLink(pickDto.getImgLink());
+//            s3Dao.deleteByNo(imgDto.getNo());
+//        }
         return pickDao.delete(no);
     }
 
