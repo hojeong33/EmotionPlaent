@@ -38,6 +38,7 @@
     <userpage-following-list v-if="userpagefollowingListActive" />
     <likes-list v-if="likesListActive"/>
     <add-play-list v-if="addPlayListActive"/>
+    <add-to-play-list v-if="addToPlayListActive"/>
     <!-- 이메일 -->
     <found-email v-if="foundEmailModalActive"/>
     <notfound-email v-if="notfoundEmailModalActive"/>
