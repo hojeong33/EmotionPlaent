@@ -1,7 +1,7 @@
 <template>
   <article id="list-container">
 		<filter-tab v-if="tab == 'feed'" :user-mood="userMood" @filtering="filtering" />
-        <filter-tab v-if="tab == 'pick'" style="visibility:hidden;" />
+    <filter-tab v-if="tab == 'pick'" style="visibility:hidden;" />
 		<search-feed-list v-if="tab == 'feed'" :feeds="filteredFeeds" />
 		<search-pick-list v-if="tab == 'pick'" :picks="this.filteredPick"  />
 		<div id="no-result" 
@@ -23,7 +23,6 @@ export default {
 	data(){
 		return {
 			feedData: null,
-			pickData: null,
 			filter: 0,
 			filteredFeed: [],
 			filteredPick: [],
@@ -67,7 +66,7 @@ export default {
       })
 		}
 	},
-	created: function() {
+	mounted: function() {
 		this.feedData = this.$store.state.tagSearchResult
 		this.test()
 	},
