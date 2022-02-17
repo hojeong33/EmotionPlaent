@@ -1,31 +1,31 @@
 <template>
   <article id="list-container">
 		<filter-tab :user-mood="userMood" @filtering="filtering" />
+
 		<search-feed-list v-if="tab == 'feed'" :feeds="filteredFeeds" />
-		<search-pick-list v-if="tab == 'pick'" :picks="filteredPicks" />
+		<search-pick-list v-if="tab == 'pick'" :picks="this.filteredPick" />
 		<div id="no-result" 
-			v-if="(tab == 'feed' && this.filteredFeeds.length === 0)||(tab == 'pick' && !filteredPicks.length)">
+			v-if="(tab == 'feed' && this.filteredFeed.length === 0)||(tab == 'pick' && this.filteredPick.length === 0)">
 			<img id="nothing" src="@/assets/images/etc/alien.png" alt="no result">
-			<p v-if="tab == 'feed' && this.filteredFeeds.length === 0">게시글이 없어요...</p>
-			<p v-if="tab == 'pick' && !filteredPicks.length">찜목록이 없어요...</p>
+			<p v-if="tab == 'feed' && this.filteredFeed.length === 0">게시글이 없어요...</p>
+			<p v-if="tab == 'pick' && this.filteredPick.length === 0">찜목록이 없어요...</p>
 		</div>
 	</article>
 </template>
 
 <script>
-import FilterTab from '@/components/Search/SearchResult/FilterTab'
+import FilterTab from '@/components/user/FilterTab'
 import SearchFeedList from '@/components/Search/SearchResult/SearchFeedList'
 import SearchPickList from '@/components/Search/SearchResult/SearchPickList'
-import feedData from '@/assets/data/userFeed'
-import pickData from '@/assets/data/pickData'
 
 export default {
 	data(){
 		return {
-			feedData,
-			pickData,
+			feedData: null,
+			pickData: null,
 			filter: 0,
-			filteredFeed: []
+			filteredFeed: [],
+			filteredPick: [],
 		}
 	},
 	props: {
@@ -41,32 +41,29 @@ export default {
 		filtering(payload){
       this.filter = payload
 			this.filteredFeed = []
+			this.filteredPick = []
     }
+	},
+	created: function() {
+		this.feedData = this.$store.state.tagSearchResult
+		if(this.$store.state.searchPickList !== null){
+			this.filteredPick = this.$store.state.searchPickList
+		}
+		console.log(this.filteredPick)
 	},
 	computed: {
 		filteredFeeds(){
 			if (this.filter){
-				this.$store.state.tagSearchResult.forEach(feed => {
-					if (feed.tags[0].no == this.filter){
-						this.filteredFeed.push(feed)
-					}
-				});
-				return this.filteredFeed
-			}
-			return this.$store.state.tagSearchResult
-		},
-		filteredPicks(){
-			if (this.filter){
 				const temp = []
-				this.pickData.forEach(pick => {
-					if (pick.planet == this.filter){
-						temp.push(pick)
+				this.feedData.forEach(feed => {
+					if (feed.tagno == this.filter){
+						temp.push(feed)
 					}
 				});
 				return temp
 			}
-			return this.pickData
-    },
+			return this.feedData
+		},
 	},
 }
 </script>
@@ -112,12 +109,4 @@ export default {
 	#filter {
 		display: flex;
 	}
-
-	.active {
-    color: black;
-    font-size: 1.4rem;
-    font-weight: bold;
-    margin-bottom: 0.5rem;
-  }
-
 </style>

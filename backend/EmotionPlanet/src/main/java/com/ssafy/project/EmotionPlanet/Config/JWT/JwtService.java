@@ -2,7 +2,9 @@ package com.ssafy.project.EmotionPlanet.Config.JWT;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.ssafy.project.EmotionPlanet.Dao.FeedDao;
 import com.ssafy.project.EmotionPlanet.Dao.UserDao;
+import com.ssafy.project.EmotionPlanet.Dto.FeedDto;
 import com.ssafy.project.EmotionPlanet.Dto.TokenDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserDto;
 import com.ssafy.project.EmotionPlanet.Dto.UserSecretDto;
@@ -16,16 +18,16 @@ import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
 import java.io.UnsupportedEncodingException;
-import java.util.Base64;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class JwtService {
 
     @Autowired
     UserDao userDao;
+
+    @Autowired
+    FeedDao feedDao;
 
 //    @Value("{jwt.secret}")
 //    private String encodeKey;
@@ -54,10 +56,12 @@ public class JwtService {
 
     public String createAccess(String email) {
         UserDto user = userDao.userSelectByEmail(email);
-
+        List<FeedDto> feedDtos = feedDao.myList(user.getNo());
+        if(feedDtos == null) user.setFeedCount(0);
+        else user.setFeedCount(feedDtos.size());
         UserSecretDto userDto = new UserSecretDto(user.getNo(), user.getEmail(),
                 user.getNickname(), user.getBirth(), user.getProfileImg(), user.getTel(), user.getIntro() ,
-                user.getPublish(), user.getMood());
+                user.getPublish(), user.getMood(), user.getFeedCount());
         System.out.println("==== create Access === " + "\n" + userDto.toString());
         return createJws(accessExpMin, userDto);
     }

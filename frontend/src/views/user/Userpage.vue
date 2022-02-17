@@ -1,32 +1,28 @@
 <template>
-  <section id="mypage-container" v-if="$store.state.searchUserInfo !== null">
-    <side-profile-card :user-info="userInfo" />
+  <section id="mypage-container" v-if="userInfo">
     <article id="profile-container">
-      <img id="profile-img" :src="$store.state.searchUserInfo.profileImg">
+      <img id="profile-img" :src="userInfo.profileImg">
       <div id="profile-card">
         <div id="name-card">
-          <h1>{{ this.$store.state.searchUserInfo.nickname }}</h1>
-          <div v-if="$store.state.searchUserInfo.no !== $store.state.userInfo.no">
-            <button v-if="$store.state.searchUserFollowInfo.followcheck == 0" id="follow"
-          @click="follow">팔로우 하기</button>
-          <button v-if="$store.state.searchUserFollowInfo.followcheck == 1" id="unfollow"
-          @click="unfollow">언팔로우</button>
-          </div>
-          <div v-else>
-            <button @click="$router.push({name: 'Setting'})">프로필 수정</button>
+          <h1>{{ userInfo.nickname }}</h1>
+          <div>
+            <button v-if="!isFollow" id="follow"
+            @click="follow">팔로우</button>
+            <button v-else id="unfollow"
+            @click="unfollow">언팔로우</button>
           </div>
         </div>
-        <div id="info-card">
-          <h3>이야기 {{ this.$store.state.searchUserFeedInfo.length }}개</h3>
-          <h3 @click="showFollowerList" style="cursor: pointer;">팔로워 {{ this.$store.state.searchUserFollowInfo.userFollow.length }}</h3>
-          <h3 @click="showFollowingList" style="cursor: pointer;">팔로우 {{ this.$store.state.searchUserFollowInfo.userFollowing.length }}</h3>
+        <div id="info-card" v-if="feeds && followers && followings">
+          <h3>이야기 {{ feeds.length }}개</h3>
+          <h3 style="cursor: pointer;">팔로워 {{ followers.length }}</h3>
+          <h3 style="cursor: pointer;">팔로우 {{ followings.length }}</h3>
         </div>
       </div>
     </article>
     <article id="tab">
-      <span id="dot1" :class="userPageTab == 'feed' ? 'slide-out':'slide-in'" />
-      <p @click="changeTab('feed')" :class="userPageTab == 'feed' ? 'activate': ''">이야기</p>
-      <p @click="changeTab('pick')" :class="userPageTab == 'pick' ? 'activate': ''">찜 목록</p>
+      <span id="dot1" :class="tab == 'feed' ? 'slide-out':'slide-in'" />
+      <p @click="changeTab('feed')" :class="tab == 'feed' ? 'activate': ''">이야기</p>
+      <p @click="changeTab('pick')" :class="tab == 'pick' ? 'activate': ''">찜 목록</p>
     </article>
     <article id="list-container">
       <router-view/>
@@ -35,26 +31,28 @@
 </template>
 
 <script>
-import SideProfileCard from '@/components/SideProfileCard.vue'
+import axios from 'axios'
 
+const session = window.sessionStorage;
 export default {
   name: 'Userpage',
-  components: {SideProfileCard},
   data() {
     return {
-      userInfo: {
-      username: '최강상후',
-      mood: 3,
-      posts: 0,
-      },
-      userPageTab: 'feed',
+      userInfo: null,
+      followers: null,
+      followings: null,
+      feeds: null,
+      tab: 'feed',
       filter: 0
     }
   },
+  props: {
+    userId: String
+  },
   methods: {
-    changeTab(tap){
-      this.userPageTab = tap
-      this.$router.push({ path: `/userpage/${tap}` })
+    changeTab(tab){
+      this.tab = tab
+      this.$router.push({ path: `/user/${this.userId}/${tab}` })
     },
     follow() {
       this.$store.dispatch('sendfollow', this.$store.state.searchUserNo)
@@ -62,22 +60,85 @@ export default {
     unfollow() {
       this.$store.dispatch('deletefollow', this.$store.state.searchUserNo)
     },
-    showFollowerList: function () {
-      this.$store.commit('userpagefollowerListActivate')
+
+    getFollowData: function () {
+      const headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+
+      axios({
+        method: 'get',
+        url: `/api/follows/${this.$store.state.userInfo.no}/${this.userId}`,
+        headers: headers,  // 넣는거 까먹지 마세요
+      })
+      .then(res => {
+        console.log("팔로우 정보 가져오기 성공")
+        console.log(res.data)
+        this.followers = res.data.follower
+        this.followings = res.data.following
+        this.$store.dispatch('accessTokenRefresh', res) // store에서
+      })
     },
-    showFollowingList: function () {
-      this.$store.commit('userpagefollowingListActivate')
+    getFeedData: function(){
+
+      const headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+
+      axios({
+        method: 'get',
+        url: `/api/feeds/my/${this.userId}`,
+        headers: headers,  // 넣는거 까먹지 마세요
+      })
+      .then(res => {
+        console.log("피드 가져오기 성공")
+        console.log(res.data)
+        this.feeds = res.data
+        this.$store.dispatch('accessTokenRefresh', res)
+      })
     }
   },
-  mounted(){
-
+  computed: {
+    isFollow(){
+      if (this.followers){
+        this.followers.forEach(ele => {
+          if (ele.no == this.$store.state.userInfo.no){
+            return true
+          }
+        })
+      }
+      return false
+    }
   },
   created(){
-    window.addEventListener('load', () => {
-      if (this.$route.params.tap != 'feed'){
-        this.userPageTab = 'pick'
-      }
+    const firstheaders = {
+      'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+      'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+    };
+    console.log(this.$route)
+		axios({
+			method:'get',
+			url:`/api/users/${this.userId}`,
+			headers:firstheaders,
+		})
+		.then(res => {
+			if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
+				session.setItem('at-jwt-access-token', "");
+				session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
+				console.log("Access Token을 교체합니다!!!")
+			}
+			this.userInfo = res.data
+      console.log('유저정보는?', this.userInfo)
+		})
+    .then(() => {
+      this.getFollowData() // 팔로우 데이터
     })
+    .then(() => {
+      this.getFeedData() // 피드 데이터
+    })
+		.catch(error => console.log('안되네', error))
   }
 }
 </script>

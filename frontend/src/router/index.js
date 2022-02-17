@@ -12,8 +12,8 @@ import Mypage from '@/views/user/Mypage.vue'
 import Userpage from '@/views/user/Userpage.vue'
 import List from '@/components/user/List'
 import PickItem from '@/components/user/PickItem'
-import UserList from '@/components/SearchUser/UserList'
-import UserPickItem from '@/components/SearchUser/UserPickItem'
+// import UserList from '@/components/SearchUser/UserList'
+// import UserPickItem from '@/components/SearchUser/UserPickItem'
 
 import Main from '@/views/main/Main.vue'
 import Setting from '@/views/Setting'
@@ -24,6 +24,7 @@ import FeedDetail from '@/components/FeedDetail'
 import ProfileUpdate from '@/components/Settings/ProfileUpdate'
 import SearchResult from '@/components/Search/SearchResult/SearchResult'
 import SearchList from '@/components/Search/SearchResult/SearchList'
+import PickItem2 from '@/components/Search/SearchResult/PickItem2'
 
 import store from '../store/index.js'
 
@@ -111,7 +112,7 @@ const routes = [
         },
       },
       {
-        path: 'item/:id/:tag/:index',
+        path: 'item/:pickNo',
         component: PickItem,
         props: true,
         meta: {
@@ -123,10 +124,11 @@ const routes = [
     ]
   },
   {
-    path: '/userpage',
+    path: '/user/:userId',
     name: 'Userpage',
-    redirect: '/userpage/feed',
+    redirect: '/user/:userId/feed',
     component: Userpage,
+    props: true,
     meta: {
       loginRequired: true,
       testRequired:  true,
@@ -135,7 +137,7 @@ const routes = [
     children: [
       {
         path: ':tab',
-        component: UserList,
+        component: List,
         props: true,
         meta: {
           loginRequired: true,
@@ -144,8 +146,8 @@ const routes = [
         },
       },
       {
-        path: 'item/:id/:tag/:index',
-        component: UserPickItem,
+        path: 'item/:pickNo',
+        component: PickItem,
         props: true,
         meta: {
           loginRequired: true,
@@ -256,6 +258,16 @@ const routes = [
           showingNav: true,
         },
       },
+      {
+        path: 'item/:pickNo',
+        component: PickItem2,
+        props: true,
+        meta: {
+          loginRequired: true,
+          testRequired: true,
+          showingNav: true,
+        },
+      }
     ]
   },
 ]
@@ -312,7 +324,7 @@ router.beforeEach((to, from, next) => {
     next({ name:'EmotionTest' })
   }
   //로그인 된 사용자가 로그인 or 회원가입 페이지로 가려고 할 경우
-  if (!to.meta.loginRequired && store.state.userInfo){
+  if (!to.meta.loginRequired && store.state.userInfo && token){
     console.log('메인')
     next({ name:'Main' })
   }

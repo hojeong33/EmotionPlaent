@@ -30,18 +30,19 @@ export default {
   },
   methods: {
     go_to_detail(){
-      this.$router.push({path: `/mypage/item/${this.pick.userNo}/${this.pick.tagNo}/${this.pick.no}`})
+      this.$router.push({path:`${this.$route.matched[0].path}/item/${this.pick.no}`})
+      this.$router.push({path: `/search/item/${this.pick.no}`})
     }
   },
   computed: {
     thumbNail(){
-      return this.pick.contentsList[0].postImgLink
+      return this.pick.imgLink
     },
     title(){
       return this.pick.name
     },
     planet(){
-      return this.planetStyles[this.pick.tagNo].img
+      return this.planetStyles[this.pick.tagno].img
     }
   }
 }

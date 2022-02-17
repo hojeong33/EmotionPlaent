@@ -131,34 +131,19 @@ export default {
       // 	this.isUserFeedSettingOpened=true
       // }
     },
-    like() {
+    like:function(){
       this.feed.like ? this.cancelLike(): this.doLike();
       this.feed.like= !this.feed.like;
     },
     doLike:function(){
-      const userdata = JSON.parse(session.getItem('userInfo')) ;
-      const likeItem={
-        targetNo:this.post,
-        userNo:userdata.no,
+      let el = {
+        receiver : this.feed.author,
+        feedno : this.post,
       }
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        };
-        axios({
-            method: 'post',
-            url:`/api/feeds/like`,
-            data:likeItem,
-            headers: headers,  // 넣는거 까먹지 마세요
-          }).then((res) => {
-          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-          this.getFeed()
-          console.log(res.data)
-          }).catch((error) => {
-            console.log(error);
-          }).then(() => {
-            console.log('좋아요 누름');
-          });
+      this.$store.dispatch('addfeedlike',el)
+    },
+    cancelLike:function(){
+      this.$store.dispatch('deletefeedlike',this.post)
     },
     getFeed:function(){
        let headers = {
@@ -179,31 +164,6 @@ export default {
             console.log(error);
           }).then(() => {
             console.log('피드 하나 가져오기');
-          });
-    },
-    cancelLike:function(){
-      const userdata = JSON.parse(session.getItem('userInfo')) ;
-      const likeItem={
-        targetNo:this.post,
-        userNo:userdata.no,
-      }
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        };
-        axios({
-            method: 'delete',
-            url:`/api/feeds/like`,
-            data:likeItem,
-            headers: headers,  // 넣는거 까먹지 마세요
-          }).then((res) => {
-          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-          this.getFeed()
-          console.log(res.data)
-          }).catch((error) => {
-            console.log(error);
-          }).then(() => {
-            console.log('좋아요 해제');
           });
     },
     likesList:function(){
