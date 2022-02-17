@@ -1,6 +1,6 @@
 <template>
   <div id="mainpage-container">
-    <loading v-if="$store.state.loading"></loading>
+    <!-- <loading v-if="$store.state.loading"></loading> -->
     <side-profile-card :user-info="userInfo"> </side-profile-card>
     <div class="container justify-content-center">
       <div class="example">
@@ -30,7 +30,7 @@
 </template>
 
 <script>
-import Loading from "./Loading.vue"
+// import Loading from "./Loading.vue"
 import TabItem from "./TabItem.vue";
 import Recommend from "../../components/MainPage/RecommendTab/Recommend.vue";
 import FeedList from "../../components/MainPage/FeedTab/FeedList.vue";
@@ -40,7 +40,7 @@ const session = window.sessionStorage;
 
 export default {
   name: "Main",
-  components: { Loading, TabItem, Recommend, FeedList, SideProfileCard },
+  components: { TabItem, Recommend, FeedList, SideProfileCard },
   data() {
     return {
       posts,
@@ -65,15 +65,10 @@ export default {
   },
   created() {
     if (this.$store.state.recommendReload === 0) {
-        this.$store.dispatch("recommendMusic");
-				this.$store.dispatch("recommendMovie");
-				this.$store.dispatch("recommendActivity");
-        
-        this.$store.dispatch("userfollowdate", this.$store.state.userInfo.no);
-        this.$store.dispatch("alarmselect")
-        this.$store.dispatch("connect")
-        // this.$store.dispatch("searchUserFeed", this.$store.state.userInfo.no)
-        this.$store.state.recommendReload = 1;
+      this.$store.dispatch("userfollowdate", this.$store.state.userInfo.no);
+      this.$store.dispatch("alarmselect")
+      this.$store.dispatch("connect")
+      this.$store.state.recommendReload = 1;
     }
     console.log("유저인포");
     console.log(this.$store.state.userInfo);
@@ -81,20 +76,10 @@ export default {
     console.log("세션 유저 인포")
     console.log(session.getItem('userInfo'))
   },
-  mounted() {
-    if (this.$store.state.loading == true) {
-      setTimeout(() => {
-        this.$store.state.loading = false
-      }, 2500)
-    } 
-  },
-  updated() {
-    if (this.$store.state.loading == true) {
-      setTimeout(() => {
-        this.$store.state.loading = false
-      }, 2500)
-    } 
-  },
+  // mounted(){
+  //   console.log('updated 입니다')
+  //   this.$store.commit('load', false)
+  // }
 };
 </script>
 

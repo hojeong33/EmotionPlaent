@@ -278,6 +278,9 @@ export default {
   created() {
     console.log(this.$store.state.userInfo)
     this.credentials.beforeNick = this.$store.state.userInfo.nickname
+  },
+  mounted(){
+    this.$store.commit('load', false)
   }
 }
 </script>

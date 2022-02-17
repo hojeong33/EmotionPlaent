@@ -34,8 +34,6 @@ export default new Vuex.Store({
     type:0, // 음악:0 영화:1 활동:2
     //내가 선택한 아이템
     item:null,
-    //내가 선택한 폴더
-    pickedForderName:null,
 
     // 내정보
     userInfo: null,
@@ -62,6 +60,8 @@ export default new Vuex.Store({
     },
     searchUserFeedInfo: [], //내 피드 정보
     searchUserPickInfo: [], //내 찜목록 정보
+    followerList: null,
+    followingList: null,
 
     planetStyles: [
       { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
@@ -112,16 +112,9 @@ export default new Vuex.Store({
     userpagefollowerListActive: false,
     likesListActive:false,
     addPlayListActive:false,
-    addToPlayListActive:false,
     nicknameErrModalActive:false,
     pwchangeErrModalActive:false,
     pwchangeConfirmModalActive:false,
-    foundEmailModalActive:false,
-    foundEmail: null,
-    notfoundEmailModalActive:false,
-    noTelModalActive:false,
-    wrongEmailModalActive:false,
-    noMatchEmailModalActive:false,
   
     // 모달의 에러 메시지
     serverErrorMessage: '',
@@ -139,6 +132,9 @@ export default new Vuex.Store({
     commentDeleted: false
   },
   mutations: {
+    load(state, payload){
+      state.loading = payload
+    },
     navActivate: function({ navActive }, payload){
       console.log('지금 나는?', payload)
       if (payload == -1){
@@ -306,26 +302,6 @@ export default new Vuex.Store({
       state.pwchangeErrModalActive = !state.pwchangeErrModalActive
     },
     //
-    //이메일찾기 페이지 모달 3개
-    foundEmailModalActivate: function (state, email) {
-      state.foundEmailModalActive = !state.foundEmailModalActive
-      state.foundEmail = email
-    },
-    notfoundEmailModalActivate: function (state) {
-      state.notfoundEmailModalActive = !state.notfoundEmailModalActive
-    },
-    noTelModalActivate: function (state) {
-      state.noTelModalActive = !state.noTelModalActive
-    },
-    //
-    //비번찾기 페이지 모달 2개 
-    wrongEmailModalActivate: function (state) {
-      state.wrongEmailModalActive = !state.wrongEmailModalActive
-    },
-    noMatchEmailModalActivate: function (state) {
-      state.noMatchEmailModalActive = !state.noMatchEmailModalActive
-    },
-    //
     feedUpdateActivate: function (state) {
       state.feedUpdateActive = !state.feedUpdateActive
       console.log(state.feedUpdateActive)
@@ -342,13 +318,13 @@ export default new Vuex.Store({
       state.pickYourTagModalActive = !state.pickYourTagModalActive
       console.log(state.pickYourTagModalActive)
     },
-    mypagefollowingListActivate: function (state) {
+    mypagefollowingListActivate: function (state, payload) {
       state.mypagefollowingListActive = !state.mypagefollowingListActive
-      console.log(state.mypagefollowingListActive)
+      state.followingList = payload
     },
-    mypagefollowerListActivate: function (state) {
+    mypagefollowerListActivate: function (state, payload) {
       state.mypagefollowerListActive = !state.mypagefollowerListActive
-      console.log(state.mypagefollowerListActive)
+      state.followerList = payload
     },
     userpagefollowingListActivate: function (state) {
       state.userpagefollowingListActive = !state.userpagefollowingListActive
@@ -368,10 +344,6 @@ export default new Vuex.Store({
       state.type=sendData[0]
       state.item=sendData[1]
       console.log(state.addPlayListActive)
-    },
-    addToPlayListActive:function(state,sendData){
-      state.addToPlayListActive=!state.addToPlayListActive
-      state.pickedForderName=sendData
     },
     // 댓글
     isDelete: function (state) {
@@ -807,57 +779,6 @@ export default new Vuex.Store({
     },
 
     //검색 끝 추천탭 시작입니다
-    recommendMusic() {
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-        axios.get('/api/recommend/music/' + this.state.userInfo.mood, {
-          headers: headers,
-        }).then((res) => {
-          this.state.recommendMusic = res.data
-          this.dispatch('accessTokenRefresh', res) 
-        
-        }).catch((error) => {
-          console.log(error);
-        }).then(() => {
-          console.log('getQSSList End!!');
-        });
-    },
-    recommendMovie() {
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-			axios.get('/api/recommend/movie/' + this.state.userInfo.mood, {
-          headers: headers,
-        }).then((res) => {
-          this.state.recommendMovie = res.data
-          this.dispatch('accessTokenRefresh', res)
-        
-        }).catch((error) => {
-          console.log(error);
-        }).then(() => {
-          console.log('getQSSList End!!');
-        });
-    },
-    recommendActivity() {
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-			axios.get('/api/recommend/activity', {
-          headers: headers,
-        }).then((res) => {
-          this.state.recommendActivity = res.data
-          this.dispatch('accessTokenRefresh', res)
-        
-      }).catch((error) => {
-        console.log(error);
-      }).then(() => {
-        console.log('getQSSList End!!');
-      });
-  },
 
     accessTokenRefresh({commit}, res) {
       console.log("accesstoken : " + res.headers)

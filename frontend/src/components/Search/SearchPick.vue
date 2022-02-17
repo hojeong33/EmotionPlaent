@@ -8,7 +8,7 @@
         <div id="search">
           <span class="info">
             <span id="title">#{{ result.name }}행성</span>
-            <img class="feed-planet" :src="require('@/assets/images/emotions/' + planetStyles[idx].img)" id="planet">
+            <img class="feed-planet" :src="require(`@/assets/images/emotions/${planet}`)" id="planet">
           </span>
           <span id="content">찜목록: {{ result.count }}개</span>
         </div>
@@ -34,6 +34,7 @@ export default {
       searchPick: null,
       searchPickResult: null,
       planetStyles: [
+				{ id: 0, name: 'default'},
         { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
         { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
         { id: 3, name: '심심행성', img: "neutral.png", color: '#ABBECA' },
@@ -48,6 +49,15 @@ export default {
     searchPickDetail(el){
       this.$router.push({ path: `/search/pick`, query: { tag: el } })
     },
+  },
+  computed: {
+    planet() {
+			const idx = this.$store.state.userInfo.mood
+			if (idx){
+				return this.planetStyles[idx].img
+			}
+			return "neutral.png"
+		}
   },
   created() {
     console.log(this.$store.state.words)
@@ -64,7 +74,6 @@ export default {
       this.$store.dispatch('accessTokenRefresh', res)
       console.log('찜목록 검색 성공', res.data)
       this.searchPick = res.data
-      console.log(this.searchPick)
     })
     .catch((err)=> {
       console.log('찜목록 검색 실패')

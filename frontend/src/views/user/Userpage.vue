@@ -47,7 +47,7 @@ export default {
     }
   },
   props: {
-    userId: Number,
+    userId: String
   },
   methods: {
     changeTab(tab){
@@ -166,6 +166,7 @@ export default {
     })
     .then(() => {
       this.getFeedData() // 피드 데이터
+      this.$store.commit('load', false)
     })
 		.catch(error => console.log('안되네', error))
   }

@@ -1,7 +1,7 @@
 <template>
   <article id="list-container">
 		<filter-tab v-if="tab == 'feed'" :user-mood="userMood" @filtering="filtering" />
-    <filter-tab v-if="tab == 'pick'" style="visibility:hidden;" />
+        <filter-tab v-if="tab == 'pick'" style="visibility:hidden;" />
 		<search-feed-list v-if="tab == 'feed'" :feeds="filteredFeeds" />
 		<search-pick-list v-if="tab == 'pick'" :picks="this.filteredPick"  />
 		<div id="no-result" 
@@ -23,6 +23,7 @@ export default {
 	data(){
 		return {
 			feedData: null,
+			pickData: null,
 			filter: 0,
 			filteredFeed: [],
 			filteredPick: [],
@@ -59,6 +60,7 @@ export default {
         this.$store.state.tagSearchResult = []
         this.filteredPick = res.data;
         this.$store.state.searching = false
+				this.$store.commit('load', false)
       })
       .catch(()=> {
         console.log('찜목록 없음')
@@ -66,7 +68,7 @@ export default {
       })
 		}
 	},
-	mounted: function() {
+	created: function() {
 		this.feedData = this.$store.state.tagSearchResult
 		this.test()
 	},

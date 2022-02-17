@@ -29,10 +29,6 @@
 </template>
 
 <script>
-import axios from 'axios'
-
-const session = window.sessionStorage;
-
 export default {
   data: function(){
     return {
@@ -41,25 +37,11 @@ export default {
   },
   methods: {
     go_to_back: function(){
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-       axios({
-        method: 'delete',
-        url: '/api/users/' + this.$store.state.userInfo.no,
-        headers: headers,
-        })
-			.then(() => {
-				console.log('탈퇴');
-				session.clear();
-			})
-			.then(() => {
-				window.location.reload()
-			})
-			.catch(() => alert('fail'))
-    this.$emit('cancel')
+      this.$emit('cancel')
     }
+  },
+   mounted(){
+    this.$store.commit('load', false)
   }
 }
 </script>
@@ -96,9 +78,9 @@ export default {
     display: flex;
     justify-content: center;
     align-items: center;
-    position: fixed;
-    width: 100%;
-    height: 100%;
+    position: absolute;
+    width: 100vw;
+    height: 100vh;
     top: 0;
     left: 0;
     background-color: rgb(0, 0, 0, 0.5);

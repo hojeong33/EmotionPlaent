@@ -1,20 +1,15 @@
 <template>
   <div id="feed-list">
-    <!-- <div id="show-btns">
-      <h3>보기</h3>
-      <button @click="showOption = 'grid'" :class="showOption == 'grid' ? 'g-active':'g' " />
-      <button @click="showOption = 'card'" :class="showOption == 'card' ? 'c-active':'c' " />
-    </div> -->
     <div v-if="showOption == 'grid'" id="grid-container">
       <feed-small v-for="feed in filteredFeeds"
-        :idx="feed"
-        :key="feed" />
+        :feed="feed"
+        :key="feed.no" />
     </div>
-    <!-- <div v-if="showOption == 'card'" id="card-container">
-      <feed v-for="feed in filteredFeeds"
-        :idx="feed"
-        :key="feed" />
-    </div> -->
+    <div id="no-result" 
+			v-if="!filteredFeeds.length">
+			<img id="nothing" src="@/assets/images/etc/alien.png" alt="no result">
+			<p>게시글이 없어요...</p>
+		</div>
   </div>
 </template>
 
@@ -32,8 +27,8 @@ export default {
     }
   },
   props: {
-    feeds: Array,
-    filter: Number
+    filter: Number,
+    userId: String
   },
   components: {
     // Feed,
@@ -41,22 +36,29 @@ export default {
   },
   computed: {
     filteredFeeds(){
-      if (this.rawFeeds && this.filter){
-        const temp = []
-        this.rawFeeds.forEach(feed => {
-          if (feed.tags[0].no == this.filter){
-            temp.push(feed.no)
-          }
-        })
-        console.log('나는 필터됐용',temp)
-        return temp
+      if (this.rawFeeds){
+        if (this.filter){
+          const temp = []
+          this.rawFeeds.forEach(feed => {
+            if (feed.tags[0].no == this.filter){
+              temp.push(feed.no)
+            }
+          })
+          console.log('나는 필터됐용',temp)
+          return temp
+        }
+        return this.rawFeeds
       }
-      return this.feeds
+      return []
     }
   },
   created(){
     const session = window.sessionStorage
-		const userdata = JSON.parse(session.getItem('userInfo'))
+		let user = JSON.parse(session.getItem('userInfo')).no
+
+    if (this.userId){
+      user = this.userId
+    }
 
     let headers = {
       'at-jwt-access-token': session.getItem('at-jwt-access-token'),
@@ -64,7 +66,7 @@ export default {
     };
     axios({
       method:'get',
-      url:`/api/feeds/my/${userdata.no}`,
+      url:`/api/feeds/my/${user}`,
       headers:headers,
     })
     .then((res) => {
@@ -75,6 +77,7 @@ export default {
       }
       this.rawFeeds=res.data
       console.log('내는 피드리스트여', this.rawFeeds)
+      this.$emit('comp')
     })
     .catch((error) => {
       console.log('FeedList', error);
@@ -86,6 +89,13 @@ export default {
 <style scoped>
   h3 {
     margin: 0 1rem;
+  }
+
+  p {
+    color: #777777;
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin: 2.5rem;
   }
 
   button {
@@ -126,6 +136,21 @@ export default {
     align-items: center;
     width: 100%;
     padding: 1rem;
+  }
+  
+	#no-result {
+		display:flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		padding-top: 1rem;
+	}
+
+	#nothing {
+    width: 10%;
+		height: 10%;
+    height: inherit;
+    aspect-ratio: 1/1;
   }
 
   .g {

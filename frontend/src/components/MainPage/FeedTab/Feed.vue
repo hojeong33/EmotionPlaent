@@ -1,61 +1,51 @@
 <template>
   <div id="feed" v-if="feed">
-    <div id=" feed_innercontainer" style="width:95%; margin:auto;">
-      <div id="header">
-        <img id="profile_image" :src="feed.authorDetail.profileImg" />
-        <div id="profile_content">
-          <p id="username">{{feed.authorDetail.nickname}}</p>
-          <p id="feed_date">{{ feed.date|dateChanger }}</p>
-        </div>
+    <div id="header">
+      <section id="profile_image">
+        <img :src="feed.authorDetail.profileImg" />
+      </section>
+      <div id="profile_content">
+        <section id="username" style="font-size:2rem;">{{feed.authorDetail.nickname}}</section>
+        <section style="font-size:1.2rem;">{{feed.date}}</section>
       </div>
-      <div id="post_image">
-        <article id="img-box">
-        <div id="uploaded-box">
-            <transition-group id="carousel" :name="page > beforePage ? 'slide':'slide-reverse'">
-              <img id="my_img" v-for="(image, index) in feed.imgs" :key="index"
-              class="uploadedImg" :src="image.imgLink" alt=""
-              v-show="index+1 == page">
-            </transition-group>
-            <div id="pages">
-              <!-- <span v-for="idx in feed.imgs.length" :key="idx" 
-              :class="['page-num', {'here':idx==page}]" @click="paginationByDot(idx)" /> -->
-              <span v-for="idx in feed.imgs.length" :key="idx" 
-              :class="['page-num', {'here':idx==page}]" />
-            </div>
-            <span id="left" class="carousel-btn" @click="pagination(false)"/>
-            <span id="right" class="carousel-btn" @click="pagination(true)"/>
-          </div>
-        </article>
+      <div id="setting" v-if="isMine">
+        <i @click="onCommentSetting" class="fas fa-ellipsis-v" style="color:black"></i>
       </div>
-      <div id="like">
-        <div id="heart">
-          <i class="far fa-heart fa-lg" style="cursor: pointer;"  :class="{'fas': this.feed.like}"  @click="like"></i>
-        </div>
-        <p id="feed_likes" v-for="(like, idx) in feed.likes" :key="idx"></p>
-        <p class="likes" style="cursor: pointer;"  @click="likesList"  >{{feed.likes.length}} likes</p>
-      </div>
-      <div id="content">
-        <div id="tag" style="flex-wrap: wrap;">
-          <p id="my_tag">#{{feed.tags[0].name}}행성 <img :src="require('@/assets/images/emotions/' + tmp.img)" alt="" style="width: 1.2rem; height: 1.2rem;"> &nbsp;</p> 
-          <p id="my_tag" v-for="(tag, idx) in feed.tags.slice(1)" :key="idx" style="flex-wrap: wrap;">#{{tag["name"]}} &nbsp;</p>
-        </div> 
-        <div v-if="isLong">
-          <div v-if="isMore">
-            <p id="caption" style="font-size:1.4rem; font-weight: bold; margin-right: 0.5rem; margin-top: auto; margin-bottom: auto;">{{feed.authorDetail.nickname}}</p>
-            <p style="font-size: 1.2rem; margin: 0.3rem;">{{feed.descr}}</p>
-          </div>
-          <div id="user_caption" v-else>
-            <p id="caption" style="font-size:1.4rem; font-weight: bold; margin-right: 0.5rem; margin-top: auto; margin-bottom: auto;">{{feed.authorDetail.nickname}}</p>
-            <p id="caption-more" @click="captionMore">더보기</p>
-          </div>
-        </div>
-        <div id="user_caption" v-else>
-           <p id="caption" style="font-size:1.4rem; font-weight: bold; margin-right: 0.5rem; margin-top: auto; margin-bottom: auto;">{{feed.authorDetail.nickname}}</p>
-          <p id="caption-more"> {{feed.descr}}</p>
-        </div>
-      </div>
-      <comment-list :feedNo="post" :feedAuthor="feed.author" @delete-comment="commentKey++" :key="commentKey"></comment-list>
     </div>
+    <div id="post_image">
+      <article id="img-box">
+      <div id="uploaded-box">
+          <transition-group id="carousel" :name="page > beforePage ? 'slide':'slide-reverse'">
+            <img id="my_img" v-for="(image, index) in feed.imgs" :key="index"
+            class="uploadedImg" :src="image.imgLink" alt=""
+            v-show="index+1 == page">
+          </transition-group>
+          <div id="pages">
+            <span v-for="idx in feed.imgs.length" :key="idx" 
+            :class="['page-num', {'here':idx==page}]" @click="paginationByDot(idx)" />
+          </div>
+          <span id="left" class="carousel-btn" @click="pagination(false)"/>
+          <span id="right" class="carousel-btn" @click="pagination(true)"/>
+        </div>
+      </article>
+      <!-- <div id="my_img" v-for="(img, idx) in feed.imgs" :key="idx"><div><img :src="img.imgLink" alt=""></div></div> -->
+      <!-- <img :src="post.postImage" alt="" v> -->
+      <!-- <p class="overlay_content" >{{post.author}}님은 {{post.tag[0]}} <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p> -->
+    </div>
+    <div id="like">
+      <div id="heart">
+        <i class="far fa-heart fa-lg" style="cursor: pointer;"  :class="{'fas': this.feed.like}"  @click="like"></i>
+      </div>
+       <p id="feed_likes" v-for="(like, idx) in feed.likes" :key="idx"></p>
+      <p class="likes" style="cursor: pointer;"  @click="likesList"  >{{feed.likes.length}} likes</p>
+    </div>
+    <div id="content">
+      <div id="tag">
+        <p id="my_tag" v-for="(tag, idx) in feed.tags" :key="idx">#{{tag["name"]}}</p>
+      </div> 
+        <p id="caption" style="font-size:1.4rem"><span style="font-weight:bold; margin-right:5px;">{{feed.author}}</span>{{feed.descr}}</p>
+    </div>
+    <comment-list :feedNo="post" :feedAuthor="feed.author" @delete-comment="commentKey++" :key="commentKey"></comment-list>
   </div>
 </template>
 
@@ -72,31 +62,29 @@ export default {
   },
   data(){
     return{
+      // date:this.post.date.toLocaleDateString(),
       page:1,
       beforePage:1,
       isCommentSettingOpened:false,
       isUserFeedSettingOpened: false,
       isMine:false,
       feed:null,
-      isLong: false,
-      isMore: false,
       posts:[],
       planetStyles: [
-        { id: 1, name: '행복', img: "happy.png", color: '#6BD9E8' },
-        { id: 2, name: '우울', img: "depressed.png", color: '#2A61F0' },
-        { id: 3, name: '심심', img: "neutral.png", color: '#C5D3DC' },
-        { id: 4, name: '공포', img: "fear.png", color: '#ED5A8E' },
-        { id: 5, name: '깜짝', img: "surprised.png", color: '#FEA95C' },
-        { id: 6, name: '분노', img: "rage.png", color: '#FB5D38' },
+        { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
+        { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
+        { id: 3, name: '심심행성', img: "neutral.png", color: '#C5D3DC' },
+        { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
+        { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
+        { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
       ],
       commentKey: 0,
-      style: null,
     }
   },
-  computed: {
+   computed: {
     tmp: function () {
-      let name = this.feed.tags[0].name
-      let style = this.planetStyles.find(el => el.name === name) || {}
+      const name = this.feed.tags[0]
+      const style = this.planetStyles.find(el => el.name === name) || {}
       return style
     }
   },
@@ -110,67 +98,50 @@ export default {
         this.page --
       }
     },
-    captionMore:function(){
-      this.isMore=true
-
+    paginationByDot(target){
+      let d
+      if (target > this.page){
+        d = true
+      }
+      else {
+        d = false
+      }
+      for (let i=0;i<Math.abs(target-this.page);i++){
+        setTimeout(() => {
+          console.log(this.page, target, d)
+          this.pagination(d)
+        }, 1000 * i);
+      }
+    },
+    onCommentSetting:function(){
+      this.$store.commit('commentSettingModalActivate')
+      // if(this.isCommentSettingOpened){
+      // 	this.isCommentSettingOpened=false
+      // }else{
+      // 	this.isCommentSettingOpened=true
+      // }
     },
     onUserFeedSetting2:function(){
       this.$store.commit('userFeedSettingModalActivate2')
+      // if(this.isUserFeedSettingOpened){
+      // 	this.isUserFeedSettingOpened=false
+      // }else{
+      // 	this.isUserFeedSettingOpened=true
+      // }
     },
-    like() {
+    like:function(){
       this.feed.like ? this.cancelLike(): this.doLike();
       this.feed.like= !this.feed.like;
     },
     doLike:function(){
-      const userdata = JSON.parse(session.getItem('userInfo')) ;
-      const likeItem={
-        targetNo:this.post,
-        userNo:userdata.no,
+      let el = {
+        receiver : this.feed.author,
+        feedno : this.post,
       }
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        };
-        axios({
-            method: 'post',
-            url:`/api/feeds/like`,
-            data:likeItem,
-            headers: headers,  // 넣는거 까먹지 마세요
-          }).then((res) => {
-          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-          this.$store.dispatch('feedlike',this.targetNo)
-          this.getFeed()
-          console.log(res.data)
-          }).catch((error) => {
-            console.log(error);
-          }).then(() => {
-            console.log('좋아요 누름');
-          });
+      this.$store.dispatch('addfeedlike',el)
     },
     cancelLike:function(){
-      const userdata = JSON.parse(session.getItem('userInfo')) ;
-      const likeItem={
-        targetNo:this.post,
-        userNo:userdata.no,
-      }
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        };
-        axios({
-            method: 'delete',
-            url:`/api/feeds/like`,
-            data:likeItem,
-            headers: headers,  // 넣는거 까먹지 마세요
-          }).then((res) => {
-          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-          this.getFeed()
-          console.log(res.data)
-          }).catch((error) => {
-            console.log(error);
-          }).then(() => {
-            console.log('좋아요 해제');
-          });
+      this.$store.dispatch('deletefeedlike',this.post)
     },
     getFeed:function(){
        let headers = {
@@ -186,9 +157,7 @@ export default {
           console.log('!!!!!!!!!!!!!!!!!!!')
           console.log(res.data)
           this.feed=res.data
-          if (this.feed.descr.length > 30) {
-            this.isLong = true
-          }
+          this.isMine=res.data.owner
           }).catch((error) => {
             console.log(error);
           }).then(() => {
@@ -198,30 +167,6 @@ export default {
     likesList:function(){
        this.$store.commit('likesListActive',this.feed.likes)
        console.log(this.feed.likes)
-    }
-  },
-  filters: {
-    dateChanger(payload){
-      const today = new Date();
-      const timeValue = new Date(payload);
-
-      const betweenTime = Math.floor((today.getTime() - timeValue.getTime()) / 1000 / 60);
-      if (betweenTime < 1) return '방금전';
-      if (betweenTime < 60) {
-          return `${betweenTime}분전`;
-      }
-
-      const betweenTimeHour = Math.floor(betweenTime / 60);
-      if (betweenTimeHour < 24) {
-          return `${betweenTimeHour}시간전`;
-      }
-
-      const betweenTimeDay = Math.floor(betweenTime / 60 / 24);
-      if (betweenTimeDay < 365) {
-          return `${betweenTimeDay}일전`;
-      }
-
-      return `${Math.floor(betweenTimeDay / 365)}년전`;
     }
   },
   created(){
@@ -243,7 +188,7 @@ export default {
   }
   #content{
     text-align: left;
-    margin:0rem 1rem;
+    margin:0rem 3rem;
     font-size: 1.2rem;
   }
   #tag{
@@ -252,9 +197,8 @@ export default {
   #like{
     display:flex;
     /* margin:0rem 3rem 0rem; */
-    margin-left: 1rem;
+    margin-left: 3rem;
     align-items: center;
-    height: 3rem;
 
   }
   .likes{
@@ -266,49 +210,44 @@ export default {
     direction:column;
   }
   #feed{
-    border-bottom: 2px solid  gainsboro;
-    margin-top:1rem;
-    margin-bottom: 1rem;
+    border: 3px solid  rgb(94, 57, 179);
+    border-radius: 30px;
+    margin:1rem;
   }
-
   #my_tag{
     color:rgb(37, 37, 201);
-    margin-top: auto;
-    margin-bottom:auto;
+    margin-bottom:3px;
     font-size:1.2rem;
   }
   #header{
     display:flex;
-    margin:1rem 1rem; 
+    margin:1rem 3rem; 
   }
   #username{
-    font-size: 2rem;
+    font-size: 1.5rem;
     font-weight: bold;
-    margin: 0rem;
-  }
-  #feed_date {
-    font-size: 1rem;
-    margin-top: auto;
-    margin-bottom: auto;
   }
   #profile_image{
-    width: 5rem;
-    height: 5rem;
+    display: inline-flex;
+    width: 4rem;
+    height: 4rem; 
     border-radius: 70%;
-    margin-right: 0.5rem;
+    overflow:hidden;
+  }
+  #profile_image img{
+    width: 4rem;
+    height: 4rem;
+
   }
   #my_img{
-    width: 100%;
     height: 100%;
   }
   #post_image{
     position: relative;
-    /* overflow: hidden; */
+    overflow: hidden;
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    margin: auto;
-    width: 98%;
   }
   .overlay_content {
     position: absolute;
@@ -369,7 +308,7 @@ export default {
     flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
-    /* margin: 1rem; */
+    margin: 1rem;
   }
 
   .page-num {
@@ -378,15 +317,19 @@ export default {
     border-radius: 50%;
     background-color: #cccccc;
     margin: 0.75rem;
-    /* cursor: pointer; */
+    cursor: pointer;
   }
    #img-box {
     display: flex;
     flex-direction: column;
+    width: 85%;
+    height: 65%;
+    background-color: lightgray;
+    border-radius: 20px;
+    margin: auto;
     justify-content: center;
     align-items: center;
-    margin-left: 1rem;
-    margin-right: 1rem;
+    margin: 2rem;
   }
   .here {
     background-color: #777777;
@@ -408,6 +351,7 @@ export default {
     height: 100%;
     position: relative;
     overflow: hidden;
+    border-radius: 20px;
   }
   .carousel-btn {
     background-size: cover;
@@ -420,15 +364,5 @@ export default {
     top: 45%;
     cursor: pointer;
   }
-  #user_caption{
-    display: flex;
-    flex-direction: row;
-  }
-  #caption-more {
-    margin-top: auto;
-    margin-bottom: auto;
-  }
-  #long_caption {
-    display: flex;
-  }
+
 </style>

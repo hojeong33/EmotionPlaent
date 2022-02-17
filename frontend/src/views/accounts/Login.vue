@@ -227,6 +227,9 @@ export default {
       });
     },
   },
+  created(){
+    this.$store.commit('load', false)
+  }
 }
 </script>
 
