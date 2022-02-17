@@ -34,7 +34,7 @@
                 <p v-if="this.alarmCount >= 10" id="plus">+</p>
               </span>
             </span>
-            <alarm v-if="alarming" id="alarm_drop" ></alarm>
+            <alarm v-if="alarming" id="alarm_drop" @cancelAlarm="alarmClose"></alarm>
           </div>
           <img @click="navClick" id="setting"
            :src="require(`@/assets/images/icons/${setting}`)">
@@ -57,7 +57,6 @@ export default {
   data: function (){
     return {
       //검색입니둥
-      
       searchWords: null,
       //알람입니둥
       alarmwatch: 0,
@@ -96,13 +95,11 @@ export default {
     },
     alarmClick() {
       this.$store.commit('navActivate', 3)
-      this.alarming = true
       this.$store.dispatch('alarmselect')
     },
-    // alarmClose() {
-    //   this.$store.commit('navActivate', 3)
-    //   this.alarming = false
-    // },
+    alarmClose() {
+      this.$store.commit('navActivate', 3)
+    },
   },
   computed: {
     feed(){

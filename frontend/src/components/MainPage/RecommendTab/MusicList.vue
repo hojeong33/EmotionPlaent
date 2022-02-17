@@ -6,7 +6,7 @@
         <span class="postCard" v-for="(music, idx) in musicData" :key="idx" v-show="idx >= page && idx < page + 4">
           <img class="postImg" :src="music.imgLink" :alt="music.title">
           <p class="postTitle">{{ music.title }}</p>
-          <img @click="addPlayList(item)" id="goldstar" src="@/assets/images/icons/goldstar.png" alt="like"> 
+          <img @click="addPlayList(music)" id="goldstar" src="@/assets/images/icons/goldstar.png" alt="like"> 
         </span>
       </transition-group>
       <span id="left" v-if="page > 0" class="carousel-btn" @click="pagination(false)"/>
