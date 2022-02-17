@@ -47,28 +47,7 @@ export default {
   methods: {
     // 글자가 포함된 태그 찜목록과 태그별 찜목록 개수를 가져옴
     searchPickDetail(el){
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-      axios({
-        method: 'get',
-        url:'/api/searchs/byPickTag/' + el,
-        headers: headers,
-      }).then(res => {
-        this.$store.dispatch('accessTokenRefresh', res)
-        console.log('찜목록 있음', res)
-        this.pickSearchResult = res.data
-        this.$store.state.tagSearchResult = []
-        // this.$bus.$emit('pickBus', this.pickSearchResult)
-        this.$store.state.searchPickList = res.data;
-        this.$router.push({ path: `/search/pick`, query: { tag: el } })
-        this.$store.state.searching = false
-      })
-      .catch(()=> {
-        console.log('찜목록 없음')
-        this.pickSearchResult = []
-      })
+      this.$router.push({ path: `/search/pick`, query: { tag: el } })
     },
   },
   computed: {

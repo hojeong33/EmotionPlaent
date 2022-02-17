@@ -1,5 +1,6 @@
 <template>
   <div id="pick-item-container" v-if="pick">
+    <h1>{{ pick.name }}</h1>
     <div id="pick-item-header">
       <img :class="{'movie-poster':pick.type==1}" :src="selectedItem.imgLink" :alt="selectedItem.title">
       <table>
@@ -84,6 +85,11 @@ export default {
 </script>
 
 <style scoped>
+  h1 {
+    width: 100%;
+    padding: 1rem;
+  }
+
   table{
     overflow: auto;
   }
@@ -120,7 +126,6 @@ export default {
   #pick-item-container {
     display: flex;
     flex-direction: column;
-    border: 2px #cccccc solid;
     width: 80%;
     margin: 3rem;
   }
@@ -128,6 +133,8 @@ export default {
   #pick-item-header {
     display: flex;
     width: 100%;
+    max-height: 40%;
+    border: 2px #cccccc solid;
   }
 
   #pick-item-header table {
@@ -145,7 +152,8 @@ export default {
     flex-direction: column;
     /* width: 100%; */
     aspect-ratio: 3/1;
-    border-top: 1px #cccccc solid;
+    margin-top: 1rem;
+    border: 2px #cccccc solid;
   }
 
   .movie-poster {
