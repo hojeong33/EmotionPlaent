@@ -49,11 +49,13 @@ export default {
         },
        movieData(){
         if (this.movie){
-          const recommendType = this.$store.state.recommendType
-          return this.movie.slice(10 * recommendType, 10 * (recommendType+1))
+          return this.movie.slice(10 * this.tab, 10 * (this.tab+1))
         }
         return 0
-      }
+      },
+    },
+    props: {
+      tab: Number
     },
     methods: {
         moveCarousel(direction) {

@@ -31,12 +31,15 @@ export default {
     name:'ActiveList',
     data() {
         return {
-            act: null,
+        act: null,
         currentOffset: 0,
         windowSize: 3,
         paginationFactor: 220,
         type:2
         }
+    },
+    props: {
+      tab: Number
     },
     computed: {
         tmp: function () {
@@ -51,12 +54,11 @@ export default {
         return this.currentOffset === 0;
         },
         actData(){
-        if (this.act){
-          const recommendType = this.$store.state.recommendType
-          return this.act.slice(10 * recommendType, 10 * (recommendType+1))
-        }
-        return 0
-      }
+          if (this.act){
+            return this.act.slice(10 * this.tab, 10 * (this.tab+1))
+          }
+          return 0
+      },
     },
     methods: {
         moveCarousel(direction) {

@@ -38,62 +38,64 @@ export default {
         sendData:null,
       }
     },
-  computed: {
-    tmp: function () {
-      const mood = this.$store.state.userInfo.mood
-      const style = this.$store.state.planetStyles.find(el => el.id === mood) || {}
-      return style
+    props: {
+      tab: Number
     },
-    atEndOfList() {
-      return this.currentOffset <= (this.paginationFactor * -1) * (this.$store.state.recommendMusic.length - 5*this.windowSize);
+    computed: {
+      tmp: function () {
+        const mood = this.$store.state.userInfo.mood
+        const style = this.$store.state.planetStyles.find(el => el.id === mood) || {}
+        return style
+      },
+      atEndOfList() {
+        return this.currentOffset <= (this.paginationFactor * -1) * (this.$store.state.recommendMusic.length - 5*this.windowSize);
+      },
+      atHeadOfList() {
+        return this.currentOffset === 0;
+      },
+      musicData(){
+        if (this.music){
+          return this.music.slice(10 * this.tab, 10 * (this.tab+1))
+        }
+        return 0
+      },
     },
-    atHeadOfList() {
-      return this.currentOffset === 0;
-    },
-    musicData(){
-      if (this.music){
-        const recommendType = this.$store.state.recommendType
-        return this.music.slice(10 * recommendType, 10 * (recommendType+1))
+    methods: {
+      moveCarousel(direction) {
+        if (direction === 1 && !this.atEndOfList) {
+          this.currentOffset -= this.paginationFactor;
+        } 
+        else if (direction === -1 && !this.atHeadOfList) {
+          this.currentOffset += this.paginationFactor;
+        }
+      },
+      addPlayList:function(item){
+        this.sendData=[this.type,item]
+        this.$store.commit('addPlayListActive',this.sendData)
       }
-      return 0
-    }
-  },
-  methods: {
-    moveCarousel(direction) {
-      if (direction === 1 && !this.atEndOfList) {
-        this.currentOffset -= this.paginationFactor;
-      } 
-      else if (direction === -1 && !this.atHeadOfList) {
-        this.currentOffset += this.paginationFactor;
-      }
     },
-    addPlayList:function(item){
-      this.sendData=[this.type,item]
-      this.$store.commit('addPlayListActive',this.sendData)
-    }
-  },
-  created(){
-    const session = window.sessionStorage
-    let headers = {
-      'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-      'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-    };
+    created(){
+      const session = window.sessionStorage
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
 
-    axios.get('/api/recommend/music/' + this.$store.state.userInfo.mood, {
-      headers: headers,
-    }).then((res) => {
-      this.music = res.data
-      this.$store.dispatch('accessTokenRefresh', res)
-      this.$emit('comp')
-    })
-    .catch((err) => {
-      console.log('err music', err);
-    })
-    .finally(() => {
-      console.log('get music data End!!');
-    });
-  },
-}
+      axios.get('/api/recommend/music/' + this.$store.state.userInfo.mood, {
+        headers: headers,
+      }).then((res) => {
+        this.music = res.data
+        this.$store.dispatch('accessTokenRefresh', res)
+        this.$emit('comp')
+      })
+      .catch((err) => {
+        console.log('err music', err);
+      })
+      .finally(() => {
+        console.log('get music data End!!');
+      });
+    },
+  }
 </script>
 
 <style scoped>

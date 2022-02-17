@@ -19,8 +19,8 @@
     </div>
     <div class="tab">
       <div id="tab_names">
-        <p @click="Refresh" :class="onRefresh ? 'active' : 'inactive'" style="margin-right:1rem; margin-left:2rem;">떠나기</p>
-        <p @click="Feel" :class="onFeel ? 'active' : 'inactive'" style="margin-left:1rem;">탐험하기</p>
+        <p @click="tab = 0" :class="tab == 0 ? 'active' : 'inactive'" style="margin-right:1rem; margin-left:2rem;">떠나기</p>
+        <p @click="tab = 1" :class="tab == 1 ? 'active' : 'inactive'" style="margin-left:1rem;">탐험하기</p>
       </div>
       <div id="refresh">
         <p style="font-weight: bold; font-size: 1.5rem;">좀 더 놀기</p>
@@ -28,9 +28,9 @@
       </div>
     </div>
     <div id="recommend_list">
-      <music-list @comp="prepared ++"></music-list>
-      <movie-list @comp="prepared ++"></movie-list>
-      <active-list @comp="prepared ++"></active-list>
+      <music-list :tab="tab" @comp="prepared ++"></music-list>
+      <movie-list :tab="tab" @comp="prepared ++"></movie-list>
+      <active-list :tab="tab" @comp="prepared ++"></active-list>
     </div>
   </div>
 </template>
@@ -55,8 +55,7 @@ export default {
         { id: 6, name: "분노행성", img: "rage.png", color: "#FB5D38" },
         { id: 7, name: '떠돌이행성', img: "spaceship.png", color: '#FCBB74' },
       ],
-      onRefresh: true,
-      onFeel: false,
+      tab: 0,
       prepared: 0
     };
   },
@@ -76,16 +75,6 @@ export default {
     }
   },
   methods: {
-    Refresh: function () {
-      this.onRefresh = true;
-      this.onFeel = false;
-      this.$store.state.recommendType = 1;
-    },
-    Feel: function () {
-      this.onRefresh = false;
-      this.onFeel = true;
-      this.$store.state.recommendType = 0;
-    },
     reload() {
       this.$store.dispatch('recommendMusic')
 			this.$store.dispatch('recommendMovie')
