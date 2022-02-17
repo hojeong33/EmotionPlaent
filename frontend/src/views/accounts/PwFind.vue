@@ -89,7 +89,6 @@ export default {
   methods: {
     send_mail(){
       this.$store.commit('load', true)
-
       let data = {
         email: this.credentials.email,
         tel: this.credentials.tel,
@@ -99,20 +98,20 @@ export default {
           method: 'post',
           url: '/api/register/findPw',
           data: data, 
-      })
-      .then((res) => {
-      console.log("메일 전송 성공" , res)
-      alert("매일을 확인해 주세요.")
-      })
-      .then(()=>{
-        this.$router.push("/login")
-      })
-      .catch((error) => {
-        alert("일치하는 정보가 없습니다.")
-        console.log(error);
-      })
-      .finally(() => this.$store.commit('load', false))
-    },
+        }).then((res) => {
+        console.log("메일 전송 성공" , res)
+        //  alert("매일을 확인해 주세요.")
+        this.$store.commit('load', false)
+        this.$store.commit('wrongEmailModalActivate')
+        }).then(()=>{
+          this.$router.push("/login")
+        }).catch((error) => {
+          // alert("일치하는 정보가 없습니다.")
+          this.$store.commit('noMatchEmailModalActivate')
+          console.log(error);
+        })
+        .finally(() => this.$store.commit('load', false))
+      },
 
     emailInput(){
       if (!this.credentials.email){
@@ -120,14 +119,6 @@ export default {
         this.credentials.target_email = null
         this.checked = false
       }
-      // else {
-      //   if (this.user.email == this.credentials.email){
-      //   this.isValid.validateEmail = true
-      //   }
-      //   else {
-      //     this.isValid.validateEmail = false
-      //   }
-      // }
     },
     go_to_back: function(){
       this.$router.go(-1)
