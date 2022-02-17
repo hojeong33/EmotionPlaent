@@ -34,11 +34,6 @@
 import axios from 'axios'
 
 const session = window.sessionStorage;
-const headers = {
-  'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-  'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-};
-
 export default {
   name: 'Userpage',
   data() {
@@ -67,6 +62,11 @@ export default {
     },
 
     getFollowData: function () {
+      const headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+
       axios({
         method: 'get',
         url: `/api/follows/${this.$store.state.userInfo.no}/${this.userId}`,
@@ -81,6 +81,12 @@ export default {
       })
     },
     getFeedData: function(){
+
+      const headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+
       axios({
         method: 'get',
         url: `/api/feeds/my/${this.userId}`,
@@ -107,11 +113,15 @@ export default {
     }
   },
   created(){
+    const firstheaders = {
+      'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+      'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+    };
     console.log(this.$route)
 		axios({
 			method:'get',
 			url:`/api/users/${this.userId}`,
-			headers:headers,
+			headers:firstheaders,
 		})
 		.then(res => {
 			if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
