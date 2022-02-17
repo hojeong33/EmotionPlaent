@@ -71,10 +71,17 @@ export default {
       userdata:null,
       choicedForder:null,
       item:null,
+      isFinded:false,
 		}
 	},
 	methods: {
+    //해당 아이템이 폴더에 있는지 확인하기
+    // findItem:function(forder){
+    //   this.forder.contentsListData.forEach(ele=>{
+    //     if()
+    //   })
 
+    },
     choiceForder:function(forder){
       this.choicedForder=forder.no
       this.pickedForder=forder.name
@@ -151,10 +158,6 @@ export default {
       console.log(this.isClick)
 
     },
-    // imgUpload() {
-    //   this.images = null;
-    //   this.images = URL.createObjectURL(this.$refs.feedImg.files[0]);
-    // },
     getPlayList:function(){
       let headers = {
           // 'Content-Type': 'multipart/form-data',
@@ -237,8 +240,6 @@ export default {
       else{
         alert('제목을 입력해주세요')
       }
-    },
-
 	},
 	created () {
     this.userdata=JSON.parse(session.getItem('userInfo')) 

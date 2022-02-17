@@ -102,7 +102,7 @@ export default {
 		}
 	},
 	props:{
-		feedNo:Number,
+		feedNo:String,
 	},
   computed: {
     tmp: function () {

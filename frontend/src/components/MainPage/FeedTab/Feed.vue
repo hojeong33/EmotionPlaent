@@ -161,8 +161,8 @@ export default {
             headers: headers,  // 넣는거 까먹지 마세요
           }).then((res) => {
           this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-          this.$store.dispatch('feedlike',this.targetNo)
           this.getFeed()
+          this.$store.dispatch('feedlike',this.targetNo)
           console.log(res.data)
           }).catch((error) => {
             console.log(error);
