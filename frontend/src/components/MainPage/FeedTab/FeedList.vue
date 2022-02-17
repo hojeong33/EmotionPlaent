@@ -1,9 +1,11 @@
 <template>
   <div id="feed-list">
+    <div>
       <feed v-for="(post,index) in posts"
         :post="post"
         :key="index">
         </feed>
+    </div>
   </div>
 </template>
 
@@ -77,4 +79,41 @@ export default {
     width: 100%;
   }
 
+  #show-btns {
+    display: flex;
+    align-items: center;
+    align-self: flex-start;
+    box-sizing: content-box;
+    margin: 1rem;
+  }
+
+  #grid-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    gap: 1rem;
+    width: 100%;
+    padding: 2rem;
+  }
+
+  #card-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .g {
+    background-image: url('../../../assets/images/icons/grid.png');
+  }
+
+  .g-active {
+    background-image: url('../../../assets/images/icons/grid-active.png');
+  }
+
+  .c {
+    background-image: url('../../../assets/images/icons/card.png');
+  }
+
+  .c-active {
+    background-image: url('../../../assets/images/icons/card-active.png');
+  }
 </style>

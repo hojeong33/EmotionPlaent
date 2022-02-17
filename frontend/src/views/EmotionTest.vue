@@ -220,8 +220,9 @@
           console.log(error);
           this.$store.commit('ReturnToLoginModalActivate')
         })
-        .then(() => {
+        .finally(() => {
           console.log('getQSSList End!!');
+          this.$store.commit('load', false)
         });
       },
   }

@@ -23,24 +23,24 @@
           <div id="type_comment" v-if="result.type == 2" @click="feed(result.feedno)">
             <img :src="result.senderImg" alt="" id="user">
             <div id="search">
-              <span id="title">{{ result.senderNickname }}님이 회원님의</span>
-              <span id="title">이야기에 댓글을 달았습니다.</span>
+              <span id="content">{{ result.senderNickname }}님이 회원님의</span>
+              <span id="content">이야기에 댓글을 달았습니다.</span>
             </div>
           </div>
           <!-- 피드 좋아요 -->
           <div id="type_feedlike" v-if="result.type == 3" @click="feed(result.feedno)">
             <img :src="result.senderImg" alt="" id="user">
             <div id="search">
-              <span id="title">{{ result.senderNickname }}님이 회원님의</span>
-              <span id="title">이야기를 좋아합니다.</span>
+              <span id="content">{{ result.senderNickname }}님이 회원님의</span>
+              <span id="content">이야기를 좋아합니다.</span>
             </div>
           </div>
           <!-- 찜목록 좋아요 -->
           <div id="type_picklike" v-if="result.type == 4">
             <img :src="result.senderImg" alt="" id="user">
             <div id="search">
-              <span id="title">{{ result.senderNickname }}님이 회원님의</span>
-              <span id="title">보물상자를 좋아합니다.</span>
+              <span id="content">{{ result.senderNickname }}님이 회원님의</span>
+              <span id="content">보물상자를 좋아합니다.</span>
             </div>
           </div>
         </div>
@@ -53,6 +53,7 @@
     <section id="alarm_footer">
       <button @click="cancel">닫기</button>
     </section>
+    <div id="other-side" @click="cancel"></div>
   </div>
 </template>
 
@@ -79,12 +80,17 @@ export default {
       await this.$store.dispatch('userSelect', el)
       await this.$store.dispatch('userfollowdate', el)
       // await this.$store.dispatch("searchUserFeed", this.$store.state.searchUserNo)
-      this.$router.push({ path: `/userpage/feed` })
+      this.$router.push({ path: `/user/${el}/feed` })
     },
     feed(el){
       console.log(el)
        this.$router.push({name:'FeedDetail', params:{feedNo:el}})
        window.location.reload()
+    },
+  },
+  computed: {
+    isShow(){
+      return this.$store.state.navActive[3]
     }
   }
 }
@@ -272,4 +278,12 @@ export default {
     align-items: flex-start;
   }
 
+  #other-side {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
 </style>

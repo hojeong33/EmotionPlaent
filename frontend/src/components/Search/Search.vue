@@ -18,6 +18,8 @@
     <section id="footer">
       <button id="cancel" @click="cancel">닫기</button>
     </section>
+    <div id="other-side" @click="cancel">
+    </div>
   </div>
 </template>
 
@@ -150,14 +152,23 @@ export default {
     text-align: right;
   }
   #cancel {
-  background-color: rgb(94, 57, 179);
-  color: white;
-  border-radius: 30px;
-  width: 3rem;
-  height: 2rem;
-  margin-top: 0.5rem;
-  margin-right: 0.5rem;
-  border: none;
-  font-weight: bold;
-}
+    background-color: rgb(94, 57, 179);
+    color: white;
+    border-radius: 30px;
+    width: 3rem;
+    height: 2rem;
+    margin-top: 0.5rem;
+    margin-right: 0.5rem;
+    border: none;
+    font-weight: bold;
+  }
+
+  #other-side {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
 </style>

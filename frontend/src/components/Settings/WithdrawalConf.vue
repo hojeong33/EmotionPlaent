@@ -39,6 +39,9 @@ export default {
     go_to_back: function(){
       this.$emit('cancel')
     }
+  },
+   mounted(){
+    this.$store.commit('load', false)
   }
 }
 </script>

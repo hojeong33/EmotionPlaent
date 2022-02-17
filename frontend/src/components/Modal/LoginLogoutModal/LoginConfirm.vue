@@ -43,7 +43,7 @@ export default {
 	background-color: white;
 	border-radius: 30px;
 	width: 19rem;
-	height: 11rem;
+	height: 13rem;
 }
 p {
 	margin: auto;
