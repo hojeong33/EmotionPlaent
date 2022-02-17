@@ -2,41 +2,49 @@
   <div>
     <h3>{{ tmp.name }}에 흐르는 별소리</h3>
     <div class="card-carousel-wrapper">
-      <div class="card-carousel--nav__left" @click="moveCarousel(-1)" :disabled="atHeadOfList"></div>
-      <div class="card-carousel">
-        <div class="card-carousel--overflow-container">
-          <div v-if="this.$store.state.recommendType === 1" class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
-            <div id="post_img" class="card-carousel--card"  v-for="item in musicData" :key="item.index">
-            <img @click="addPlayList(item)" id="goldstar"  src="@/assets/images/icons/goldstar.png" alt=""> 
-            <img :src="item.imgLink"/>
-              <div class="card-carousel--card--footer">
-                <p>{{ item.title }}</p>
-                <p style="font-weight: normal; font-size: 1.1rem;">{{ item.artist }}</p>
-                <p class="tag" v-for="(tag, index) in item.tag" :key="index" :class="index &gt; 0 ? 'secondary' : ''" >{{ tag }}</p>
-              </div>
+        <div class="card-carousel--nav__left" @click="moveCarousel(-1)" :disabled="atHeadOfList"></div>
+        <div class="card-carousel">
+            <div class="card-carousel--overflow-container">
+                <div v-if="this.$store.state.recommendType === 1" class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
+                    <div id="post_img" class="card-carousel--card"  v-for="item in this.$store.state.recommendMusic.slice(0, 10)" :key="item.index">
+                        <img @click="addPlayList(item)" id="goldstar"  src="@/assets/images/icons/goldstar.png" alt=""> 
+                        <img :src="item.imgLink"/>
+                        <div class="card-carousel--card--footer">
+                            <p>{{ item.title }}</p>
+                            <p style="font-weight: normal; font-size: 1.1rem;">{{ item.artist }}</p>
+                            <p class="tag" v-for="(tag, index) in item.tag" :key="index" :class="index &gt; 0 ? 'secondary' : ''" >{{ tag }}</p>
+                        </div>
+                    </div>
+                </div>
+                <div v-if="this.$store.state.recommendType === 0" class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
+                    <div  id="post_img" class="card-carousel--card" v-for="item in this.$store.state.recommendMusic.slice(10)" :key="item.index">
+                        <img @click="addPlayList(item)" id="goldstar" src="@/assets/images/icons/goldstar.png" alt="">
+                        <img :src="item.imgLink"/>
+                        <div class="card-carousel--card--footer">
+                            <p>{{ item.title }}</p>
+                            <p style="font-weight: normal; font-size: 1.1rem;">{{ item.artist }}</p>
+                            <p class="tag" v-for="(tag, index) in item.tag" :key="index" :class="index &gt; 0 ? 'secondary' : ''" >{{ tag }}</p>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
         </div>
         <div class="card-carousel--nav__right" @click="moveCarousel(1)" :disabled="atEndOfList"></div>
-      </div>
     </div>
   </div>
 </template>
 
 <script>
-import axios from 'axios'
-
 export default {
     name:'MusicList',
     data() {
-      return {
-        music: null,
+        return {
         currentOffset: 0,
         windowSize: 3,
         paginationFactor: 220,
         type:0,
         sendData:null,
-      }
+        }
     },
   computed: {
     tmp: function () {
@@ -45,54 +53,26 @@ export default {
       return style
     },
     atEndOfList() {
-      return this.currentOffset <= (this.paginationFactor * -1) * (this.$store.state.recommendMusic.length - 5*this.windowSize);
+    return this.currentOffset <= (this.paginationFactor * -1) * (this.$store.state.recommendMusic.length - 5*this.windowSize);
     },
     atHeadOfList() {
-      return this.currentOffset === 0;
+    return this.currentOffset === 0;
     },
-    musicData(){
-      if (this.music){
-        const recommendType = this.$store.state.recommendType
-        return this.music.slice(10 * recommendType, 10 * (recommendType+1))
-      }
-      return 0
+},
+    methods: {
+        moveCarousel(direction) {
+        if (direction === 1 && !this.atEndOfList) {
+            this.currentOffset -= this.paginationFactor;
+        } else if (direction === -1 && !this.atHeadOfList) {
+            this.currentOffset += this.paginationFactor;
+        }
+        },
+        addPlayList:function(item){
+          this.sendData=[this.type,item]
+          this.$store.commit('addPlayListActive',this.sendData)
+          // console.log(this.$store.state.recommendMusic)
+        }
     }
-  },
-  methods: {
-    moveCarousel(direction) {
-      if (direction === 1 && !this.atEndOfList) {
-        this.currentOffset -= this.paginationFactor;
-      } 
-      else if (direction === -1 && !this.atHeadOfList) {
-        this.currentOffset += this.paginationFactor;
-      }
-    },
-    addPlayList:function(item){
-      this.sendData=[this.type,item]
-      this.$store.commit('addPlayListActive',this.sendData)
-    }
-  },
-  created(){
-    const session = window.sessionStorage
-    let headers = {
-      'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-      'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-    };
-
-    axios.get('/api/recommend/music/' + this.$store.state.userInfo.mood, {
-      headers: headers,
-    }).then((res) => {
-      this.music = res.data
-      this.$store.dispatch('accessTokenRefresh', res)
-      this.$emit('comp')
-    })
-    .catch((err) => {
-      console.log('err music', err);
-    })
-    .finally(() => {
-      console.log('get music data End!!');
-    });
-  },
 }
 </script>
 
