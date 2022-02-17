@@ -125,8 +125,6 @@
 <script>
 import axios from 'axios'
 
-const session = window.sessionStorage;
-
 export default {
   data: function(){
     return {
@@ -165,24 +163,7 @@ export default {
       }
     },
     go_to_withdrawal: function(){
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-       axios({
-        method: 'delete',
-        url: '/api/users/' + this.$store.state.userInfo.no,
-        headers: headers,
-        })
-			.then(() => {
-				console.log('탈퇴');
-				session.clear();
-			})
-			.then(() => {
-				window.location.reload()
-        // this.$router.push('/setting/withdrawal')
-			})
-			.catch(() => alert('fail'))
+      this.$router.push('/setting/withdrawal')
     },
     profileImgChangeModal:function(){
       this.$store.commit('profileImgChangeModalActivate')
