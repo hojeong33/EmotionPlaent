@@ -24,8 +24,8 @@
 
 
     <insert id="create" parameterType="com.ssafy.project.EmotionPlanet.Dto.PickDto">
-        insert into pick(userNo, name, tagNo, type, imgLink)
-        values (  #{userNo}, #{name}, #{tagNo}, #{type}, #{imgLink})
+        insert into pick(userNo, name, tagNo, type)
+        values (  #{userNo}, #{name}, #{tagNo}, #{type})
         <selectKey keyProperty="no" resultType="int" order="AFTER">
             SELECT LAST_INSERT_ID()
         </selectKey>
