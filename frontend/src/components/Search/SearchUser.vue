@@ -29,7 +29,7 @@ export default {
       await this.$store.dispatch('userSelect', el)
       await this.$store.dispatch('userfollowdate', el)
       // await this.$store.dispatch("searchUserFeed", this.$store.state.searchUserNo)
-      this.$router.push({ path: `/${el}/feed` })
+      this.$router.push({ path: `/user/${el}` })
       this.$store.state.searching = false
     }
   },

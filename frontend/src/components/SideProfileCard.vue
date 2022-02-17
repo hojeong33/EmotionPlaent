@@ -61,11 +61,11 @@ export default {
       this.$store.commit('navActivate', 0)
     },
     resize(){
-      window.innerWidth > 1000 ? this.isActive = true: this.isActive = false
+      window.innerWidth > 1400 ? this.isActive = true: this.isActive = false
     }
   },
   mounted(){
-    if (window.innerWidth > 1000){
+    if (window.innerWidth > 1400){
       this.isActive = true
     }
     window.addEventListener('resize', this.resize)
@@ -83,7 +83,7 @@ export default {
     min-height: 400px;
     position: fixed;
     top: 10rem;
-    right: 3%;
+    right: 2.5%;
     z-index: 1;
     border: 0.1rem solid gainsboro;
     border-radius: 10px;
@@ -95,11 +95,14 @@ export default {
     display: flex;
     justify-content: center;
     align-items: flex-end;
+    width: 100%;
     height: 25vh;
     background-image: url('../assets/images/emotions/cover_s.png');
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
   }
 
   .overlay_content {

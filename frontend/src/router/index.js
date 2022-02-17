@@ -123,9 +123,9 @@ const routes = [
     ]
   },
   {
-    path: '/:userId',
+    path: '/user/:userId',
     name: 'Userpage',
-    redirect: '/:userId/feed',
+    redirect: '/user/:userId/feed',
     component: Userpage,
     props: true,
     meta: {
