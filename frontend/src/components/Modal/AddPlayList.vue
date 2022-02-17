@@ -18,8 +18,9 @@
       <div v-for="(forder, index) in forderlists" :key="index">
         <div id="userInfo">
           <!-- <img id="profile_img" :src="liker.profileImg" alt=""> -->
+          
           <p id="username">{{forder.name}}</p>
-          <button id="follow_cancel" @click="choiceForder(forder)">선택</button>
+          <button v-if="isFinded" id="follow_cancel" @click="choiceForder(forder)">선택</button>
           <img id="trash"  @click="deleteForder(forder.no)" src="@/assets/images/icons/trash.png" style="margin-right:1rem" alt="">
         </div>
       </div>
@@ -37,7 +38,7 @@
     </div>
     <div id="new_container" v-else>
       <p id="plus_text">이름</p>
-      <input id="playlist_input"  v-model.trim="listName" placeholder="플레이리스트 이름을 입력해주세요">
+      <input id="playlist_input"  @keyup.enter="createList" v-model.trim="listName" placeholder="플레이리스트 이름을 입력해주세요">
       <!-- <div id="uploading">
       <p id="plus_text" style="margin-top:0.5rem;">이미지 업로드</p>
       <input type="file" id="file" accept="image/*" @change="imgUpload" ref="feedImg" /> -->
@@ -71,15 +72,23 @@ export default {
       userdata:null,
       choicedForder:null,
       item:null,
-      isFinded:false,
+      // isFinded:false,
 		}
 	},
+  computed:{
+    isFinded(forder){
+      let temp=false
+        forder.contentsListData.forEach(ele=>{
+        if(ele.no==this.item){
+          temp=true
+        }
+      })
+      return temp
+    }
+  },
 	methods: {
     //해당 아이템이 폴더에 있는지 확인하기
-    // findItem:function(forder){
-    //   this.forder.contentsListData.forEach(ele=>{
-    //     if()
-    //   })
+    
 
     },
     choiceForder:function(forder){
@@ -231,6 +240,7 @@ export default {
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
             this.isClick=true
             this.getPlayLists()
+            this.listName=null
         }).catch((error) => {
           console.log(error);
         }).then(() => {
