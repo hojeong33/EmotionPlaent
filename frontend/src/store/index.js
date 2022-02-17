@@ -415,25 +415,25 @@ export default new Vuex.Store({
       let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-    };
-    let data = {
-      userNo : this.state.userInfo.no,
-      targetNo : el.feedno,
-    };
-    axios({
-        method: 'post',
-        url: '/api/feeds/like',
-        data: data, // post 나 put에 데이터 넣어 줄때
-        headers: headers,  // 넣는거 까먹지 마세요
-      }).then((res) => {
-      console.log("피드 좋아요 추가 성공")
-      this.dispatch('feedlike',el)
-      this.dispatch('accessTokenRefresh', res) // store에서
-      }).catch((error) => {
-        console.log("피드 좋아요 실패")
-        console.log(error);
-      })
-    },
+      };
+      let data = {
+        userNo : this.state.userInfo.no,
+        targetNo : el.feedno,
+      };
+      axios({
+          method: 'post',
+          url: '/api/feeds/like',
+          data: data, // post 나 put에 데이터 넣어 줄때
+          headers: headers,  // 넣는거 까먹지 마세요
+        }).then((res) => {
+        console.log("피드 좋아요 추가 성공")
+        this.dispatch('feedlike',el)
+        this.dispatch('accessTokenRefresh', res) // store에서
+        }).catch((error) => {
+          console.log("피드 좋아요 실패")
+          console.log(error);
+        })
+      },
 
       //알림 읽기 + 7일 이후 읽은 알림 삭제
       readAlarm(state, el){
@@ -580,7 +580,7 @@ export default new Vuex.Store({
         url:'/api/alarm/' + this.state.userInfo.no,
       })
       .then((res)=>{
-        console.log('알림 가져오기 성공')
+        console.log('알림 가져오기 성공', res)
         this.state.alarm = res.data
       })
       .catch(err=> {

@@ -145,23 +145,24 @@ export default {
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
       axios({
-          method: 'get',
-          url:`/api/comments/returnNo/${this.feedNo}`,
-          headers: headers,  // 넣는거 까먹지 마세요
-          }).then((res) => {
-          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-          this.comments=res.data.reverse()
-          this.commentsData=[]
-          for (let i=0; i<this.comments.length; i++){
-            const commentNo=this.comments[i]
-            this.getComment(commentNo)
-          }
-          }).catch((error) => {
-            console.log(error);
-          }).then(() => {
-            console.log('댓글 목록 가져오기');
-          });
-        },
+        method: 'get',
+        url:`/api/comments/returnNo/${this.feedNo}`,
+        headers: headers,  // 넣는거 까먹지 마세요
+        }).then((res) => {
+        this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+        this.comments=res.data.reverse()
+        this.commentsData=[]
+        for (let i=0; i<this.comments.length; i++){
+          const commentNo=this.comments[i]
+          this.getComment(commentNo)
+        }
+        this.$store.commit('load', false)
+        }).catch((error) => {
+          console.log(error);
+        }).then(() => {
+          console.log('댓글 목록 가져오기');
+        });
+      },
     createComment:function(){
       const userdata = JSON.parse(session.getItem('userInfo')) 
       const commentItem={
@@ -225,22 +226,43 @@ export default {
 				console.log(error);
 			}).then(() => {
 				console.log('피드 하나 가져오기');
-			});
+			}); 
 		},
+    getLike(){
+      let headers = {
+			'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+			'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+			};
+			axios({
+				method: 'get',
+				url:`/api/feeds/like/${this.feedNo}`,
+				headers: headers,  // 넣는거 까먹지 마세요
+			}).then((res) => {
+			this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+			console.log(res.data)
+      this.feed.likes = res.data
+			}).catch((error) => {
+				console.log('좋아요 실패해따',error);
+			}).then(() => {
+				console.log('좋아요 하나 가져오기');
+			});
+    },
     like:function(){
       this.feed.like ? this.cancelLike(): this.doLike();
       this.feed.like= !this.feed.like;
     },
     doLike:function(){
-		console.log(this.feedNo)
+      console.log(this.feedNo)
       let el = {
         receiver : this.feed.author,
         feedno : this.feedNo,
       }
       this.$store.dispatch('addfeedlike',el)
+      .then(() => this.getLike())
     },
     cancelLike:function(){
       this.$store.dispatch('deletefeedlike',this.feedNo)
+      .then(() => this.getLike())
     },
     onModalFeed:function(){
       if(this.isMineFeed){

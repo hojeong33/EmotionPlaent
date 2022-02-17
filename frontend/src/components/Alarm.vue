@@ -69,9 +69,8 @@ export default {
   },
   methods: {
     cancel() {
-      this.$store.commit('navActivate', 3)
-      // this.$store.dispatch('readAlarm', this.$store.state.userInfo.no)
-      // this.$emit('cancelAlarm')
+      this.$store.dispatch('readAlarm', this.$store.state.userInfo.no)
+      this.$emit('cancelAlarm')
       // console.log("여기가 알림 닫는곳")
       // console.log(this.$store.state.searchUserNo)
       // console.log(this.$store.state.searchUserInfo)
@@ -81,7 +80,7 @@ export default {
       await this.$store.dispatch('userSelect', el)
       await this.$store.dispatch('userfollowdate', el)
       // await this.$store.dispatch("searchUserFeed", this.$store.state.searchUserNo)
-      this.$router.push({ path: `/userpage/feed` })
+      this.$router.push({ path: `/user/${el}/feed` })
     },
     feed(el){
       console.log(el)
