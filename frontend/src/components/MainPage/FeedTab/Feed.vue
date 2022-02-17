@@ -72,7 +72,6 @@ export default {
   },
   data(){
     return{
-      // date:this.post.date.toLocaleDateString(),
       page:1,
       beforePage:1,
       isCommentSettingOpened:false,
@@ -111,42 +110,67 @@ export default {
         this.page --
       }
     },
-    // paginationByDot(target){
-    //   let d
-    //   if (target > this.page){
-    //     d = true
-    //   }
-    //   else {
-    //     d = false
-    //   }
-    //   for (let i=0;i<Math.abs(target-this.page);i++){
-    //     setTimeout(() => {
-    //       console.log(this.page, target, d)
-    //       this.pagination(d)
-    //     }, 1000 * i);
-    //   }
-    //},
     captionMore:function(){
       this.isMore=true
 
     },
-
     onUserFeedSetting2:function(){
       this.$store.commit('userFeedSettingModalActivate2')
     },
-    like:function(){
+    like() {
       this.feed.like ? this.cancelLike(): this.doLike();
       this.feed.like= !this.feed.like;
     },
     doLike:function(){
-      let el = {
-        receiver : this.feed.author,
-        feedno : this.post,
+      const userdata = JSON.parse(session.getItem('userInfo')) ;
+      const likeItem={
+        targetNo:this.post,
+        userNo:userdata.no,
       }
-      this.$store.dispatch('addfeedlike',el)
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+        axios({
+            method: 'post',
+            url:`/api/feeds/like`,
+            data:likeItem,
+            headers: headers,  // 넣는거 까먹지 마세요
+          }).then((res) => {
+          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+          this.$store.dispatch('feedlike',this.targetNo)
+          this.getFeed()
+          console.log(res.data)
+          }).catch((error) => {
+            console.log(error);
+          }).then(() => {
+            console.log('좋아요 누름');
+          });
     },
     cancelLike:function(){
-      this.$store.dispatch('deletefeedlike',this.post)
+      const userdata = JSON.parse(session.getItem('userInfo')) ;
+      const likeItem={
+        targetNo:this.post,
+        userNo:userdata.no,
+      }
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+        axios({
+            method: 'delete',
+            url:`/api/feeds/like`,
+            data:likeItem,
+            headers: headers,  // 넣는거 까먹지 마세요
+          }).then((res) => {
+          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+          this.getFeed()
+          console.log(res.data)
+          }).catch((error) => {
+            console.log(error);
+          }).then(() => {
+            console.log('좋아요 해제');
+          });
     },
     getFeed:function(){
        let headers = {
