@@ -1,7 +1,7 @@
 <template>
 	<div id="signup_fail">
     <div id="modal">
-			<h4>비밀번호를 확인해주세요</h4>
+			<h4>입력 정보를 확인해주세요</h4>
 			<hr>
 			<p @click="signupAgain">확인</p>
     </div>

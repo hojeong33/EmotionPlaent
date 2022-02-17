@@ -228,25 +228,25 @@ export default {
 				console.log('피드 하나 가져오기');
 			}); 
 		},
-    getLike(){
-      let headers = {
-			'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-			'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-			};
-			axios({
-				method: 'get',
-				url:`/api/feeds/like/${this.feedNo}`,
-				headers: headers,  // 넣는거 까먹지 마세요
-			}).then((res) => {
-			this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-			console.log(res.data)
-      this.feed.likes = res.data
-			}).catch((error) => {
-				console.log('좋아요 실패해따',error);
-			}).then(() => {
-				console.log('좋아요 하나 가져오기');
-			});
-    },
+    // getLike(){
+    //   let headers = {
+		// 	'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+		// 	'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+		// 	};
+		// 	axios({
+		// 		method: 'get',
+		// 		url:`/api/feeds/like/${this.feedNo}`,
+		// 		headers: headers,  // 넣는거 까먹지 마세요
+		// 	}).then((res) => {
+		// 	this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+		// 	console.log(res.data)
+    //   this.feed.likes = res.data
+		// 	}).catch((error) => {
+		// 		console.log('좋아요 실패해따',error);
+		// 	}).then(() => {
+		// 		console.log('좋아요 하나 가져오기');
+		// 	});
+    // },
     like:function(){
       this.feed.like ? this.cancelLike(): this.doLike();
       this.feed.like= !this.feed.like;
@@ -258,11 +258,13 @@ export default {
         feedno : this.feedNo,
       }
       this.$store.dispatch('addfeedlike',el)
-      .then(() => this.getLike())
+      // .then(() => this.getLike())
+      this.getFeed()
     },
     cancelLike:function(){
       this.$store.dispatch('deletefeedlike',this.feedNo)
-      .then(() => this.getLike())
+      // .then(() => this.getLike())
+      this.getFeed()
     },
     onModalFeed:function(){
       if(this.isMineFeed){

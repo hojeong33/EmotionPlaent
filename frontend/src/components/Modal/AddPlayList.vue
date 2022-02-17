@@ -17,7 +17,6 @@
     <div id="feed_likes_list" v-else>
       <div v-for="(forder, index) in forderlists" :key="index">
         <div id="userInfo">
-          <!-- <img id="profile_img" :src="liker.profileImg" alt=""> -->
           <p id="username">{{forder.name}}</p>
           <button id="follow_cancel" @click="choiceForder(forder)">선택</button>
           <img id="trash"  @click="deleteForder(forder.no)" src="@/assets/images/icons/trash.png" style="margin-right:1rem" alt="">
@@ -207,6 +206,7 @@ export default {
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
             this.isClick=true
             this.getPlayLists()
+            this.listName=''
         }).catch((error) => {
           console.log(error);
         }).then(() => {
@@ -217,7 +217,6 @@ export default {
         alert('제목을 입력해주세요')
       }
     },
-
 	},
 	created () {
     this.userdata=JSON.parse(session.getItem('userInfo')) 
