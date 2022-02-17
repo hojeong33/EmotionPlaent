@@ -77,8 +77,8 @@ export default {
 	flex-direction: column;
 	background-color: white;
 	border-radius: 20px;
-	width: 20vw;
-	height: 20vh;
+	width: 14rem;
+	height: 11rem;
 	text-align: center;
 }
 hr {
@@ -88,5 +88,6 @@ p {
 	margin: auto;
 	font-weight: bold;
 	cursor: pointer;
+	font-size: 1.5rem;
 }
 </style>

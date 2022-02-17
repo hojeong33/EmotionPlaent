@@ -1,11 +1,9 @@
 <template>
   <div id="feed-list">
-    <div>
       <feed v-for="(post,index) in posts"
         :post="post"
         :key="index">
         </feed>
-    </div>
   </div>
 </template>
 
