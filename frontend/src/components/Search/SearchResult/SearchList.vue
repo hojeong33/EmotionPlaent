@@ -1,9 +1,9 @@
 <template>
   <article id="list-container">
-		<filter-tab :user-mood="userMood" @filtering="filtering" />
-
+		<filter-tab v-if="tab == 'feed'" :user-mood="userMood" @filtering="filtering" />
+        <filter-tab v-if="tab == 'pick'" style="visibility:hidden;" />
 		<search-feed-list v-if="tab == 'feed'" :feeds="filteredFeeds" />
-		<search-pick-list v-if="tab == 'pick'" :picks="this.filteredPick" />
+		<search-pick-list v-if="tab == 'pick'" :picks="this.filteredPick"  />
 		<div id="no-result" 
 			v-if="(tab == 'feed' && this.filteredFeed.length === 0)||(tab == 'pick' && this.filteredPick.length === 0)">
 			<img id="nothing" src="@/assets/images/etc/alien.png" alt="no result">
@@ -17,7 +17,8 @@
 import FilterTab from '@/components/user/FilterTab'
 import SearchFeedList from '@/components/Search/SearchResult/SearchFeedList'
 import SearchPickList from '@/components/Search/SearchResult/SearchPickList'
-
+import axios from 'axios'
+const session = window.sessionStorage
 export default {
 	data(){
 		return {
@@ -30,7 +31,7 @@ export default {
 	},
 	props: {
 		userMood: Number,
-		tab: String
+		tab: String,
 	},
 	components: {
 		FilterTab,
@@ -42,14 +43,33 @@ export default {
       this.filter = payload
 			this.filteredFeed = []
 			this.filteredPick = []
-    }
+    },
+		test(){
+			let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+      axios({
+        method: 'get',
+        url:'/api/searchs/byPickTag/' + this.$route.query.tag,
+        headers: headers,
+      }).then(res => {
+        this.$store.dispatch('accessTokenRefresh', res)
+        console.log('찜목록 있음', res)
+        this.pickSearchResult = res.data
+        this.$store.state.tagSearchResult = []
+        this.filteredPick = res.data;
+        this.$store.state.searching = false
+      })
+      .catch(()=> {
+        console.log('찜목록 없음')
+        this.pickSearchResult = []
+      })
+		}
 	},
 	created: function() {
 		this.feedData = this.$store.state.tagSearchResult
-		if(this.$store.state.searchPickList !== null){
-			this.filteredPick = this.$store.state.searchPickList
-		}
-		console.log(this.filteredPick)
+		this.test()
 	},
 	computed: {
 		filteredFeeds(){
