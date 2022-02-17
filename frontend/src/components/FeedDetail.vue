@@ -226,7 +226,7 @@ export default {
 				console.log(error);
 			}).then(() => {
 				console.log('피드 하나 가져오기');
-			});
+			}); 
 		},
     getLike(){
       let headers = {
