@@ -8,7 +8,7 @@
           <img :src="result.profileImg" alt="" id="user">
           <p id="title">@{{ result.nickname }}</p>
         </div>
-        <img src="../../assets/images/icons/search_dark.png" 
+        <img src="../../assets/images/icons/search_dark.png" v-if="result.no"
         @click="getInfo(result.no)" alt="" id="go">
       </div>
     </div>

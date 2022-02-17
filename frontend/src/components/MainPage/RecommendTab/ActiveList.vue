@@ -6,19 +6,9 @@
         <div class="card-carousel">
             <div class="card-carousel--overflow-container">
                 <div v-if="this.$store.state.recommendType === 1" class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
-                    <div id="post_img" class="card-carousel--card" v-for="item in this.$store.state.recommendActivity.slice(0, 10)" :key="item.index">
+                    <div id="post_img" class="card-carousel--card" v-for="item in this.actData" :key="item.index">
                         <img @click="addPlayList(item)" id="goldstar" src="@/assets/images/icons/goldstar.png" alt="">
                         <img id="active_img" :src="item.imgLink"/>
-                        <div class="card-carousel--card--footer">
-                            <p>{{ item.title }}</p>
-                            <p class="tag" v-for="(tag, index) in item.tag" :key="index" :class="index &gt; 0 ? 'secondary' : ''" >{{ tag }}</p>
-                        </div>
-                    </div>
-                </div>
-                <div v-if="this.$store.state.recommendType === 0" class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
-                    <div id="post_img" class="card-carousel--card" v-for="item in this.$store.state.recommendActivity.slice(10)" :key="item.index">
-                        <img @click="addPlayList(item)" id="goldstar" src="@/assets/images/icons/goldstar.png" alt="">
-                        <img  :src="item.imgLink"/>
                         <div class="card-carousel--card--footer">
                             <p>{{ item.title }}</p>
                             <p class="tag" v-for="(tag, index) in item.tag" :key="index" :class="index &gt; 0 ? 'secondary' : ''" >{{ tag }}</p>
@@ -33,10 +23,15 @@
 </template>
 
 <script>
+import axios from 'axios'
+
+const session = window.sessionStorage
+
 export default {
     name:'ActiveList',
     data() {
         return {
+            act: null,
         currentOffset: 0,
         windowSize: 3,
         paginationFactor: 220,
@@ -55,6 +50,13 @@ export default {
         atHeadOfList() {
         return this.currentOffset === 0;
         },
+        actData(){
+        if (this.act){
+          const recommendType = this.$store.state.recommendType
+          return this.act.slice(10 * recommendType, 10 * (recommendType+1))
+        }
+        return 0
+      }
     },
     methods: {
         moveCarousel(direction) {
@@ -69,7 +71,24 @@ export default {
           this.$store.commit('addPlayListActive',this.sendData)
           // console.log(this.$store.state.recommendMusic)
         }
-    }
+    },
+    created(){
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+			axios.get('/api/recommend/activity', {
+          headers: headers,
+        }).then((res) => {
+          this.act = res.data
+          this.$store.dispatch('accessTokenRefresh', res)
+        this.$emit('comp')
+      }).catch((err) => {
+        console.log('err act', err);
+      }).then(() => {
+        console.log('get act data End!!');
+      });
+  },
 }
 </script>
 

@@ -59,6 +59,7 @@ export default {
         this.$store.state.tagSearchResult = []
         this.filteredPick = res.data;
         this.$store.state.searching = false
+				this.$store.commit('load', false)
       })
       .catch(()=> {
         console.log('찜목록 없음')

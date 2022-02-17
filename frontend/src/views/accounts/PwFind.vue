@@ -108,6 +108,7 @@ export default {
         this.$store.commit('noMatchEmailModalActivate')
         console.log(error);
       })
+      .finally(() => this.$store.commit('load', false))
     },
 
     emailInput(){
@@ -165,6 +166,9 @@ export default {
         this.credentials.target_email = null
       }
     }
+  },
+  mounted(){
+    this.$store.commit('load', false)
   }
 }
 </script>

@@ -62,6 +62,8 @@ export default new Vuex.Store({
     },
     searchUserFeedInfo: [], //내 피드 정보
     searchUserPickInfo: [], //내 찜목록 정보
+    followerList: null,
+    followingList: null,
 
     planetStyles: [
       { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
@@ -139,6 +141,9 @@ export default new Vuex.Store({
     commentDeleted: false
   },
   mutations: {
+    load(state, payload){
+      state.loading = payload
+    },
     navActivate: function({ navActive }, payload){
       console.log('지금 나는?', payload)
       if (payload == -1){
@@ -342,13 +347,13 @@ export default new Vuex.Store({
       state.pickYourTagModalActive = !state.pickYourTagModalActive
       console.log(state.pickYourTagModalActive)
     },
-    mypagefollowingListActivate: function (state) {
+    mypagefollowingListActivate: function (state, payload) {
       state.mypagefollowingListActive = !state.mypagefollowingListActive
-      console.log(state.mypagefollowingListActive)
+      state.followingList = payload
     },
-    mypagefollowerListActivate: function (state) {
+    mypagefollowerListActivate: function (state, payload) {
       state.mypagefollowerListActive = !state.mypagefollowerListActive
-      console.log(state.mypagefollowerListActive)
+      state.followerList = payload
     },
     userpagefollowingListActivate: function (state) {
       state.userpagefollowingListActive = !state.userpagefollowingListActive
@@ -807,57 +812,6 @@ export default new Vuex.Store({
     },
 
     //검색 끝 추천탭 시작입니다
-    recommendMusic() {
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-        axios.get('/api/recommend/music/' + this.state.userInfo.mood, {
-          headers: headers,
-        }).then((res) => {
-          this.state.recommendMusic = res.data
-          this.dispatch('accessTokenRefresh', res) 
-        
-        }).catch((error) => {
-          console.log(error);
-        }).then(() => {
-          console.log('getQSSList End!!');
-        });
-    },
-    recommendMovie() {
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-			axios.get('/api/recommend/movie/' + this.state.userInfo.mood, {
-          headers: headers,
-        }).then((res) => {
-          this.state.recommendMovie = res.data
-          this.dispatch('accessTokenRefresh', res)
-        
-        }).catch((error) => {
-          console.log(error);
-        }).then(() => {
-          console.log('getQSSList End!!');
-        });
-    },
-    recommendActivity() {
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-			axios.get('/api/recommend/activity', {
-          headers: headers,
-        }).then((res) => {
-          this.state.recommendActivity = res.data
-          this.dispatch('accessTokenRefresh', res)
-        
-      }).catch((error) => {
-        console.log(error);
-      }).then(() => {
-        console.log('getQSSList End!!');
-      });
-  },
 
     accessTokenRefresh({commit}, res) {
       console.log("accesstoken : " + res.headers)
