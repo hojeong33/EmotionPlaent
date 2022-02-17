@@ -1,18 +1,17 @@
 <template>
   <div id="comments" v-if="comments">
     <div id="form-commentInfo">
-      <div id="comment-count"  @click="goToDetail">댓글 
+      <div id="comment-count">댓글 
           <span id="count">{{comments.length}}</span>
       </div>
       <comment v-for="(comment,index) in this.commentsList"
       :comment="comment"
       :key="index">
       </comment>
-      <p v-if="isShort" id="comment-more" @click="commentMore">댓글 더보기</p>
-      <p v-if="isAll" id="comment-more" @click="commentShort">댓글 닫기</p>
+      <p v-if="isShort" id="comment-more" @click="goToDetail">댓글 더보기</p>
       <div id="comment_write">
         <input id="comment-input" @keyup.enter="createComment" v-model.trim="commentContent" placeholder="댓글을 입력해 주세요."> 
-        <img id="submit" @click="createComment" src="@/assets/images/icons/write.png" alt="" style="width:1.6rem;height:1.6rem; margin-bottom:3px;">
+        <img id="submit" @click="createComment" src="@/assets/images/icons/write.png" alt="" style="width:2rem;height:2rem; margin-bottom:3px; cursor: pointer;">
       </div>
     </div>
   </div>
@@ -46,18 +45,9 @@ export default {
  
   methods:{
     goToDetail:function(){
-      this.$router.push({name:'FeedDetail', params:{feedNo:this.feedNo}})
-    },
-    commentMore:function(){
-      this.commentsList=this.comments
       this.isShort=false
-      this.isAll=true
+      this.$router.push({name:'FeedDetail', params:{feedNo:this.feedNo}})
 
-    },
-    commentShort:function(){
-      this.commentsList=this.comments.slice(0,2)
-      this.isShort=true
-      this.isAll=false
     },
     forceRerender(){
       this.getComments()
@@ -178,6 +168,7 @@ export default {
   margin-top: 1rem;
   font-size: 1.2rem;
   color:#777777;
+  cursor: pointer;
 }
 
 </style>

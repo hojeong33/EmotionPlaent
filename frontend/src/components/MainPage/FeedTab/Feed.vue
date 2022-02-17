@@ -94,7 +94,7 @@ export default {
       style: null,
     }
   },
-   computed: {
+  computed: {
     tmp: function () {
       let name = this.feed.tags[0].name
       let style = this.planetStyles.find(el => el.name === name) || {}
@@ -279,11 +279,12 @@ export default {
   }
   #post_image{
     position: relative;
-    overflow: hidden;
+    /* overflow: hidden; */
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    width: 100%;
+    margin: auto;
+    width: 98%;
   }
   .overlay_content {
     position: absolute;
