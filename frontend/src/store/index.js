@@ -34,6 +34,8 @@ export default new Vuex.Store({
     type:0, // 음악:0 영화:1 활동:2
     //내가 선택한 아이템
     item:null,
+    //내가 선택한 폴더
+    pickedForderName:null,
 
     // 내정보
     userInfo: null,
@@ -110,6 +112,7 @@ export default new Vuex.Store({
     userpagefollowerListActive: false,
     likesListActive:false,
     addPlayListActive:false,
+    addToPlayListActive:false,
     nicknameErrModalActive:false,
     pwchangeErrModalActive:false,
     pwchangeConfirmModalActive:false,
@@ -337,6 +340,10 @@ export default new Vuex.Store({
       state.type=sendData[0]
       state.item=sendData[1]
       console.log(state.addPlayListActive)
+    },
+    addToPlayListActive:function(state,sendData){
+      state.addToPlayListActive=!state.addToPlayListActive
+      state.pickedForderName=sendData
     },
     // 댓글
     isDelete: function (state) {
