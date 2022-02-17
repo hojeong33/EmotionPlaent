@@ -120,6 +120,9 @@ export default {
         this.$store.dispatch('changePw', this.credentials.nextPw)
       }
     },
+  },
+   mounted(){
+    this.$store.commit('load', false)
   }
 }
 </script>

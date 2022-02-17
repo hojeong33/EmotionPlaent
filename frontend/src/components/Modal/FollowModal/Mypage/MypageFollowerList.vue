@@ -10,15 +10,15 @@
 				</div>
 			</div>
 			<hr>
-			<div id="no_result" v-if="myFollowerInfo.length === 0">
+			<div id="no_result" v-if="!followers.length">
 				<img id="nothing" src="@/assets/images/etc/alien.png" alt="no result">
 				<p id="no_follower">팔로워 목록이 없습니다...</p>
 			</div>
 			<div id="my_follower_list" v-else>
-				<div v-for="followerInfo in myFollowerInfo" :key="followerInfo.no">
-					<div id="userInfo">
-						<img id="profile_img" :src="followerInfo.profileImg" alt="" @click="moveToUserPage(followerInfo.no)">
-						<p id="username" @click="moveToUserPage(followerInfo.no)">{{followerInfo.nickname}}</p>
+				<div v-for="follower in followers" :key="follower.no">
+					<div id="userInfo" @click="moveToUserPage(follower.no)">
+						<img id="profile_img" :src="follower.profileImg" alt="">
+						<p id="username" >{{follower.nickname}}</p>
 					</div>
 				</div>
 			</div>
@@ -33,6 +33,11 @@ export default {
 			myFollowerInfo: []
 		}
 	},
+	computed: {
+		followers(){
+			return this.$store.state.followerList
+		}
+	},
 	methods: {
 		goBack: function () {
 			// console.log('여기옴')
@@ -44,7 +49,7 @@ export default {
 			this.$store.dispatch('userSelect', el)
 			this.$store.dispatch('userfollowdate', el)
 			this.$store.commit('mypagefollowerListActivate')
-			this.$router.push({ path: `/userpage/feed` })
+			this.$router.push({ path: `/user/${el}` })
 		}
 	},
 	created () {

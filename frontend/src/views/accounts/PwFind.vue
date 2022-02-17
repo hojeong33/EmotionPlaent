@@ -88,24 +88,30 @@ export default {
   },
   methods: {
     send_mail(){
-    let data = {
-      email: this.credentials.email,
-      tel: this.credentials.tel,
-      requestemail : this.credentials.target_email,
-    };
-    axios({
-        method: 'post',
-        url: '/api/register/findPw',
-        data: data, 
-      }).then((res) => {
-       console.log("메일 전송 성공" , res)
-       alert("매일을 확인해 주세요.")
-      }).then(()=>{
+      this.$store.commit('load', true)
+
+      let data = {
+        email: this.credentials.email,
+        tel: this.credentials.tel,
+        requestemail : this.credentials.target_email,
+      };
+      axios({
+          method: 'post',
+          url: '/api/register/findPw',
+          data: data, 
+      })
+      .then((res) => {
+      console.log("메일 전송 성공" , res)
+      alert("매일을 확인해 주세요.")
+      })
+      .then(()=>{
         this.$router.push("/login")
-      }).catch((error) => {
+      })
+      .catch((error) => {
         alert("일치하는 정보가 없습니다.")
         console.log(error);
       })
+      .finally(() => this.$store.commit('load', false))
     },
 
     emailInput(){
@@ -163,6 +169,9 @@ export default {
         this.credentials.target_email = null
       }
     }
+  },
+  mounted(){
+    this.$store.commit('load', false)
   }
 }
 </script>

@@ -9,9 +9,9 @@ import PwFind from '@/views/accounts/PwFind'
 import EmotionTest from '@/views/EmotionTest'
 
 import Mypage from '@/views/user/Mypage.vue'
-import Userpage from '@/views/user/Userpage.vue'
+// import Userpage from '@/views/user/Userpage.vue'
 import List from '@/components/user/List'
-import PickItem from '@/components/user/PickItem'
+import PickDetail from '@/components/user/PickDetail'
 // import UserList from '@/components/SearchUser/UserList'
 // import UserPickItem from '@/components/SearchUser/UserPickItem'
 
@@ -112,7 +112,7 @@ const routes = [
       },
       {
         path: 'item/:pickNo',
-        component: PickItem,
+        component: PickDetail,
         props: true,
         meta: {
           loginRequired: true,
@@ -126,7 +126,7 @@ const routes = [
     path: '/user/:userId',
     name: 'Userpage',
     redirect: '/user/:userId/feed',
-    component: Userpage,
+    component: Mypage,
     props: true,
     meta: {
       loginRequired: true,
@@ -146,7 +146,7 @@ const routes = [
       },
       {
         path: 'item/:pickNo',
-        component: PickItem,
+        component: PickDetail,
         props: true,
         meta: {
           loginRequired: true,
@@ -282,10 +282,12 @@ const userUpdate = new Promise(() => {
 })
 
 router.beforeEach((to, from, next) => {
-  console.log(to)
+  console.log('여기로 갈거야',to)
+  console.log('여기에서 갈거야',from)
   // 라우터 이동 시 토큰이 필요함
   token = window.sessionStorage.getItem('at-jwt-access-token');
   console.log(token)
+  store.commit('load', true)
   //지정되지 않은 라우트로 이동할 경우 메인으로 redirect
   if (!to.matched.length){
     console.log('do not matched!!')

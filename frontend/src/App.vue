@@ -1,8 +1,9 @@
 <template>
   <div id="app">
+    <loading v-if="loading"/>
     <navigation v-if="showingNav" />
     <create v-if="navActive[0]" />
-    <router-view/>
+    <router-view :key="$route.path" />
     <!-- 모달창 -->
     <logout-modal v-if="logoutModalActive" />
     <user-feed-setting v-if="userFeedSettingModalActive" />
@@ -41,6 +42,7 @@
 </template>
 
 <script>
+import Loading from '@/views/Loading'
 import Create from '@/views/Create'
 import Update from '@/views/Update'
 import Navigation from '@/components/Navigation'
@@ -88,10 +90,9 @@ import pwchangeErr from '@/components/Modal/UserInfoModal/pwchangeErr.vue'
 
 import { mapState } from 'vuex'
 
-
-
 export default {
   components: {
+    Loading,
     Create,
     Update,
     Navigation,
@@ -132,7 +133,7 @@ export default {
   computed:
     mapState([
       'navActive', 'showingNav', 'modalActive', 'profileImgChangeModalActive', 'commentSettingModalActive', 'logoutModalActive', 'userFeedSettingModalActive', 'userFeedSettingModalActive2', 'loginConfirmModalActive', 
-      'signupConfirmModalActive', 'emotionTestTooMuchPickModalActive', 'firstEmotionTestConfirmModalActive', 'emotionTestErrorActive', 'emotionTestPickMoreModalActive', 
+      'signupConfirmModalActive', 'emotionTestTooMuchPickModalActive', 'firstEmotionTestConfirmModalActive', 'emotionTestErrorActive', 'emotionTestPickMoreModalActive', 'loading',
       'emotionTestResultModalActive', 'loginFailModalActive', 'signupFailModalActive1', 'signupFailModalActive2', 'ReturnToLoginModalActive', 'commentNeedContentModalActive',
       'moreInfoConfirmModalActive', 'feedUpdateActive', 'pickYourImageModalActive', 'tooMuchImagesModalActive', 'pickYourTagModalActive', 'mypagefollowingListActive', 'mypagefollowerListActive',
       'userpagefollowingListActive', 'userpagefollowerListActive', 'userFeedSettingModalActive2','likesListActive','addPlayListActive', 'nicknameErrModalActive', 'pwchangeConfirmModalActive', 'pwchangeErrModalActive',
