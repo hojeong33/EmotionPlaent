@@ -17,7 +17,7 @@
         </div>
       </article>
       <!-- <div v-for="(img, idx) in feed.imgs" :key="idx"><img  id="feedImg" :src="img.imgLink" alt=""></div> -->
-			<p class="overlay_content" >{{feed.authorDetail.nickname}} <img id="planet_img" :src="require('@/assets/images/emotions/happy.png')" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p>
+			<p class="overlay_content" >{{feed.authorDetail.nickname}}님은 <img id="planet_img" :src="require('@/assets/images/emotions/happy.png')" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p>
 		</div>
 		<div id="feed_text">
 			<div id="text_head">
