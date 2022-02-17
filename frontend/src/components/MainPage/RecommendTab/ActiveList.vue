@@ -121,6 +121,7 @@ transform: rotate(45deg);
 }
 .card-carousel--nav__right:active {
 transform: rotate(45deg) scale(0.9);
+
 }
 
 .card-carousel-cards {
