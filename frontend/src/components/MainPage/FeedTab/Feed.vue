@@ -1,51 +1,53 @@
 <template>
   <div id="feed" v-if="feed">
-    <div id="header">
-      <section id="profile_image">
-        <img :src="feed.authorDetail.profileImg" />
-      </section>
-      <div id="profile_content">
-        <section id="username" style="font-size:2rem;">{{feed.authorDetail.nickname}}</section>
-        <section style="font-size:1.2rem;">{{feed.date}}</section>
-      </div>
-      <div id="setting" v-if="isMine">
-        <i @click="onCommentSetting" class="fas fa-ellipsis-v" style="color:black"></i>
-      </div>
-    </div>
-    <div id="post_image">
-      <article id="img-box">
-      <div id="uploaded-box">
-          <transition-group id="carousel" :name="page > beforePage ? 'slide':'slide-reverse'">
-            <img id="my_img" v-for="(image, index) in feed.imgs" :key="index"
-            class="uploadedImg" :src="image.imgLink" alt=""
-            v-show="index+1 == page">
-          </transition-group>
-          <div id="pages">
-            <span v-for="idx in feed.imgs.length" :key="idx" 
-            :class="['page-num', {'here':idx==page}]" @click="paginationByDot(idx)" />
-          </div>
-          <span id="left" class="carousel-btn" @click="pagination(false)"/>
-          <span id="right" class="carousel-btn" @click="pagination(true)"/>
+    <div id=" feed_innercontainer" style="width:95%; margin:auto;">
+      <div id="header">
+        <section id="profile_image">
+          <img :src="feed.authorDetail.profileImg" />
+        </section>
+        <div id="profile_content">
+          <section id="username" style="font-size:2rem;">{{feed.authorDetail.nickname}}</section>
+          <section style="font-size:1.2rem;">{{feed.date}}</section>
         </div>
-      </article>
-      <!-- <div id="my_img" v-for="(img, idx) in feed.imgs" :key="idx"><div><img :src="img.imgLink" alt=""></div></div> -->
-      <!-- <img :src="post.postImage" alt="" v> -->
-      <!-- <p class="overlay_content" >{{post.author}}님은 {{post.tag[0]}} <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p> -->
-    </div>
-    <div id="like">
-      <div id="heart">
-        <i class="far fa-heart fa-lg" style="cursor: pointer;"  :class="{'fas': this.feed.like}"  @click="like"></i>
+        <div id="setting" v-if="isMine">
+          <i @click="onCommentSetting" class="fas fa-ellipsis-v" style="color:black"></i>
+        </div>
       </div>
-       <p id="feed_likes" v-for="(like, idx) in feed.likes" :key="idx"></p>
-      <p class="likes" style="cursor: pointer;"  @click="likesList"  >{{feed.likes.length}} likes</p>
+      <div id="post_image">
+        <article id="img-box">
+        <div id="uploaded-box">
+            <transition-group id="carousel" :name="page > beforePage ? 'slide':'slide-reverse'">
+              <img id="my_img" v-for="(image, index) in feed.imgs" :key="index"
+              class="uploadedImg" :src="image.imgLink" alt=""
+              v-show="index+1 == page">
+            </transition-group>
+            <div id="pages">
+              <span v-for="idx in feed.imgs.length" :key="idx" 
+              :class="['page-num', {'here':idx==page}]" @click="paginationByDot(idx)" />
+            </div>
+            <span id="left" class="carousel-btn" @click="pagination(false)"/>
+            <span id="right" class="carousel-btn" @click="pagination(true)"/>
+          </div>
+        </article>
+        <!-- <div id="my_img" v-for="(img, idx) in feed.imgs" :key="idx"><div><img :src="img.imgLink" alt=""></div></div> -->
+        <!-- <img :src="post.postImage" alt="" v> -->
+        <!-- <p class="overlay_content" >{{post.author}}님은 {{post.tag[0]}} <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p> -->
+      </div>
+      <div id="like">
+        <div id="heart">
+          <i class="far fa-heart fa-lg" style="cursor: pointer;"  :class="{'fas': this.feed.like}"  @click="like"></i>
+        </div>
+        <p id="feed_likes" v-for="(like, idx) in feed.likes" :key="idx"></p>
+        <p class="likes" style="cursor: pointer;"  @click="likesList"  >{{feed.likes.length}} likes</p>
+      </div>
+      <div id="content">
+        <div id="tag">
+          <p id="my_tag" v-for="(tag, idx) in feed.tags" :key="idx">#{{tag["name"]}}</p>
+        </div> 
+          <p id="caption" style="font-size:1.4rem"><span style="font-weight:bold; margin-right:5px;">{{feed.author}}</span>{{feed.descr}}</p>
+      </div>
+      <comment-list :feedNo="post" :feedAuthor="feed.author" @delete-comment="commentKey++" :key="commentKey"></comment-list>
     </div>
-    <div id="content">
-      <div id="tag">
-        <p id="my_tag" v-for="(tag, idx) in feed.tags" :key="idx">#{{tag["name"]}}</p>
-      </div> 
-        <p id="caption" style="font-size:1.4rem"><span style="font-weight:bold; margin-right:5px;">{{feed.author}}</span>{{feed.descr}}</p>
-    </div>
-    <comment-list :feedNo="post" :feedAuthor="feed.author" @delete-comment="commentKey++" :key="commentKey"></comment-list>
   </div>
 </template>
 
@@ -250,10 +252,14 @@ export default {
     direction:column;
   }
   #feed{
-    border: 3px solid  rgb(94, 57, 179);
-    border-radius: 30px;
-    margin:1rem;
+    border-bottom: 2px solid  gainsboro;
+    /* border-radius: 30px; */
+    margin-top:1rem;
+    margin-bottom: 1rem;
   }
+  /* #feed_innercontainer {
+    width: 90%;
+  } */
   #my_tag{
     color:rgb(37, 37, 201);
     margin-bottom:3px;
