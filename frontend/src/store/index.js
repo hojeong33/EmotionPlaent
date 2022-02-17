@@ -78,6 +78,7 @@ export default new Vuex.Store({
       {descr: null, author:null, tags: []},
       {image: []},
     ],
+    feedDetailNum: null,
     //이미지
     rawImg: [],
     
@@ -85,7 +86,6 @@ export default new Vuex.Store({
     commentSettingModalActive: false,
     logoutModalActive: false,
     userFeedSettingModalActive: false,
-    userFeedSettingModalActive2: false,
     profileImgChangeModalActive: false,
     loginConfirmModalActive: false,
     signupConfirmModalActive: false,
@@ -212,7 +212,10 @@ export default new Vuex.Store({
       // state.feedCreateData[0].tags.push({name: `${feedtag}`, type: 0})
       // console.log(state.feedCreateData[0].tags)
     },
-    
+    feedNumberForUpdate: function(state, feedNumber) {
+      state.feedDetailNum = feedNumber
+      console.log(state.feedDetailNum)
+    },
     // 모달부분입니다
     commentSettingModalActivate: function (state, commentNum) {
       state.commentSettingModalActive = !state.commentSettingModalActive
@@ -222,10 +225,6 @@ export default new Vuex.Store({
     userFeedSettingModalActivate: function (state) {
       state.userFeedSettingModalActive = !state.userFeedSettingModalActive
       console.log(state.userFeedSettingModalActive)
-    },
-    userFeedSettingModalActivate2: function (state) {
-      state.userFeedSettingModalActive2 = !state.userFeedSettingModalActive2
-      console.log(state.userFeedSettingModalActive2)
     },
     logoutModalActivate: function (state) {
       state.logoutModalActive = !state.logoutModalActive

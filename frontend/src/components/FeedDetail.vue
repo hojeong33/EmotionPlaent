@@ -36,21 +36,21 @@
 			</div>
 			<hr>
 			<div id="text_body">
-				<div>
-					<p id="caption">{{feed.descr}}</p>
-				</div>
-				<br>
         <div id="tags" >
           <p id="tag">#{{feed.tags[0].name}}행성 <img :src="require('@/assets/images/emotions/' + tmp.img)" alt="" style="width: 1.2rem; height: 1.2rem; margin-left: 0rem;"> &nbsp;</p> 
           <p id="tag" v-for="(tag, idx) in feed.tags.slice(1)" :key="idx">#{{tag["name"]}} &nbsp;</p>
         </div>
+        <div>
+					<p id="caption">{{feed.descr}}</p>
+				</div>
+        <br>
 				<div id="comments">
 					<div id="comment" v-for="(comment, idx) in commentsData" :key="idx">
 						<img id="profile_image2" :src="comment.userRequestDto.profileImg" alt="">
 						<p id="username2">{{comment.userRequestDto.nickname}}</p>
 						<p id="user_comment">{{comment.descr}}</p>
 						<div id="comment_setting">
-              <i @click="onModalComment" class="fas fa-ellipsis-v" style="color:black"></i>
+              <i @click="onModalComment" class="fas fa-ellipsis-v" style="color:black; cursor:pointer;"></i>
 							<!-- 댓글 하나하나에 유저데이터가 들어가서 해당 유저의 댓글이 지워져야 함-->							
 							<!-- <comment-setting v-if="isCommentSettingOpened" @cancel="isCommentSettingOpened=false"></comment-setting> -->
 						</div>
@@ -60,7 +60,7 @@
 			<hr>
 			<div id="likes">
         <div id="heart" style="margin-right: 0.3rem;">
-          <i class="far fa-heart fa-lg" :class="{'fas': this.feed.like}"  @click="like"></i>
+          <i class="far fa-heart fa-lg" :class="{'fas': this.feed.like}"  @click="like" style="cursor: pointer;"></i>
         </div>
         <p id="feed_likes" v-for="(like, idx) in feed.likes" :key="idx"></p>
         <p class="likes" style="margin-top: auto; margin-bottom: auto;">{{feed.likes.length}} likes</p>
@@ -102,7 +102,7 @@ export default {
 		}
 	},
 	props:{
-		feedNo:Number,
+		feedNo:String,
 	},
   computed: {
     tmp: function () {
@@ -166,7 +166,7 @@ export default {
       };
       axios({
           method: 'get',
-          url:`/api/comments/returnNo/${this.feedNo}`,
+          url:`/api/comments/returnNo/${Number(this.feedNo)}`,
           headers: headers,  // 넣는거 까먹지 마세요
           }).then((res) => {
           this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
@@ -187,7 +187,7 @@ export default {
       const commentItem={
           descr:this.commentContent,
           author:userdata.no,
-          feedNo:this.feedNo
+          feedNo:Number(this.feedNo)
         }
       if(commentItem.descr){
         this.commentContent=null
@@ -208,7 +208,7 @@ export default {
              this.getComments()
              let body = {
                receiver: this.feed.author,
-               feedno: this.feedNo,
+               feedno: Number(this.feedNo),
                commentno: res.data, // 이부분 백 수정하고 테스트해야함
              }
              this.$store.dispatch('comment',body)
@@ -233,7 +233,7 @@ export default {
 			};
 			axios({
 				method: 'get',
-				url:`/api/feed/${this.feedNo}`,
+				url:`/api/feed/${Number(this.feedNo)}`,
 				headers: headers,  // 넣는거 까먹지 마세요
 			}).then((res) => {
 			this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
@@ -241,6 +241,7 @@ export default {
 			console.log('이건 피드 데이터', this.feed)
       this.getComments()
 			this.isMineFeed=res.data.owner
+      this.$store.commit('feedNumberForUpdate', this.feed.no)
 			}).catch((error) => {
 				console.log(error);
 			}).then(() => {
@@ -255,34 +256,24 @@ export default {
 		console.log(this.feedNo)
       let el = {
         receiver : this.feed.author,
-        feedno : this.feedNo,
+        feedno : Number(this.feedNo),
       }
       this.$store.dispatch('addfeedlike',el)
     },
     cancelLike:function(){
-      this.$store.dispatch('deletefeedlike',this.feedNo)
+      this.$store.dispatch('deletefeedlike',Number(this.feedNo))
     },
     onModalFeed:function(){
-      if(this.isMineFeed){
-        this.onCommentSetting()
-      }
-      else{
-        this.onUserFeedSetting2
-      }
+      this.onUserFeedSetting()
     },
     onModalComment:function(){
-      if(this.isMineComment){
-        this.onCommentSetting()
-      }
-      else{
-        this.onUserFeedSetting2
-      }
+      this.onCommentSetting()
     },
 		onCommentSetting:function(){
 			this.$store.commit('commentSettingModalActivate')
 		},
-		onUserFeedSetting2:function(){
-			this.$store.commit('userFeedSettingModalActivate2')
+		onUserFeedSetting:function(){
+			this.$store.commit('userFeedSettingModalActivate')
 		},
 	},
   filters: {
@@ -311,6 +302,7 @@ export default {
   },
 	created(){
 		this.getFeed()
+    console.log(typeof(this.feedNo))
 		
 	}
 }
@@ -327,8 +319,8 @@ export default {
 	justify-content: center;
 	align-items: center;
 	margin: auto;
-	border: 2px solid rgb(94, 57, 179);
-	border-style: solid;
+	border: 3px solid rgb(94, 57, 179);
+  background-color: white;
 }
 #img_container {
   position: relative;
@@ -393,6 +385,7 @@ export default {
 	font-size: 1rem;
 	text-align: left;
   margin: 0.4rem;
+  font-weight: bold;
 }
 #tags {
 	display: flex;

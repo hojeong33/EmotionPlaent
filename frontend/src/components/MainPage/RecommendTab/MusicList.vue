@@ -228,6 +228,6 @@ h3{
 		width: 2rem;
 		height: 2rem;
     right: 1%;
-    top:40%;
+    top:128px;
   }
 </style>
