@@ -62,7 +62,6 @@ export default {
   width: 2.5rem;
   height: 2.5rem; 
   border-radius: 50%;
-  overflow:hidden;
   margin-right:0.4rem;
   margin-bottom: auto;
   margin-top: auto;
@@ -73,17 +72,20 @@ export default {
   margin-bottom: auto;
   margin-top: auto;
   margin-right: 0.4rem;
+  white-space: nowrap;
 }
 #user_comment{
   font-size: 1rem;
   margin-bottom: auto;
   margin-top: auto;
   word-break: break-all;
+  margin-right: 0.3rem;
   
-  width: 85%;
 }
 #setting {
   width: 1%;
-  margin: auto;
+  margin-left: auto;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 </style>
