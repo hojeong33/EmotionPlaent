@@ -99,11 +99,13 @@ export default {
         data: data, 
       }).then((res) => {
        console.log("메일 전송 성공" , res)
-       alert("매일을 확인해 주세요.")
+      //  alert("매일을 확인해 주세요.")
+       this.$store.commit('wrongEmailModalActivate')
       }).then(()=>{
         this.$router.push("/login")
       }).catch((error) => {
-        alert("일치하는 정보가 없습니다.")
+        // alert("일치하는 정보가 없습니다.")
+        this.$store.commit('noMatchEmailModalActivate')
         console.log(error);
       })
     },

@@ -120,6 +120,8 @@ export default new Vuex.Store({
     foundEmail: null,
     notfoundEmailModalActive:false,
     noTelModalActive:false,
+    wrongEmailModalActive:false,
+    noMatchEmailModalActive:false,
   
     // 모달의 에러 메시지
     serverErrorMessage: '',
@@ -314,6 +316,14 @@ export default new Vuex.Store({
     },
     noTelModalActivate: function (state) {
       state.noTelModalActive = !state.noTelModalActive
+    },
+    //
+    //비번찾기 페이지 모달 2개 
+    wrongEmailModalActivate: function (state) {
+      state.wrongEmailModalActive = !state.wrongEmailModalActive
+    },
+    noMatchEmailModalActivate: function (state) {
+      state.noMatchEmailModalActive = !state.noMatchEmailModalActive
     },
     //
     feedUpdateActivate: function (state) {
