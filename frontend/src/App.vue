@@ -93,6 +93,7 @@ import UserpageFollowerList from '@/components/Modal/FollowModal/Userpage/Userpa
 //좋아요
 import LikesList from '@/components/Modal/LikesList.vue'
 import AddPlayList from '@/components/Modal/AddPlayList.vue'
+import AddToPlayList from '@/components/Modal/AddToPlayList.vue'
 //정보변경
 import nicknameErr from '@/components/Modal/UserInfoModal/nicknameErr.vue'
 import pwchangeConfirm from '@/components/Modal/UserInfoModal/pwchangeConfirm.vue'
@@ -143,6 +144,7 @@ export default {
     UserpageFollowerList,
     LikesList,
     AddPlayList,
+    AddToPlayList,
     //정보변경
     nicknameErr,
     pwchangeConfirm,

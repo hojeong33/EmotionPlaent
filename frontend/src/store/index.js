@@ -66,7 +66,7 @@ export default new Vuex.Store({
     planetStyles: [
       { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
       { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
-      { id: 3, name: '떠돌이행성', img: "space-station.png", color: '#ABBECA' },
+      { id: 3, name: '심심행성', img: "neutral.png", color: '#ABBECA' },
       { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
       { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
       { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
@@ -112,6 +112,7 @@ export default new Vuex.Store({
     userpagefollowerListActive: false,
     likesListActive:false,
     addPlayListActive:false,
+    addToPlayListActive:false,
     nicknameErrModalActive:false,
     pwchangeErrModalActive:false,
     pwchangeConfirmModalActive:false,
@@ -352,6 +353,10 @@ export default new Vuex.Store({
       state.item=sendData[1]
       console.log(state.addPlayListActive)
     },
+    addToPlayListActive:function(state,sendData){
+      state.addToPlayListActive=!state.addToPlayListActive
+      state.pickedForderName=sendData
+    },
     // 댓글
     isDelete: function (state) {
       if (state.commentNum) {
@@ -436,7 +441,7 @@ export default new Vuex.Store({
             method: 'get',
             url: '/api/alarm/read/'+ el,
           }).then((res) => {
-            console.log("알림 읽기 성공")
+            console.log("알림 읽기 성공") 
             console.log(res.data)
             this.state.alarm = []
           }).catch(() => {
@@ -447,6 +452,8 @@ export default new Vuex.Store({
      // 여기는 알림 시작 --------------------------------------------------------
      follow(state, el) { //팔로우 알림 보내는 부분
       console.log("팔로우 알림");
+      console.log(el)
+      console.log(this.state.userInfo.no)
       if (this.stompClient && this.stompClient.connected) {
         const msg = {
           sender: this.state.userInfo.no,
