@@ -54,6 +54,11 @@ export default {
         this.page --
       }
     },
+    addPlayList:function(item){
+        this.sendData=[this.type,item]
+        this.$store.commit('addPlayListActive',this.sendData)
+        // console.log(this.$store.state.recommendMusic)
+      }
   },
   created(){
     let headers = {

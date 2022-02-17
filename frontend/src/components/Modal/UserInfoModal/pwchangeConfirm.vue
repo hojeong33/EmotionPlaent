@@ -1,7 +1,7 @@
 <template>
 	<div id="login_fail">
     <div id="modal">
-			<h4>비밀번호가 성공적으로 변경되었습니다. 다시 로그인해주세요.</h4>
+			<h4>프로필 정보가 성공적으로 변경되었습니다. 다시 로그인해주세요.</h4>
 			<hr>
 			<p @click="tryAgain">확인</p>
     </div>
