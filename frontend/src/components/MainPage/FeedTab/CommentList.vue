@@ -120,7 +120,8 @@ export default {
           });
       }
       else{
-        alert('내용을 채워주세요')
+        // alert('내용을 채워주세요')
+        this.$store.commit('commentNeedContentModalActivate')
       }
     },
   },
@@ -155,11 +156,13 @@ export default {
 }
 #comments{
   text-align: left;
-  margin:0rem 3rem;
+  margin:0rem 1rem;
 }
 #comment-count{
   color:#777777;
   font-size:1.2rem;
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 #comment-input{
   width: 93%;

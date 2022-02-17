@@ -62,7 +62,7 @@ export default {
 	background-color: white;
 	border-radius: 20px;
 	width: 19rem;
-	height: 13rem;
+	height: 10rem;
 	text-align: center;
 	color: black;
 }
@@ -72,6 +72,7 @@ export default {
 
 }
 #footer {
+	height: 20%;
 	display: flex;
 	flex-direction: row;
 	margin-top: auto;
