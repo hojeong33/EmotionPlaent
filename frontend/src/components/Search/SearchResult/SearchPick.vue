@@ -30,8 +30,7 @@ export default {
   },
   methods: {
     go_to_detail(){
-      this.$router.push({path:`${this.$route.matched[0].path}/item/${this.pick.no}`})
-      this.$router.push({path: `/search/item/${this.pick.no}`})
+      this.$router.push({path: `/user/${this.pick.userNo}/item/${this.pick.no}`})
     }
   },
   computed: {

@@ -62,7 +62,7 @@ export default {
         this.$store.state.tagSearchResult = []
         // this.$bus.$emit('pickBus', this.pickSearchResult)
         this.$store.state.searchPickList = res.data;
-        this.$router.push({ path: `/search/pick` })
+        this.$router.push({ path: `/search/pick`, query: { tag: el } })
         this.$store.state.searching = false
       })
       .catch(()=> {

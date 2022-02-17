@@ -242,6 +242,7 @@ const routes = [
     name: 'SearchResult',
     redirect: '/search/feed',
     component: SearchResult,
+    props: true,
     meta: {
       loginRequired: true,
       testRequired: true, 
@@ -281,6 +282,7 @@ const router = new VueRouter({
 let token = window.sessionStorage.getItem('at-jwt-access-token');
 const jwt = require('jsonwebtoken');
 const decodeAccessToken = jwt.decode(token)
+const user = JSON.parse(window.sessionStorage.getItem('userInfo'))
 
 //유저 정보 업데이트
 const userUpdate = new Promise(() => {
@@ -327,6 +329,10 @@ router.beforeEach((to, from, next) => {
   if (!to.meta.loginRequired && store.state.userInfo && token){
     console.log('메인')
     next({ name:'Main' })
+  }
+
+  if (to.params.userId && to.params.userId ==  user.no && to.path.includes('item')){
+    next({ path: `/mypage/item/${to.params.pickNo}` })
   }
 
   next()

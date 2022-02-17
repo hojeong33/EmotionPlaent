@@ -31,17 +31,17 @@ export default {
   },
   props: {
     pickNo: String,
-
-
   },
   computed: {
     selectedItem(){
-      console.log(this.pick.contentsListData[this.selected])
-      return this.pick.contentsListData[this.selected]
+      if (this.pick){
+        return this.pick.contentsListData[this.selected]
+      }
+      return 0
     },
     items(){
       let temp=[]
-      if(this.pick){
+      if (this.pick){
         this.pick.contentsListData.forEach(ele => {
           if(this.pick.type==0){
             temp.push(`${ele.author} - ${ele.title}`)
@@ -53,8 +53,6 @@ export default {
       }
       return temp
     }
-
-
   },
   created(){
 		let headers = {
