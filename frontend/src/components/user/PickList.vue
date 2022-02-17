@@ -1,10 +1,18 @@
 <template>
-  <article class="picks" @click="go_to_detail" @mouseover="isHover = true">
+  <article v-if="pick.contentsListData.length" class="picks" style="cursor:pointer" @click="go_to_detail" @mouseover="isHover = true">
     <img :class="{planet, 'movie-planet':pick.no == 2}" :src="require(`@/assets/images/emotions/${planet}`)" alt="">
     <img :class="['thumbnail', {'movie-thumb':pick.no == 2}]" :src="thumbNail" alt="thumbnail">
     <h3>{{ title }}</h3>
     <span v-show="isHover" @mouseleave="isHover = false" class="picks-info">
       <p>Go to Detail</p>
+    </span>
+  </article>
+  <article v-else class="picks" @mouseover="isHover = true">
+    <img :class="{planet, 'movie-planet':pick.no == 2}" :src="require(`@/assets/images/emotions/${planet}`)" alt="">
+    <img :class="['thumbnail', {'movie-thumb':pick.no == 2}]" :src="thumbNail" alt="thumbnail">
+    <h3>{{ title }}</h3>
+    <span v-show="isHover" @mouseleave="isHover = false" class="picks-info">
+      <p>Empty List</p>
     </span>
   </article>
 </template>
@@ -37,7 +45,12 @@ export default {
   },
   computed: {
     thumbNail(){
-      return this.pick.contentsListData[0].imgLink
+      if(this.pick.contentsListData.length>0){
+        return this.pick.contentsListData[0].imgLink
+      }
+      else{
+        return this.pick.imgLink
+      }
     },
     title(){
       return this.pick.name
@@ -74,7 +87,7 @@ export default {
     flex-direction: column;
     align-items: center;
     border: none;
-    cursor: pointer;
+    /* cursor: pointer; */
     position: relative;
   }
 
