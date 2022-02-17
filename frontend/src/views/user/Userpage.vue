@@ -79,6 +79,7 @@ export default {
         this.followings = res.data.following
         this.$store.dispatch('accessTokenRefresh', res) // store에서
       })
+      .catch(() => {console.log('팔로우 에러')})
     },
     getFeedData: function(){
 
@@ -98,6 +99,7 @@ export default {
         this.feeds = res.data
         this.$store.dispatch('accessTokenRefresh', res)
       })
+      .catch(() => console.log('피드 에러'))
     }
   },
   computed: {

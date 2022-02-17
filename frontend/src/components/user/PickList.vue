@@ -39,7 +39,7 @@ export default {
   methods: {
     go_to_detail(){
       // console.log('디테일로감')
-      this.$router.push({path:`${this.$route.matched[0].path}/item/${this.pick.no}`})
+      this.$router.push({path:`/user/${this.pick.userNo}/item/${this.pick.no}`})
       // this.$router.push({path: `/mypage/item/${this.pick.userNo}/${this.pick.tagNo}/${this.pick.no}`})
     }
   },
