@@ -23,24 +23,24 @@
           <div id="type_comment" v-if="result.type == 2" @click="feed(result.feedno)">
             <img :src="result.senderImg" alt="" id="user">
             <div id="search">
-              <span id="title">{{ result.senderNickname }}님이 회원님의</span>
-              <span id="title">이야기에 댓글을 달았습니다.</span>
+              <span id="content">{{ result.senderNickname }}님이 회원님의</span>
+              <span id="content">이야기에 댓글을 달았습니다.</span>
             </div>
           </div>
           <!-- 피드 좋아요 -->
           <div id="type_feedlike" v-if="result.type == 3" @click="feed(result.feedno)">
             <img :src="result.senderImg" alt="" id="user">
             <div id="search">
-              <span id="title">{{ result.senderNickname }}님이 회원님의</span>
-              <span id="title">이야기를 좋아합니다.</span>
+              <span id="content">{{ result.senderNickname }}님이 회원님의</span>
+              <span id="content">이야기를 좋아합니다.</span>
             </div>
           </div>
           <!-- 찜목록 좋아요 -->
           <div id="type_picklike" v-if="result.type == 4">
             <img :src="result.senderImg" alt="" id="user">
             <div id="search">
-              <span id="title">{{ result.senderNickname }}님이 회원님의</span>
-              <span id="title">보물상자를 좋아합니다.</span>
+              <span id="content">{{ result.senderNickname }}님이 회원님의</span>
+              <span id="content">보물상자를 좋아합니다.</span>
             </div>
           </div>
         </div>

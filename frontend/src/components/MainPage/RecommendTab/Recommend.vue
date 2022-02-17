@@ -76,9 +76,7 @@ export default {
   },
   methods: {
     reload() {
-      this.$store.dispatch('recommendMusic')
-			this.$store.dispatch('recommendMovie')
-			this.$store.dispatch('recommendActivity')
+      location.reload()
       this.$store.state.loading = true
     },
   },
