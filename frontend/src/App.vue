@@ -41,6 +41,8 @@
     <notfound-email v-if="notfoundEmailModalActive"/>
     <no-tel v-if="noTelModalActive"/>
     <add-to-play-list v-if="addToPlayListActive"/>
+    <wrong-email v-if="wrongEmailModalActive"/>
+    <no-match-email v-if="noMatchEmailModalActive"/>
   </div>
 </template>
 
@@ -95,6 +97,9 @@ import pwchangeErr from '@/components/Modal/UserInfoModal/pwchangeErr.vue'
 import foundEmail from '@/components/Modal/EmailFindModal/foundEmail.vue'
 import notfoundEmail from '@/components/Modal/EmailFindModal/notfoundEmail.vue'
 import noTel from '@/components/Modal/EmailFindModal/noTel.vue'
+//비밀번호 찾기
+import noMatchEmail from '@/components/Modal/PwFindModal/noMatchEmail.vue'
+import wrongEmail from '@/components/Modal/PwFindModal/wrongEmail.vue'
 
 import { mapState } from 'vuex'
 
@@ -142,15 +147,18 @@ export default {
     foundEmail,
     notfoundEmail,
     noTel,
+    //비번 찾기
+    noMatchEmail,
+    wrongEmail,
   },
-  computed: 
+  computed:
   mapState([
     'navActive', 'showingNav', 'modalActive', 'profileImgChangeModalActive', 'commentSettingModalActive', 'logoutModalActive', 'userFeedSettingModalActive', 'userFeedSettingModalActive2', 'loginConfirmModalActive', 
     'signupConfirmModalActive', 'emotionTestTooMuchPickModalActive', 'firstEmotionTestConfirmModalActive', 'emotionTestErrorActive', 'emotionTestPickMoreModalActive', 
     'emotionTestResultModalActive', 'loginFailModalActive', 'signupFailModalActive1', 'signupFailModalActive2', 'ReturnToLoginModalActive', 'commentNeedContentModalActive',
     'moreInfoConfirmModalActive', 'feedUpdateActive', 'pickYourImageModalActive', 'tooMuchImagesModalActive', 'pickYourTagModalActive', 'mypagefollowingListActive', 'mypagefollowerListActive',
     'userpagefollowingListActive', 'userpagefollowerListActive', 'userFeedSettingModalActive2','likesListActive','addPlayListActive', 'nicknameErrModalActive', 'pwchangeConfirmModalActive', 'pwchangeErrModalActive',
-    'foundEmailModalActive', 'notfoundEmailModalActive', 'noTelModalActive','addToPlayListActive'
+    'foundEmailModalActive', 'notfoundEmailModalActive', 'noTelModalActive','addToPlayListActive', 'wrongEmailModalActive', 'noMatchEmailModalActive',
   ])
 }
 
