@@ -21,7 +21,6 @@ import UserInfo from '@/components/Settings/UserInfo'
 import PwChange from '@/components/Settings/PwChange'
 import Withdrawal from '@/components/Settings/Withdrawal'
 import FeedDetail from '@/components/FeedDetail'
-import ProfileUpdate from '@/components/Settings/ProfileUpdate'
 import SearchResult from '@/components/Search/SearchResult/SearchResult'
 import SearchList from '@/components/Search/SearchResult/SearchList'
 
@@ -214,15 +213,6 @@ const routes = [
           showingNav: true,
         },
       },
-      {
-        path:'profile-update',
-        component: ProfileUpdate,
-        meta: {
-          loginRequired: true,
-          testRequired: true,
-          showingNav: true,
-        },
-      }
     ],  
   },
   {
