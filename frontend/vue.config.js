@@ -8,8 +8,8 @@ module.exports = {
           '/api': {
               // 프록시 요청을 보낼 서버의 주소
               // target: 'https://i6e203.p.ssafy.io:8443',
-            //   target: 'http://localhost:8080',
-              target: 'http://13.125.47.126:8080',
+              target: 'http://localhost:8080',
+              //target: 'http://13.125.47.126:8080',
               changeOrigin: true,
           }
       }

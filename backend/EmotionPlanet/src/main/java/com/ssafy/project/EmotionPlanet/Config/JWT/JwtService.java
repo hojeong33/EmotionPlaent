@@ -15,6 +15,7 @@ import org.apache.commons.collections4.MapUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
+import org.springframework.util.Base64Utils;
 
 import javax.crypto.SecretKey;
 import java.io.UnsupportedEncodingException;
@@ -138,8 +139,9 @@ public class JwtService {
     public String decode(String token) {
 
         String[] splitToken = token.split("\\.");
-        Base64.Decoder decoder = Base64.getDecoder();
-        byte[] decodedBytes = decoder.decode(splitToken[1]);
+//        Base64.Decoder decoder = Base64.getDecoder();
+//        byte[] decodedBytes = decoder.decode(splitToken[1]);
+        byte[] decodedBytes = Base64Utils.decodeFromUrlSafeString(splitToken[1]);
 
         String decodedString = null;
 
