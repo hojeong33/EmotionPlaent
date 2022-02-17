@@ -13,7 +13,7 @@ public interface FeedService {
     public List<Integer> myListReturnNo(int no);
     public FeedDto read(int no, int userNo);
     public int write(FeedDto feedDto);
-    public int update(FeedDto feedDto);
+    public int update(FeedDto feedDto, int type);
     public int delete(int no);
     public List<UserRequestDto> likeList(int feedNo);
     public int like(int userNo, int feedNo);

@@ -42,7 +42,8 @@ public class AlarmController {
     }
      
     @GetMapping(value = "/alarm/{no}")
-    public ResponseEntity<List<AlarmDto>> selectAlram(@PathVariable String no) { 
+    public ResponseEntity<List<AlarmDto>> selectAlram(@PathVariable String no) {
+        System.out.println("알람 : " + no);
         int userNo = Integer.parseInt(no);
         List<AlarmDto> list = alarmService.selectAlram(userNo);
         if(list != null) {
