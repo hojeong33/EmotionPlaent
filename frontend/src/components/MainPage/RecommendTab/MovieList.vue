@@ -53,6 +53,15 @@ export default {
         atHeadOfList() {
         return this.currentOffset === 0;
         },
+       movieData(){
+        if (this.movie){
+          return this.movie.slice(10 * this.tab, 10 * (this.tab+1))
+        }
+        return 0
+      },
+    },
+    props: {
+      tab: Number
     },
     methods: {
         moveCarousel(direction) {
