@@ -43,6 +43,7 @@ public class AlarmServiceImpl implements AlarmService {
 	@Override
 	public List<AlarmDto> selectAlram(int no) {
 		List<AlarmDto> list = alarmDao.selectAlram(no);
+		System.out.println("알람 사이즈 : " + list.size());
 		if(list.size() != 0)
 			return list;
 		return null;

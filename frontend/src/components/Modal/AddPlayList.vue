@@ -17,7 +17,6 @@
     <div id="feed_likes_list" v-else>
       <div v-for="(forder, index) in forderlists" :key="index">
         <div id="userInfo">
-          <!-- <img id="profile_img" :src="liker.profileImg" alt=""> -->
           <p id="username">{{forder.name}}</p>
           <button id="follow_cancel" @click="choiceForder(forder)">선택</button>
           <img id="trash"  @click="deleteForder(forder.no)" src="@/assets/images/icons/trash.png" style="margin-right:1rem" alt="">
@@ -31,11 +30,8 @@
     </div>
     <div id="new_container" v-else>
       <p id="plus_text">이름</p>
-      <input id="playlist_input"  v-model.trim="listName" placeholder="플레이리스트 이름을 입력해주세요">
-      <!-- <div id="uploading">
-      <p id="plus_text" style="margin-top:0.5rem;">이미지 업로드</p>
-      <input type="file" id="file" accept="image/*" @change="imgUpload" ref="feedImg" /> -->
-    <!-- </div> -->
+      <input id="playlist_input"  @keyup.enter="createList" v-model.trim="listName" placeholder="플레이리스트 이름을 입력해주세요">
+
       <button id="pu_button" @click="createList">만들기</button>
     </div>
   </div>
@@ -67,7 +63,6 @@ export default {
 		}
 	},
 	methods: {
-
     choiceForder:function(forder){
       this.choicedForder=forder.no
       this.pickedForder=forder.name
@@ -144,10 +139,6 @@ export default {
       console.log(this.isClick)
 
     },
-    // imgUpload() {
-    //   this.images = null;
-    //   this.images = URL.createObjectURL(this.$refs.feedImg.files[0]);
-    // },
     getPlayList:function(){
       let headers = {
           // 'Content-Type': 'multipart/form-data',
@@ -221,6 +212,7 @@ export default {
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
             this.isClick=true
             this.getPlayLists()
+            this.listName=''
         }).catch((error) => {
           console.log(error);
         }).then(() => {
@@ -231,7 +223,6 @@ export default {
         alert('제목을 입력해주세요')
       }
     },
-
 	},
 	created () {
     this.userdata=JSON.parse(session.getItem('userInfo')) 
