@@ -106,7 +106,7 @@
         <input type="date" id="birth" v-model="credentials.birth" :max="this.maxdate">
       </article>
         <article id="btn_container">
-          <button @click="signup" id="signup_btn">시민권 등록하기</button>
+          <button @click="signup" id="signup_btn">여행티켓 발급하기</button>
           <button @click="go_to_back" id="back_to_btn">다음에 할게요</button>
         </article>
       </section>

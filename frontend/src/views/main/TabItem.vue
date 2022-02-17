@@ -23,11 +23,12 @@ export default {
  div{
   margin: 1rem 1.2rem;
   font-size: 2rem; 
+  font-weight: bold;
  }
  
 .tab {
   border-radius: 2px 2px 0 0;
-  background: #fff;
+  background:none;
   color: #777777;
   line-height: 24px;
   margin-bottom:0;

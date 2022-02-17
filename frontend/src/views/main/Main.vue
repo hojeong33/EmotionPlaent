@@ -100,7 +100,7 @@ export default {
 
 <style scoped>
 #mainpage-container {
-  
+  background-color: white;
 }
 
 .container {

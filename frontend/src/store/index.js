@@ -12,6 +12,7 @@ import SockJS from "sockjs-client";
 export default new Vuex.Store({
   state: {
     // feedActive: false,
+    searchPickList : [],
     //검색부분
     searching: false, //검색창 활성화
     words: null, //검색창
@@ -135,8 +136,9 @@ export default new Vuex.Store({
       if (payload == -1){
         navActive.forEach((ele, idx) => {
           Vue.set(navActive, idx, false)
+          console.log('1차', navActive)
         })
-        return
+        return 
       }
       if (payload == 0 || payload == 3){
         Vue.set(navActive, payload, !navActive[payload])
@@ -145,6 +147,7 @@ export default new Vuex.Store({
       navActive.forEach((ele, idx) => {
         navActive[idx] = false
       })
+
       Vue.set(navActive, payload, true)
       console.log(navActive)
     },
@@ -708,45 +711,7 @@ export default new Vuex.Store({
     },
 
     //여기 검색부분입니다
-    // 글자가 포함된 태그리스트와 태그별 피드 개수를 가져옴
-    searchsPickTag(state, el){
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-      axios({
-        method: 'get',
-        url:'/api/searchs/byPickTag/' + el,
-        headers: headers,
-      }).then(res => {
-        this.dispatch('accessTokenRefresh', res)
-        console.log('찜목록 있음', res)
-      })
-      .catch(()=> {
-        console.log('찜목록 없음')
-        
-      })
-    },
-
-    searchPickTagList(){
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-      axios({
-        method: 'get',
-        url:'/api/searchs/byPickTagList',
-        headers: headers,
-      }).then(res => {
-        this.dispatch('accessTokenRefresh', res)
-        console.log('태그 있음', res)
-      })
-      .catch(()=> {
-        console.log('태그 없음')
-        
-      })
-    },
-
+    // 검색창에 넣은 단어를 포함하는 피드 개수를 가져옴
     searchTag() {
       let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
@@ -780,6 +745,7 @@ export default new Vuex.Store({
         console.log("태그 피드 검색 성공")
         console.log(res.data)
         this.state.tagSearchResult = res.data
+        this.state.tagSearch = []
         this.dispatch('accessTokenRefresh', res)
       }).catch((error) => {
         console.log("태그 피드 검색 실패")

@@ -1,10 +1,10 @@
 <template>
   <div id="comments" v-if="comments">
     <div id="form-commentInfo">
-      <div id="comment-count">댓글 
+      <div id="comment-count"  @click="goToDetail">댓글 
           <span id="count">{{comments.length}}</span>
       </div>
-      <comment v-for="(comment,index) in this.comments"
+      <comment v-for="(comment,index) in this.commentsList"
       :comment="comment"
       :key="index">
       </comment>
@@ -21,6 +21,8 @@
 <script>
 import Comment from './Comment.vue'
 import axios from 'axios';
+import {mapState} from 'vuex'
+
 const session = window.sessionStorage;
 
 export default {
@@ -37,10 +39,15 @@ export default {
     }
   },
   props:{
-      feedNo:Number
+      feedNo:Number,
+      feedAuthor:Number,
+ 
   },
  
   methods:{
+    goToDetail:function(){
+      this.$router.push({name:'FeedDetail', params:{feedNo:this.feedNo}})
+    },
     commentMore:function(){
       this.commentsList=this.comments
       this.isShort=false
@@ -59,14 +66,15 @@ export default {
       let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-    };
-    axios({
+      };
+      axios({
         method: 'get',
-        url:`http://13.125.47.126:8080/comments/returnNo/${this.feedNo}`,
+        url:`/api/comments/returnNo/${this.feedNo}`,
         headers: headers,  // 넣는거 까먹지 마세요
       }).then((res) => {
       this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
       this.comments=res.data.reverse()
+      this.commentsList=this.comments.slice(0,2)
       console.log('댓글이 갱신됐슴다!!!!!!!!!!!!!!!!!!!', this.comments)
       })
       .catch((error) => {
@@ -88,7 +96,7 @@ export default {
         };
         axios({
             method: 'post',
-            url:'http://13.125.47.126:8080/comments',
+            url:'/api/comments',
             data: commentItem, // post 나 put에 데이터 넣어 줄때
             headers: headers,  // 넣는거 까먹지 마세요
           })
@@ -97,20 +105,38 @@ export default {
              console.log(res.data)
              console.log('댓글 다시 가져옴!!!!!!!!!!!!!!!!!!!!!!')
              this.getComments()
+             let body = {
+               receiver: this.feedAuthor,
+               feedno: this.feedNo,
+               commentno: res.data,
+             }
+             this.$store.dispatch('comment',body)
           })
           .catch((error) => {
             console.log(error);
           })
           .then(() => {
-            console.log('댓글 작성 완료');
+            console.log('댓글 작성 완료 코멘트 리스트');
           });
-
-        
       }
       else{
         alert('내용을 채워주세요')
       }
     },
+  },
+  computed: {
+    ...mapState([
+      'commentDeleted'
+    ])
+  },
+  watch: {
+    commentDeleted: function () {
+      const idx = this.comments.indexOf(this.commentDeleted)
+      console.log('지워지는 값', idx)
+      if (idx > -1) {
+        this.$emit('delete-comment')
+      } 
+    }
   },
   created(){
     this.getComments()

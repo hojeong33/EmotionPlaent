@@ -149,7 +149,7 @@ export default {
     };
     axios({
       method: 'get',
-      url:`http://13.125.47.126:8080/feed/${this.idx}`,
+      url:`/api/feed/${this.idx}`,
       headers: headers,  // 넣는거 까먹지 마세요
     })
     .then((res) => {
