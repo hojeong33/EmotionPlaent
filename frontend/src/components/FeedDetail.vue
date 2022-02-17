@@ -227,20 +227,60 @@ export default {
 				console.log('피드 하나 가져오기');
 			});
 		},
-    like:function(){
+    like() {
       this.feed.like ? this.cancelLike(): this.doLike();
       this.feed.like= !this.feed.like;
     },
     doLike:function(){
-		console.log(this.feedNo)
-      let el = {
-        receiver : this.feed.author,
-        feedno : this.feedNo,
+      const userdata = JSON.parse(session.getItem('userInfo')) ;
+      const likeItem={
+        targetNo:this.feedNo,
+        userNo:userdata.no,
       }
-      this.$store.dispatch('addfeedlike',el)
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+        axios({
+            method: 'post',
+            url:`/api/feeds/like`,
+            data:likeItem,
+            headers: headers,  // 넣는거 까먹지 마세요
+          }).then((res) => {
+          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+          this.$store.dispatch('feedlike',this.targetNo)
+          this.getFeed()
+          console.log(res.data)
+          }).catch((error) => {
+            console.log(error);
+          }).then(() => {
+            console.log('좋아요 누름');
+          });
     },
     cancelLike:function(){
-      this.$store.dispatch('deletefeedlike',this.feedNo)
+      const userdata = JSON.parse(session.getItem('userInfo')) ;
+      const likeItem={
+        targetNo:this.feedNo,
+        userNo:userdata.no,
+      }
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+        axios({
+            method: 'delete',
+            url:`/api/feeds/like`,
+            data:likeItem,
+            headers: headers,  // 넣는거 까먹지 마세요
+          }).then((res) => {
+          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+          this.getFeed()
+          console.log(res.data)
+          }).catch((error) => {
+            console.log(error);
+          }).then(() => {
+            console.log('좋아요 해제');
+          });
     },
     onModalFeed:function(){
       if(this.isMineFeed){
