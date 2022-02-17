@@ -39,10 +39,6 @@ import SideProfileCard from '@/components/SideProfileCard.vue'
 import axios from 'axios'
 
 const session = window.sessionStorage
-const firstheaders = {
-      'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-      'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-};
 
 export default {
   name: 'Mypage',
@@ -165,10 +161,15 @@ export default {
   },
   created() {
     if (this.$route.params.userId){
+      const headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+
       axios({
         method:'get',
         url:`/api/users/${this.userId}`,
-        headers:firstheaders,
+        headers: headers,
       })
       .then(res => {
         if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
@@ -177,6 +178,7 @@ export default {
           console.log("Access Token을 교체합니다!!!")
         }
         this.userInfo = res.data
+        console.log(this.userInfo)
       })
       .then(() => {
         this.getFollowData() // 팔로우 데이터

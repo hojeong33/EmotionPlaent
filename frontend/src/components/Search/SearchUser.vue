@@ -1,15 +1,13 @@
 <template>
   <div id="container">
-    <div id="results" v-if="this.$store.state.userSearch.length !== 0">
-      <div v-for="result in this.$store.state.userSearch"
-      :key="result.no"
-      id="result">
+    <div id="results" v-if="searchUser.length !== 0">
+      <div v-for="result in searchUser"
+      :key="result.no" class="result" @click="getInfo(result.no)">
         <div id="user_info">
           <img :src="result.profileImg" alt="" id="user">
           <p id="title">@{{ result.nickname }}</p>
         </div>
-        <img src="../../assets/images/icons/search_dark.png" v-if="result.no"
-        @click="getInfo(result.no)" alt="" id="go">
+        <img src="../../assets/images/icons/search_dark.png" alt="" id="go">
       </div>
     </div>
     <div v-else id="no_result">
@@ -25,13 +23,20 @@ export default {
   methods: {
     async getInfo(el) {
       console.log('유저에용',el)
+      const to = `/user/${el}`
+      console.log(to)
       this.$store.state.searchUserNo = el
       await this.$store.dispatch('userSelect', el)
       await this.$store.dispatch('userfollowdate', el)
       // await this.$store.dispatch("searchUserFeed", this.$store.state.searchUserNo)
-      this.$router.push({ path: `/user/${el}` })
-      this.$store.state.searching = false
-      this.$store.state.userSearch = []
+      // window.location.reload()
+
+      this.$router.push({ path: to })
+    }
+  },
+  computed: {
+    searchUser(){
+      return this.$store.state.userSearch
     }
   },
   created() {
@@ -62,13 +67,14 @@ export default {
     overflow-y: scroll;
   }
 
-  #result {
+  .result {
     display: flex;
     width: 85%;
     align-items: center;
     margin: 1rem 1rem;
     background-color: white;
     border-bottom: 0.1rem gainsboro;
+    cursor: pointer;
   }
 
   #search {
@@ -98,6 +104,7 @@ export default {
   #user_info {
     display: flex;
     flex-direction: row;
+    cursor: pointer;
   }
   #user {
     width: 2.3rem;

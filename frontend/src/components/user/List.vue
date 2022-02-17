@@ -1,17 +1,8 @@
 <template>
   <article id="list-container">
 		<filter-tab :user-mood="userMood" @filtering="filtering" />
-
 		<feed-list :filter="filter" :userId="userId" @comp="prepared = 'feed'" v-if="tab == 'feed'"/>
 		<pick-list :filter="filter" :userId="userId" @comp="prepared = 'pick'" v-if="tab == 'pick'" />
-
-		<!-- <div id="no-result" 
-		v-if="(tab == 'feed' && !filteredFeeds.length)||(tab == 'pick' && !filteredPicks.length)">
-			<img id="nothing" src="@/assets/images/etc/alien.png" alt="no result">
-			<p v-if="tab == 'feed' && !filteredFeeds.length">게시글이 없어요...</p>
-			<p v-if="tab == 'pick' && !filteredPicks.length">찜목록이 없어요...</p>
-		</div> -->
-		
 	</article>
 </template>
 
@@ -21,7 +12,7 @@ import FeedList from '@/components/user/FeedList'
 import PickList from '@/components/user/PickList'
 
 export default {
-	name: 'UserFeed',
+	name: 'List',
 	data: function () {
 		return {
 			planetStyles: [
@@ -40,7 +31,7 @@ export default {
 	},
 	props: {
 		tab: String,
-		userId: Number
+		userId: String
 	},
 	components: {
 		FilterTab,
@@ -70,13 +61,6 @@ export default {
 </script>
 
 <style scoped>  
-  p {
-    color: #777777;
-    font-size: 1.5rem;
-    font-weight: bold;
-    margin: 2.5rem;
-  }
-
 	#list-container {
 		display: flex;
 		flex-direction: column;
@@ -84,21 +68,6 @@ export default {
 		align-items: center;
 		width: 100%;
 	}
-
-	#no-result {
-		display:flex;
-		flex-direction: column;
-		justify-content: center;
-		align-items: center;
-		padding-top: 1rem;
-	}
-
-	#nothing {
-    width: 30%;
-		height: 30%;
-    height: inherit;
-    aspect-ratio: 1/1;
-  }
 
 	#filter {
 		display: flex;
