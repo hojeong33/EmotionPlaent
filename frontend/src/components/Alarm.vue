@@ -53,6 +53,7 @@
     <section id="alarm_footer">
       <button @click="cancel">닫기</button>
     </section>
+    <div id="other-side" @click="cancel"></div>
   </div>
 </template>
 
@@ -68,8 +69,9 @@ export default {
   },
   methods: {
     cancel() {
-      this.$store.dispatch('readAlarm', this.$store.state.userInfo.no)
-      this.$emit('cancelAlarm')
+      this.$store.commit('navActivate', 3)
+      // this.$store.dispatch('readAlarm', this.$store.state.userInfo.no)
+      // this.$emit('cancelAlarm')
       // console.log("여기가 알림 닫는곳")
       // console.log(this.$store.state.searchUserNo)
       // console.log(this.$store.state.searchUserInfo)
@@ -85,6 +87,11 @@ export default {
       console.log(el)
        this.$router.push({name:'FeedDetail', params:{feedNo:el}})
        window.location.reload()
+    },
+  },
+  computed: {
+    isShow(){
+      return this.$store.state.navActive[3]
     }
   }
 }
@@ -272,4 +279,12 @@ export default {
     align-items: flex-start;
   }
 
+  #other-side {
+    width: 100vw;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    z-index: -1;
+  }
 </style>
