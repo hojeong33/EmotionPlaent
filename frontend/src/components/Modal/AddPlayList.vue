@@ -17,10 +17,8 @@
     <div id="feed_likes_list" v-else>
       <div v-for="(forder, index) in forderlists" :key="index">
         <div id="userInfo">
-          <!-- <img id="profile_img" :src="liker.profileImg" alt=""> -->
-          
           <p id="username">{{forder.name}}</p>
-          <button v-if="isFinded" id="follow_cancel" @click="choiceForder(forder)">선택</button>
+          <button id="follow_cancel" @click="choiceForder(forder)">선택</button>
           <img id="trash"  @click="deleteForder(forder.no)" src="@/assets/images/icons/trash.png" style="margin-right:1rem" alt="">
         </div>
       </div>
@@ -33,10 +31,7 @@
     <div id="new_container" v-else>
       <p id="plus_text">이름</p>
       <input id="playlist_input"  @keyup.enter="createList" v-model.trim="listName" placeholder="플레이리스트 이름을 입력해주세요">
-      <!-- <div id="uploading">
-      <p id="plus_text" style="margin-top:0.5rem;">이미지 업로드</p>
-      <input type="file" id="file" accept="image/*" @change="imgUpload" ref="feedImg" /> -->
-    <!-- </div> -->
+
       <button id="pu_button" @click="createList">만들기</button>
     </div>
   </div>
@@ -58,7 +53,6 @@ export default {
         type:null,//음악 :0 영화:1 활동:2
         tagNo:null,//행성
         userNo:null,
-        imgLink:null,
       },
       forderlistsNo:[],
       forderlists:[],
@@ -66,23 +60,12 @@ export default {
       userdata:null,
       choicedForder:null,
       item:null,
-      // isFinded:false,
 		}
 	},
-  computed:{
-    isFinded(forder){
-      let temp=false
-        forder.contentsListData.forEach(ele=>{
-        if(ele.no==this.item){
-          temp=true
-        }
-      })
-      return temp
-    }
-  },
 	methods: {
-    choiceForder:function(forderNo){
-      this.choicedForder=forderNo
+    choiceForder:function(forder){
+      this.choicedForder=forder.no
+      this.pickedForder=forder.name
       let sendData=null
       if (this.listData.type==0){
          sendData={
@@ -119,6 +102,7 @@ export default {
         }).then((res) => {
             console.log(sendData)
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+            this.$store.commit('addToPlayListActive',forder.name)
         }).catch((error) => {
           console.log(error);
         }).then(() => {
@@ -228,7 +212,7 @@ export default {
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
             this.isClick=true
             this.getPlayLists()
-            this.listName=null
+            this.listName=''
         }).catch((error) => {
           console.log(error);
         }).then(() => {
@@ -238,6 +222,7 @@ export default {
       else{
         alert('제목을 입력해주세요')
       }
+    },
 	},
 	created () {
     this.userdata=JSON.parse(session.getItem('userInfo')) 
@@ -255,6 +240,15 @@ export default {
 #trash{
   width: 25px;
   height: 25px;
+}
+#check_img{
+  width:25px;
+  height: 25px;
+  cursor: pointer;
+}
+#check_alert{
+  margin-left: 1rem;
+  color: gray;
 }
 #likes_list {
 	display: flex;
@@ -411,5 +405,6 @@ input:focus {
   line-height: 2rem;
   margin-left: 60%;
 }
+
 
 </style>

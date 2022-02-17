@@ -129,6 +129,20 @@ export default {
       // 	this.isUserFeedSettingOpened=true
       // }
     },
+    like:function(){
+      this.feed.like ? this.cancelLike(): this.doLike();
+      this.feed.like= !this.feed.like;
+    },
+    doLike:function(){
+      let el = {
+        receiver : this.feed.author,
+        feedno : this.post,
+      }
+      this.$store.dispatch('addfeedlike',el)
+    },
+    cancelLike:function(){
+      this.$store.dispatch('deletefeedlike',this.post)
+    },
     getFeed:function(){
        let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
@@ -143,48 +157,13 @@ export default {
           console.log('!!!!!!!!!!!!!!!!!!!')
           console.log(res.data)
           this.feed=res.data
-          if (this.feed.descr.length > 30) {
-            this.isLong = true
-          }
+          this.isMine=res.data.owner
           }).catch((error) => {
             console.log(error);
           }).then(() => {
             console.log('피드 하나 가져오기');
           });
     },
-    like() {
-      this.feed.like ? this.cancelLike(): this.doLike();
-      this.feed.like= !this.feed.like;
-    },
-    doLike:function(){
-      let el = {
-        receiver : this.feed.author,
-        feedno : this.post,
-      }
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        };
-        axios({
-            method: 'post',
-            url:`/api/feeds/like`,
-            data:likeItem,
-            headers: headers,  // 넣는거 까먹지 마세요
-          }).then((res) => {
-          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-          this.getFeed()
-          this.$store.dispatch('feedlike',this.targetNo)
-          console.log(res.data)
-          }).catch((error) => {
-            console.log(error);
-          }).then(() => {
-            console.log('좋아요 누름');
-          });
-    },
-    cancelLike:function(){
-      this.$store.dispatch('deletefeedlike',this.post)
-    },
-    
     likesList:function(){
        this.$store.commit('likesListActive',this.feed.likes)
        console.log(this.feed.likes)

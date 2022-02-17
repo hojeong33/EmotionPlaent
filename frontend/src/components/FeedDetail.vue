@@ -92,7 +92,7 @@ export default {
 		}
 	},
 	props:{
-		feedNo:String,
+		feedNo:Number,
 	},
 	methods: {
     pagination(payload){
