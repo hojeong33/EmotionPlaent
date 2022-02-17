@@ -1,12 +1,7 @@
 <template>
   <article id="list-container">
 		<filter-tab v-if="tab == 'feed'" :user-mood="userMood" @filtering="filtering" />
-<<<<<<< HEAD
-		<filter-tab v-if="tab == 'pick'" style="visibility:hidden;" />
-
-=======
-        <filter-tab v-if="tab == 'pick'" style="visibility:hidden;" />
->>>>>>> f2ae5dec8162d0eecbba84c95f86a95051f2d22f
+    <filter-tab v-if="tab == 'pick'" style="visibility:hidden;" />
 		<search-feed-list v-if="tab == 'feed'" :feeds="filteredFeeds" />
 		<search-pick-list v-if="tab == 'pick'" :picks="this.filteredPick"  />
 		<div id="no-result" 
@@ -46,9 +41,6 @@ export default {
 		filtering(payload){
       this.filter = payload
 			this.filteredFeed = []
-<<<<<<< HEAD
-    }
-=======
 			this.filteredPick = []
     },
 		test(){
@@ -73,7 +65,6 @@ export default {
         this.pickSearchResult = []
       })
 		}
->>>>>>> f2ae5dec8162d0eecbba84c95f86a95051f2d22f
 	},
 	mounted: function() {
 		this.feedData = this.$store.state.tagSearchResult
