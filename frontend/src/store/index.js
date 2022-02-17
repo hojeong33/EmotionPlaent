@@ -115,6 +115,13 @@ export default new Vuex.Store({
     nicknameErrModalActive:false,
     pwchangeErrModalActive:false,
     pwchangeConfirmModalActive:false,
+    foundEmailModalActive:false,
+    foundEmail: null,
+    notfoundEmailModalActive:false,
+    noTelModalActive:false,
+    wrongEmailModalActive:false,
+    noMatchEmailModalActive:false,
+
   
     // 모달의 에러 메시지
     serverErrorMessage: '',
@@ -351,7 +358,26 @@ export default new Vuex.Store({
         state.commentDeleted = state.commentNum
       }
       console.log(state.commentDeleted)
-    }
+    },
+    //이메일찾기 페이지 모달 3개
+    foundEmailModalActivate: function (state, email) {
+      state.foundEmailModalActive = !state.foundEmailModalActive
+      state.foundEmail = email
+    },
+    notfoundEmailModalActivate: function (state) {
+      state.notfoundEmailModalActive = !state.notfoundEmailModalActive
+    },
+    noTelModalActivate: function (state) {
+      state.noTelModalActive = !state.noTelModalActive
+    },
+    //비번찾기 페이지 모달 2개 
+    wrongEmailModalActivate: function (state) {
+      state.wrongEmailModalActive = !state.wrongEmailModalActive
+    },
+    noMatchEmailModalActivate: function (state) {
+      state.noMatchEmailModalActive = !state.noMatchEmailModalActive
+    },
+
   },
   actions: {
 
