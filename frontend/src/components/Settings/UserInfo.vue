@@ -194,58 +194,14 @@ export default {
         }
       }
     },
-    // tel_helper: function(event){
-    //   const nums = this.credentials.tel.length
-    //   const n = this.credentials.tel.charCodeAt(nums-1)
-    //   const poss = ['010', '011', '012', '013', '014',
-    //                 '015', '016', '017', '018', '019']
-    //   console.log(nums)
-    //   if (event.inputType == 'deleteContentBackward'){
-    //     if (nums == 3 || nums == 8){
-    //       this.credentials.tel = this.credentials.tel.slice(0, nums - 1)
-    //     }
-    //     return
-    //   }
-    //   if (n > 47 && n < 58){
-    //     if (nums == 3 || nums == 8){
-    //       this.credentials.tel += '-'
-    //     }
-    //   }
-    //   else {
-    //     this.credentials.tel = this.credentials.tel.slice(0, nums - 1)
-    //   }
-    //   if (nums == 13 && poss.indexOf(this.credentials.tel.slice(0,3)) > -1){
-    //     console.log(poss.indexOf(this.credentials.tel.slice(0,3)))
-    //     console.log(nums)
-    //     this.telCheck()
-    //   }
-    //   else {
-    //     this.isValid.validateTel = false
-    //   }
-    // },
-    // telCheck: function(){
-    //   axios({
-    //     method: 'get',
-    //     url: '/api/register/checkByTel/' + this.credentials.tel
-    //   })
-    //   .then(res => {
-    //     console.log(res)
-    //     if (res.data){
-    //       this.isValid.validateTel = true
-    //     }
-    //     else {
-    //       this.isValid.validateTel = false
-    //     }
-    //   })
-    // },
+    
     async user_change() {
-      //낙넴 변경하려 했을 경우
+      let nicknameChange = false
       if (this.credentials.beforeNick !== this.$store.state.userInfo.nickname) {
         console.log(this.isValid.validateNicknamecheck)
         console.log(this.isValid.validateNicknamelength)
         if (this.isValid.validateNicknamecheck == true && this.isValid.validateNicknamelength == true) {
-          this.$store.state.userInfo.nickname = this.credentials.beforeNick
-          this.$router.push({name: 'Mypage'})
+          nicknameChange = true
         }
         else {
           this.$store.commit('nicknameErrModalActivate')
@@ -253,22 +209,32 @@ export default {
       }
       
       // 비번 변경하려 했을 경우
-      else if (this.credentials.pwConf !== null) {
-        if (this.isValid.validateNextPw == true) {
-          await this.$store.dispatch('updateuser', this.credentials.pwConf)
-          .then(() => {
-            this.$store.commit('pwchangeConfirmModalActivate')
-          })
-          .catch(() => alert('fail'))
-          }
+      let pwChange = false
+      if (this.credentials.pwConf) {
+        if (this.isValid.validateNextPw && this.isValid.validatePwConf) {
+          pwChange = true
+        }
         else {
           this.$store.commit('pwchangeErrModalActivate')
         }
       }
-      // 소개 or 공개비공개 설정 변경
-      else {
-        this.$store.dispatch('updateuser', null)
-        this.$router.push({name: 'Mypage'})
+
+      if (nicknameChange && pwChange){
+        this.$store.state.userInfo.nickname = this.credentials.beforeNick
+        this.$store.dispatch('updateuser', this.credentials.pwConf)
+        .then(() => {
+          this.$store.commit('pwchangeConfirmModalActivate')
+        })
+      }
+      else if (nicknameChange){
+        this.$store.state.userInfo.nickname = this.credentials.beforeNick
+        this.$store.commit('pwchangeConfirmModalActivate')
+      }
+      else if (pwChange){
+        this.$store.dispatch('updateuser', this.credentials.pwConf)
+        .then(() => {
+          this.$store.commit('pwchangeConfirmModalActivate')
+        })
       }
     },
     pw_change() {
@@ -287,6 +253,9 @@ export default {
   created() {
     console.log(this.$store.state.userInfo)
     this.credentials.beforeNick = this.$store.state.userInfo.nickname
+  },
+   mounted(){
+    this.$store.commit('load', false)
   }
 }
 </script>

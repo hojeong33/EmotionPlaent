@@ -11,7 +11,7 @@
             <input id="search_bar" class="form-control" autocomplete="off"
             type="search" placeholder="Search" aria-label="Search"
             @focus="searchOn" :value="searchWords" @input="search">
-            <search v-if="this.$store.state.searching" v-on:cancel="searchOff" id="dropdown"></search>
+            <search v-if="searchRecommend" v-on:cancel="searchOff" id="dropdown"></search>
           </div>
           <!-- <button class="btn btn-outline-success" type="submit" id="search"><img src="@/assets/images/search.png" id="search"></button> -->
           <!-- <img src="@/assets/images/icons/search.png" id="search" type="submit"> -->
@@ -34,7 +34,7 @@
                 <p v-if="this.alarmCount >= 10" id="plus">+</p>
               </span>
             </span>
-            <alarm v-if="alarming" id="alarm_drop" v-on:cancelAlarm="alarmClose" @blur="alarmClose"></alarm>
+            <alarm v-if="alarming" id="alarm_drop" @cancelAlarm="alarmClose"></alarm>
           </div>
           <img @click="navClick" id="setting"
            :src="require(`@/assets/images/icons/${setting}`)">
@@ -57,10 +57,8 @@ export default {
   data: function (){
     return {
       //검색입니둥
-      
       searchWords: null,
       //알람입니둥
-      alarming: false,
       alarmwatch: 0,
     }
   },
@@ -97,12 +95,10 @@ export default {
     },
     alarmClick() {
       this.$store.commit('navActivate', 3)
-      this.alarming = true
       this.$store.dispatch('alarmselect')
     },
     alarmClose() {
       this.$store.commit('navActivate', 3)
-      this.alarming = false
     },
   },
   computed: {
@@ -139,6 +135,12 @@ export default {
       });
       console.log(count)
       return count
+    },
+    searchRecommend(){
+      return this.$store.state.searching
+    },
+    alarming(){
+      return this.$store.state.navActive[3]
     }
   },
 }

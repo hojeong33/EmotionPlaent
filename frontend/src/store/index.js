@@ -12,7 +12,6 @@ import SockJS from "sockjs-client";
 export default new Vuex.Store({
   state: {
     // feedActive: false,
-    searchPickList : [],
     //검색부분
     searching: false, //검색창 활성화
     words: null, //검색창
@@ -61,11 +60,13 @@ export default new Vuex.Store({
     },
     searchUserFeedInfo: [], //내 피드 정보
     searchUserPickInfo: [], //내 찜목록 정보
+    followerList: null,
+    followingList: null,
 
     planetStyles: [
       { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
       { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
-      { id: 3, name: '심심행성', img: "neutral.png", color: '#ABBECA' },
+      { id: 3, name: '떠돌이행성', img: "space-station.png", color: '#ABBECA' },
       { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
       { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
       { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
@@ -111,9 +112,17 @@ export default new Vuex.Store({
     userpagefollowerListActive: false,
     likesListActive:false,
     addPlayListActive:false,
+    addToPlayListActive:false,
     nicknameErrModalActive:false,
     pwchangeErrModalActive:false,
     pwchangeConfirmModalActive:false,
+    foundEmailModalActive:false,
+    foundEmail: null,
+    notfoundEmailModalActive:false,
+    noTelModalActive:false,
+    wrongEmailModalActive:false,
+    noMatchEmailModalActive:false,
+
   
     // 모달의 에러 메시지
     serverErrorMessage: '',
@@ -131,6 +140,9 @@ export default new Vuex.Store({
     commentDeleted: false
   },
   mutations: {
+    load(state, payload){
+      state.loading = payload
+    },
     navActivate: function({ navActive }, payload){
       console.log('지금 나는?', payload)
       if (payload == -1){
@@ -314,13 +326,13 @@ export default new Vuex.Store({
       state.pickYourTagModalActive = !state.pickYourTagModalActive
       console.log(state.pickYourTagModalActive)
     },
-    mypagefollowingListActivate: function (state) {
+    mypagefollowingListActivate: function (state, payload) {
       state.mypagefollowingListActive = !state.mypagefollowingListActive
-      console.log(state.mypagefollowingListActive)
+      state.followingList = payload
     },
-    mypagefollowerListActivate: function (state) {
+    mypagefollowerListActivate: function (state, payload) {
       state.mypagefollowerListActive = !state.mypagefollowerListActive
-      console.log(state.mypagefollowerListActive)
+      state.followerList = payload
     },
     userpagefollowingListActivate: function (state) {
       state.userpagefollowingListActive = !state.userpagefollowingListActive
@@ -341,13 +353,36 @@ export default new Vuex.Store({
       state.item=sendData[1]
       console.log(state.addPlayListActive)
     },
+    addToPlayListActive:function(state,sendData){
+      state.addToPlayListActive=!state.addToPlayListActive
+      state.pickedForderName=sendData
+    },
     // 댓글
     isDelete: function (state) {
       if (state.commentNum) {
         state.commentDeleted = state.commentNum
       }
       console.log(state.commentDeleted)
-    }
+    },
+    //이메일찾기 페이지 모달 3개
+    foundEmailModalActivate: function (state, email) {
+      state.foundEmailModalActive = !state.foundEmailModalActive
+      state.foundEmail = email
+    },
+    notfoundEmailModalActivate: function (state) {
+      state.notfoundEmailModalActive = !state.notfoundEmailModalActive
+    },
+    noTelModalActivate: function (state) {
+      state.noTelModalActive = !state.noTelModalActive
+    },
+    //비번찾기 페이지 모달 2개 
+    wrongEmailModalActivate: function (state) {
+      state.wrongEmailModalActive = !state.wrongEmailModalActive
+    },
+    noMatchEmailModalActivate: function (state) {
+      state.noMatchEmailModalActive = !state.noMatchEmailModalActive
+    },
+
   },
   actions: {
 
@@ -380,25 +415,25 @@ export default new Vuex.Store({
       let headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-    };
-    let data = {
-      userNo : this.state.userInfo.no,
-      targetNo : el.feedno,
-    };
-    axios({
-        method: 'post',
-        url: '/api/feeds/like',
-        data: data, // post 나 put에 데이터 넣어 줄때
-        headers: headers,  // 넣는거 까먹지 마세요
-      }).then((res) => {
-      console.log("피드 좋아요 추가 성공")
-      this.dispatch('feedlike',el)
-      this.dispatch('accessTokenRefresh', res) // store에서
-      }).catch((error) => {
-        console.log("피드 좋아요 실패")
-        console.log(error);
-      })
-    },
+      };
+      let data = {
+        userNo : this.state.userInfo.no,
+        targetNo : el.feedno,
+      };
+      axios({
+          method: 'post',
+          url: '/api/feeds/like',
+          data: data, // post 나 put에 데이터 넣어 줄때
+          headers: headers,  // 넣는거 까먹지 마세요
+        }).then((res) => {
+        console.log("피드 좋아요 추가 성공")
+        this.dispatch('feedlike',el)
+        this.dispatch('accessTokenRefresh', res) // store에서
+        }).catch((error) => {
+          console.log("피드 좋아요 실패")
+          console.log(error);
+        })
+      },
 
       //알림 읽기 + 7일 이후 읽은 알림 삭제
       readAlarm(state, el){
@@ -406,7 +441,7 @@ export default new Vuex.Store({
             method: 'get',
             url: '/api/alarm/read/'+ el,
           }).then((res) => {
-            console.log("알림 읽기 성공")
+            console.log("알림 읽기 성공") 
             console.log(res.data)
             this.state.alarm = []
           }).catch(() => {
@@ -417,6 +452,8 @@ export default new Vuex.Store({
      // 여기는 알림 시작 --------------------------------------------------------
      follow(state, el) { //팔로우 알림 보내는 부분
       console.log("팔로우 알림");
+      console.log(el)
+      console.log(this.state.userInfo.no)
       if (this.stompClient && this.stompClient.connected) {
         const msg = {
           sender: this.state.userInfo.no,
@@ -543,7 +580,7 @@ export default new Vuex.Store({
         url:'/api/alarm/' + this.state.userInfo.no,
       })
       .then((res)=>{
-        console.log('알림 가져오기 성공')
+        console.log('알림 가져오기 성공', res)
         this.state.alarm = res.data
       })
       .catch(err=> {
@@ -775,57 +812,6 @@ export default new Vuex.Store({
     },
 
     //검색 끝 추천탭 시작입니다
-    recommendMusic() {
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-        axios.get('/api/recommend/music/' + this.state.userInfo.mood, {
-          headers: headers,
-        }).then((res) => {
-          this.state.recommendMusic = res.data
-          this.dispatch('accessTokenRefresh', res) 
-        
-        }).catch((error) => {
-          console.log(error);
-        }).then(() => {
-          console.log('getQSSList End!!');
-        });
-    },
-    recommendMovie() {
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-			axios.get('/api/recommend/movie/' + this.state.userInfo.mood, {
-          headers: headers,
-        }).then((res) => {
-          this.state.recommendMovie = res.data
-          this.dispatch('accessTokenRefresh', res)
-        
-        }).catch((error) => {
-          console.log(error);
-        }).then(() => {
-          console.log('getQSSList End!!');
-        });
-    },
-    recommendActivity() {
-      let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-      };
-			axios.get('/api/recommend/activity', {
-          headers: headers,
-        }).then((res) => {
-          this.state.recommendActivity = res.data
-          this.dispatch('accessTokenRefresh', res)
-        
-      }).catch((error) => {
-        console.log(error);
-      }).then(() => {
-        console.log('getQSSList End!!');
-      });
-  },
 
     accessTokenRefresh({commit}, res) {
       console.log("accesstoken : " + res.headers)

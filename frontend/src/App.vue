@@ -1,8 +1,9 @@
 <template>
   <div id="app">
+    <loading v-if="loading"/>
     <navigation v-if="showingNav" />
     <create v-if="navActive[0]" />
-    <router-view/>
+    <router-view :key="$route.path" />
     <!-- 모달창 -->
     <logout-modal v-if="logoutModalActive" />
     <user-feed-setting v-if="userFeedSettingModalActive" />
@@ -37,10 +38,21 @@
     <userpage-following-list v-if="userpagefollowingListActive" />
     <likes-list v-if="likesListActive"/>
     <add-play-list v-if="addPlayListActive"/>
+    <add-to-play-list v-if="addToPlayListActive"/>
+    <!-- 이메일 -->
+    <found-email v-if="foundEmailModalActive"/>
+    <notfound-email v-if="notfoundEmailModalActive"/>
+    <no-tel v-if="noTelModalActive"/>
+    <!-- 비밀번호찾기 -->
+    <wrong-email v-if="wrongEmailModalActive"/>
+    <no-match-email v-if="noMatchEmailModalActive"/>
+
+
   </div>
 </template>
 
 <script>
+import Loading from '@/views/Loading'
 import Create from '@/views/Create'
 import Update from '@/views/Update'
 import Navigation from '@/components/Navigation'
@@ -81,17 +93,25 @@ import UserpageFollowerList from '@/components/Modal/FollowModal/Userpage/Userpa
 //좋아요
 import LikesList from '@/components/Modal/LikesList.vue'
 import AddPlayList from '@/components/Modal/AddPlayList.vue'
+import AddToPlayList from '@/components/Modal/AddToPlayList.vue'
 //정보변경
 import nicknameErr from '@/components/Modal/UserInfoModal/nicknameErr.vue'
 import pwchangeConfirm from '@/components/Modal/UserInfoModal/pwchangeConfirm.vue'
 import pwchangeErr from '@/components/Modal/UserInfoModal/pwchangeErr.vue'
+//이메일 찾기
+import foundEmail from '@/components/Modal/EmailFindModal/foundEmail.vue'
+import notfoundEmail from '@/components/Modal/EmailFindModal/notfoundEmail.vue'
+import noTel from '@/components/Modal/EmailFindModal/noTel.vue'
+//비밀번호 찾기
+import noMatchEmail from '@/components/Modal/PwFindModal/noMatchEmail.vue'
+import wrongEmail from '@/components/Modal/PwFindModal/wrongEmail.vue'
+
 
 import { mapState } from 'vuex'
 
-
-
 export default {
   components: {
+    Loading,
     Create,
     Update,
     Navigation,
@@ -124,18 +144,28 @@ export default {
     UserpageFollowerList,
     LikesList,
     AddPlayList,
+    AddToPlayList,
     //정보변경
     nicknameErr,
     pwchangeConfirm,
-    pwchangeErr
+    pwchangeErr,
+     //이메일 찾기
+    foundEmail,
+    notfoundEmail,
+    noTel,
+    //비번 찾기
+    noMatchEmail,
+    wrongEmail,
+
   },
   computed:
     mapState([
       'navActive', 'showingNav', 'modalActive', 'profileImgChangeModalActive', 'commentSettingModalActive', 'logoutModalActive', 'userFeedSettingModalActive', 'userFeedSettingModalActive2', 'loginConfirmModalActive', 
-      'signupConfirmModalActive', 'emotionTestTooMuchPickModalActive', 'firstEmotionTestConfirmModalActive', 'emotionTestErrorActive', 'emotionTestPickMoreModalActive', 
+      'signupConfirmModalActive', 'emotionTestTooMuchPickModalActive', 'firstEmotionTestConfirmModalActive', 'emotionTestErrorActive', 'emotionTestPickMoreModalActive', 'loading',
       'emotionTestResultModalActive', 'loginFailModalActive', 'signupFailModalActive1', 'signupFailModalActive2', 'ReturnToLoginModalActive', 'commentNeedContentModalActive',
       'moreInfoConfirmModalActive', 'feedUpdateActive', 'pickYourImageModalActive', 'tooMuchImagesModalActive', 'pickYourTagModalActive', 'mypagefollowingListActive', 'mypagefollowerListActive',
       'userpagefollowingListActive', 'userpagefollowerListActive', 'userFeedSettingModalActive2','likesListActive','addPlayListActive', 'nicknameErrModalActive', 'pwchangeConfirmModalActive', 'pwchangeErrModalActive',
+      'foundEmailModalActive', 'notfoundEmailModalActive', 'noTelModalActive','addToPlayListActive', 'wrongEmailModalActive', 'noMatchEmailModalActive',
     ]),
 }
 

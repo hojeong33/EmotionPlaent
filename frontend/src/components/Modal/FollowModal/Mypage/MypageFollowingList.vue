@@ -10,15 +10,15 @@
 				</div>
 			</div>
 			<hr>	
-			<div id="no_result" v-if="myFollowingInfo.length === 0">
+			<div id="no_result" v-if="!followings.length">
 				<img id="nothing" src="@/assets/images/etc/alien.png" alt="no result">
 				<p id="no_following">팔로잉 목록이 없습니다...</p>
 			</div>
 			<div id="my_following_list" v-else>
-				<div v-for="followingInfo in myFollowingInfo" :key="followingInfo.no">
-					<div id="userInfo">
-						<img id="profile_img" :src="followingInfo.profileImg" alt="" @click="moveToUserPage(followingInfo.no)">
-						<p id="username" @click="moveToUserPage(followingInfo.no)">{{followingInfo.nickname}}</p>
+				<div v-for="following in followings" :key="following.no">
+					<div id="userInfo" @click="moveToUserPage(following.no)">
+						<img id="profile_img" :src="following.profileImg" alt="">
+						<p id="username">{{following.nickname}}</p>
 					</div>
 				</div>
 			</div>
@@ -44,7 +44,12 @@ export default {
 			this.$store.dispatch('userSelect', el)
 			this.$store.dispatch('userfollowdate', el)
 			this.$store.commit('mypagefollowingListActivate')
-			this.$router.push({ path: `/userpage/feed` })
+			this.$router.push({ path: `/user/${el}` })
+		}
+	},
+	computed: {
+		followings(){
+			return this.$store.state.followingList
 		}
 	},
 	created () {

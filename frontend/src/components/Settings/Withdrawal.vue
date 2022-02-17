@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     pwConfCheck: function(){
-      if (this.credentials.pwConf && this.credentials.nextPw === this.credentials.pwConf){
+      if (this.credentials.pwConf && this.credentials.pw === this.credentials.pwConf){
         this.isValid.validatePwConf = true
       }
       else {
@@ -78,6 +78,9 @@ export default {
     go_to_back: function(){
       this.$router.push('/setting')
     },
+  },
+   mounted(){
+    this.$store.commit('load', false)
   }
 }
 </script>

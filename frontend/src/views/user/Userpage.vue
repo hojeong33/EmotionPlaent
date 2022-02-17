@@ -9,7 +9,7 @@
             <button v-if="!isFollow" id="follow"
             @click="follow">팔로우</button>
             <button v-else id="unfollow"
-            @click="unfollow">언팔로우</button>
+            @click="follow">언팔로우</button>
           </div>
         </div>
         <div id="info-card" v-if="feeds && followers && followings">
@@ -47,7 +47,7 @@ export default {
     }
   },
   props: {
-    userId: String
+    userId: Number,
   },
   methods: {
     changeTab(tab){
@@ -55,10 +55,36 @@ export default {
       this.$router.push({ path: `/user/${this.userId}/${tab}` })
     },
     follow() {
-      this.$store.dispatch('sendfollow', this.$store.state.searchUserNo)
-    },
-    unfollow() {
-      this.$store.dispatch('deletefollow', this.$store.state.searchUserNo)
+      let method = 'post'
+      if (this.isFollow){
+        method = 'delete'
+      }
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+      let data = {
+        sender : JSON.parse(window.sessionStorage.getItem('userInfo')).no,
+        receiver : Number(this.userId),
+      };
+      console.log(data, method)
+      axios({
+        method: method,
+        url: '/api/follows',
+        data: data, // post 나 put에 데이터 넣어 줄때
+        headers: headers,  // 넣는거 까먹지 마세요
+      })
+      .then((res) => {
+      console.log("팔로우 성공")
+      console.log(res.data)
+      })
+      .catch((error) => {
+        console.log("팔로우 실패")
+        console.log(error);
+      })
+      .finally(() => {
+        this.getFollowData()
+      })
     },
 
     getFollowData: function () {
@@ -79,6 +105,7 @@ export default {
         this.followings = res.data.following
         this.$store.dispatch('accessTokenRefresh', res) // store에서
       })
+      .catch(() => {console.log('팔로우 에러')})
     },
     getFeedData: function(){
 
@@ -98,18 +125,20 @@ export default {
         this.feeds = res.data
         this.$store.dispatch('accessTokenRefresh', res)
       })
+      .catch(() => console.log('피드 에러'))
     }
   },
   computed: {
     isFollow(){
+      let result = false
       if (this.followers){
         this.followers.forEach(ele => {
-          if (ele.no == this.$store.state.userInfo.no){
-            return true
+          if (ele.no == JSON.parse(window.sessionStorage.getItem('userInfo')).no){
+            result = true
           }
         })
       }
-      return false
+      return result
     }
   },
   created(){
@@ -137,6 +166,7 @@ export default {
     })
     .then(() => {
       this.getFeedData() // 피드 데이터
+      this.$store.commit('load', false)
     })
 		.catch(error => console.log('안되네', error))
   }

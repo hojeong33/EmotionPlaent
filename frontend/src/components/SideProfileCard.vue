@@ -9,7 +9,7 @@
       </div>
     </div>
     <div class="card_body">
-      <p style="margin-top: auto; margin-bottom: auto;">이야기 {{ this.$store.state.userFeedInfo.length }}개</p>
+      <p style="margin-top: auto; margin-bottom: auto;">이야기 {{ this.$store.state.userInfo.feedCount }}개</p>
       <p style="margin-top: auto; margin-bottom: auto;">팔로워 {{ this.$store.state.userFollowInfo.userFollow.length }}명</p>
       <p style="margin-top: auto; margin-bottom: auto;">팔로우 {{ this.$store.state.userFollowInfo.userFollowing.length }}명</p>
     </div>
@@ -40,7 +40,7 @@ export default {
       planetStyles: [
         { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
         { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
-        { id: 3, name: '심심행성', img: "neutral.png", color: '#ABBECA' },
+        { id: 3, name: '떠돌이행성', img: "space-station.png", color: '#ABBECA' },
         { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
         { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
         { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
@@ -61,11 +61,11 @@ export default {
       this.$store.commit('navActivate', 0)
     },
     resize(){
-      window.innerWidth > 1000 ? this.isActive = true: this.isActive = false
+      window.innerWidth > 1400 ? this.isActive = true: this.isActive = false
     }
   },
   mounted(){
-    if (window.innerWidth > 1000){
+    if (window.innerWidth > 1400){
       this.isActive = true
     }
     window.addEventListener('resize', this.resize)
@@ -83,7 +83,7 @@ export default {
     min-height: 400px;
     position: fixed;
     top: 10rem;
-    right: 2.3%;
+    right: 2.5%;
     z-index: 1;
     border: 0.2rem solid gainsboro;
     border-radius: 10px;
@@ -95,11 +95,14 @@ export default {
     display: flex;
     justify-content: center;
     align-items: flex-end;
-    height: 50%;
+    width: 100%;
+    height: 25vh;
     background-image: url('../assets/images/emotions/cover_s.png');
     background-repeat: no-repeat;
     background-position: center;
     background-size: cover;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
   }
 
   .overlay_content {

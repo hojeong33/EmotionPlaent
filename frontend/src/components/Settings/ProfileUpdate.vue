@@ -229,8 +229,9 @@ export default {
         }
       })
     },
-    async user_change() {
+    user_change() {
       //낙넴 변경하려 했을 경우
+      let nicknameChange = false
       if (this.credentials.beforeNick !== this.$store.state.userInfo.nickname) {
         console.log(this.isValid.validateNicknamecheck)
         console.log(this.isValid.validateNicknamelength)
@@ -239,27 +240,34 @@ export default {
           this.$router.go(-1)
         }
         else {
-          this.$store.commit('nicknameErrModalActivate')
+          nicknameChange = true
         }
       }
       
       // 비번 변경하려 했을 경우
-      else if (this.credentials.pwConf !== null) {
-        if (this.isValid.validateNextPw == true) {
-          await this.$store.dispatch('updateuser', this.credentials.pwConf)
-          .then(() => {
-            this.$store.commit('pwchangeConfirmModalActivate')
-          })
-          .catch(() => alert('fail'))
-          }
+      let pwChange = false
+      if (this.credentials.pwConf === this.credentials.nextPw) {
+        if (this.isValid.validateNextPw && this.isValid.validatePwConf) {
+          pwChange = true
+        }
         else {
           this.$store.commit('pwchangeErrModalActivate')
         }
       }
       // 소개 or 공개비공개 설정 변경
-      else {
-        this.$store.dispatch('updateuser', null)
-        this.$router.go(-1)
+      // else {
+      //   this.$store.dispatch('updateuser', null)
+      //   this.$router.go(-1)
+      // }
+      console.log('?????????????????????',nicknameChange, pwChange)
+      if (nicknameChange){
+        this.$store.commit('nicknameErrModalActivate')
+      }
+      if (pwChange){
+        this.$store.dispatch('updateuser', this.credentials.pwConf)
+        .then(() => {
+          this.$store.commit('pwchangeConfirmModalActivate')
+        })
       }
     },
     pw_change() {
@@ -278,6 +286,9 @@ export default {
   created() {
     console.log(this.$store.state.userInfo)
     this.credentials.beforeNick = this.$store.state.userInfo.nickname
+  },
+  mounted(){
+    this.$store.commit('load', false)
   }
 }
 </script>

@@ -1,169 +1,125 @@
 <template>
-  <div id="pick-item-container" v-if="pick">
-    <div id="pick-item-header">
-      <img :class="{'movie-poster':pick.type==1}" :src="selectedItem.imgLink" :alt="selectedItem.title">
-      <table>
-        <tr @click="selected = idx" v-for="(item, idx) of items" :key="idx" :class="{ 'selected':selected == idx }">
-          {{item}}
-        </tr>
-      </table>
-    </div>
-    <div id="pick-item-body">
-      <span class="pick-item-info" v-for="key of ['title', 'author', 'descr', 'year', 'imgLink']" :key="key">
-        <h5>{{ key }}</h5>
-        <p v-if="selectedItem[key]">{{ selectedItem[key] }}</p>
-        <p v-else>-</p>
-      </span>
-    </div>
-  </div>
+  <article v-if="pick.contentsListData.length" class="picks" style="cursor:pointer" @click="go_to_detail" @mouseover="isHover = true">
+    <img :class="{planet, 'movie-planet':pick.no == 2}" :src="require(`@/assets/images/emotions/${planet}`)" alt="">
+    <img :class="['thumbnail', {'movie-thumb':pick.no == 2}]" :src="thumbNail" alt="thumbnail">
+    <h3>{{ title }}</h3>
+    <span v-show="isHover" @mouseleave="isHover = false" class="picks-info">
+      <p>Go to Detail</p>
+    </span>
+  </article>
+  <article v-else class="picks" @mouseover="isHover = true">
+    <img :class="{planet, 'movie-planet':pick.no == 2}" :src="require(`@/assets/images/emotions/${planet}`)" alt="">
+    <img :class="['thumbnail', {'movie-thumb':pick.no == 2}]" :src="thumbNail" alt="thumbnail">
+    <h3>{{ title }}</h3>
+    <span v-show="isHover" @mouseleave="isHover = false" class="picks-info">
+      <p>Empty List</p>
+    </span>
+  </article>
 </template>
 
 <script>
-import axios from 'axios'
-
-const session = window.sessionStorage;
 export default {
   data(){
     return {
-      pick:null,
-      selected: 0,
+      planetStyles: [
+				{ id: 0, name: 'default'},
+        { id: 1, name: '행복행성', img: "happy.png", color: '#ED5A8E' },
+        { id: 2, name: '우울행성', img: "depressed.png", color: '#6BD9E8' },
+        { id: 3, name: '떠돌이행성', img: "space-station.png", color: '#C5D3DC' },
+        { id: 4, name: '공포행성', img: "fear.png", color: '#FEA95C' },
+        { id: 5, name: '깜짝행성', img: "suprised.png", color: '#FB5D38' },
+        { id: 6, name: '분노행성', img: "rage.png", color: '#2A61F0' },
+      ],
+      isHover: false
     }
   },
   props: {
-    pickNo: String,
-
-
+    pick: Object
+  },
+  methods: {
+    go_to_detail(){
+      this.$router.push({path:`/user/${this.pick.userNo}/item/${this.pick.no}`})
+    }
   },
   computed: {
-    selectedItem(){
-      console.log(this.pick.contentsListData[this.selected])
-      return this.pick.contentsListData[this.selected]
-    },
-    items(){
-      let temp=[]
-      if(this.pick){
-        this.pick.contentsListData.forEach(ele => {
-          if(this.pick.type==0){
-            temp.push(`${ele.author} - ${ele.title}`)
-          }
-          else{
-            temp.push(`${ele.title}`)
-          }
-        });
+    thumbNail(){
+      if(this.pick.contentsListData.length>0){
+        return this.pick.contentsListData[0].imgLink
       }
-      return temp
+      else{
+        return this.pick.imgLink
+      }
+    },
+    title(){
+      return this.pick.name
+    },
+    planet(){
+      return this.planetStyles[this.pick.tagNo].img
     }
-
-
-  },
-  created(){
-		let headers = {
-			'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-			'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-		};
-
-		axios({
-			method:'get',
-			url:`/api/pick/${this.pickNo}`,
-			headers:headers,
-		})
-		.then((res) => {
-			if(res.headers['at-jwt-access-token'] != session.getItem('at-jwt-access-token')){
-				session.setItem('at-jwt-access-token', "");
-				session.setItem('at-jwt-access-token', res.headers['at-jwt-access-token']);
-				console.log("Access Token을 교체합니다!!!")
-			}
-			this.pick=res.data
-		})
-		.catch((error) => {
-			console.log(error);
-		})
-		.finally(() => {
-			console.log('피드 가져오기 클리어');
-		});
   }
 }
 </script>
 
 <style scoped>
-  table{
-    overflow: auto;
-  }
-  img {
-    width: 40%;
-    height: inherit;
-    aspect-ratio: 1/1;
-    padding: 0.5rem;
-  }
-
-  tr {
-    width: 100%;
-    padding: 0.5rem;
-    border-bottom: 1px #cccccc solid;
-    cursor: pointer;
-    text-align: start;
-  }
-
-  h5 {
-    width: 20%;
-    font-size: 1.25rem;
+  h3 {
+    font-size: 1.125rem;
     font-weight: bold;
-    text-align: start;
+    margin: 0.5rem 0;
+    word-break: keep-all;
   }
 
   p {
-    width: 80%;
-    word-break: break-all;
-    font-size: 1rem;
     margin: 0;
-    text-align: start;
+    font-size: 1.5rem;
+    color: rgb(255, 255, 255, 0.75);
   }
 
-  #pick-item-container {
+  img {
+    width: 100%;
+    height: inherit;
+    aspect-ratio: 1/1;
+  }
+
+  .picks {
     display: flex;
     flex-direction: column;
-    border: 2px #cccccc solid;
-    width: 80%;
-    margin: 3rem;
+    align-items: center;
+    border: none;
+    /* cursor: pointer; */
+    position: relative;
   }
 
-  #pick-item-header {
+  .thumbnail {
+    border: 1px #cccccc solid;
+  }
+
+  .movie-thumb {
+    aspect-ratio: 2/3;
+  }
+
+  .planet {
+    width: 20%;
+    border: 3px white solid;
+    border-radius: 50%;
+    position: absolute;
+    left: 5%;
+    bottom: 25%;
+  }
+
+  .movie-planet {
+    bottom: 20%;
+  }
+
+  .picks-info {
     display: flex;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
     width: 100%;
-  }
-
-  #pick-item-header table {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    align-items: flex-start;
-    border-left: 1px #cccccc solid;
-    overflow: auto;
-  }
-
-  #pick-item-body {
-    display: flex;
-    flex-direction: column;
-    /* width: 100%; */
-    aspect-ratio: 3/1;
-    border-top: 1px #cccccc solid;
-  }
-
-  .movie-poster {
-    aspect-ratio: 1/1.5;
-  }
-
-  .pick-item-info {
-    display: flex;
-    justify-content: stretch;
-    align-content: center;
-    width: 100%;
-    padding: 0.5rem;
-  }
-
-  .selected {
-    background-color: #cccccc;
-    font-weight: bold;
+    height: 100%;
+    top: 0;
+    left: 0;
+    background-color: rgb(0, 0, 0, 0.5);
+    z-index: 1;
   }
 </style>

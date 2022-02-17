@@ -29,12 +29,15 @@ export default {
     }
   },
   mounted(){
+    console.log(this.$route.query.tag)
     if (this.$route.path.includes('pick')){
       this.tab = 'pick'
     }
   }
 }
 </script>
+
+
 
 <style scoped>
   h2 {

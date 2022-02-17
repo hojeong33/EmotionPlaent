@@ -143,6 +143,26 @@
         },
       }
     },
+    computed: {
+      canIJoin1(){
+        let temp = true
+        for (let key in this.isValid){
+          if (!this.isValid[key]){
+            temp = false
+          }
+        }
+        return temp
+      },
+      canIJoin2(){
+        let temp = true
+        for (let key in this.credentials){
+          if (!this.credentials[key]){
+            temp = false
+          }
+        }
+        return temp
+      }
+    },
     created(){
       var today = new Date();
       var year = today.getFullYear();
@@ -163,7 +183,7 @@
         }
       },
       signup: function () {
-        if (this.credentials.pw === this.credentials.passwordConfirmation){ // 입력 비밀번호가 일치하면 회원가입 (나중에 여기다 벨류체크)
+        if (this.canIJoin1 && this.canIJoin2){ // 입력 비밀번호가 일치하면 회원가입 (나중에 여기다 벨류체크)
           axios({
             method: 'post',
             url: '/api/register',
@@ -280,7 +300,7 @@
           url: '/api/register/checkByTel/' + this.credentials.tel
         })
         .then(res => {
-          console.log(res)
+          console.log('전화번호중복체크',res)
           if (res.data){
             this.isValid.validateTel = true
           }
@@ -293,6 +313,9 @@
         this.$router.go(-1)
       }
     },
+    mounted(){
+      this.$store.commit('load', false)
+    }
   }
 </script>
 <style scoped>

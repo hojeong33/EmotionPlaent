@@ -9,9 +9,9 @@ import PwFind from '@/views/accounts/PwFind'
 import EmotionTest from '@/views/EmotionTest'
 
 import Mypage from '@/views/user/Mypage.vue'
-import Userpage from '@/views/user/Userpage.vue'
+// import Userpage from '@/views/user/Userpage.vue'
 import List from '@/components/user/List'
-import PickItem from '@/components/user/PickItem'
+import PickDetail from '@/components/user/PickDetail'
 // import UserList from '@/components/SearchUser/UserList'
 // import UserPickItem from '@/components/SearchUser/UserPickItem'
 
@@ -24,7 +24,6 @@ import FeedDetail from '@/components/FeedDetail'
 import ProfileUpdate from '@/components/Settings/ProfileUpdate'
 import SearchResult from '@/components/Search/SearchResult/SearchResult'
 import SearchList from '@/components/Search/SearchResult/SearchList'
-import PickItem2 from '@/components/Search/SearchResult/PickItem2'
 
 import store from '../store/index.js'
 
@@ -113,7 +112,7 @@ const routes = [
       },
       {
         path: 'item/:pickNo',
-        component: PickItem,
+        component: PickDetail,
         props: true,
         meta: {
           loginRequired: true,
@@ -127,7 +126,7 @@ const routes = [
     path: '/user/:userId',
     name: 'Userpage',
     redirect: '/user/:userId/feed',
-    component: Userpage,
+    component: Mypage,
     props: true,
     meta: {
       loginRequired: true,
@@ -147,7 +146,7 @@ const routes = [
       },
       {
         path: 'item/:pickNo',
-        component: PickItem,
+        component: PickDetail,
         props: true,
         meta: {
           loginRequired: true,
@@ -242,6 +241,7 @@ const routes = [
     name: 'SearchResult',
     redirect: '/search/feed',
     component: SearchResult,
+    props: true,
     meta: {
       loginRequired: true,
       testRequired: true, 
@@ -258,16 +258,6 @@ const routes = [
           showingNav: true,
         },
       },
-      {
-        path: 'item/:pickNo',
-        component: PickItem2,
-        props: true,
-        meta: {
-          loginRequired: true,
-          testRequired: true,
-          showingNav: true,
-        },
-      }
     ]
   },
 ]
@@ -291,13 +281,15 @@ const userUpdate = new Promise(() => {
 })
 
 router.beforeEach((to, from, next) => {
-  console.log(to)
+  console.log('여기에서',from)
+  console.log('여기로 갈거야',to)
   // 라우터 이동 시 토큰이 필요함
   token = window.sessionStorage.getItem('at-jwt-access-token');
   console.log(token)
+  store.commit('load', true)
   //지정되지 않은 라우트로 이동할 경우 메인으로 redirect
   if (!to.matched.length){
-    console.log('do not matched!!')
+    console.log('do not matched!!', to)
     next({ name:'Main' })
   }
   //네비게이션 랜더 유무
@@ -327,6 +319,11 @@ router.beforeEach((to, from, next) => {
   if (!to.meta.loginRequired && store.state.userInfo && token){
     console.log('메인')
     next({ name:'Main' })
+  }
+  const user = JSON.parse(window.sessionStorage.getItem('userInfo'))
+  
+  if (to.params.userId && to.params.userId ==  user.no && to.path.includes('item')){
+    next({ path: `/mypage/item/${to.params.pickNo}` })
   }
 
   next()

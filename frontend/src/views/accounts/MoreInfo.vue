@@ -187,6 +187,9 @@ const clear = function(){
       var day = ('0' + today.getDate()).slice(-2);
       this.maxdate = year + '-' + month  + '-' + day;
     },
+    mounted(){
+      this.$store.commit('load', false)
+    }
   }
 </script>
 <style scoped>
