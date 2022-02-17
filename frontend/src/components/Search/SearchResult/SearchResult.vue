@@ -17,9 +17,6 @@ export default {
       pickTap: 1,
     }
   },
-  props: {
-    // tag: String
-  },
   methods: {
     changeTab(payload){
       this.tab = payload
@@ -39,6 +36,8 @@ export default {
   }
 }
 </script>
+
+
 
 <style scoped>
   h2 {

@@ -29,7 +29,7 @@
       </div>
     </div>
     <div id="freeTag_write">
-      <input type="text" id="tag_input" @keyup.enter="keyPress" placeholder="자유태그를 작성 후 엔터키를 눌러 주세요">
+      <input type="text" id="tag_input" @keyup.enter="keyPress" @blur="keyPress" placeholder="자유태그를 작성 후 엔터키를 눌러 주세요">
       <img id="write" @click="freeTagCreate" src="@/assets/images/icons/write.png" alt="" style="width:1.6rem;height:1.6rem; cursor: pointer;">
     </div>
     <textarea id="text-input" placeholder="" v-model="feedData.descr" />

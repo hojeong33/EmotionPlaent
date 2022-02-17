@@ -44,20 +44,19 @@ public class PickController {
 
     @PostMapping(value ="/picks") // 목록 생성
     public ResponseEntity<Integer> create(
-            @RequestPart(value="data") PickDto pickDto,
-            @RequestPart(value="multipartFile", required = false) List<MultipartFile> multipartFile) {
+            @RequestPart(value="data") PickDto pickDto) {
 
-        List<Integer> imgNo = new ArrayList<>();
-        if(multipartFile != null){
-            imgNo = s3Service.uploadFile(multipartFile);
-        }
-
-        List<ImgDto> imgs = new ArrayList<>();
-        for (int no : imgNo) {
-            imgs.add(imgService.select(no));
-        }
-
-        pickDto.setImgLink(imgs.get(0).getImgLink());
+//        List<Integer> imgNo = new ArrayList<>();
+//        if(multipartFile != null){
+//            imgNo = s3Service.uploadFile(multipartFile);
+//        }
+//
+//        List<ImgDto> imgs = new ArrayList<>();
+//        for (int no : imgNo) {
+//            imgs.add(imgService.select(no));
+//        }
+//
+//        pickDto.setImgLink(imgs.get(0).getImgLink());
 
         int result = pickService.create(pickDto);
         if(result == SUCCESS) {
@@ -67,9 +66,9 @@ public class PickController {
         }
     }
 
-    @GetMapping(value ="/pick/{no}") // 해당 목록 가져오기
-    public ResponseEntity<PickDto> list(@RequestHeader(value="at-jwt-access-token") String jwt, @PathVariable String no) {
-        int pickNo = Integer.parseInt(no);
+    @GetMapping(value ="/pick/{pickNo}") // 해당 목록 가져오기
+    public ResponseEntity<PickDto> list(@RequestHeader(value="at-jwt-access-token") String jwt, @PathVariable String pickNo) {
+        int pickNos = Integer.parseInt(pickNo);
         String decode = jwtService.decode(jwt);
         System.out.println("디코딩 내용 : " + decode);
         String[] arr = decode.split("\\{|\\}| |,|\"|:");
@@ -81,7 +80,7 @@ public class PickController {
             }
         }
 
-        PickDto pick = pickService.select(pickNo, Integer.parseInt(userNo));
+        PickDto pick = pickService.select(pickNos, Integer.parseInt(userNo));
         if(pick != null) {
             return new ResponseEntity<PickDto>(pick, HttpStatus.OK);
         } else {
@@ -127,20 +126,19 @@ public class PickController {
 
     @PutMapping(value ="/picks") // 목록 수정
     public ResponseEntity<Integer> update(
-            @RequestPart(value="data") PickDto pickDto,
-            @RequestPart(value="multipartFile", required = false) List<MultipartFile> multipartFile) {
+            @RequestPart(value="data") PickDto pickDto) {
 
-        List<Integer> imgNo = new ArrayList<>();
-        if(multipartFile != null){
-            imgNo = s3Service.uploadFile(multipartFile);
-        }
-
-        List<ImgDto> imgs = new ArrayList<>();
-        for (int no : imgNo) {
-            imgs.add(imgService.select(no));
-        }
-
-        pickDto.setImgLink(imgs.get(0).getImgLink());
+//        List<Integer> imgNo = new ArrayList<>();
+//        if(multipartFile != null){
+//            imgNo = s3Service.uploadFile(multipartFile);
+//        }
+//
+//        List<ImgDto> imgs = new ArrayList<>();
+//        for (int no : imgNo) {
+//            imgs.add(imgService.select(no));
+//        }
+//
+//        pickDto.setImgLink(imgs.get(0).getImgLink());
 
         int result = pickService.update(pickDto);
         if(result == SUCCESS) {
