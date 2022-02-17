@@ -36,17 +36,20 @@ export default {
   },
   computed: {
     filteredFeeds(){
-      if (this.rawFeeds && this.filter){
-        const temp = []
-        this.rawFeeds.forEach(feed => {
-          if (feed.tags[0].no == this.filter){
-            temp.push(feed.no)
-          }
-        })
-        console.log('나는 필터됐용',temp)
-        return temp
+      if (this.rawFeeds){
+        if (this.filter){
+          const temp = []
+          this.rawFeeds.forEach(feed => {
+            if (feed.tags[0].no == this.filter){
+              temp.push(feed.no)
+            }
+          })
+          console.log('나는 필터됐용',temp)
+          return temp
+        }
+        return this.rawFeeds
       }
-      return this.rawFeeds
+      return []
     }
   },
   created(){
