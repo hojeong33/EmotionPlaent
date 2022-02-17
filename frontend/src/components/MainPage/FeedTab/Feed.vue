@@ -14,7 +14,7 @@
     </div>
     <div id="post_image">
       <article id="img-box">
-        <div id="uploaded-box">
+      <div id="uploaded-box">
           <transition-group id="carousel" :name="page > beforePage ? 'slide':'slide-reverse'">
             <img id="my_img" v-for="(image, index) in feed.imgs" :key="index"
             class="uploadedImg" :src="image.imgLink" alt=""
@@ -28,9 +28,6 @@
           <span id="right" class="carousel-btn" @click="pagination(true)"/>
         </div>
       </article>
-      <!-- <div id="my_img" v-for="(img, idx) in feed.imgs" :key="idx"><div><img :src="img.imgLink" alt=""></div></div> -->
-      <!-- <img :src="post.postImage" alt="" v> -->
-      <!-- <p class="overlay_content" >{{post.author}}님은 {{post.tag[0]}} <img id="planet_img" :src="require('@/assets/images/emotions/' + tmp.img)" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p> -->
     </div>
     <div id="like">
       <div id="heart">
@@ -62,7 +59,6 @@ export default {
   },
   data(){
     return{
-      // date:this.post.date.toLocaleDateString(),
       page:1,
       beforePage:1,
       isCommentSettingOpened:false,
@@ -73,10 +69,11 @@ export default {
       planetStyles: [
         { id: 1, name: '행복행성', img: "happy.png", color: '#6BD9E8' },
         { id: 2, name: '우울행성', img: "depressed.png", color: '#2A61F0' },
-        { id: 3, name: '떠돌이행성', img: "space-station.png", color: '#C5D3DC' },
+        { id: 3, name: '떠돌이행성', img: "neutral.png", color: '#C5D3DC' },
         { id: 4, name: '공포행성', img: "fear.png", color: '#ED5A8E' },
         { id: 5, name: '깜짝행성', img: "surprised.png", color: '#FEA95C' },
         { id: 6, name: '분노행성', img: "rage.png", color: '#FB5D38' },
+        { id: 7, name: '떠돌이행성', img: "spaceship.png", color: '#FCBB74' }
       ],
       commentKey: 0,
     }
@@ -115,19 +112,9 @@ export default {
     },
     onCommentSetting:function(){
       this.$store.commit('commentSettingModalActivate')
-      // if(this.isCommentSettingOpened){
-      // 	this.isCommentSettingOpened=false
-      // }else{
-      // 	this.isCommentSettingOpened=true
-      // }
     },
     onUserFeedSetting2:function(){
       this.$store.commit('userFeedSettingModalActivate2')
-      // if(this.isUserFeedSettingOpened){
-      // 	this.isUserFeedSettingOpened=false
-      // }else{
-      // 	this.isUserFeedSettingOpened=true
-      // }
     },
     like:function(){
       this.feed.like ? this.cancelLike(): this.doLike();
@@ -139,9 +126,11 @@ export default {
         feedno : this.post,
       }
       this.$store.dispatch('addfeedlike',el)
+      this.getFeed()
     },
     cancelLike:function(){
       this.$store.dispatch('deletefeedlike',this.post)
+      this.getFeed()
     },
     getFeed:function(){
        let headers = {

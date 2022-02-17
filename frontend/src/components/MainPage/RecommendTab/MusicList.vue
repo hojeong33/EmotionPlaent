@@ -85,7 +85,7 @@ export default {
 <style scoped>
   h3 {
     text-align: left;
-    margin-left: 3rem;
+    margin-left:3rem;
     font-weight: bold;
     font-size: 2rem;
   }
