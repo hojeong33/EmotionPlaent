@@ -19,7 +19,7 @@
       <div id="freeTag" v-if="feedData.tags.slice(2).length === 0">
         <p id="freeTag" style="margin:auto 0.2rem; color: blue; font-weight: bold;"># 자유태그를 #입력해주세요</p>
       </div>
-      <div id="freeTag" v-else style="flex-wrap: wrap;">
+      <div id="freeTag" v-else>
         <div id="freeTag" v-for="(tag, idx) in feedData.tags.slice(2)" :key="idx"> 
             <p v-if="tag.name" id="pickTag" style="margin:auto 0.2rem; color: blue; font-weight: bold;">
               # {{tag.name}}

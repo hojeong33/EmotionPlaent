@@ -160,9 +160,9 @@ export default {
     'emotionTestResultModalActive', 'loginFailModalActive', 'signupFailModalActive1', 'signupFailModalActive2', 'ReturnToLoginModalActive', 'commentNeedContentModalActive',
     'moreInfoConfirmModalActive', 'feedUpdateActive', 'pickYourImageModalActive', 'tooMuchImagesModalActive', 'pickYourTagModalActive', 'mypagefollowingListActive', 'mypagefollowerListActive',
     'userpagefollowingListActive', 'userpagefollowerListActive', 'userFeedSettingModalActive2','likesListActive','addPlayListActive', 'nicknameErrModalActive', 'pwchangeConfirmModalActive', 'pwchangeErrModalActive',
-    'foundEmailModalActive', 'notfoundEmailModalActive', 'noTelModalActive','addToPlayListActive', 'wrongEmailModalActive', 'noMatchEmailModalActive',
+    'foundEmailModalActive', 'notfoundEmailModalActive', 'noTelModalActive','addToPlayListActive', 'wrongEmailModalActive', 'noMatchEmailModalActive'
   ])
-}
+  }
 
 </script>
 

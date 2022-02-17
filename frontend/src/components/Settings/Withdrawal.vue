@@ -68,7 +68,7 @@ export default {
   },
   methods: {
     pwConfCheck: function(){
-      if (this.credentials.pwConf && this.credentials.pw === this.credentials.pwConf){
+      if (this.credentials.pwConf && this.credentials.nextPw === this.credentials.pwConf){
         this.isValid.validatePwConf = true
       }
       else {
