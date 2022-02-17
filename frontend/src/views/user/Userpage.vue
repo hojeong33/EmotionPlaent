@@ -55,10 +55,36 @@ export default {
       this.$router.push({ path: `/user/${this.userId}/${tab}` })
     },
     follow() {
-      this.$store.dispatch('sendfollow', this.$store.state.searchUserNo)
-    },
-    unfollow() {
-      this.$store.dispatch('deletefollow', this.$store.state.searchUserNo)
+      let method = 'post'
+      if (this.isFollow){
+        method = 'delete'
+      }
+      let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+      };
+      let data = {
+        sender : JSON.parse(window.sessionStorage.getItem('userInfo')).no,
+        receiver : Number(this.userId),
+      };
+      console.log(data, method)
+      axios({
+        method: method,
+        url: '/api/follows',
+        data: data, // post 나 put에 데이터 넣어 줄때
+        headers: headers,  // 넣는거 까먹지 마세요
+      })
+      .then((res) => {
+      console.log("팔로우 성공")
+      console.log(res.data)
+      })
+      .catch((error) => {
+        console.log("팔로우 실패")
+        console.log(error);
+      })
+      .finally(() => {
+        this.getFollowData()
+      })
     },
 
     getFollowData: function () {
@@ -106,10 +132,11 @@ export default {
     isFollow(){
       if (this.followers){
         this.followers.forEach(ele => {
-          if (ele.no == this.$store.state.userInfo.no){
+          if (ele.no == JSON.parse(window.sessionStorage.getItem('userInfo')).no){
             return true
           }
         })
+        return false
       }
       return false
     }
