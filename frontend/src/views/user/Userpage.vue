@@ -9,7 +9,7 @@
             <button v-if="!isFollow" id="follow"
             @click="follow">팔로우</button>
             <button v-else id="unfollow"
-            @click="unfollow">언팔로우</button>
+            @click="follow">언팔로우</button>
           </div>
         </div>
         <div id="info-card" v-if="feeds && followers && followings">
@@ -124,15 +124,15 @@ export default {
   },
   computed: {
     isFollow(){
+      let result = false
       if (this.followers){
         this.followers.forEach(ele => {
           if (ele.no == JSON.parse(window.sessionStorage.getItem('userInfo')).no){
-            return true
+            result = true
           }
         })
-        return false
       }
-      return false
+      return result
     }
   },
   created(){

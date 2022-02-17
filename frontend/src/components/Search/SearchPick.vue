@@ -56,14 +56,8 @@ export default {
         url:'/api/searchs/byPickTag/' + el,
         headers: headers,
       }).then(res => {
-        this.$store.dispatch('accessTokenRefresh', res)
         console.log('찜목록 있음', res)
-        this.pickSearchResult = res.data
-        this.$store.state.tagSearchResult = []
-        // this.$bus.$emit('pickBus', this.pickSearchResult)
-        this.$store.state.searchPickList = res.data;
         this.$router.push({ path: `/search/pick`, query: { tag: el } })
-        this.$store.state.searching = false
       })
       .catch(()=> {
         console.log('찜목록 없음')
