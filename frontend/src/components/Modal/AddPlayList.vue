@@ -19,7 +19,7 @@
         <div id="userInfo">
           <!-- <img id="profile_img" :src="liker.profileImg" alt=""> -->
           <p id="username">{{forder.name}}</p>
-          <button id="follow_cancel" @click="choiceForder(forder.no)">선택</button>
+          <button id="follow_cancel" @click="choiceForder(forder)">선택</button>
           <img id="trash"  @click="deleteForder(forder.no)" src="@/assets/images/icons/trash.png" style="margin-right:1rem" alt="">
         </div>
       </div>
@@ -57,7 +57,6 @@ export default {
         type:null,//음악 :0 영화:1 활동:2
         tagNo:null,//행성
         userNo:null,
-        imgLink:null,
       },
       forderlistsNo:[],
       forderlists:[],
@@ -68,8 +67,10 @@ export default {
 		}
 	},
 	methods: {
-    choiceForder:function(forderNo){
-      this.choicedForder=forderNo
+
+    choiceForder:function(forder){
+      this.choicedForder=forder.no
+      this.pickedForder=forder.name
       let sendData=null
       if (this.listData.type==0){
          sendData={
@@ -106,6 +107,7 @@ export default {
         }).then((res) => {
             console.log(sendData)
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+            this.$store.commit('addToPlayListActive',forder.name)
         }).catch((error) => {
           console.log(error);
         }).then(() => {
@@ -247,6 +249,15 @@ export default {
 #trash{
   width: 25px;
   height: 25px;
+}
+#check_img{
+  width:25px;
+  height: 25px;
+  cursor: pointer;
+}
+#check_alert{
+  margin-left: 1rem;
+  color: gray;
 }
 #likes_list {
 	display: flex;
@@ -403,5 +414,6 @@ input:focus {
   line-height: 2rem;
   margin-left: 60%;
 }
+
 
 </style>
