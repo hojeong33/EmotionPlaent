@@ -17,7 +17,7 @@
         </div>
       </article>
       <!-- <div v-for="(img, idx) in feed.imgs" :key="idx"><img  id="feedImg" :src="img.imgLink" alt=""></div> -->
-			<p class="overlay_content" >{{feed.authorDetail.nickname}} <img id="planet_img" :src="require('@/assets/images/emotions/happy.png')" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p>
+			<p class="overlay_content" >{{feed.authorDetail.nickname}}님은 <img id="planet_img" :src="require('@/assets/images/emotions/happy.png')" style="width:1.2rem;height:1.2rem; margin-bottom:3px">에 있어요</p>
 		</div>
 		<div id="feed_text">
 			<div id="text_head">
@@ -61,7 +61,7 @@
           <i class="far fa-heart fa-lg" :class="{'fas': this.feed.like}"  @click="like"></i>
         </div>
         <p id="feed_likes" v-for="(like, idx) in feed.likes" :key="idx"></p>
-        <p class="likes">{{feed.likes.length}} likes</p>
+        <p class="likes" style="cursor: pointer;" @click="likesList">{{feed.likes.length}} likes</p>
       </div>
 			<hr>
 			<div id="comment_write">
@@ -145,23 +145,24 @@ export default {
         'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
       };
       axios({
-          method: 'get',
-          url:`/api/comments/returnNo/${this.feedNo}`,
-          headers: headers,  // 넣는거 까먹지 마세요
-          }).then((res) => {
-          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-          this.comments=res.data.reverse()
-          this.commentsData=[]
-          for (let i=0; i<this.comments.length; i++){
-            const commentNo=this.comments[i]
-            this.getComment(commentNo)
-          }
-          }).catch((error) => {
-            console.log(error);
-          }).then(() => {
-            console.log('댓글 목록 가져오기');
-          });
-        },
+        method: 'get',
+        url:`/api/comments/returnNo/${this.feedNo}`,
+        headers: headers,  // 넣는거 까먹지 마세요
+        }).then((res) => {
+        this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+        this.comments=res.data.reverse()
+        this.commentsData=[]
+        for (let i=0; i<this.comments.length; i++){
+          const commentNo=this.comments[i]
+          this.getComment(commentNo)
+        }
+        this.$store.commit('load', false)
+        }).catch((error) => {
+          console.log(error);
+        }).then(() => {
+          console.log('댓글 목록 가져오기');
+        });
+      },
     createComment:function(){
       const userdata = JSON.parse(session.getItem('userInfo')) 
       const commentItem={
@@ -225,22 +226,43 @@ export default {
 				console.log(error);
 			}).then(() => {
 				console.log('피드 하나 가져오기');
-			});
+			}); 
 		},
+    getLike(){
+      let headers = {
+			'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+			'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+			};
+			axios({
+				method: 'get',
+				url:`/api/feeds/like/${this.feedNo}`,
+				headers: headers,  // 넣는거 까먹지 마세요
+			}).then((res) => {
+			this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+			console.log(res.data)
+      this.feed.likes = res.data
+			}).catch((error) => {
+				console.log('좋아요 실패해따',error);
+			}).then(() => {
+				console.log('좋아요 하나 가져오기');
+			});
+    },
     like:function(){
       this.feed.like ? this.cancelLike(): this.doLike();
       this.feed.like= !this.feed.like;
     },
     doLike:function(){
-		console.log(this.feedNo)
+      console.log(this.feedNo)
       let el = {
         receiver : this.feed.author,
         feedno : this.feedNo,
       }
       this.$store.dispatch('addfeedlike',el)
+      .then(() => this.getLike())
     },
     cancelLike:function(){
       this.$store.dispatch('deletefeedlike',this.feedNo)
+      .then(() => this.getLike())
     },
     onModalFeed:function(){
       if(this.isMineFeed){
@@ -260,20 +282,16 @@ export default {
     },
 		onCommentSetting:function(){
 			this.$store.commit('commentSettingModalActivate')
-			// if(this.isCommentSettingOpened){
-			// 	this.isCommentSettingOpened=false
-			// }else{
-			// 	this.isCommentSettingOpened=true
-			// }
+
 		},
 		onUserFeedSetting2:function(){
 			this.$store.commit('userFeedSettingModalActivate2')
-			// if(this.isUserFeedSettingOpened){
-			// 	this.isUserFeedSettingOpened=false
-			// }else{
-			// 	this.isUserFeedSettingOpened=true
-			// }
-		}
+	
+		},
+    likesList:function(){
+       this.$store.commit('likesListActive',this.feed.likes)
+       console.log(this.feed.likes)
+    }
 	},
 	created(){
 		this.getFeed()

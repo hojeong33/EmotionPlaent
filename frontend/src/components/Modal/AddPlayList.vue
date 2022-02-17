@@ -17,6 +17,7 @@
     <div id="feed_likes_list" v-else>
       <div v-for="(forder, index) in forderlists" :key="index">
         <div id="userInfo">
+          <!-- <img id="profile_img" :src="liker.profileImg" alt=""> -->
           <p id="username">{{forder.name}}</p>
           <button id="follow_cancel" @click="choiceForder(forder)">선택</button>
           <img id="trash"  @click="deleteForder(forder.no)" src="@/assets/images/icons/trash.png" style="margin-right:1rem" alt="">
@@ -30,7 +31,7 @@
     </div>
     <div id="new_container" v-else>
       <p id="plus_text">이름</p>
-      <input id="playlist_input"  v-model.trim="listName" placeholder="플레이리스트 이름을 입력해주세요">
+      <input id="playlist_input"  @keyup.enter="createList" v-model.trim="listName" placeholder="플레이리스트 이름을 입력해주세요">
       <button id="pu_button" @click="createList">만들기</button>
     </div>
   </div>

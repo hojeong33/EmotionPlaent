@@ -89,6 +89,7 @@ export default {
       .then((res) => {
       console.log("팔로우 성공")
       console.log(res.data)
+      this.$store.dispatch('follow', Number(this.userId))
       })
       .catch((error) => {
         console.log("팔로우 실패")
