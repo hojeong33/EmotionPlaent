@@ -101,6 +101,9 @@ export default {
       this.$router.go(-1)
     },
   },
+  mounted(){
+    this.$store.commit('load', false)
+  }
 }
 </script>
 

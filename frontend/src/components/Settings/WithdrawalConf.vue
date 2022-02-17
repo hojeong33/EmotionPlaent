@@ -60,6 +60,9 @@ export default {
 			.catch(() => alert('fail'))
     this.$emit('cancel')
     }
+  },
+   mounted(){
+    this.$store.commit('load', false)
   }
 }
 </script>

@@ -78,6 +78,9 @@ export default {
     go_to_back: function(){
       this.$router.push('/setting')
     },
+  },
+   mounted(){
+    this.$store.commit('load', false)
   }
 }
 </script>

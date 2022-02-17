@@ -28,9 +28,9 @@
       </div>
     </div>
     <div id="recommend_list">
-      <music-list></music-list>
-      <movie-list></movie-list>
-      <active-list></active-list>
+      <music-list @comp="prepared ++"></music-list>
+      <movie-list @comp="prepared ++"></movie-list>
+      <active-list @comp="prepared ++"></active-list>
     </div>
   </div>
 </template>
@@ -57,6 +57,7 @@ export default {
       ],
       onRefresh: true,
       onFeel: false,
+      prepared: 0
     };
   },
   computed: {
@@ -65,6 +66,14 @@ export default {
       const style = this.planetStyles.find((el) => el.id === mood) || {};
       return style;
     },
+  },
+  watch:{
+    prepared(){
+      if (this.prepared == 3){
+        this.$store.commit('load', false)
+        console.log('loaded!!!')
+      }
+    }
   },
   methods: {
     Refresh: function () {

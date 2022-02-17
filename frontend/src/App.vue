@@ -1,8 +1,9 @@
 <template>
   <div id="app">
+    <loading v-if="loading"/>
     <navigation v-if="showingNav" />
     <create v-if="navActive[0]" />
-    <router-view/>
+    <router-view :key="$route.path" />
     <!-- 모달창 -->
     <logout-modal v-if="logoutModalActive" />
     <user-feed-setting v-if="userFeedSettingModalActive" />
@@ -47,6 +48,7 @@
 </template>
 
 <script>
+import Loading from '@/views/Loading'
 import Create from '@/views/Create'
 import Update from '@/views/Update'
 import Navigation from '@/components/Navigation'
@@ -103,9 +105,9 @@ import wrongEmail from '@/components/Modal/PwFindModal/wrongEmail.vue'
 
 import { mapState } from 'vuex'
 
-
 export default {
   components: {
+    Loading,
     Create,
     Update,
     Navigation,
