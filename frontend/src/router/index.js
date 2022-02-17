@@ -24,7 +24,6 @@ import FeedDetail from '@/components/FeedDetail'
 import ProfileUpdate from '@/components/Settings/ProfileUpdate'
 import SearchResult from '@/components/Search/SearchResult/SearchResult'
 import SearchList from '@/components/Search/SearchResult/SearchList'
-import PickItem2 from '@/components/Search/SearchResult/PickItem2'
 
 import store from '../store/index.js'
 
@@ -242,6 +241,7 @@ const routes = [
     name: 'SearchResult',
     redirect: '/search/feed',
     component: SearchResult,
+    props: true,
     meta: {
       loginRequired: true,
       testRequired: true, 
@@ -258,16 +258,6 @@ const routes = [
           showingNav: true,
         },
       },
-      {
-        path: 'item/:pickNo',
-        component: PickItem2,
-        props: true,
-        meta: {
-          loginRequired: true,
-          testRequired: true,
-          showingNav: true,
-        },
-      }
     ]
   },
 ]
