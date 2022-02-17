@@ -7,7 +7,6 @@
     <!-- 모달창 -->
     <logout-modal v-if="logoutModalActive" />
     <user-feed-setting v-if="userFeedSettingModalActive" />
-    <user-feed-setting2 v-if="userFeedSettingModalActive2" />
     <comment-setting v-if="commentSettingModalActive" />
     <profile-img-change v-if="profileImgChangeModalActive" />
     <login-confirm v-if="loginConfirmModalActive" />
@@ -59,7 +58,6 @@ import Navigation from '@/components/Navigation'
 // 모달창
 //// 세팅
 import UserFeedSetting from '@/components/Modal/SettingModal/UserFeedSetting.vue'
-import UserFeedSetting2 from '@/components/Modal/SettingModal/UserFeedSetting2.vue'
 import CommentSetting from '@/components/Modal/SettingModal/CommentSetting.vue'
 //// 로그인과 로그아웃
 import LoginConfirm from '@/components/Modal/LoginLogoutModal/LoginConfirm.vue'
@@ -118,7 +116,6 @@ export default {
     //모달창
     LogoutModal,
     UserFeedSetting,
-    UserFeedSetting2,
     CommentSetting,
     ProfileImgChange,
     LoginConfirm,

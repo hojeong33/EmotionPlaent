@@ -6,19 +6,19 @@
 			<p style="color: red;" @click="feedDelete">삭제</p>
 			<hr>
 			<p @click="cancel">취소</p>
-			<!-- 유저가 나인지 다른 유저인지에 따라서 신고, 차단이 나오거나 수정, 삭제가 나와야 한다-->
 		</div>
 	</div>
 </template>
 
 <script>
 import axios from 'axios'
+import {mapState} from 'vuex'
 
 const session = window.sessionStorage; 
 export default {
 	data: function () {
 		return {
-			feedNum: 163,
+			feedNum: null,
 
 		}
 	},
@@ -44,6 +44,7 @@ export default {
 
 				this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
 				this.dispatch('accessTokenRefresh', res) // store에서
+				this.$router.push({name: 'Main'})
 
 				}).catch((error) => {
 					console.log(error);
@@ -52,6 +53,15 @@ export default {
 				})
 			this.$store.commit('userFeedSettingModalActivate')
 		}
+	},
+	computed: {
+		...mapState([
+			'feedDetailNum'
+		])
+	},
+	created () {
+		this.feedNum = this.feedDetailNum
+		console.log(typeof(this.feedNum))
 	}
 }
 </script>
@@ -74,8 +84,8 @@ export default {
 	flex-direction: column;
 	background-color: white;
 	border-radius: 20px;
-	width: 12vw;
-	height: 20vh;
+	width: 16rem;
+	height: 13rem;
 	text-align: center;
 }
 hr {
@@ -85,5 +95,6 @@ p {
 	margin: auto;
 	font-weight: bold;
 	cursor: pointer;
+	font-size: 1.2rem;
 }
 </style>
