@@ -60,14 +60,13 @@ export default {
         method: 'get',
         url: '/api/register/findEmail/' + this.tel,
       }).then((res) => {
-       alert("찾은 이메일은 " +res.data+ " 입니다.")
-       this.$router.push("/login")
+       this.$store.commit('foundEmailModalActivate', res.data)
       }).catch((error) => {
-        alert("일치하는 정보가 없습니다.")
+        this.$store.commit('notfoundEmailModalActivate')
         console.log(error);
       })
     }else{
-      alert("전화번호를 입력해 주세요")
+      this.$store.commit('noTelModalActivate')
     }
     },
 

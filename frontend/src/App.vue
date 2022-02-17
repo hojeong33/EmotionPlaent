@@ -37,6 +37,9 @@
     <userpage-following-list v-if="userpagefollowingListActive" />
     <likes-list v-if="likesListActive"/>
     <add-play-list v-if="addPlayListActive"/>
+    <found-email v-if="foundEmailModalActive"/>
+    <notfound-email v-if="notfoundEmailModalActive"/>
+    <no-tel v-if="noTelModalActive"/>
   </div>
 </template>
 
@@ -85,9 +88,12 @@ import AddPlayList from '@/components/Modal/AddPlayList.vue'
 import nicknameErr from '@/components/Modal/UserInfoModal/nicknameErr.vue'
 import pwchangeConfirm from '@/components/Modal/UserInfoModal/pwchangeConfirm.vue'
 import pwchangeErr from '@/components/Modal/UserInfoModal/pwchangeErr.vue'
+//이메일 찾기
+import foundEmail from '@/components/Modal/EmailFindModal/foundEmail.vue'
+import notfoundEmail from '@/components/Modal/EmailFindModal/notfoundEmail.vue'
+import noTel from '@/components/Modal/EmailFindModal/noTel.vue'
 
 import { mapState } from 'vuex'
-
 
 
 export default {
@@ -127,16 +133,21 @@ export default {
     //정보변경
     nicknameErr,
     pwchangeConfirm,
-    pwchangeErr
+    pwchangeErr,
+    //이메일 찾기
+    foundEmail,
+    notfoundEmail,
+    noTel,
   },
-  computed:
-    mapState([
-      'navActive', 'showingNav', 'modalActive', 'profileImgChangeModalActive', 'commentSettingModalActive', 'logoutModalActive', 'userFeedSettingModalActive', 'userFeedSettingModalActive2', 'loginConfirmModalActive', 
-      'signupConfirmModalActive', 'emotionTestTooMuchPickModalActive', 'firstEmotionTestConfirmModalActive', 'emotionTestErrorActive', 'emotionTestPickMoreModalActive', 
-      'emotionTestResultModalActive', 'loginFailModalActive', 'signupFailModalActive1', 'signupFailModalActive2', 'ReturnToLoginModalActive', 'commentNeedContentModalActive',
-      'moreInfoConfirmModalActive', 'feedUpdateActive', 'pickYourImageModalActive', 'tooMuchImagesModalActive', 'pickYourTagModalActive', 'mypagefollowingListActive', 'mypagefollowerListActive',
-      'userpagefollowingListActive', 'userpagefollowerListActive', 'userFeedSettingModalActive2','likesListActive','addPlayListActive', 'nicknameErrModalActive', 'pwchangeConfirmModalActive', 'pwchangeErrModalActive',
-    ]),
+  computed: 
+  mapState([
+    'navActive', 'showingNav', 'modalActive', 'profileImgChangeModalActive', 'commentSettingModalActive', 'logoutModalActive', 'userFeedSettingModalActive', 'userFeedSettingModalActive2', 'loginConfirmModalActive', 
+    'signupConfirmModalActive', 'emotionTestTooMuchPickModalActive', 'firstEmotionTestConfirmModalActive', 'emotionTestErrorActive', 'emotionTestPickMoreModalActive', 
+    'emotionTestResultModalActive', 'loginFailModalActive', 'signupFailModalActive1', 'signupFailModalActive2', 'ReturnToLoginModalActive', 'commentNeedContentModalActive',
+    'moreInfoConfirmModalActive', 'feedUpdateActive', 'pickYourImageModalActive', 'tooMuchImagesModalActive', 'pickYourTagModalActive', 'mypagefollowingListActive', 'mypagefollowerListActive',
+    'userpagefollowingListActive', 'userpagefollowerListActive', 'userFeedSettingModalActive2','likesListActive','addPlayListActive', 'nicknameErrModalActive', 'pwchangeConfirmModalActive', 'pwchangeErrModalActive',
+    'foundEmailModalActive', 'notfoundEmailModalActive', 'noTelModalActive',
+  ]),
 }
 
 </script>
