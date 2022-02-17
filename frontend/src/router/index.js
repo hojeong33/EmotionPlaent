@@ -24,6 +24,7 @@ import FeedDetail from '@/components/FeedDetail'
 import ProfileUpdate from '@/components/Settings/ProfileUpdate'
 import SearchResult from '@/components/Search/SearchResult/SearchResult'
 import SearchList from '@/components/Search/SearchResult/SearchList'
+import PickItem2 from '@/components/Search/SearchResult/PickItem2'
 
 import store from '../store/index.js'
 
@@ -111,7 +112,7 @@ const routes = [
         },
       },
       {
-        path: 'item/:id/:tag/:index',
+        path: 'item/:pickNo',
         component: PickItem,
         props: true,
         meta: {
@@ -145,7 +146,7 @@ const routes = [
         },
       },
       {
-        path: ':tag/:index',
+        path: 'item/:pickNo',
         component: PickItem,
         props: true,
         meta: {
@@ -257,6 +258,16 @@ const routes = [
           showingNav: true,
         },
       },
+      {
+        path: 'item/:pickNo',
+        component: PickItem2,
+        props: true,
+        meta: {
+          loginRequired: true,
+          testRequired: true,
+          showingNav: true,
+        },
+      }
     ]
   },
 ]
@@ -291,7 +302,7 @@ router.beforeEach((to, from, next) => {
   }
   //네비게이션 랜더 유무
   store.commit('navActivate2', to.meta.showingNav)
-
+  
   // 네비게이션 바 Active와 매칭
   if (to.name == 'Main'){store.commit('navActivate', 1)}
   else if (to.matched.length && to.matched[0].path == '/mypage'){store.commit('navActivate', 2)}

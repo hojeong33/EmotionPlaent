@@ -86,20 +86,6 @@
           </p>
         </span>
       </article>
-      <!-- <article id="pin-form">
-        <span>
-          <label for="pin">PIN 번호</label>
-          <img src="../../assets/images/icons/help.png" alt="help" id="help"
-          @mouseover="help = true" @mouseout="help = false">
-          <p v-show="help" id="help-message">
-            PIN 번호는 회원 가입시 설정한 추가 비밀번호입니다.
-            PIN 번호를 분실하였을 경우 고객센터 문의를 이용해주세요.
-          </p>
-        </span>
-        <input type="password" id="pin"
-        v-model="credentials.pin"
-        placeholder="등록하신 PIN 번호를 입력해주세요.">
-      </article> -->
       <br>
       <article id="pu_form_radio">
         <label for="" style="margin-left:1rem;">계정 공개 여부</label>

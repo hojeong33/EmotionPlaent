@@ -1,9 +1,9 @@
 <template>
   <div id="picklist-container">
     <div id="pick-tab">
-      <h3 @click="pickTab = 1" :class="pickTab == 1 ? 'active': ''">음악</h3>
-      <h3 @click="pickTab = 2" :class="pickTab == 2 ? 'active': ''">영화</h3>
-      <h3 @click="pickTab = 3" :class="pickTab == 3 ? 'active': ''">활동</h3>
+      <h3 @click="pickTab = 0" :class="pickTab == 0 ? 'active': ''">음악</h3>
+      <h3 @click="pickTab = 1" :class="pickTab == 1 ? 'active': ''">영화</h3>
+      <h3 @click="pickTab = 2" :class="pickTab == 2 ? 'active': ''">활동</h3>
     </div>
     <div id="picks"> 
       <search-pick v-for="(pick, idx) in filteredPicks" :key="idx" :pick="pick" />
@@ -30,7 +30,7 @@ export default {
     filteredPicks(){
       const temp = []
       this.picks.forEach(ele => {
-        if (ele.no == this.pickTab){
+        if (ele.type == this.pickTab){
           temp.push(ele)
         }
       })

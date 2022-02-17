@@ -39,8 +39,8 @@ export default {
 	justify-content: center;
 	background-color: white;
 	border-radius: 30px;
-	width: 18vw;
-	height: 20vh;
+	width: 18rem;
+	height: 10rem;
 }
 p {
 	margin: auto;

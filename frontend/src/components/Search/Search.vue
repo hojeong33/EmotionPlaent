@@ -158,5 +158,6 @@ export default {
   margin-top: 0.5rem;
   margin-right: 0.5rem;
   border: none;
+  font-weight: bold;
 }
 </style>
