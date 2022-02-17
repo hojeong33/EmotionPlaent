@@ -23,6 +23,7 @@
         <span id="right" class="carousel-btn" @click="pagination(true)"/>
       </div>
     </article>
+    <br>
     <footer>
       <div class="imgUpload">
         <label for="file">이미지 업로드</label> 
@@ -328,7 +329,7 @@ export default {
     flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
-    margin: 1rem;
+    margin: 0rem 1rem 1rem 1rem;
   }
 
   .page-num {

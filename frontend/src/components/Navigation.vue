@@ -47,7 +47,6 @@
 </template>
 <script>
 // import {mapState} from 'vuex'
-// 똑같은 페이지 눌렀을 때 새로고침이 안 됨 - 수정 필요
 import Search from '@/components/Search/Search'
 import Alarm from '@/components/Alarm'
 
@@ -68,7 +67,7 @@ export default {
   components: { Search, Alarm },
   methods: {
     navClick(event){
-      console.log(this.$router)
+      // console.log(this.$router)
       if (event.target.id == 'write'){this.$store.commit('navActivate', 0)}
       else if (event.target.id == 'home' || event.target.id =='logo_img'){this.$router.push({ name:'Main' })}
       else if (event.target.id == 'my_page'){this.$router.push({ name:'Mypage' })}
@@ -116,6 +115,7 @@ export default {
       else{return 'home_selected.png'}
     },
     myPage(){
+      console.log(!this.navActive[2])
       if (!this.navActive[2]){return 'user.png'}
       return 'user_selected.png'
     },
@@ -146,9 +146,6 @@ export default {
 
 <style scoped>
 #nav {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
   width: 100%;
@@ -264,7 +261,7 @@ export default {
   min-height: 340px;
   position: absolute;
   background-color: white;
-  margin: 0.7rem -7.8rem;
+  margin: 0.5rem -7.8rem;
 }
 
 #nine{

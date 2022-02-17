@@ -23,6 +23,7 @@ export default {
  div{
   margin: 1rem 1.2rem;
   font-size: 2rem; 
+  font-weight: bold;
  }
  
 .tab {

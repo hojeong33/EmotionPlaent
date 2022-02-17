@@ -5,10 +5,12 @@
 			<hr>
 			<div id="footer">
 				<div id="text1">
-					<button id="footer-btn" style="background-color: #777777;" @click="signout">네</button>
+					<!-- <button id="footer-btn" style="background-color: #777777;" @click="signout">네</button> -->
+					<p style="color: red; font-size: 1.3rem; font-weight: bold; cursor: pointer;" @click="signout">네</p>
 				</div>
 				<div>
-					<button id="footer-btn" @click="cancel">아니오</button>
+					<!-- <button id="footer-btn" @click="cancel">아니오</button> -->
+					<p style="font-size: 1.3rem; font-weight: bold; cursor: pointer;" @click="cancel">아니오</p>
 				</div>
 			</div>
 		</div>
@@ -76,7 +78,7 @@ export default {
 	margin-bottom: auto;
 	justify-content: space-evenly;
 }
-#footer-btn {
+/* #footer-btn {
 	background-color: #5E39B3;
 	margin: auto;
 	font-weight: bold;
@@ -86,7 +88,7 @@ export default {
 	height: 2.5rem;
 	border: none;
 	border-radius: 30px;
-}
+} */
 hr {
 	margin: 0rem;
 }

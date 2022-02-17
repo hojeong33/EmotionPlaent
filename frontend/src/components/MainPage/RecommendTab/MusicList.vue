@@ -10,8 +10,8 @@
                         <img @click="addPlayList(item)" id="goldstar"  src="@/assets/images/icons/goldstar.png" alt=""> 
                         <img :src="item.imgLink"/>
                         <div class="card-carousel--card--footer">
-                            <p>{{ item.artist }} - </p>
                             <p>{{ item.title }}</p>
+                            <p style="font-weight: normal; font-size: 1.1rem;">{{ item.artist }}</p>
                             <p class="tag" v-for="(tag, index) in item.tag" :key="index" :class="index &gt; 0 ? 'secondary' : ''" >{{ tag }}</p>
                         </div>
                     </div>
@@ -21,8 +21,8 @@
                         <img @click="addPlayList(item)" id="goldstar" src="@/assets/images/icons/goldstar.png" alt="">
                         <img :src="item.imgLink"/>
                         <div class="card-carousel--card--footer">
-                            <p>{{ item.artist }} - </p>
                             <p>{{ item.title }}</p>
+                            <p style="font-weight: normal; font-size: 1.1rem;">{{ item.artist }}</p>
                             <p class="tag" v-for="(tag, index) in item.tag" :key="index" :class="index &gt; 0 ? 'secondary' : ''" >{{ tag }}</p>
                         </div>
                     </div>
@@ -53,7 +53,7 @@ export default {
       return style
     },
     atEndOfList() {
-    return this.currentOffset <= (this.paginationFactor * -1) * (this.$store.state.recommendMusic.length - this.windowSize);
+    return this.currentOffset <= (this.paginationFactor * -1) * (this.$store.state.recommendMusic.length - 5*this.windowSize);
     },
     atHeadOfList() {
     return this.currentOffset === 0;
@@ -85,7 +85,7 @@ export default {
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	margin: 20px 0 40px;
+	margin: 20px 0 50px;
 	color: #666a73;
 }
 
@@ -93,6 +93,7 @@ export default {
 display: flex;
 justify-content: center;
 width: 85%;
+
 }
 .card-carousel--overflow-container {
 overflow: hidden;
@@ -103,8 +104,8 @@ width: 15px;
 height: 15px;
 padding: 10px;
 box-sizing: border-box;
-border-top: 2px solid #42b883;
-border-right: 2px solid #42b883;
+border-top: 2px solid #5E39B3;
+border-right: 2px solid #5E39B3;
 cursor: pointer;
 margin: 0 20px;
 transition: transform 150ms linear;
@@ -139,6 +140,7 @@ background-color: #fff;
 border-radius: 4px;
 z-index: 3;
 margin-bottom: 2px;
+border: 1px solid gainsboro;
 }
 .card-carousel-cards .card-carousel--card:first-child {
 margin-left: 0;
@@ -164,8 +166,8 @@ padding: 7px 15px;
 padding: 3px 0;
 margin: 0;
 margin-bottom: 2px;
-font-size: 19px;
-font-weight: 500;
+font-size: 1.2rem;
+font-weight: bold;
 color: #2c3e50;
 user-select: none;
 }
@@ -212,8 +214,9 @@ box-shadow: 0px 0px 0px #004977;
 }
 h3{
     text-align: left;
-    margin-left:3rem;
+    margin-left: 3rem;
     font-weight: bold;
+    font-size: 2rem;
 }
 
   #post_img {
@@ -222,9 +225,9 @@ h3{
   #goldstar{
     position: absolute;
     cursor: pointer;
-		width: 40px;
-		height: 40px;
-    right: 5%;
-    top:110px;
+		width: 2rem;
+		height: 2rem;
+    right: 1%;
+    top:40%;
   }
 </style>

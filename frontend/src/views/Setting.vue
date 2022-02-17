@@ -19,17 +19,16 @@ export default {
   }
 
   #setting_container {
+    width: 50%;
+    min-width: 700px;
+    min-height: 100vh;
+    margin: auto;
+    border-left: 1px solid #cccccc;
+    border-right: 1px solid #cccccc;
+    background-color: white;
     display: flex;
     flex-direction: column;
-    width: 30%;
-    min-width: 700px;
-    min-height: 92.5vh;
-    /* border-left: 2px #cccccc solid;
-    border-right: 2px #cccccc solid; */
-    border-left: 2px  #5E39B3 solid;
-    border-right: 2px  #5E39B3 solid;
-    padding: 1.5rem 0;
-    margin: 0 auto;
-    background-color: white;
+    align-items: center;
+    justify-content: flex-start;
   }
 </style>

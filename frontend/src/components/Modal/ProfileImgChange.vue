@@ -45,6 +45,7 @@ export default {
     imgUpload() {
       this.images = null;
       this.images = URL.createObjectURL(this.$refs.feedImg.files[0]);
+      console.log(this.images)
     },
     changeprofileImg() {
       let headers = {
@@ -54,6 +55,7 @@ export default {
 
       const formData = new FormData();
       formData.append("multipartFile", this.$refs.feedImg.files[0]);
+      console.log(formData)
 
       axios({
         method: "post",
@@ -99,8 +101,8 @@ export default {
   align-items: center;
   background-color: white;
   border-radius: 30px;
-  width: 30vw;
-  height: 50vh;
+  width: 30rem;
+  height: 30rem;
   text-align: center;
   padding: 0.4rem;
 }
@@ -120,7 +122,9 @@ export default {
   cursor: pointer;
 }
 #header_title{
-  margin: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-left: 6rem;
   font-weight: bold;
 }
 #body {
@@ -145,7 +149,6 @@ export default {
 
 #default-img {
   width: 100%;
-
 }
 
 #changeImg {
@@ -163,15 +166,15 @@ export default {
 }
 #footer {
   width: 100%;
-  height: 10%;
+  height: 15%;
 }
 #buttons {
   display: flex;
   justify-content: space-evenly;
+
 }
 hr {
   width: 100%;
-  height: 2px;
   margin: 0rem;
   color: black;
 }

@@ -12,6 +12,7 @@ import SockJS from "sockjs-client";
 export default new Vuex.Store({
   state: {
     // feedActive: false,
+    searchPickList : [],
     //검색부분
     searching: false, //검색창 활성화
     words: null, //검색창
@@ -135,8 +136,9 @@ export default new Vuex.Store({
       if (payload == -1){
         navActive.forEach((ele, idx) => {
           Vue.set(navActive, idx, false)
+          console.log('1차', navActive)
         })
-        return
+        return 
       }
       if (payload == 0 || payload == 3){
         Vue.set(navActive, payload, !navActive[payload])
@@ -145,6 +147,7 @@ export default new Vuex.Store({
       navActive.forEach((ele, idx) => {
         navActive[idx] = false
       })
+
       Vue.set(navActive, payload, true)
       console.log(navActive)
     },

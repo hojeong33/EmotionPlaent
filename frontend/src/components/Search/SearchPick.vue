@@ -60,7 +60,8 @@ export default {
         console.log('찜목록 있음', res)
         this.pickSearchResult = res.data
         this.$store.state.tagSearchResult = []
-        this.$bus.$emit('pickBus', this.pickSearchResult)
+        // this.$bus.$emit('pickBus', this.pickSearchResult)
+        this.$store.state.searchPickList = res.data;
         this.$router.push({ path: `/search/pick` })
         this.$store.state.searching = false
       })

@@ -3,7 +3,7 @@
 		<filter-tab :user-mood="userMood" @filtering="filtering" />
 
 		<search-feed-list v-if="tab == 'feed'" :feeds="filteredFeeds" />
-		<search-pick-list v-if="tab == 'pick'" :picks="this.pickData" />
+		<search-pick-list v-if="tab == 'pick'" :picks="this.filteredPick" />
 		<div id="no-result" 
 			v-if="(tab == 'feed' && this.filteredFeed.length === 0)||(tab == 'pick' && this.pickData.length === 0)">
 			<img id="nothing" src="@/assets/images/etc/alien.png" alt="no result">
@@ -44,10 +44,17 @@ export default {
 	},
 	mounted: function() {
 		this.feedData = this.$store.state.tagSearchResult
+<<<<<<< HEAD
 		this.$bus.$on('pickBus', (searchPicks) => {
 		this.pickData = searchPicks
 		console.log(this.pickData)
 		})
+=======
+		if(this.$store.state.searchPickList !== null){
+			this.filteredPick = this.$store.state.searchPickList
+		}
+		console.log(this.filteredPick)
+>>>>>>> c5d7bccd74cc9c20e2d6f6a4dc4b33500ab6f57b
 	},
 	computed: {
 		filteredFeeds(){
