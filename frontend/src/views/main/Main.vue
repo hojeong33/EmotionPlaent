@@ -49,13 +49,6 @@ export default {
         { id: 1, label: "놀거리", content: "1" },
         { id: 2, label: "이야기", content: "2" },
       ],
-      userInfo: {
-        username: "최강상후",
-        mood: null,
-        posts: 0,
-        followings: 0,
-        followers: 20100,
-      },
     };
   },
   computed: {
@@ -103,9 +96,8 @@ export default {
 .contents {
   position: relative;
   overflow: hidden;
-  width: 50vw;
+  width: 100%;
   min-width: 700px;
-  min-height: 92.5vh;
   /* 메인 피드 크기 -> 100vh-> 센터 */
   min-height: 100vh;
   border: 2px solid gainsboro;
