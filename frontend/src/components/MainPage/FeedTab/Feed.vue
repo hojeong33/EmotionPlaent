@@ -117,6 +117,29 @@ export default {
     onUserFeedSetting2:function(){
       this.$store.commit('userFeedSettingModalActivate2')
     },
+    getFeed:function(){
+       let headers = {
+        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
+        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
+        };
+        axios({
+            method: 'get',
+            url:`/api/feed/${this.post}`,
+            headers: headers,  // 넣는거 까먹지 마세요
+          }).then((res) => {
+          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+          console.log('!!!!!!!!!!!!!!!!!!!')
+          console.log(res.data)
+          this.feed=res.data
+          if (this.feed.descr.length > 30) {
+            this.isLong = true
+          }
+          }).catch((error) => {
+            console.log(error);
+          }).then(() => {
+            console.log('피드 하나 가져오기');
+          });
+    },
     like() {
       this.feed.like ? this.cancelLike(): this.doLike();
       this.feed.like= !this.feed.like;
@@ -172,29 +195,7 @@ export default {
             console.log('좋아요 해제');
           });
     },
-    getFeed:function(){
-       let headers = {
-        'at-jwt-access-token': session.getItem('at-jwt-access-token'),
-        'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
-        };
-        axios({
-            method: 'get',
-            url:`/api/feed/${this.post}`,
-            headers: headers,  // 넣는거 까먹지 마세요
-          }).then((res) => {
-          this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
-          console.log('!!!!!!!!!!!!!!!!!!!')
-          console.log(res.data)
-          this.feed=res.data
-          if (this.feed.descr.length > 30) {
-            this.isLong = true
-          }
-          }).catch((error) => {
-            console.log(error);
-          }).then(() => {
-            console.log('피드 하나 가져오기');
-          });
-    },
+    
     likesList:function(){
        this.$store.commit('likesListActive',this.feed.likes)
        console.log(this.feed.likes)
