@@ -14,7 +14,7 @@
     </div>
     <div id="post_image">
       <article id="img-box">
-      <div id="uploaded-box">
+        <div id="uploaded-box">
           <transition-group id="carousel" :name="page > beforePage ? 'slide':'slide-reverse'">
             <img id="my_img" v-for="(image, index) in feed.imgs" :key="index"
             class="uploadedImg" :src="image.imgLink" alt=""
