@@ -66,6 +66,14 @@ export default {
       return style;
     },
   },
+  watch:{
+    prepared(){
+      if (this.prepared == 3){
+        this.$store.commit('load', false)
+        console.log('loaded!!!')
+      }
+    }
+  },
   methods: {
     reload() {
       this.$store.dispatch('recommendMusic')

@@ -2,49 +2,41 @@
   <div>
     <h3>{{ tmp.name }}에 흐르는 별소리</h3>
     <div class="card-carousel-wrapper">
-        <div class="card-carousel--nav__left" @click="moveCarousel(-1)" :disabled="atHeadOfList"></div>
-        <div class="card-carousel">
-            <div class="card-carousel--overflow-container">
-                <div v-if="this.$store.state.recommendType === 1" class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
-                    <div id="post_img" class="card-carousel--card"  v-for="item in this.$store.state.recommendMusic.slice(0, 10)" :key="item.index">
-                        <img @click="addPlayList(item)" id="goldstar"  src="@/assets/images/icons/goldstar.png" alt=""> 
-                        <img :src="item.imgLink"/>
-                        <div class="card-carousel--card--footer">
-                            <p>{{ item.title }}</p>
-                            <p style="font-weight: normal; font-size: 1.1rem;">{{ item.artist }}</p>
-                            <p class="tag" v-for="(tag, index) in item.tag" :key="index" :class="index &gt; 0 ? 'secondary' : ''" >{{ tag }}</p>
-                        </div>
-                    </div>
-                </div>
-                <div v-if="this.$store.state.recommendType === 0" class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
-                    <div  id="post_img" class="card-carousel--card" v-for="item in this.$store.state.recommendMusic.slice(10)" :key="item.index">
-                        <img @click="addPlayList(item)" id="goldstar" src="@/assets/images/icons/goldstar.png" alt="">
-                        <img :src="item.imgLink"/>
-                        <div class="card-carousel--card--footer">
-                            <p>{{ item.title }}</p>
-                            <p style="font-weight: normal; font-size: 1.1rem;">{{ item.artist }}</p>
-                            <p class="tag" v-for="(tag, index) in item.tag" :key="index" :class="index &gt; 0 ? 'secondary' : ''" >{{ tag }}</p>
-                        </div>
-                    </div>
-                </div>
+      <div class="card-carousel--nav__left" @click="moveCarousel(-1)" :disabled="atHeadOfList"></div>
+      <div class="card-carousel">
+        <div class="card-carousel--overflow-container">
+          <div v-if="this.$store.state.recommendType === 1" class="card-carousel-cards" :style="{ transform: 'translateX' + '(' + currentOffset + 'px' + ')' }">
+            <div id="post_img" class="card-carousel--card"  v-for="item in musicData" :key="item.index">
+            <img @click="addPlayList(item)" id="goldstar"  src="@/assets/images/icons/goldstar.png" alt=""> 
+            <img :src="item.imgLink"/>
+              <div class="card-carousel--card--footer">
+                <p>{{ item.title }}</p>
+                <p style="font-weight: normal; font-size: 1.1rem;">{{ item.artist }}</p>
+                <p class="tag" v-for="(tag, index) in item.tag" :key="index" :class="index &gt; 0 ? 'secondary' : ''" >{{ tag }}</p>
+              </div>
             </div>
+          </div>
         </div>
         <div class="card-carousel--nav__right" @click="moveCarousel(1)" :disabled="atEndOfList"></div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import axios from 'axios'
+
 export default {
     name:'MusicList',
     data() {
-        return {
+      return {
+        music: null,
         currentOffset: 0,
         windowSize: 3,
         paginationFactor: 220,
         type:0,
         sendData:null,
-        }
+      }
     },
     props: {
       tab: Number

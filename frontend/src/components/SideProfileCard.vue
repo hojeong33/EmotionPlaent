@@ -80,7 +80,7 @@ export default {
     width: 23rem;
     min-width: 300px;
     height: 32rem;
-    min-height: 390px;
+    min-height: 400px;
     position: fixed;
     top: 10rem;
     right: 2.5%;
@@ -96,7 +96,7 @@ export default {
     justify-content: center;
     align-items: flex-end;
     width: 100%;
-    height: 50%;
+    height: 25vh;
     background-image: url('../assets/images/emotions/cover_s.png');
     background-repeat: no-repeat;
     background-position: center;

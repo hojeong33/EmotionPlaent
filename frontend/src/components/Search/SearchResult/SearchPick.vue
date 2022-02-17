@@ -2,7 +2,7 @@
   <article class="picks" @click="go_to_detail" @mouseover="isHover = true">
     <img :class="['planet', {'movie-planet':pick.no == 2}]" :src="require(`@/assets/images/emotions/${planet}`)" alt="">
     <img :class="['thumbnail', {'movie-thumb':pick.no == 2}]" :src="thumbNail" alt="thumbnail">
-    <h3>{{ pick.name }}</h3>
+    <h3>{{ title }}</h3>
     <span v-show="isHover" @mouseleave="isHover = false" class="picks-info">
       <p>Go to Detail</p>
     </span>

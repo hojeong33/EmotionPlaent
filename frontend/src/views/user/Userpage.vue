@@ -47,7 +47,7 @@ export default {
     }
   },
   props: {
-    userId: Number,
+    userId: String
   },
   methods: {
     changeTab(tab){

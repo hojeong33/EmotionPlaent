@@ -98,11 +98,6 @@ export default {
       this.$store.commit('navActivate', 3)
       this.alarming = true
       this.$store.dispatch('alarmselect')
-      console.log('여기에요!!!!', this.$store.navActive)
-      if (this.$store.navActive[3] === true) {
-        console.log('사라져라 얍')
-        this.alarmClose()
-      }
     },
     // alarmClose() {
     //   this.$store.commit('navActivate', 3)
