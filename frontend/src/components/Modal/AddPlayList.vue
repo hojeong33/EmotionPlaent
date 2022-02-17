@@ -17,25 +17,21 @@
     <div id="feed_likes_list" v-else>
       <div v-for="(forder, index) in forderlists" :key="index">
         <div id="userInfo">
-          <!-- <img id="profile_img" :src="liker.profileImg" alt=""> -->
           <p id="username">{{forder.name}}</p>
-          <button id="follow_cancel" @click="choiceForder(forder.no)">선택</button>
-          <img id="trash"  @click="deleteForder(forder.no)" src="@/assets/images/icons/trash.png" alt="">
+          <button id="follow_cancel" @click="choiceForder(forder)">선택</button>
+          <img id="trash"  @click="deleteForder(forder.no)" src="@/assets/images/icons/trash.png" style="margin-right:1rem" alt="">
         </div>
       </div>
     </div>
-    <hr>
+    <hr id="footer">
     <div id="plus_container" v-if="isClick">
       <img id="plus_icon" @click="addList" src="@/assets/images/icons/more_selected.png" alt="">
       <p id="plus_text">새 플레이리스트 만들기</p>
     </div>
     <div id="new_container" v-else>
       <p id="plus_text">이름</p>
-      <input id="playlist_input"  v-model.trim="listName" placeholder="플레이리스트 이름을 입력해주세요">
-      <div id="uploading">
-      <p id="plus_text" style="margin-top:0.5rem;">이미지 업로드</p>
-      <input type="file" id="file" accept="image/*" @change="imgUpload" ref="feedImg" />
-    </div>
+      <input id="playlist_input"  @keyup.enter="createList" v-model.trim="listName" placeholder="플레이리스트 이름을 입력해주세요">
+
       <button id="pu_button" @click="createList">만들기</button>
     </div>
   </div>
@@ -67,8 +63,9 @@ export default {
 		}
 	},
 	methods: {
-    choiceForder:function(forderNo){
-      this.choicedForder=forderNo
+    choiceForder:function(forder){
+      this.choicedForder=forder.no
+      this.pickedForder=forder.name
       let sendData=null
       if (this.listData.type==0){
          sendData={
@@ -105,6 +102,7 @@ export default {
         }).then((res) => {
             console.log(sendData)
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
+            this.$store.commit('addToPlayListActive',forder.name)
         }).catch((error) => {
           console.log(error);
         }).then(() => {
@@ -140,10 +138,6 @@ export default {
       // console.log('여기')
       console.log(this.isClick)
 
-    },
-    imgUpload() {
-      this.images = null;
-      this.images = URL.createObjectURL(this.$refs.feedImg.files[0]);
     },
     getPlayList:function(){
       let headers = {
@@ -203,7 +197,7 @@ export default {
         };
   
         const formData2 = new FormData();
-        formData2.append("multipartFile", this.$refs.feedImg.files[0]);
+        // formData2.append("multipartFile", this.$refs.feedImg.files[0]);
         formData2.append(
           "data",
           new Blob([JSON.stringify(this.listData)], { type: "application/json" })
@@ -218,6 +212,7 @@ export default {
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
             this.isClick=true
             this.getPlayLists()
+            this.listName=''
         }).catch((error) => {
           console.log(error);
         }).then(() => {
@@ -228,7 +223,6 @@ export default {
         alert('제목을 입력해주세요')
       }
     },
-
 	},
 	created () {
     this.userdata=JSON.parse(session.getItem('userInfo')) 
@@ -246,6 +240,15 @@ export default {
 #trash{
   width: 25px;
   height: 25px;
+}
+#check_img{
+  width:25px;
+  height: 25px;
+  cursor: pointer;
+}
+#check_alert{
+  margin-left: 1rem;
+  color: gray;
 }
 #likes_list {
 	display: flex;
@@ -310,7 +313,7 @@ export default {
 #feed_likes_list{
 	margin-left: 1rem;
 	overflow-y: scroll;
-	height: 82%;
+	height: 20rem;
 }
 #userInfo{
 	display: flex;
@@ -402,4 +405,6 @@ input:focus {
   line-height: 2rem;
   margin-left: 60%;
 }
+
+
 </style>

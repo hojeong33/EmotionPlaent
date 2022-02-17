@@ -17,4 +17,8 @@ public interface ImgDao {
             @Param("imgNo") int imgNo,
             @Param("feedNo") int feedNo);
 
+    public int relationDelete(
+            @Param("imgNo") int imgNo,
+            @Param("feedNo") int feedNo);
+
 }
