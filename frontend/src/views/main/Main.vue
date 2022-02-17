@@ -49,13 +49,6 @@ export default {
         { id: 1, label: "놀거리", content: "1" },
         { id: 2, label: "이야기", content: "2" },
       ],
-      userInfo: {
-        username: "최강상후",
-        mood: null,
-        posts: 0,
-        followings: 0,
-        followers: 20100,
-      },
     };
   },
   computed: {
