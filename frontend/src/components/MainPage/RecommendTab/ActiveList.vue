@@ -55,16 +55,9 @@ export default {
       }
     },
     addPlayList:function(item){
-<<<<<<< HEAD
-        this.sendData=[this.type, item]
-        this.$store.commit('addPlayListActive',this.sendData)
+      this.sendData=[this.type, item]
+      this.$store.commit('addPlayListActive',this.sendData)
     },
-=======
-        this.sendData=[this.type,item]
-        this.$store.commit('addPlayListActive',this.sendData)
-        // console.log(this.$store.state.recommendMusic)
-      }
->>>>>>> 391aa28aa3c6f9c1a77f07c5609a82eedfe6f542
   },
   created(){
     let headers = {

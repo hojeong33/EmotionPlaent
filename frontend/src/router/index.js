@@ -225,19 +225,6 @@ const routes = [
           title: '회원 탈퇴'
         },
       },
-<<<<<<< HEAD
-      {
-        path:'profile-update',
-        component: ProfileUpdate,
-        meta: {
-          loginRequired: true,
-          testRequired: true,
-          showingNav: true,
-          title: '프로필 수정'
-        },
-      }
-=======
->>>>>>> 391aa28aa3c6f9c1a77f07c5609a82eedfe6f542
     ],  
   },
   {
@@ -340,6 +327,10 @@ router.beforeEach((to, from, next) => {
   
   if (to.params.userId && to.params.userId ==  user.no && to.path.includes('item')){
     next({ path: `/mypage/item/${to.params.pickNo}` })
+  }
+
+  if (to.params.userId && to.params.userId ==  user.no && to.path.includes('user')){
+    next({ path: `/mypage` })
   }
 
   next()
