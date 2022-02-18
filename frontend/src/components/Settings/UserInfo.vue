@@ -239,6 +239,7 @@ export default {
           this.$store.commit('pwchangeConfirmModalActivate')
         })
       }
+      this.$store.dispatch('updateuser', null)
     },
     pw_change() {
       if (this.pwActivate === false) {
