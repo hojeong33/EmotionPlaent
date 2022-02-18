@@ -31,7 +31,7 @@ export default {
 	},
 	props: {
 		tab: String,
-		userId: String
+		userId: Number,
 	},
 	components: {
 		FilterTab,
