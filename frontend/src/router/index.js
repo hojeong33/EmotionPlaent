@@ -38,6 +38,7 @@ const routes = [
       loginRequired: false,
       testRequired: false,
       showingNav: false,
+      title: '로그인'
     }
   },
   {
@@ -48,6 +49,7 @@ const routes = [
       loginRequired: true,
       testRequired: false,
       showingNav: false,
+      title: '추가 정보 입력'
     }
   },
   {
@@ -56,7 +58,8 @@ const routes = [
     component: KaKaoLogin,
     meta: {
       loginRequired: false,
-      testRequired: false
+      testRequired: false,
+      title: '카카오로 로그인하기'
     }
   },
   {
@@ -67,6 +70,7 @@ const routes = [
       loginRequired: false,
       testRequired: false,
       showingNav: false,
+      title: '시민권 발급받기'
     }
   },
   {
@@ -77,6 +81,7 @@ const routes = [
       loginRequired: false,
       testRequired: false,
       showingNav: false,
+      title: '비밀번호 찾기'
     },
   },
   {
@@ -87,6 +92,7 @@ const routes = [
       loginRequired: false,
       testRequired: false,
       showingNav: false,
+      title: '이메일 찾기'
     },
   },
   {
@@ -98,6 +104,7 @@ const routes = [
       loginRequired: true,
       testRequired: true, 
       showingNav: true,
+      title: '마이 페이지'
     },
     children: [
       {
@@ -174,6 +181,7 @@ const routes = [
       loginRequired: true,
       testRequired: false,
       showingNav: false,
+      title: '감정 테스트'
     },
   },
   {
@@ -185,6 +193,7 @@ const routes = [
       loginRequired: true,
       testRequired: true,
       showingNav: true,
+      title: '설정 페이지'
     },
     children: [
       {
@@ -194,6 +203,7 @@ const routes = [
           loginRequired: true,
           testRequired: true,
           showingNav: true,
+          title: '프로필 수정'
         },
       },
       {
@@ -203,6 +213,7 @@ const routes = [
           loginRequired: true,
           testRequired: true,
           showingNav: true,
+          title: '비밀번호 수정'
         },
       },
       {
@@ -212,6 +223,7 @@ const routes = [
           loginRequired: true,
           testRequired: true,
           showingNav: true,
+          title: '회원 탈퇴'
         },
       },
       {
@@ -221,6 +233,7 @@ const routes = [
           loginRequired: true,
           testRequired: true,
           showingNav: true,
+          title: '프로필 수정'
         },
       }
     ],  
@@ -234,6 +247,7 @@ const routes = [
       loginRequired: true,
       testRequired: true,
       showingNav: true,
+      title: '피드 상세정보'
     },
   },
   {
@@ -331,7 +345,7 @@ router.beforeEach((to, from, next) => {
 
 const DEFAULT_TITLE = 'Emotion Planet'
 
-router.afterEach((to, from) => {
+router.afterEach((to) => {
   // Use next tick to handle router history correctly
   // see: https://github.com/vuejs/vue-router/issues/914#issuecomment-384477609
   Vue.nextTick(() => {

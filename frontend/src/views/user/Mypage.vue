@@ -203,7 +203,7 @@ export default {
       })
       .then(() => this.getFeedData())
       .catch(err => console.log(err))
-      .finally(() => this.$store.commit('load', false))
+      .finally(() => {this.$store.commit('load', false)})
     }
   },
   mounted(){
