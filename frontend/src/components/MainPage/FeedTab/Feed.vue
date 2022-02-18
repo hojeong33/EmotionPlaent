@@ -36,7 +36,7 @@
       </div>
       <div id="content">
         <div id="tag" style="flex-wrap: wrap;">
-          <!-- <p id="my_tag">#{{feed.tags[0].name}}행성 <img :src="require('@/assets/images/emotions/' + tmp.img)" alt="" style="width: 1.2rem; height: 1.2rem;"> &nbsp;</p>  -->
+          <p id="my_tag">#{{feed.tags[0].name}}행성 <img :src="require('@/assets/images/emotions/' + tmp.img)" alt="" style="width: 1.2rem; height: 1.2rem;"> &nbsp;</p> 
           <p id="my_tag" v-for="(tag, idx) in feed.tags.slice(1)" :key="idx" style="flex-wrap: wrap;">#{{tag["name"]}} &nbsp;</p>
         </div> 
         <div v-if="isLong">
@@ -91,13 +91,13 @@ export default {
         { id: 7, name: '떠돌이행성', img: "spaceship.png", color: '#FCBB74' }
       ],
       commentKey: 0,
-      // style: null,
+      styleName: null,
     }
   },
   computed: {
     tmp: function () {
-      let name = this.feed.tags[0]
-      console.log(this.feed)
+      let name = this.styleName
+      console.log(name)
       let style = this.planetStyles.find(el => el.name === name) || {}
       console.log('이것은 스타일', style)
       return style
@@ -169,6 +169,8 @@ export default {
           console.log('!!!!!!!!!!!!!!!!!!!')
           console.log(res.data)
           this.feed=res.data
+          this.styleName = this.feed.tags[0].name + '행성'
+          console.log(this.styleName)
         
           if (this.feed.descr.length > 30) {
             this.isLong = true

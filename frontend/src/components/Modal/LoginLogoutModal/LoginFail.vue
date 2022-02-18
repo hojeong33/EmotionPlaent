@@ -1,7 +1,7 @@
 <template>
 	<div id="login_fail">
     <div id="modal">
-			<h4>이메일 또는 비밀번호를 <br> 다시 확인해주세요</h4>
+			<h4><span style="color:red;">이메일</span> 또는 <span style="color:red;">비밀번호</span>를 <br> 다시 확인해주세요</h4>
 			<hr>
 			<p @click="loginAgain">확인</p>
     </div>

@@ -161,6 +161,7 @@ export default {
     }
   },
   created() {
+    console.log('프롭임', this.userId)
     if (this.$route.params.userId){
       const headers = {
         'at-jwt-access-token': session.getItem('at-jwt-access-token'),
