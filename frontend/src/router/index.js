@@ -329,7 +329,7 @@ router.beforeEach((to, from, next) => {
     next({ path: `/mypage/item/${to.params.pickNo}` })
   }
 
-  if (to.params.userId && to.params.userId ==  user.no && to.path.includes('user')){
+  else if (to.params.userId && to.params.userId ==  user.no && to.path.includes('user')){
     next({ path: `/mypage` })
   }
 
