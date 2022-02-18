@@ -129,7 +129,7 @@ export default {
 
     for (let planet of this.planetStyles) {
       if (planet.id === this.userInfo.mood) {
-        let PlanetName = planet.name.slice(0,2)
+        let PlanetName = planet.name.slice(0,-2)
         console.log(PlanetName)
         this.feedDto.tags.push({name: PlanetName, type: 1 })
       }
