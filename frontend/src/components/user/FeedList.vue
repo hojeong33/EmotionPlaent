@@ -28,7 +28,7 @@ export default {
   },
   props: {
     filter: Number,
-    userId: String
+    userId: Number,
   },
   components: {
     // Feed,
