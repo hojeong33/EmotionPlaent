@@ -228,7 +228,10 @@ export default {
       }
       else if (nicknameChange){
         this.$store.state.userInfo.nickname = this.credentials.beforeNick
-        this.$store.commit('pwchangeConfirmModalActivate')
+        this.$store.dispatch('updateuser', null)
+        .then(() => {
+          this.$store.commit('pwchangeConfirmModalActivate')
+        })
       }
       else if (pwChange){
         this.$store.dispatch('updateuser', this.credentials.pwConf)

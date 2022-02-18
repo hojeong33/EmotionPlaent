@@ -53,7 +53,7 @@ export default {
     }
   },
   props: {
-    userId: String
+    userId: Number,
   },
   methods: {
     changeTab(tap){
