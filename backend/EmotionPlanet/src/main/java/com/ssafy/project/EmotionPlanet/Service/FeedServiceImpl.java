@@ -131,23 +131,30 @@ public class FeedServiceImpl implements FeedService{
     }
 
     @Override
-    public int update(FeedDto feedDto) {
+    public int update(FeedDto feedDto, int type) {
 
         List<ImgDto> dbImg = imgDao.list(feedDto.getNo());
         List<TagDto> dbTag = tagDao.list(feedDto.getNo());
 
-        for (ImgDto img : dbImg) {
-            System.out.println("파일명 : " + img.getImgName());
-            s3Dao.deleteByNo(img.getNo());
+        if(type == 0) {
+            for (ImgDto img : dbImg) {
+                System.out.println("파일명 : " + img.getImgName());
+                s3Dao.deleteByNo(img.getNo());
+            }
+            for (ImgDto img : feedDto.getImgs()) {
+                imgDao.relation(img.getNo(), feedDto.getNo());
+            }
+        }else {
+            for (ImgDto img : feedDto.getImgs()) {
+                imgDao.relationDelete(img.getNo(), feedDto.getNo());
+                imgDao.relation(img.getNo(), feedDto.getNo());
+            }
         }
 
         for(TagDto tagDto : dbTag){
             tagDao.deleteRelation(tagDto.getNo(), feedDto.getNo());
         }
 
-        for (ImgDto img : feedDto.getImgs()) {
-            imgDao.relation(img.getNo(), feedDto.getNo());
-        }
 
         for (TagDto tag : feedDto.getTags()) {
             tag.setFeedNo(feedDto.getNo());

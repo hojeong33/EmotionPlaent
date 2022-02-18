@@ -22,4 +22,7 @@
         insert into feed_img(feedNo, imgNo) values (  #{feedNo}, #{imgNo})
     </insert>
 
+    <delete id="relationDelete" parameterType="map">
+        delete from feed_img where feedNo = #{feedNo} and imgNo = #{imgNo}
+    </delete>
 </mapper>

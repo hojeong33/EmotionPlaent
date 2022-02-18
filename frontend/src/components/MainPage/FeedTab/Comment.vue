@@ -1,13 +1,10 @@
 <template>
-  <div v-if="commentData">
-    <div>
-    <!-- <div style="position: absolute;"> -->
-      <img id="comment_img" :src="commentData.userRequestDto.profileImg" alt="">
-      <p id="username">{{commentData.userRequestDto.nickname}} </p> 
-      <p id="user_comment">{{commentData.descr}} </p>
-      <div id="comment_setting" v-if="isMine">
-        <i @click="onCommentSetting" class="fas fa-ellipsis-v"></i>
-      </div>
+  <div id="comment" v-if="commentData">
+    <img id="comment_img" :src="commentData.userRequestDto.profileImg" alt="">
+    <p id="username">{{commentData.userRequestDto.nickname}} </p> 
+    <p id="user_comment">{{commentData.descr}} </p>
+    <div id="setting" v-if="isMine" style="cursor: pointer;">
+      <i @click="onCommentSetting" id="comment_setting" class="fas fa-ellipsis-v"></i>
     </div>
   </div>
 </template>
@@ -57,24 +54,38 @@ export default {
 </script>
 
 <style scoped>
-#comment_img{
-  width: 2rem;
-  height: 2rem; 
-  border-radius: 70%;
-  overflow:hidden;
-  margin:2px;
-
-}
-
-#setting{
-  width: 10%;
-  border:1px solid black;
-  border-radius: 10px;
-  text-align: center;
+#comment {
   display: flex;
-  flex-direction:column;
-  position: absolute;
-  transform: translate(34rem,-10px);
-  background-color: white;
+  margin-bottom: 0.5rem;
+}
+#comment_img{
+  width: 2.5rem;
+  height: 2.5rem; 
+  border-radius: 50%;
+  margin-right:0.4rem;
+  margin-bottom: auto;
+  margin-top: auto;
+}
+#username {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin-bottom: auto;
+  margin-top: auto;
+  margin-right: 0.4rem;
+  white-space: nowrap;
+}
+#user_comment{
+  font-size: 1rem;
+  margin-bottom: auto;
+  margin-top: auto;
+  word-break: break-all;
+  margin-right: 0.3rem;
+  
+}
+#setting {
+  width: 1%;
+  margin-left: auto;
+  margin-top: auto;
+  margin-bottom: auto;
 }
 </style>

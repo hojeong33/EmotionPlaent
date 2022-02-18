@@ -17,7 +17,6 @@
     <div id="feed_likes_list" v-else>
       <div v-for="(forder, index) in forderlists" :key="index">
         <div id="userInfo">
-          <!-- <img id="profile_img" :src="liker.profileImg" alt=""> -->
           <p id="username">{{forder.name}}</p>
           <button id="follow_cancel" @click="choiceForder(forder)">선택</button>
           <img id="trash"  @click="deleteForder(forder.no)" src="@/assets/images/icons/trash.png" style="margin-right:1rem" alt="">
@@ -31,11 +30,7 @@
     </div>
     <div id="new_container" v-else>
       <p id="plus_text">이름</p>
-      <input id="playlist_input"  v-model.trim="listName" placeholder="플레이리스트 이름을 입력해주세요">
-      <!-- <div id="uploading">
-      <p id="plus_text" style="margin-top:0.5rem;">이미지 업로드</p>
-      <input type="file" id="file" accept="image/*" @change="imgUpload" ref="feedImg" /> -->
-    <!-- </div> -->
+      <input id="playlist_input"  @keyup.enter="createList" v-model.trim="listName" placeholder="플레이리스트 이름을 입력해주세요">
       <button id="pu_button" @click="createList">만들기</button>
     </div>
   </div>
@@ -67,7 +62,7 @@ export default {
 		}
 	},
 	methods: {
-
+    //퐇더 선택하기
     choiceForder:function(forder){
       this.choicedForder=forder.no
       this.pickedForder=forder.name
@@ -105,7 +100,6 @@ export default {
           data:sendData,
           headers: headers,  // 넣는거 까먹지 마세요
         }).then((res) => {
-            console.log(sendData)
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
             this.$store.commit('addToPlayListActive',forder.name)
         }).catch((error) => {
@@ -114,9 +108,9 @@ export default {
           console.log('플레이리스트에 담기');
         });
     },
+    //폴더 삭제하기
     deleteForder:function(forderNo){
       let headers = {
-          // 'Content-Type': 'multipart/form-data',
           'at-jwt-access-token': session.getItem('at-jwt-access-token'),
           'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
         };
@@ -132,25 +126,19 @@ export default {
         }).then(() => {
           console.log('플레이리스트 삭제');
         });
-
     },
+    //창닫기
 		goBack: function () {
 			this.$store.commit('addPlayListActive',this.type)
       this.isClick=true
 		},
+    //폴더추가버튼
     addList:function(){
       this.isClick=false
-      // console.log('여기')
-      console.log(this.isClick)
-
     },
-    // imgUpload() {
-    //   this.images = null;
-    //   this.images = URL.createObjectURL(this.$refs.feedImg.files[0]);
-    // },
+    //플레이리스트 데이터 가져오기
     getPlayList:function(){
       let headers = {
-          // 'Content-Type': 'multipart/form-data',
           'at-jwt-access-token': session.getItem('at-jwt-access-token'),
           'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
         };
@@ -166,11 +154,10 @@ export default {
         }).then(() => {
           console.log('플레이리스트 정보 가져오기');
         });
-
     },
+    //유저 플레이리스트들 번호 가져오기
     getPlayLists:function(){
        let headers = {
-          // 'Content-Type': 'multipart/form-data',
           'at-jwt-access-token': session.getItem('at-jwt-access-token'),
           'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
         };
@@ -183,7 +170,6 @@ export default {
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
             this.forderlistsNo=res.data
             this.forderlists=[]
-            // console.log(this.forderlists)
             for(let i=0; i<this.forderlistsNo.length; i++){
               this.pickNo=this.forderlistsNo[i]
               this.getPlayList()
@@ -195,18 +181,17 @@ export default {
         });
 
     },
+    //플레이리스트 만들기
     createList:function () {
       this.listData['name']=this.listName
       if(this.listName){
 
         let headers = {
-          // 'Content-Type': 'multipart/form-data',
           'at-jwt-access-token': session.getItem('at-jwt-access-token'),
           'at-jwt-refresh-token': session.getItem('at-jwt-refresh-token'),
         };
   
         const formData2 = new FormData();
-        // formData2.append("multipartFile", this.$refs.feedImg.files[0]);
         formData2.append(
           "data",
           new Blob([JSON.stringify(this.listData)], { type: "application/json" })
@@ -221,6 +206,7 @@ export default {
             this.$store.dispatch('accessTokenRefresh', res) // store아닌곳에서
             this.isClick=true
             this.getPlayLists()
+            this.listName=''
         }).catch((error) => {
           console.log(error);
         }).then(() => {
@@ -231,7 +217,6 @@ export default {
         alert('제목을 입력해주세요')
       }
     },
-
 	},
 	created () {
     this.userdata=JSON.parse(session.getItem('userInfo')) 
@@ -249,6 +234,7 @@ export default {
 #trash{
   width: 25px;
   height: 25px;
+  cursor: pointer;
 }
 #check_img{
   width:25px;
@@ -276,7 +262,6 @@ export default {
 	border-radius: 20px;
 	width: 25vw;
 	min-width: 350px;
-	/* height: 45vh; */
 	min-height: 450px;
 }
 #likes_list_header {
@@ -368,16 +353,12 @@ hr {
 #new_container{
   margin-left: 6%;
   margin-top: 0.5rem;
-  /* margin-bottom: auto; */
 	width: 100%;
-	/* display: flex; */
 }
 #plus_container{
   margin-top: 0.5rem;
-  /* margin-bottom: auto; */
   display: flex;
 	width: 100%;
-	/* justify-content: center; */
 }
 #plus_text{
 	margin-top:auto;

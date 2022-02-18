@@ -21,7 +21,6 @@ import UserInfo from '@/components/Settings/UserInfo'
 import PwChange from '@/components/Settings/PwChange'
 import Withdrawal from '@/components/Settings/Withdrawal'
 import FeedDetail from '@/components/FeedDetail'
-import ProfileUpdate from '@/components/Settings/ProfileUpdate'
 import SearchResult from '@/components/Search/SearchResult/SearchResult'
 import SearchList from '@/components/Search/SearchResult/SearchList'
 
@@ -226,6 +225,7 @@ const routes = [
           title: '회원 탈퇴'
         },
       },
+<<<<<<< HEAD
       {
         path:'profile-update',
         component: ProfileUpdate,
@@ -236,6 +236,8 @@ const routes = [
           title: '프로필 수정'
         },
       }
+=======
+>>>>>>> 391aa28aa3c6f9c1a77f07c5609a82eedfe6f542
     ],  
   },
   {
