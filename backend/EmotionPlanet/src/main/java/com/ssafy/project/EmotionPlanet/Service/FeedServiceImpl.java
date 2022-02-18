@@ -82,6 +82,17 @@ public class FeedServiceImpl implements FeedService{
             feed.setTags(tags);
             feed.setImgs(imgs);
             feed.setAuthorDetail(userDetail);
+
+            List<UserRequestDto> follow = feedDao.likeListFollow(feed.getAuthor(), feed.getNo());
+            List<UserRequestDto> unfollow = feedDao.likeListUnFollow(feed.getAuthor(), feed.getNo());
+            List<UserRequestDto> sum = new ArrayList<>();
+            for (UserRequestDto user1 : follow) {
+                sum.add(user1);
+            }
+            for (UserRequestDto user1 : unfollow) {
+                sum.add(user1);
+            }
+            feed.setLikes(sum);
         }
 
         return feeds;
