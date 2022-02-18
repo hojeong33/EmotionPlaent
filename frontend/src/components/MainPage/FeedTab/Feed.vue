@@ -94,12 +94,10 @@ export default {
       // style: null,
     }
   },
-  computed: {
+    computed: {
     tmp: function () {
-      let name = this.feed.tags[0]
-      console.log(this.feed)
-      let style = this.planetStyles.find(el => el.name === name) || {}
-      console.log('이것은 스타일', style)
+      const idx = this.feed.tags[0].no
+      const style = this.planetStyles.find(el => el.id === idx) || {}
       return style
     }
   },

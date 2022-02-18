@@ -66,10 +66,10 @@ export default {
       ]
     }
   },
-   computed: {
+     computed: {
     tmp: function () {
-      const name = this.feed.planet
-      const style = this.planetStyles.find(el => el.name === name) || {}
+      const idx = this.feed.tags[0].no
+      const style = this.planetStyles.find(el => el.id === idx) || {}
       return style
     }
   },
