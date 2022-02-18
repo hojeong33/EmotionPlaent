@@ -66,16 +66,22 @@ public class FeedServiceImpl implements FeedService{
     }
 
     @Override
-    public List<FeedDto> myList(int no) {
+    public List<FeedDto> myList(int userNo, int myNo) {
 
-        List<FeedDto> feeds = feedDao.myList(no);
+        List<FeedDto> feeds = feedDao.myList(userNo);
         for(FeedDto feed : feeds){
             List<CommentDto> comments = commentDao.list(feed.getNo());
             List<TagDto> tags = tagDao.list(feed.getNo());
             List<ImgDto> imgs = imgDao.list(feed.getNo());
+            UserDto user = userDao.userSelect(feed.getAuthor());
+            UserRequestDto userDetail = new UserRequestDto(user.getNo(), user.getNickname(), user.getProfileImg());
+            if(myNo == feed.getAuthor()) feed.setOwner(true);
+            if(feedDao.liking(myNo, feed.getNo()) == 1) feed.setLike(true);
+            else feed.setLike(false);
             feed.setComments(comments);
             feed.setTags(tags);
             feed.setImgs(imgs);
+            feed.setAuthorDetail(userDetail);
         }
 
         return feeds;
